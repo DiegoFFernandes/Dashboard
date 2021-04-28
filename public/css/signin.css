@@ -1,0 +1,64 @@
+html,
+body {
+
+} 
+
+body {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-bottom: 40px;
+  background: linear-gradient(to right, rgb(59 145 222),rgb(1 37 70));
+  color: white;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+  background-color: white;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+  background-color: white;
+  border-color:rgba(11, 26, 17);
+}
+.form-signin input[type="email"] {
+  margin-bottom: 15px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.padding{
+    padding-top: 5%;
+    
+}
+.message-login {
+    padding-top: 15px;    
+}
+.btn-ivo{
+  color: #fff;
+  background-color: #b81a28;
+  border-color: #af0f1f;
+}
+.btn-ivo:hover{
+  background-color: #ac1622;
+  border-color: #c21224;
+}
+

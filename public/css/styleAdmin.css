@@ -1,0 +1,122 @@
+
+/*--------------------------------------------------------------
+# Our Services
+--------------------------------------------------------------*/
+.services {
+  padding-bottom: 20px;
+}
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+.services .icon-box {
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
+  margin: 0  0 40px 0;
+  background: #fff;
+  box-shadow: 0 5px 26px 0 rgba(24, 129, 68, 0.20);
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  border: 1px solid #fff;
+  height: 390px;
+}
+
+.services .icon {
+  margin: 0 auto 25px auto;
+  padding-top: 17px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 50%;
+  width: 122px;
+  height: 122px;
+  opacity: 0.9;
+}
+
+.services .icon i {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.services .title {
+  font-weight: 700;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.services .title a {
+  color: #444;
+}
+
+.services p:first-child {
+  font-size: 15px;
+  line-height: 28px;
+  margin-bottom: 0;
+}
+
+.services .icon-box-green .icon i {
+  color: #41cf2e;
+}
+
+.services .icon-box-green:hover {
+  border-color: #41cf2e;
+}
+
+.btn-green{
+  color: #fff;
+  background-color: #245136;
+  border-color: #245136;
+  transition: padding 1s;
+}
+
+.btn-green:hover{
+  color: #fff;
+  background-color: #0b1a11;
+  border-color: #0b1a11;
+  padding: 0.375rem 2.75rem;  
+}
+
+/*Widgtes Etapas*/
+.small-box {
+  background: rgb(255, 255, 255);
+  border-radius: 2px;
+  position: relative;
+  display: block;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 1px rgb(0 0 0 / 10%);
+}
+.small-box:hover{
+  background: #e01c28;
+}
+.small-box>.inner {
+  padding: 30px;
+  text-align: center;  
+}
+
+/*Botão pesquisa*/
+.icon-pesquisa {
+  position: fixed;
+  bottom: 5px;
+  right: 0;
+  z-index: 1000000;
+  font-size: 17px;
+}
+
+/*Box-Acampanha ordem*/
+.box{
+  padding-bottom: 3%;
+}
+
+/*btn-hide lote pcp*/
+.hidden{
+  display: none;
+}
+.btn-fechar{
+  margin-bottom: 3px;
+}
+
+.bg-warning{
+  background-color: #ffd707;
+}
+

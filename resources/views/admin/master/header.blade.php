@@ -14,19 +14,21 @@
         </a>
 
         <div class="navbar-custom-menu">
+            @if(isset($user->name))
             <ul class="nav navbar-nav">
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="{{asset('adminlte/dist/img/avatar5.png')}}" class="user-image" alt="User Image">
-                        <span class="hidden-xs">{{$user->name}}</span>
+                        <span class="hidden-xs">
+                            {{$user->name}}
+                        </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
                             <img src="{{asset('adminlte/dist/img/avatar5.png')}}" class="img-circle" alt="User Image">
-
-                            <p>                                                                                         
+                            <p>
                                 {{$user->name}}
                                 <small>Membro há {{$user->created_at->diffForHumans()}}</small>
                             </p>
@@ -43,6 +45,7 @@
                     </ul>
                 </li>
             </ul>
+            @endif
         </div>
     </nav>
 </header>

@@ -24,11 +24,9 @@ class AcompanhaOrdemController extends Controller
 
  public function index(Request $request)
  {
-  $uri  = $this->resposta->route()->uri();
-  $user = $this->user;
+  $uri           = $this->resposta->route()->uri();
+  $user          = $this->user;
   $codigo_barras = $request->codigo_barras;
-  
-  
 
   return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'codigo_barras'));
  }
@@ -41,11 +39,11 @@ class AcompanhaOrdemController extends Controller
   $bindings = [$nr_ordem];
 
   if ($nr_ordem >= 9999999999) {
-    $sem_info = 0;
-    return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
-   }
+   $sem_info = 0;
+   return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
+  }
 
-  $sql_etapas      =
+  $sql_etapas =
    "SELECT *
    FROM RETORNA_ACOMPANHAMENTOPNEU (:bindings) R
    ORDER BY CAST(R.O_DT_ENTRADA||' '||R.O_HR_ENTRADA AS DOM_TIMESTAMP)";
@@ -75,10 +73,12 @@ class AcompanhaOrdemController extends Controller
   LEFT JOIN controlelotepcprecap CLR ON (CLR.id = MLP.idcontrolelotepcprecap)
   where OPR.id = :bindings";
 
- $info_pneu = DB::connection('firebird')->select($sql_info_pneu, $bindings);
+  $info_pneu = DB::connection('firebird')->select($sql_info_pneu, $bindings);
 
   return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'status_etapas', 'info_pneu'));
  }
 
- 
+ public function layout(){
+   return view('site.producao.layout');
+ }
 }

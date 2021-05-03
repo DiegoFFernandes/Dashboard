@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Models;
 
-use App\Charts\ProdutividadeExecutadoresChart;
-use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class ProdutividadeController extends Controller
+class Produtividade extends Model
 {
- public function index()
+ use HasFactory;
+
+ public function executores()
  {
 
   $sql = "
-        SELECT substring(X.NMEXECUTOR from 1 for position(' ', X.NMEXECUTOR)-1) NMEXECUTOR, SUM(X.HOJE) HOJE, SUM(X.ONTEM) ONTEM, SUM(X.ANTEONTEM) ANTEONTEM
+        SELECT X.NMEXECUTOR, SUM(X.HOJE) HOJE, SUM(X.ONTEM) ONTEM, SUM(X.ANTEONTEM) ANTEONTEM
         FROM (
            SELECT E.NMEXECUTOR, COUNT(I.ID) HOJE, 0 ONTEM, 0 ANTEONTEM
            FROM ESCAREACAOPNEU I
@@ -20,7 +22,7 @@ class ProdutividadeController extends Controller
            INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)
            INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.ID = OPR.IDITEMPEDIDOPNEU)
            INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
-           WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-4
+           WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE
             AND I.ST_ETAPA = 'F'
             AND PP.IDEMPRESA IN (1,2,3)
            GROUP BY  E.NMEXECUTOR
@@ -34,7 +36,7 @@ class ProdutividadeController extends Controller
            INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)
            INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.ID = OPR.IDITEMPEDIDOPNEU)
            INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
-          WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-5
+          WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-1
             AND I.ST_ETAPA = 'F'
             AND PP.IDEMPRESA IN (1,2,3)
            GROUP BY  E.NMEXECUTOR
@@ -48,7 +50,7 @@ class ProdutividadeController extends Controller
            INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)
            INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.ID = OPR.IDITEMPEDIDOPNEU)
            INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
-           WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-6
+           WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-2
             AND I.ST_ETAPA = 'F'
             AND PP.IDEMPRESA IN (1,2,3)
            GROUP BY  E.NMEXECUTOR
@@ -58,42 +60,8 @@ class ProdutividadeController extends Controller
         ORDER BY HOJE DESC
         ";
 
-  $result_escareacao = DB::connection('firebird')->select($sql);
+  return  DB::connection('firebird')->select($sql);
 
-  foreach ($result_escareacao as $key => $escareacao) {
-   $keys_escareacao[] = $escareacao->NMEXECUTOR;
-   $value_hoje[]      = $escareacao->HOJE;
-   $value_ontem[]     = $escareacao->ONTEM;
-   $value_anteontem[] = $escareacao->ANTEONTEM;
-   $mediaDia[]= 100;
-  }
-  //dd($mediaDia);
-  $chart = $this->GeraCharts($keys_escareacao, $value_hoje, $value_ontem, $value_anteontem, $mediaDia);
-  return view('admin.producao.produtividade-executores', compact('chart'));
  }
 
- public function GeraCharts($keys, $hoje, $ontem, $anteontem, $media)
- {
-
-  $chart = new ProdutividadeExecutadoresChart;
-
-  $chart->labels($keys);
-  $chart->dataset('Hoje', 'bar', $hoje)
-   ->options([
-    'backgroundColor' => '#3FBF3F',
-   ]);
-  $chart->dataset('Ontem', 'bar', $ontem)
-  ->options([
-    'backgroundColor' => '#3F3FBF',
-   ]);
-  $chart->dataset('Anteontem', 'bar', $anteontem)
-  ->options([
-    'backgroundColor' => '#C43535',
-   ]);
-   $chart->dataset('Media Dia', 'line', $media)
-  ->options([
-    'color' => '#F0E118',
-   ]);
-  return $chart;
- }
 }

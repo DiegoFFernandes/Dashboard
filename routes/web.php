@@ -26,8 +26,6 @@ Route::middleware(['auth'])->prefix('producao')->group(function () {
  /*Rotas Quantide lote e atrasos*/
  Route::get('lote-pcp', [LotePcpController::class, 'index'])->name('admin.lote.pcp');
  Route::get('lote-pcp/{nr_lote}/pneus-lote', [PneusLotePcpController::class, 'index'])->name('admin.lote.pneu.pcp');
- /*Produtividade Executores*/
- Route::get('produtividade-executores', [ProdutividadeController::class, 'index'])->name('admin.producao.produtividade');
 });
 
 Route::prefix('producao')->group(function () {
@@ -35,4 +33,7 @@ Route::prefix('producao')->group(function () {
  Route::get('acompanha-ordem', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem');
  Route::get('acompanha-ordem/{codigo_barras}', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem');
  Route::post('acompanha-ordem', [AcompanhaOrdemController::class, 'statusOrdem'])->name('admin.producao.acompanha.ordem');
+
+ /*Produtividade Executores*/
+ Route::get('produtividade-executores', [ProdutividadeController::class, 'index'])->name('admin.producao.produtividade');
 });

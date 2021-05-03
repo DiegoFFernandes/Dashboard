@@ -39,6 +39,9 @@
                         <a href="{{route('admin.producao.acompanha.ordem')}}"><i class="fa fa-circle-o"></i>Acompanhar
                             Ordem</a>
                     </li>
+                    <li>
+                        <a href="{{route('admin.producao.produtividade')}}"><i class="fa fa-circle-o"></i>Produtividade</a>
+                    </li>
                 </ul>
             </li>
         </ul>

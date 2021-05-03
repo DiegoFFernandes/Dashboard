@@ -14,10 +14,10 @@ $.widget.bridge('uibutton', $.ui.button);
 -->
 <!-- Sparkline -->
 <script src="{{asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
-<!-- jvectormap -->
+<!-- jvectormap 
 <script src="{{asset('adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
 <script src="{{asset('adminlte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
-<!-- jQuery Knob Chart -->
+ jQuery Knob Chart -->
 <script src="{{asset('adminlte/bower_components/jquery-knob/dist/jquery.knob.min.js')}}"></script>
 <!-- daterangepicker -->
 <script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
@@ -39,7 +39,7 @@ $.widget.bridge('uibutton', $.ui.button);
 <!--Ck Editor
 <script src="{{asset('adminlte/bower_components/ckeditor/ckeditor.js')}}"></script>
 -->
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
 <!-- My Scripts -->
 <script src="{{asset('adminlte/dist/js/scripts.js')}}"></script>
 

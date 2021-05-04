@@ -35,17 +35,17 @@ $(document).ready(function () {
 
 
 
-// var button = document.getElementById("btn-hide");
+var button = document.getElementById("btn-hide");
 
-// button.addEventListener("click", fnToggle);
+button.addEventListener("click", fnToggle);
 
-// function fnToggle() {
-//     var mostrar = document.getElementById("lote-pcp");
-//     mostrar.classList.toggle("hidden");
+function fnToggle() {
+    var mostrar = document.getElementById("lote-pcp");
+    mostrar.classList.toggle("hidden");
 
-//     if (mostrar) {
-//         button.innerHTML = "Fechar Lotes"
-//     } else {
-//         button.innerHTML = "Abrir Lotes"
-//     };
-// }
+    if (mostrar) {
+        button.innerHTML = "Fechar Lotes"
+    } else {
+        button.innerHTML = "Abrir Lotes"
+    };
+}

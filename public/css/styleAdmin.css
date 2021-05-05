@@ -107,10 +107,6 @@
 .box{
   padding-bottom: 3%;
 }
-.box-body .acompanha-ordem {
-  padding: none;
-}
-
 
 /*btn-hide lote pcp*/
 .hidden{
@@ -125,8 +121,8 @@
 }
 
 /* Graficos Produtividade */
-.box-body{
+/* .box-body{
   padding: 0;
-}
+} */
 
 /* */

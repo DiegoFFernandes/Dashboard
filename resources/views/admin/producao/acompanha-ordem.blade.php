@@ -14,7 +14,7 @@
                 <!-- form start -->
                 <form class="form-inline" action="{{route('admin.producao.acompanha.ordem')}}" method="post">
                     @csrf
-                    <div class="box-body acompanha-ordem">
+                    <div class="box-body">
                         <div class="form-group m-2">
                             <label for="numeroOrdem">Número Ordem:</label>                            
                             (<a

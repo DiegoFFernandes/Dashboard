@@ -107,6 +107,10 @@
 .box{
   padding-bottom: 3%;
 }
+.box-body .acompanha-ordem {
+  padding: none;
+}
+
 
 /*btn-hide lote pcp*/
 .hidden{
@@ -125,3 +129,4 @@
   padding: 0;
 }
 
+/* */

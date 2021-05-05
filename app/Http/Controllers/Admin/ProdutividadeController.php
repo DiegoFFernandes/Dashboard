@@ -17,13 +17,26 @@ class ProdutividadeController extends Controller
 
  public function index()
  {
-   $emp = 1;
+  $emp              = 1;
+  $escareacao       = 'ESCAREACAOPNEU';
+  $raspa            = 'RASPAGEMPNEU';
+  $exame_inicial    = 'EXAMEINICIAL';
+  $preparacao_banda = 'PREPARACAOBANDAPNEU';
 
-  $result_escareacao = $this->esc_prod->executores($emp);
+  $result_escareacao = $this->esc_prod->executores($emp, $escareacao);
+  $chart_escareacao  = $this->CarregaVariavel($result_escareacao);
 
-  $chart = $this->CarregaVariavel($result_escareacao);
+  $result_raspagem = $this->esc_prod->executores($emp, $raspa);
+  $chart_raspagem  = $this->CarregaVariavel($result_raspagem);
 
-  return view('admin.producao.produtividade-executores', compact('chart'));
+  $result_exame_inicial = $this->esc_prod->executores($emp, $exame_inicial);
+  $chart_exame_inicial  = $this->CarregaVariavel($result_exame_inicial);
+
+  $result_preparacaobanda = $this->esc_prod->executores($emp, $preparacao_banda);
+  $chart_prep_banda  = $this->CarregaVariavel($result_preparacaobanda);
+
+  return view('admin.producao.produtividade-executores',
+   compact('chart_escareacao', 'chart_raspagem', 'chart_exame_inicial', 'chart_prep_banda'));
  }
 
  public function CarregaVariavel($resultados)
@@ -44,22 +57,28 @@ class ProdutividadeController extends Controller
  {
 
   $chart = new ProdutividadeExecutadoresChart;
-
+  
   $chart->labels($keys);
   $chart->dataset('Hoje', 'bar', $hoje)
    ->options([
+    'show'      => true,
     'backgroundColor' => '#3FBF3F',
-   ]);
+   ],
+   
+  );
   $chart->dataset('Ontem', 'bar', $ontem)
    ->options([
+    'show'      => true,
     'backgroundColor' => '#3F3FBF',
    ]);
   $chart->dataset('Anteontem', 'bar', $anteontem)
    ->options([
+    'show'      => true,
     'backgroundColor' => '#C43535',
    ]);
   $chart->dataset('Media Dia', 'line', $media)
    ->options([
+    'show'      => true,
     'color' => '#F0E118',
    ]);
   return $chart;

@@ -18,7 +18,7 @@
                         <div class="form-group m-2">
                             <label for="numeroOrdem">Número Ordem:</label>                            
                             (<a
-                                href="http://zxing.appspot.com/scan?ret=http://192.168.254.36:8000/producao/acompanha-ordem/{CODE}" data-toggle="tooltip" data-placement="top" title="Exclusivo Celular">Leitor</a>):
+                                href="http://zxing.appspot.com/scan?ret=http://producao.ivorecap.com.br:8000/producao/acompanha-ordem/{CODE}" data-toggle="tooltip" data-placement="top" title="Exclusivo Celular">Leitor</a>):
                             <input type="number" class="form-control" name="nr_ordem" value="{{isset($codigo_barras) ? $codigo_barras : ''}}" placeholder="123456" required/>
 
 

@@ -36,25 +36,37 @@ class AcompanhaOrdemController extends Controller
   $uri      = $this->resposta->route()->uri();
   $user     = $this->user;
   $nr_ordem = $request->nr_ordem;
-  $bindings = [$nr_ordem];
 
+  /* verifica se a ordem e maior que o limite //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
   if ($nr_ordem >= 9999999999) {
    $sem_info = 0;
    return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
   }
 
+  /*Com a informação do usuario, consulta no banco e pega o ID do itempedidopneu*/
+  $sql_idpneu       = "select IDITEMPEDIDOPNEU from ordemproducaorecap where id = ?";
+  $iditempedidopneu = DB::connection('firebird')->select($sql_idpneu, [$nr_ordem]);
+
+  /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
+  if ($nr_ordem >= 9999999999 || $iditempedidopneu === []) {
+    $sem_info = 0;
+    return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
+  }
+
+  /*Consulta no Banco através do IDPEDIDOPNEU buscando os setores que a ordem passou RRC016*/
   $sql_etapas =
    "SELECT *
-   FROM RETORNA_ACOMPANHAMENTOPNEU (:bindings) R
+   FROM RETORNA_ACOMPANHAMENTOPNEU (?) R
    ORDER BY CAST(R.O_DT_ENTRADA||' '||R.O_HR_ENTRADA AS DOM_TIMESTAMP)";
 
-  $status_etapas = DB::connection('firebird')->select($sql_etapas, $bindings);
+  $status_etapas = DB::connection('firebird')->select($sql_etapas, [$iditempedidopneu[0]->IDITEMPEDIDOPNEU]);
 
+  /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
   if ($status_etapas === []) {
    $sem_info = $status_etapas;
    return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
   }
-
+  /* Consulta informações da ORDEM */
   $sql_info_pneu = "
   Select IPP.idpedidopneu PEDIDO, OPR.id ORDEM, PP.idpessoa ID, P.NM_PESSOA CLIENTE, SP.dsservico SERVICO,
   MP.dsmodelo||' - '||M.dsmarca as MODELO, MD.dsmedidapneu MEDIDA,
@@ -71,14 +83,25 @@ class AcompanhaOrdemController extends Controller
   LEFT JOIN LOTEPCPORDEMPRODUCAORECAP LOPR ON (LOPR.idordemproducao = OPR.ID)
   LEFT JOIN MONTAGEMLOTEPCPRECAP MLP ON (MLP.id = LOPR.idmontagemlotepcp)
   LEFT JOIN controlelotepcprecap CLR ON (CLR.id = MLP.idcontrolelotepcprecap)
-  where OPR.id = :bindings";
+  where OPR.id = ?";
 
-  $info_pneu = DB::connection('firebird')->select($sql_info_pneu, $bindings);
+  $info_pneu = DB::connection('firebird')->select($sql_info_pneu, [$nr_ordem]);
 
   return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'status_etapas', 'info_pneu'));
  }
 
- public function layout(){
-   return view('site.producao.layout');
+ public function layout()
+ {
+  return view('site.producao.layout');
+ }
+
+ public function validaDados($nr_ordem, $iditempedidopneu)
+ {
+  $uri  = $this->resposta->route()->uri();
+  $user = $this->user;
+  if ($nr_ordem >= 9999999999 || $iditempedidopneu === []) {
+   $sem_info = 0;
+   return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
+  }
  }
 }

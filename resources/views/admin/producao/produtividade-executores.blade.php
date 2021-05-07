@@ -8,7 +8,7 @@
             <!-- AREA CHART -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Exame Inicial</h3>
+                    <h3 class="box-title">{{$setor['setor1']}}</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                 class="fa fa-minus"></i>
@@ -19,8 +19,8 @@
                 </div>
                 <div class="box-body">
                     <div class="chart" style="height:230px">
-                        {!! $chart_exame_inicial->container() !!}
-                        {!! $chart_exame_inicial->script() !!}
+                        {!! $chart_setor1->container() !!}
+                        {!! $chart_setor1->script() !!}
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -31,7 +31,7 @@
             <!-- AREA CHART -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Raspagem</h3>
+                    <h3 class="box-title">{{$setor['setor2']}}</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                 class="fa fa-minus"></i>
@@ -42,8 +42,8 @@
                 </div>
                 <div class="box-body">
                     <div class="chart" style="height:230px">
-                        {!! $chart_raspagem->container() !!}
-                        {!! $chart_raspagem->script() !!}
+                        {!! $chart_setor2->container() !!}
+                        {!! $chart_setor2->script() !!}
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -54,7 +54,7 @@
             <!-- AREA CHART -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Escareação</h3>
+                    <h3 class="box-title">{{$setor['setor3']}}</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                 class="fa fa-minus"></i>
@@ -65,8 +65,8 @@
                 </div>
                 <div class="box-body">
                     <div class="chart" style="height:230px">
-                        {!! $chart_escareacao->container() !!}
-                        {!! $chart_escareacao->script() !!}
+                        {!! $chart_setor3->container() !!}
+                        {!! $chart_setor3->script() !!}
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -77,7 +77,7 @@
             <!-- AREA CHART -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Preparação Banda</h3>
+                    <h3 class="box-title">{{$setor['setor4']}}</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                 class="fa fa-minus"></i>
@@ -88,8 +88,8 @@
                 </div>
                 <div class="box-body">
                     <div class="chart" style="height:230px">
-                        {!! $chart_prep_banda->container() !!}
-                        {!! $chart_prep_banda->script() !!}
+                        {!! $chart_setor4->container() !!}
+                        {!! $chart_setor4->script() !!}
                     </div>
                 </div>
                 <!-- /.box-body -->

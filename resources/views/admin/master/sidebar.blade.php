@@ -40,7 +40,18 @@
                             Ordem</a>
                     </li>
                     <li>
-                        <a href="{{route('admin.producao.produtividade')}}"><i class="fa fa-circle-o"></i>Produtividade</a>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-circle-o"></i> Produtividade
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">                            
+                            <li><a href="{{route('admin.producao.quadrante1')}}"><i class="fa fa-circle-o"></i>Quadrante 1</a></li>
+                            <li><a href="{{route('admin.producao.quadrante2')}}"><i class="fa fa-circle-o"></i>Quadrante 2</a></li>
+                            <li><a href="{{route('admin.producao.quadrante3')}}"><i class="fa fa-circle-o"></i>Quadrante 3</a></li>
+                            <li><a href="{{route('admin.producao.quadrante4')}}"><i class="fa fa-circle-o"></i>Quadrante 4</a></li>
+                        </ul>
                     </li>
                 </ul>
             </li>

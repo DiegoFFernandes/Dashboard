@@ -5,38 +5,64 @@ namespace App\Http\Controllers\admin;
 use App\Charts\ProdutividadeExecutadoresChart;
 use App\Http\Controllers\Controller;
 use App\Models\Produtividade;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProdutividadeController extends Controller
 {
  protected $escareacao;
 
- public function __construct(Produtividade $prod)
+ public function __construct(Produtividade $prod, Request $request)
  {
-  $this->esc_prod = $prod;
+  $this->produtividade = $prod;
+  $this->resposta      = $request;
+  $this->middleware(function ($request, $next) {
+   $this->user = Auth::user();
+   return $next($request);
+  });
  }
 
  public function index()
  {
-  $emp              = 1;
-  $escareacao       = 'ESCAREACAOPNEU';
-  $raspa            = 'RASPAGEMPNEU';
-  $exame_inicial    = 'EXAMEINICIAL';
-  $preparacao_banda = 'PREPARACAOBANDAPNEU';
 
-  $result_escareacao = $this->esc_prod->executores($emp, $escareacao);
-  $chart_escareacao  = $this->CarregaVariavel($result_escareacao);
+  $exploder = explode('/', $this->resposta->route()->uri());
+  $uri      = ucfirst($exploder[2]);
+  $user     = $this->user;
+  $emp      = 1;
 
-  $result_raspagem = $this->esc_prod->executores($emp, $raspa);
-  $chart_raspagem  = $this->CarregaVariavel($result_raspagem);
+  if ($uri == "Quadrante-1") {
+     
+   $exame_inicial    = 'EXAMEINICIAL';
+   $raspa            = 'RASPAGEMPNEU';
+   $escareacao       = 'ESCAREACAOPNEU'; 
+   $preparacao_banda = 'PREPARACAOBANDAPNEU';
+   $setor = ['setor1' => 'Exame Inicial', 'setor2' => 'Raspagem', 'setor3' => 'Escareação', 'setor4' => 'Preparação Banda'];
+   
+   $result_escareacao = $this->produtividade->executores($emp, $escareacao);
+   $chart_setor1      = $this->CarregaVariavel($result_escareacao);
 
-  $result_exame_inicial = $this->esc_prod->executores($emp, $exame_inicial);
-  $chart_exame_inicial  = $this->CarregaVariavel($result_exame_inicial);
+   $result_raspagem = $this->produtividade->executores($emp, $raspa);
+   $chart_setor2    = $this->CarregaVariavel($result_raspagem);
 
-  $result_preparacaobanda = $this->esc_prod->executores($emp, $preparacao_banda);
-  $chart_prep_banda  = $this->CarregaVariavel($result_preparacaobanda);
+   $result_exame_inicial = $this->produtividade->executores($emp, $exame_inicial);
+   $chart_setor3         = $this->CarregaVariavel($result_exame_inicial);
 
-  return view('admin.producao.produtividade-executores',
-   compact('chart_escareacao', 'chart_raspagem', 'chart_exame_inicial', 'chart_prep_banda'));
+   $result_preparacaobanda = $this->produtividade->executores($emp, $preparacao_banda);
+   $chart_setor4           = $this->CarregaVariavel($result_preparacaobanda);
+
+   return view('admin.producao.produtividade-executores',
+    compact('chart_setor1', 'chart_setor2', 'chart_setor3', 'chart_setor4', 'setor', 'user'));
+  } 
+  elseif ($uri == "Quadrante-2") {
+
+   $limpezamanchao = 'LIMPEZAMANCHAO';
+   $aplicacaocola  = 'APLICACAOCOLAPNEU';
+
+   $setor = ['setor1' => 'Exame Inicial', 'setor2' => 'Raspagem', 'setor3' => 'Escareação', 'setor4' => 'Preparação Banda'];
+   
+   return view('admin.producao.produtividade');
+  }
+
  }
 
  public function CarregaVariavel($resultados)
@@ -57,28 +83,28 @@ class ProdutividadeController extends Controller
  {
 
   $chart = new ProdutividadeExecutadoresChart;
-  
+
   $chart->labels($keys);
   $chart->dataset('Hoje', 'bar', $hoje)
    ->options([
-    'show'      => true,
+    'show'            => true,
     'backgroundColor' => '#3FBF3F',
    ],
-   
-  );
+
+   );
   $chart->dataset('Ontem', 'bar', $ontem)
    ->options([
-    'show'      => true,
+    'show'            => true,
     'backgroundColor' => '#3F3FBF',
    ]);
   $chart->dataset('Anteontem', 'bar', $anteontem)
    ->options([
-    'show'      => true,
+    'show'            => true,
     'backgroundColor' => '#C43535',
    ]);
   $chart->dataset('Media Dia', 'line', $media)
    ->options([
-    'show'      => true,
+    'show'  => true,
     'color' => '#F0E118',
    ]);
   return $chart;

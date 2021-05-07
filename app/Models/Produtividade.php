@@ -22,7 +22,7 @@ class Produtividade extends Model
      INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)
      INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.ID = OPR.IDITEMPEDIDOPNEU)
      INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
-     WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-4
+     WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE
       AND I.ST_ETAPA = 'F'
       AND PP.IDEMPRESA = ".$emp."
      GROUP BY  E.NMEXECUTOR
@@ -36,7 +36,7 @@ class Produtividade extends Model
      INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)
      INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.ID = OPR.IDITEMPEDIDOPNEU)
      INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
-    WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-5
+    WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-1
       AND I.ST_ETAPA = 'F'
       AND PP.IDEMPRESA = ".$emp."
      GROUP BY  E.NMEXECUTOR
@@ -50,7 +50,7 @@ class Produtividade extends Model
      INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)
      INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.ID = OPR.IDITEMPEDIDOPNEU)
      INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
-     WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-6
+     WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-2
       AND I.ST_ETAPA = 'F'
       AND PP.IDEMPRESA = ".$emp."
      GROUP BY  E.NMEXECUTOR
@@ -60,7 +60,20 @@ class Produtividade extends Model
   ORDER BY HOJE DESC
         ";
 
-  return DB::connection('firebird')->select($sql);
+$array_vazio = [
+   (object)['NMEXECUTOR' => 'SEM INFORMAÇÃO', 'HOJE' => 0 , 'ONTEM' => 0, 'ANTEONTEM' => 0]
+   
+];
+$resultado = DB::connection('firebird')->select($sql);
+
+if($resultado === []){
+    return $resultado = [
+      (object)['NMEXECUTOR' => 'SEM INFORMAÇÃO', 'HOJE' => 0 , 'ONTEM' => 0, 'ANTEONTEM' => 0]
+      
+   ];
+}
+return $resultado;
+  
 
  }
 

@@ -26,7 +26,7 @@ class PneusLotePcpController extends Controller
   $bindings      = ["nr_lote" => $request->nr_lote];
   
   $sql_pneu_lote = "
-    select IPP.idpedidopneu PEDIDO, OPR.id ORDEM, PP.idpessoa ID, P.NM_PESSOA CLIENTE, SP.dsservico SERVICO,
+  select IPP.idpedidopneu PEDIDO, OPR.id ORDEM, PP.idpessoa ID, P.NM_PESSOA CLIENTE, SP.dsservico SERVICO,
     MP.dsmodelo||' - '||M.dsmarca as MODELO, MD.dsmedidapneu MEDIDA,
     PN.nrserie SERIE, PN.nrfogo FOGO, PN.nrdot DOT, LOPR.idmontagemlotepcp LOTE, CLR.dscontrolelotepcp DSLOTE
     FROM ITEMPEDIDOPNEU IPP
@@ -42,7 +42,8 @@ class PneusLotePcpController extends Controller
     LEFT JOIN MONTAGEMLOTEPCPRECAP MLP ON (MLP.id = LOPR.idmontagemlotepcp)
     LEFT JOIN controlelotepcprecap CLR ON (CLR.id = MLP.idcontrolelotepcprecap)
     where LOPR.idmontagemlotepcp = :nr_lote
-        AND OPR.stexamefinal NOT IN ('A', 'R')";
+        AND OPR.stexamefinal NOT IN ('A', 'R')
+        AND OPR.stordem NOT IN ('F', 'C')";
 
   $pneus_lote = DB::connection('firebird')->select($sql_pneu_lote, $bindings);
   

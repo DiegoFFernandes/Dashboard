@@ -64,10 +64,10 @@
                     <table class="table display table-striped table-bordered" style="width:100%">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Usuario</th>
+                                <th>#</th>                                
                                 <th>Entrada</th>
                                 <th>Saida</th>
+                                <th>Usuario</th>
                                 <th>Detalhes</th>
                                 <th>Retrabalho</th>
                             </tr>
@@ -75,12 +75,12 @@
                         <tbody>
                             @foreach ($status_etapas as $acompanha)
                             <tr>
-                                <th scope="row">{!! utf8_encode($acompanha->O_DS_ETAPA) !!}</th>
-                                <td>{!! utf8_encode($acompanha->O_NM_USUARIO) !!}</td>
+                                <th scope="row">{!! utf8_encode($acompanha->O_DS_ETAPA) !!}</th>                                
                                 <td>{!! utf8_encode($acompanha->O_DT_ENTRADA).' '.utf8_encode($acompanha->O_HR_ENTRADA)
                                     !!}</td>
                                 <td>{!! utf8_encode($acompanha->O_DT_SAIDA).' '.utf8_encode($acompanha->O_HR_SAIDA) !!}
                                 </td>
+                                <td>{!! utf8_encode($acompanha->O_NM_USUARIO) !!}</td>
                                 <td>{!! utf8_encode($acompanha->O_DS_COMPLEMENTOETAPA) !!}</td>
                                 <td>{!! utf8_encode($acompanha->O_ST_RETRABALHO) !!}</td>
                             </tr>

@@ -16,8 +16,6 @@
                 <ul class="treeview-menu" style="display: none;">
                     <li class="active"><a href="{{route('admin.dashborad')}}"><i class="fa fa-home"></i>Inicio</a>
                     </li>
-                    <li class="active"><a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
-                    </li>
                 </ul>
             </li>
             <li class="treeview" style="height: auto;">
@@ -40,18 +38,62 @@
                             Ordem</a>
                     </li>
                     <li>
+                    <li><a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
+                    </li>
                     <li class="treeview">
                         <a href="#"><i class="fa fa-circle-o"></i> Produtividade
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">                            
-                            <li><a href="{{route('admin.producao.quadrante1')}}"><i class="fa fa-circle-o"></i>Quadrante 1</a></li>
-                            <li><a href="{{route('admin.producao.quadrante2')}}"><i class="fa fa-circle-o"></i>Quadrante 2</a></li>
-                            <li><a href="{{route('admin.producao.quadrante3')}}"><i class="fa fa-circle-o"></i>Quadrante 3</a></li>
-                            <li><a href="{{route('admin.producao.quadrante4')}}"><i class="fa fa-circle-o"></i>Quadrante 4</a></li>
+                        <ul class="treeview-menu">
+                            <li><a href="{{route('admin.producao.quadrante1')}}"><i class="fa fa-circle-o"></i>Quadrante
+                                    1</a></li>
+                            <li><a href="{{route('admin.producao.quadrante2')}}"><i class="fa fa-circle-o"></i>Quadrante
+                                    2</a></li>
+                            <li><a href="{{route('admin.producao.quadrante3')}}"><i class="fa fa-circle-o"></i>Quadrante
+                                    3</a></li>
+                            <li><a href="{{route('admin.producao.quadrante4')}}"><i class="fa fa-circle-o"></i>Quadrante
+                                    4</a></li>
                         </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-user"></i> <span>Usuários</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class="active"><a href="{{route('admin.usuarios.listar')}}"><i class="fa fa-list"></i>Listar</a>
+                    </li>
+                    <li class="active"><a href=""><i class="fa fa-plus-circle"></i>Permissões</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-shield"></i> <span>Portaria</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-circle-o"></i> Veiculos
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href=""><i class="fa fa-circle-o"></i>Listar</a></li>
+                            <li><a href=""><i class="fa fa-circle-o"></i>Cadastrar</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="active"><a href=""><i class="fa fa-plus-circle"></i>Relátorio</a>
                     </li>
                 </ul>
             </li>

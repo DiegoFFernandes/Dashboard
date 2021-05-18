@@ -25,22 +25,22 @@ class AcompanhaOrdemController extends Controller
  public function index(Request $request)
  {
   $uri           = $this->resposta->route()->uri();
-  $user          = $this->user;
+  $user_auth          = $this->user;
   $codigo_barras = $request->codigo_barras;
 
-  return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'codigo_barras'));
+  return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'codigo_barras'));
  }
 
  public function statusOrdem(Request $request)
  {
   $uri      = $this->resposta->route()->uri();
-  $user     = $this->user;
+  $user_auth     = $this->user;
   $nr_ordem = $request->nr_ordem;
 
   /* verifica se a ordem e maior que o limite //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
   if ($nr_ordem >= 9999999999) {
    $sem_info = 0;
-   return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
+   return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem'));
   }
 
   /*Com a informação do usuario, consulta no banco e pega o ID do itempedidopneu*/
@@ -50,7 +50,7 @@ class AcompanhaOrdemController extends Controller
   /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
   if ($nr_ordem >= 9999999999 || $iditempedidopneu === []) {
     $sem_info = 0;
-    return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
+    return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem'));
   }
 
   /*Consulta no Banco através do IDPEDIDOPNEU buscando os setores que a ordem passou RRC016*/
@@ -64,7 +64,7 @@ class AcompanhaOrdemController extends Controller
   /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
   if ($status_etapas === []) {
    $sem_info = $status_etapas;
-   return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
+   return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem'));
   }
   /* Consulta informações da ORDEM */
   $sql_info_pneu = "
@@ -87,7 +87,7 @@ class AcompanhaOrdemController extends Controller
 
   $info_pneu = DB::connection('firebird')->select($sql_info_pneu, [$nr_ordem]);
 
-  return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'status_etapas', 'info_pneu'));
+  return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'status_etapas', 'info_pneu'));
  }
 
  public function layout()
@@ -101,7 +101,7 @@ class AcompanhaOrdemController extends Controller
   $user = $this->user;
   if ($nr_ordem >= 9999999999 || $iditempedidopneu === []) {
    $sem_info = 0;
-   return view('admin.producao.acompanha-ordem', compact('user', 'uri', 'sem_info', 'nr_ordem'));
+   return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem'));
   }
  }
 }

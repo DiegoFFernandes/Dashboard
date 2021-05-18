@@ -17,10 +17,10 @@ $.widget.bridge('uibutton', $.ui.button);
 <!-- jvectormap 
 <script src="{{asset('adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
 <script src="{{asset('adminlte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
- jQuery Knob Chart -->
+ jQuery Knob Chart 
 <script src="{{asset('adminlte/bower_components/jquery-knob/dist/jquery.knob.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
+daterangepicker 
+<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>-->
 <script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
 <!-- datepicker -->
 <script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}">
@@ -36,10 +36,11 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script> -->
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
-<!--Ck Editor
+<!--Ck Editor -->
 <script src="{{asset('adminlte/bower_components/ckeditor/ckeditor.js')}}"></script>
--->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- My Scripts -->
 <script src="{{asset('adminlte/dist/js/scripts.js')}}"></script>
 

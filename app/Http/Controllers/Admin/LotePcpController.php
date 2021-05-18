@@ -20,7 +20,7 @@ class LotePcpController extends Controller
  public function index()
  {
   $uri  = $this->resposta->route()->uri();
-  $user = $this->user;
+  $user_auth = $this->user;
 
   $sql = "
     SELECT
@@ -267,6 +267,6 @@ class LotePcpController extends Controller
   $resultados = DB::connection('firebird')->select($sql);
   $pneus = DB::connection('firebird')->select($sql_pneus);
 
-  return view('admin.pcp.lote-pcp', compact('resultados', 'pneus', 'user', 'uri'));
+  return view('admin.pcp.lote-pcp', compact('resultados', 'pneus', 'user_auth', 'uri'));
  }
 }

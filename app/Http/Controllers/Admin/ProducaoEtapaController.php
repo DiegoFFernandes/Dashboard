@@ -585,7 +585,7 @@ FROM (
 
   $etapas = DB::connection('firebird')->select($sql, $bindings);
 
-  return view('admin.pcp.etapas', compact('user', 'uri', 'etapas'));
+  return view('admin.pcp.etapas', compact('user_auth', 'uri', 'etapas'));
 
  }
 

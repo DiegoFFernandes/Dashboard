@@ -12,9 +12,9 @@ class LoginController extends Controller
  public function dashboard()
  {
   if (Auth::check() === true) {
-   $user = Auth::user();  
+   $user_auth = Auth::user();
 
-   return view('admin.index', compact('user'));
+   return view('admin.index', compact('user_auth'));
   }
   return redirect()->route('admin.login');
  }
@@ -22,8 +22,8 @@ class LoginController extends Controller
  public function showLoginForm()
  {
   if (Auth::check() === true) {
-   $user = Auth::user();
-   return view('admin.index', compact('user'));
+   $user_auth = Auth::user();
+   return view('admin.index', compact('user_auth'));
   }
   return view('auth.login');
  }
@@ -36,6 +36,7 @@ class LoginController extends Controller
   ];
 
   if (Auth::attempt($credencials)) {
+
    return redirect()->route('admin.dashborad');
   }
   return redirect()->back()->withInput()->withErrors(['Os dados informados são invalidos!']);

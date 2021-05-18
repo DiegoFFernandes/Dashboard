@@ -22,7 +22,7 @@ class PneusLotePcpController extends Controller
  {
   
   $uri           = $this->resposta->route()->uri();
-  $user          = $this->user;
+  $user_auth          = $this->user;
   $bindings      = ["nr_lote" => $request->nr_lote];
   
   $sql_pneu_lote = "
@@ -47,6 +47,6 @@ class PneusLotePcpController extends Controller
 
   $pneus_lote = DB::connection('firebird')->select($sql_pneu_lote, $bindings);
   
-  return view('admin.pcp.pneus-lote-pcp', compact('uri', 'user', 'pneus_lote'));
+  return view('admin.pcp.pneus-lote-pcp', compact('uri', 'user_auth', 'pneus_lote'));
  }
 }

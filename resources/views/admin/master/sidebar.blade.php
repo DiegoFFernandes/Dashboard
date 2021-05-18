@@ -59,6 +59,7 @@
                     </li>
                 </ul>
             </li>
+            @role('admin')
             <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-user"></i> <span>Usuários</span>
@@ -67,12 +68,16 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
+                    <li class="active"><a href="{{route('admin.usuarios.create')}}"><i class="fa fa-plus-circle"></i>Adicionar usuário</a>
+                    </li>
                     <li class="active"><a href="{{route('admin.usuarios.listar')}}"><i class="fa fa-list"></i>Listar</a>
                     </li>
-                    <li class="active"><a href=""><i class="fa fa-plus-circle"></i>Permissões</a>
+                    <li class="active"><a href="{{route('admin.usuarios.role')}}"><i
+                                class="fa fa-plus-circle"></i>Permissões</a>
                     </li>
                 </ul>
             </li>
+            @endrole
             <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-shield"></i> <span>Portaria</span>
@@ -90,10 +95,11 @@
                         <ul class="treeview-menu">
                             <li><a href=""><i class="fa fa-circle-o"></i>Listar</a></li>
                             <li><a href=""><i class="fa fa-circle-o"></i>Cadastrar</a></li>
-
                         </ul>
                     </li>
-                    <li class="active"><a href=""><i class="fa fa-plus-circle"></i>Relátorio</a>
+                    <li><a href=""><i class="fa fa-plus-circle"></i>Entrada</a></li>
+                    <li><a href=""><i class="fa fa-plus-circle"></i>Saida</a></li>
+                    <li><a href=""><i class="fa fa-plus-circle"></i>Relátorios</a>
                     </li>
                 </ul>
             </li>

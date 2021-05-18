@@ -25,19 +25,19 @@ class ProdutividadeController extends Controller
  public function index()
  {
 
-  $exploder = explode('/', $this->resposta->route()->uri());
-  $uri      = ucfirst($exploder[2]);
-  $user     = $this->user;
-  $emp      = 1;
+  $exploder  = explode('/', $this->resposta->route()->uri());
+  $uri       = ucfirst($exploder[2]);
+  $user_auth = $this->user;
+  $emp       = 1;
 
   if ($uri == "Quadrante-1") {
-     
+
    $exame_inicial    = 'EXAMEINICIAL';
    $raspa            = 'RASPAGEMPNEU';
-   $escareacao       = 'ESCAREACAOPNEU'; 
+   $escareacao       = 'ESCAREACAOPNEU';
    $preparacao_banda = 'PREPARACAOBANDAPNEU';
-   $setor = ['setor1' => 'Exame Inicial', 'setor2' => 'Raspagem', 'setor3' => 'Escareação', 'setor4' => 'Preparação Banda'];
-   
+   $setor            = ['setor1' => 'Exame Inicial', 'setor2' => 'Raspagem', 'setor3' => 'Escareação', 'setor4' => 'Preparação Banda'];
+
    $result_escareacao = $this->produtividade->executores($emp, $escareacao);
    $chart_setor1      = $this->CarregaVariavel($result_escareacao);
 
@@ -51,15 +51,14 @@ class ProdutividadeController extends Controller
    $chart_setor4           = $this->CarregaVariavel($result_preparacaobanda);
 
    return view('admin.producao.produtividade-executores',
-    compact('chart_setor1', 'chart_setor2', 'chart_setor3', 'chart_setor4', 'setor', 'user'));
-  } 
-  elseif ($uri == "Quadrante-2") {
+    compact('chart_setor1', 'chart_setor2', 'chart_setor3', 'chart_setor4', 'setor', 'user_auth'));
+  } elseif ($uri == "Quadrante-2") {
 
    $limpezamanchao = 'LIMPEZAMANCHAO';
    $aplicacaocola  = 'APLICACAOCOLAPNEU';
 
    $setor = ['setor1' => 'Exame Inicial', 'setor2' => 'Raspagem', 'setor3' => 'Escareação', 'setor4' => 'Preparação Banda'];
-   
+
    return view('admin.producao.produtividade');
   }
 

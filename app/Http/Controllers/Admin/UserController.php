@@ -6,26 +6,37 @@ use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
- public function __construct(Empresa $empresa)
+ public function __construct(Empresa $empresa, Request $request)
  {
-  $this->empresa = $empresa;
+  $this->empresa  = $empresa;
+  $this->resposta = $request;
+  $this->middleware(function ($request, $next) {
+   $this->user = Auth::user();
+   return $next($request);
+  });
  }
  public function index()
  {
-  $users    = User::all();
-  $empresas = $this->empresa->empresa();
+  $uri       = $this->resposta->route()->uri();
+  $user_auth = $this->user;
+  $users     = User::all();
+  $empresas  = $this->empresa->empresa();
 
-  return view('admin.usuarios.usuarios', compact('users', 'empresas'));
+  return view('admin.usuarios.usuarios', compact('users', 'user_auth', 'empresas', 'uri'));
  }
 
  public function create(Request $request)
  {
+  $data = User::where('email', $request->email)->exists();
+  if ($data) {
+   return redirect()->route('admin.usuarios.listar')->with('warning', 'Email já existe, favor cadastrar outro!');
+  }
   $user = $this->_validade($request);
-
-  User::create($user);
+  $user = User::create($user);
 
   return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário criado com sucesso!');
 
@@ -59,10 +70,11 @@ class UserController extends Controller
    return redirect()->route('admin.usuarios.listar')->with('status', 'Ouve algum erro!');
   }
  }
- public function delete($id){
-   $user = User::findOrFail($id);
-   $user->delete();
-   return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário deletado com sucesso!');
+ public function delete($id)
+ {
+  $user = User::findOrFail($id);
+  $user->delete();
+  return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário deletado com sucesso!');
  }
 
  public function _validade(Request $request)

@@ -33,7 +33,10 @@ $(document).ready(function () {
     });
 });
 
-
+$(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+});
 
 var button = document.getElementById("btn-hide");
 
@@ -49,3 +52,4 @@ function fnToggle() {
         button.innerHTML = "Abrir Lotes"
     };
 }
+

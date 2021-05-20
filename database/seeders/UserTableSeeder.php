@@ -14,12 +14,14 @@ class UserTableSeeder extends Seeder
   */
  public function run()
  {
-  User::create([
+  $user = User::create([
    'name'     => 'Diego Ferreira',
    'email'    => 'ti.campina@ivorecap.com.br',
    'empresa'  => 1,
    'password' => bcrypt('admin'),
   ]);
+  $user->assignRole('admin');
+  
   User::create([
    'name'     => 'Portaria',
    'email'    => 'portaria@ivorecap.com.br',

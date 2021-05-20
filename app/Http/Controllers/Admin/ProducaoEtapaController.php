@@ -69,7 +69,7 @@ class ProducaoEtapaController extends Controller
   }
 
   $uri  = $this->resposta->route()->uri();
-  $user = $this->user;
+  $user_auth = $this->user;
   $sql  = "SELECT
   SUM(X.NR_EXINI) NR_EXINI,
   SUM(X.NR_RASPA) NR_RASPA,

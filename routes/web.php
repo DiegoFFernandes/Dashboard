@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\LotePcpController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
+use App\Http\Controllers\Admin\PortariaController;
 use App\Http\Controllers\Admin\ProducaoEtapaController;
 use App\Http\Controllers\admin\ProdutividadeController;
 use App\Http\Controllers\Admin\UserController;
@@ -27,7 +28,7 @@ Route::post('/login/do', [LoginController::class, 'Login'])->name('admin.login.d
 Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
 Route::get('/admin', [LoginController::class, 'dashboard'])->name('admin.dashborad');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:admin|producao'])->group(function () {
  Route::prefix('producao')->group(function () {
   /* Routas Etapas */
   Route::get('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas');
@@ -38,7 +39,7 @@ Route::middleware(['auth'])->group(function () {
   Route::get('lote-pcp/{nr_lote}/pneus-lote', [PneusLotePcpController::class, 'index'])->name('admin.lote.pneu.pcp');
  });
 
- Route::middleware(['auth'])->prefix('usuarios')->group(function () {
+ Route::middleware(['auth', 'role:admin'])->prefix('usuarios')->group(function () {
   Route::get('/', [UserController::class, 'index'])->name('admin.usuarios');
   Route::get('listar', [UserController::class, 'index'])->name('admin.usuarios.listar');
   Route::get('editar/{id}', [UserController::class, 'edit'])->name('admin.usuarios.edit');
@@ -71,3 +72,7 @@ Route::prefix('producao')->group(function () {
  Route::get('produtividade-executores/quadrante-4', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante4');
 });
 
+Route::prefix('portaria')->group(function(){
+ Route::get('cadastrar/entrada', [PortariaController::class, 'index'])->name('admin.portaria.entrada');
+ Route::get('cadastrar/saida', [PortariaController::class, 'index'])->name('admin.portaria.saida');
+});

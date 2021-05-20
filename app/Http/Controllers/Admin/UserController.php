@@ -7,6 +7,7 @@ use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -31,10 +32,12 @@ class UserController extends Controller
 
  public function create(Request $request)
  {
-  $data = User::where('email', $request->email)->exists();
+  $data = User::where('email', $request->email)->exists(); 
+
   if ($data) {
    return redirect()->route('admin.usuarios.listar')->with('warning', 'Email já existe, favor cadastrar outro!');
   }
+  $request['password']= Hash::make($request['password']);
   $user = $this->_validade($request);
   $user = User::create($user);
 
@@ -59,7 +62,7 @@ class UserController extends Controller
   $data             = $this->_validade($request);
   $data['name']     = $request->name;
   $data['email']    = $request->email;
-  $data['password'] = $request->password;
+  $data['password'] = Hash::make($request->password);
   $data['empresa']  = $request->empresa;
 
   $user->fill($data);

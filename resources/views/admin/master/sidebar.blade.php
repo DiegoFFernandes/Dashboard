@@ -18,6 +18,7 @@
                     </li>
                 </ul>
             </li>
+            @role('admin|producao')
             <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-th"></i> <span>Produção</span>
@@ -59,6 +60,7 @@
                     </li>
                 </ul>
             </li>
+            @endrole
             @role('admin')
             <li class="treeview" style="height: auto;">
                 <a href="#">
@@ -68,9 +70,10 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li class="active"><a href="{{route('admin.usuarios.create')}}"><i class="fa fa-plus-circle"></i>Adicionar usuário</a>
+                    <li class="active"><a href="{{route('admin.usuarios.create')}}"><i
+                                class="fa fa-plus-circle"></i>Adicionar usuário</a>
                     </li>
-                    <li class="active"><a href="{{route('admin.usuarios.listar')}}"><i class="fa fa-list"></i>Listar</a>
+                    <li class="active"><a href="{{route('admin.usuarios.listar')}}"><i class="fa fa-list"></i>Listar usuários</a>
                     </li>
                     <li class="active"><a href="{{route('admin.usuarios.role')}}"><i
                                 class="fa fa-plus-circle"></i>Permissões</a>
@@ -78,6 +81,7 @@
                 </ul>
             </li>
             @endrole
+            @role('portaria|admin')
             <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-shield"></i> <span>Portaria</span>
@@ -97,12 +101,22 @@
                             <li><a href=""><i class="fa fa-circle-o"></i>Cadastrar</a></li>
                         </ul>
                     </li>
-                    <li><a href=""><i class="fa fa-plus-circle"></i>Entrada</a></li>
-                    <li><a href=""><i class="fa fa-plus-circle"></i>Saida</a></li>
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-circle-o"></i> Movimentos
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{route('admin.portaria.entrada')}}"><i class="fa fa-plus-circle"></i>Entrada</a></li>
+                            <li><a href="{{route('admin.portaria.saida')}}"><i class="fa fa-plus-circle"></i>Saida</a></li>
+                        </ul>
+                    </li>
                     <li><a href=""><i class="fa fa-plus-circle"></i>Relátorios</a>
                     </li>
                 </ul>
             </li>
+            @endrole
         </ul>
     </section>
     <!-- /.sidebar -->

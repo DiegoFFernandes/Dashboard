@@ -16,8 +16,20 @@
         <div class="navbar-custom-menu">
             @if(isset($user_auth->name))
             <ul class="nav navbar-nav">
-                <li class="messages-menu">Entrada</li>
-                <li>Saida</li>
+                @role('portaria|admin')
+                <li class="">
+                    <a href="#">
+                        Entrada
+                        <span class="label label-success">65</span>
+                    </a>
+                </li>
+                <li class="">
+                    <a href="#">
+                        Saida
+                        <span class="label label-warning">58</span>
+                    </a>
+                </li>
+                @endrole
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">

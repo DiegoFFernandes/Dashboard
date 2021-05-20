@@ -28,21 +28,25 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'ver cobranca']);
         Permission::create(['name' => 'ver faturamento']);
         Permission::create(['name' => 'ver comercial']);
+        Permission::create(['name' => 'ver producao']);
 
         $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo(Permission::all());
+        $role->givePermissionTo([
+            'editar', 'listar', 'criar', 'ver financeiro', 'ver cobranca', 'ver faturamento', 'ver comercial', 'ver producao']);
 
         $role = Role::create(['name' => 'portaria'])
         ->givePermissionTo(['editar', 'listar', 'criar']);
 
         $role = Role::create(['name' => 'comercial'])
-        ->givePermissionTo(['editar', 'listar', 'criar']);
+        ->givePermissionTo(['ver comercial']);
 
         $role = Role::create(['name' => 'financeiro'])
-        ->givePermissionTo(['editar', 'listar', 'criar']);
+        ->givePermissionTo(['ver financeiro']);
 
-        $role = Role::create(['name' => 'usuario'])
-        ->givePermissionTo(['ver comercial']);
+        $role = Role::create(['name' => 'producao'])
+        ->givePermissionTo(['ver producao']);
+
+        $role = Role::create(['name' => 'usuario']);
         
     }
 }

@@ -70,14 +70,18 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li class="active"><a href="{{route('admin.usuarios.create')}}"><i
-                                class="fa fa-plus-circle"></i>Adicionar usuário</a>
+                    <li class="{{($uri == 'usuarios/cadastrar') ? 'active' : ''}}" ><a href="{{route('admin.usuarios.create')}}">
+                        <i class="fa fa-plus-circle"></i>Adicionar usuário</a>
                     </li>
-                    <li class="active"><a href="{{route('admin.usuarios.listar')}}"><i class="fa fa-list"></i>Listar usuários</a>
+                    <li class="{{($uri == 'usuarios/listar') ? 'active' : ''}}" ><a href="{{route('admin.usuarios.listar')}}">
+                        <i class="fa fa-list"></i>Listar usuários</a>
                     </li>
-                    <li class="active"><a href="{{route('admin.usuarios.role')}}"><i
-                                class="fa fa-plus-circle"></i>Permissões</a>
-                    </li>
+                    <li class="{{($uri == 'usuarios/funcao') ? 'active' : ''}}"><a href="{{route('admin.usuarios.role')}}">
+                        <i class="fa fa-shield"></i>Funções</a>
+                    </li> 
+                    <li class="{{($uri == 'usuarios/permissao') ? 'active' : ''}}"><a href="{{route('admin.usuarios.permission')}}">
+                        <i class="fa fa-lock"></i>Permissões</a>
+                    </li>                      
                 </ul>
             </li>
             @endrole

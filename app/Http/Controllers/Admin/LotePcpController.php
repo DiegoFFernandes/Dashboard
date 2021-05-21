@@ -40,8 +40,8 @@ class LotePcpController extends Controller
            AND IPP.STGARANTIA = 'N'
            AND PP.IDEMPRESA IN (1,2)
            AND M.STLOTE = 'P'
-           AND OPR.STORDEM NOT IN ('F', 'C')
-          -- AND OPR.ID = 905
+          --AND OPR.STORDEM NOT IN ('F', 'C')
+          --AND OPR.ID = 905
        GROUP BY C.DSCONTROLELOTEPCP, M.ID, M.NRLOTESEQDIA, M.DTPRODUCAO
 
     UNION ALL

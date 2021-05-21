@@ -9,12 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+ public function __construct(Request $request)
+ {
+  $this->resposta = $request;
+ }
+
  public function dashboard()
  {
   if (Auth::check() === true) {
    $user_auth = Auth::user();
-
-   return view('admin.index', compact('user_auth'));
+   $uri       = $this->resposta->route()->uri();
+   return view('admin.index', compact('user_auth', 'uri'));
   }
   return redirect()->route('admin.login');
  }

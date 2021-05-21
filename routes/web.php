@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\LotePcpController;
+use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
@@ -49,12 +50,19 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
   Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
 
   /*Rotas funções*/
-  Route::get('permissao', [RoleController::class, 'index'])->name('admin.usuarios.role');
+  Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');
   Route::get('funcao/editar/{id}', [RoleController::class, 'edit'])->name('admin.usuarios.role.edit');
   Route::post('funcao/editar', [RoleController::class, 'update'])->name('admin.usuarios.role.edit.do');
   Route::get('funcao/novo', [RoleController::class, 'create'])->name('admin.usuarios.role.create');
   Route::post('funcao/novo', [RoleController::class, 'save'])->name('admin.usuarios.role.create.do');
   Route::get('funcao/delete/{id}', [RoleController::class, 'delete'])->name('admin.usuarios.role.delete');
+
+  /*Rotas permission*/
+  Route::get('permissao', [PermissionController::class, 'index'])->name('admin.usuarios.permission');
+  Route::get('permissao/editar/{id}', [PermissionController::class, 'edit'])->name('admin.usuarios.permission.edit');
+  Route::post('permissao/editar', [PermissionController::class, 'update'])->name('admin.usuarios.permission.edit.do');
+
+  Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
  });
 
 });

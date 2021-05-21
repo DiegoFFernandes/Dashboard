@@ -27,7 +27,7 @@
                                 <th>id</th>
                                 <th>Nome</th>
                                 <th>Email</th>
-                                <th>Permissões</th>
+                                <th>Funções</th>
                                 <th>Acões</th>
                             </tr>
                         </thead>
@@ -38,16 +38,16 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
-                                    @if(!empty($user->getPermissionNames()))
-                                    @foreach($user->getPermissionNames() as $v)
+                                    @if(!empty($user->getRoleNames()))
+                                    @foreach($user->getRoleNames() as $v)
                                     <span class="badge badge-info">{{ $v }}</span>
                                     @endforeach
                                     @endif
                                 </td>
                                 <td>
                                     <a class="btn btn-info"
-                                        href="{{route('admin.usuarios.permission.edit', $user->id)}}">Editar</a>
-                                    <a class="btn btn-danger" href="{{route('admin.usuarios.permission.delete', $user->id)}}">Deletar</a>
+                                        href="{{route('admin.usuarios.role.edit', $user->id)}}">Editar</a>
+                                    <a class="btn btn-danger" href="{{route('admin.usuarios.role.delete', $user->id)}}">Deletar</a>
                                 </td>
                             </tr>
                             @endforeach

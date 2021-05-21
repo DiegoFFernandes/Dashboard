@@ -29,8 +29,7 @@ class RoleController extends Controller
    ->orderBy('id')->get();
   $user_auth = $this->user;
 
-  $permission = Permission::all();
-  return view('admin.usuarios.permission', compact('permission', 'data', 'user_auth', 'uri'));
+  return view('admin.usuarios.roles', compact('data', 'user_auth', 'uri'));
  }
  public function edit(Request $request)
  {

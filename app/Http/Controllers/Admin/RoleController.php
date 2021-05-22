@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -25,6 +26,7 @@ class RoleController extends Controller
 
   $data = User::select('users.id', 'users.name', 'users.email', 'users.empresa', 'users.created_at')
    ->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+   ->where('users.email','<>', 'ti.campina@ivorecap.com.br')
    ->groupBy('users.id', 'users.name', 'users.email', 'users.empresa', 'users.created_at')
    ->orderBy('id')->get();
   $user_auth = $this->user;
@@ -86,8 +88,10 @@ class RoleController extends Controller
      return redirect()->route('admin.usuarios.role')->with('status', 'Nova função usuário criada  com sucesso!');
  }
 
- public function delete(Request $request)
+ public function delete($id)
  {
-  return $user = User::findOrFail($request->id);
+  DB::table("model_has_roles")->where('model_id',$id)->delete();
+        return redirect()->route('admin.usuarios.role')
+                        ->with('status','Função usuario deletado com successo');
  }
 }

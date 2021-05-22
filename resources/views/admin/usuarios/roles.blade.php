@@ -27,7 +27,8 @@
                                 <th>id</th>
                                 <th>Nome</th>
                                 <th>Email</th>
-                                <th>Funções</th>
+                                <th>Empresa</th>
+                                <th>Funções</th>                                
                                 <th>Acões</th>
                             </tr>
                         </thead>
@@ -37,6 +38,7 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->empresa }}</td>
                                 <td>
                                     @if(!empty($user->getRoleNames()))
                                     @foreach($user->getRoleNames() as $v)

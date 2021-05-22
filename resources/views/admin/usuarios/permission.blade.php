@@ -17,7 +17,7 @@
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header">
-                    <a href="{{route('admin.usuarios.role.create')}}" class="btn btn-success">Criar novo</a>
+                    <a href="{{route('admin.usuarios.permission.create')}}" class="btn btn-success">Criar novo</a>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
@@ -27,6 +27,7 @@
                                 <th>id</th>
                                 <th>Nome</th>
                                 <th>Email</th>
+                                <th>Empresa</th>
                                 <th>Permissões</th>
                                 <th>Acões</th>
                             </tr>
@@ -37,6 +38,7 @@
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
+                                <td>{{ $user->empresa }}</td>
                                 <td>
                                     @if(!empty($user->getPermissionNames()))
                                     @foreach($user->getPermissionNames() as $v)

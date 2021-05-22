@@ -61,7 +61,8 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
   Route::get('permissao', [PermissionController::class, 'index'])->name('admin.usuarios.permission');
   Route::get('permissao/editar/{id}', [PermissionController::class, 'edit'])->name('admin.usuarios.permission.edit');
   Route::post('permissao/editar', [PermissionController::class, 'update'])->name('admin.usuarios.permission.edit.do');
-
+  Route::get('permissao/novo', [PermissionController::class, 'create'])->name('admin.usuarios.permission.create');
+  Route::post('permissão/novo', [PermissionController::class, 'save'])->name('admin.usuarios.permission.create.do');
   Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
  });
 

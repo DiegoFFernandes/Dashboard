@@ -51,7 +51,7 @@ class ProdutividadeController extends Controller
    $chart_setor4           = $this->CarregaVariavel($result_preparacaobanda);
 
    return view('admin.producao.produtividade-executores',
-    compact('chart_setor1', 'chart_setor2', 'chart_setor3', 'chart_setor4', 'setor', 'user_auth'));
+    compact('chart_setor1', 'chart_setor2', 'chart_setor3', 'chart_setor4', 'setor', 'user_auth', 'uri'));
   } elseif ($uri == "Quadrante-2") {
 
    $limpezamanchao = 'LIMPEZAMANCHAO';

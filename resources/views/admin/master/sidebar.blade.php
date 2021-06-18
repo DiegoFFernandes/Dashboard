@@ -70,18 +70,22 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li class="{{($uri == 'usuarios/cadastrar') ? 'active' : ''}}" ><a href="{{route('admin.usuarios.create')}}">
-                        <i class="fa fa-plus-circle"></i>Adicionar usuário</a>
+                    <li class="{{($uri == 'usuarios/cadastrar') ? 'active' : ''}}"><a
+                            href="{{route('admin.usuarios.create')}}">
+                            <i class="fa fa-plus-circle"></i>Adicionar usuário</a>
                     </li>
-                    <li class="{{($uri == 'usuarios/listar') ? 'active' : ''}}" ><a href="{{route('admin.usuarios.listar')}}">
-                        <i class="fa fa-list"></i>Listar usuários</a>
+                    <li class="{{($uri == 'usuarios/listar') ? 'active' : ''}}"><a
+                            href="{{route('admin.usuarios.listar')}}">
+                            <i class="fa fa-list"></i>Listar usuários</a>
                     </li>
-                    <li class="{{($uri == 'usuarios/funcao') ? 'active' : ''}}"><a href="{{route('admin.usuarios.role')}}">
-                        <i class="fa fa-shield"></i>Funções</a>
-                    </li> 
-                    <li class="{{($uri == 'usuarios/permissao') ? 'active' : ''}}"><a href="{{route('admin.usuarios.permission')}}">
-                        <i class="fa fa-lock"></i>Permissões</a>
-                    </li>                      
+                    <li class="{{($uri == 'usuarios/funcao') ? 'active' : ''}}"><a
+                            href="{{route('admin.usuarios.role')}}">
+                            <i class="fa fa-shield"></i>Funções</a>
+                    </li>
+                    <li class="{{($uri == 'usuarios/permissao') ? 'active' : ''}}"><a
+                            href="{{route('admin.usuarios.permission')}}">
+                            <i class="fa fa-lock"></i>Permissões</a>
+                    </li>
                 </ul>
             </li>
             @endrole
@@ -100,9 +104,31 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li><a href=""><i class="fa fa-circle-o"></i>Listar</a></li>
-                            <li><a href=""><i class="fa fa-circle-o"></i>Cadastrar</a></li>
+                        <ul class="treeview-menu" style="display: none;">
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-circle-o"></i> Cadastros
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Marcas
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li><a href="{{route('marca-veiculo.cadastrar')}}"><i class="fa fa-circle-o"></i>Cadastrar</a></li>
+                                            <li><a href=""><i class="fa fa-circle-o"></i>Editar</a></li>
+                                            <li><a href=""><i class="fa fa-circle-o"></i>Listar</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#"><i class="fa fa-circle-o"></i>Modelos</a></li>
+                                    <li><a href="{{route('admin.cadastrar.motorista.veiculos')}}"><i
+                                                class="fa fa-circle-o"></i>Motorista/Veiculos</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -112,8 +138,13 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="{{route('admin.portaria.entrada')}}"><i class="fa fa-plus-circle"></i>Entrada</a></li>
-                            <li><a href="{{route('admin.portaria.saida')}}"><i class="fa fa-plus-circle"></i>Saida</a></li>
+                            <li><a href="{{route('admin.listar.motorista.veiculos')}}"><i
+                                        class="fa fa-circle-o"></i>Listar Motorista/Veiculos</a></li>
+
+                            <li><a href="{{route('admin.portaria.entrada')}}"><i
+                                        class="fa fa-plus-circle"></i>Entrada</a></li>
+                            <li><a href="{{route('admin.portaria.saida')}}"><i class="fa fa-plus-circle"></i>Saida</a>
+                            </li>
                         </ul>
                     </li>
                     <li><a href=""><i class="fa fa-plus-circle"></i>Relátorios</a>

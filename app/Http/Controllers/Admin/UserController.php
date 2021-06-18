@@ -32,14 +32,14 @@ class UserController extends Controller
 
  public function create(Request $request)
  {
-  $data = User::where('email', $request->email)->exists(); 
+  $data = User::where('email', $request->email)->exists();
 
   if ($data) {
    return redirect()->route('admin.usuarios.listar')->with('warning', 'Email já existe, favor cadastrar outro!');
   }
-  $request['password']= Hash::make($request['password']);
-  $user = $this->_validade($request);
-  $user = User::create($user);
+  $request['password'] = Hash::make($request['password']);
+  $user                = $this->_validade($request);
+  $user                = User::create($user);
 
   return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário criado com sucesso!');
 
@@ -47,12 +47,12 @@ class UserController extends Controller
 
  public function edit(Request $request)
  {
-
+  $uri      = $this->resposta->route()->uri();
   $users    = User::all();
   $user_id  = User::findOrFail($request->id);
   $empresas = $this->empresa->empresa();
 
-  return view('admin.usuarios.usuarios', compact('user_id', 'users', 'empresas'));
+  return view('admin.usuarios.usuarios', compact('user_id', 'users', 'empresas', 'uri'));
  }
 
  public function update(Request $request)

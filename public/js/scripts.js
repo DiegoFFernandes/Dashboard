@@ -38,18 +38,57 @@ $(function () {
     $('.select2').select2()
 });
 
-var button = document.getElementById("btn-hide");
+$(document).ready(function () {
+    $('#id_frotaveiculo').change(function () {
+        const url = $('#MotoristaForm').attr("data-marcas-url");
+        const idFrota = $(this).val();       
+        $.ajax({
+            url: url,
+            data: {
+                'id_frotaveiculo': idFrota,
+            },
+            success: function (data) {
+                $("#id_marca").html(data);
+            }
+        });
+    });
 
-button.addEventListener("click", fnToggle);
+    $('#id_marca').change(function () {
+        const url = $('#MotoristaForm').attr("data-modelos-url");
+        const idMarca = $(this).val();    
+        const idFrota = $('#id_frotaveiculo').val();  
+           
+        $.ajax({
+            url: url,
+            data: {
+                'id_frotaveiculo': idFrota,
+                'id_marca' : idMarca,
+            },
+            success: function (data) {
+                $("#id_modelo").html(data);
+            }
+        });
+    });
+});
 
-function fnToggle() {
-    var mostrar = document.getElementById("lote-pcp");
-    mostrar.classList.toggle("hidden");
+$(document).ready(function(){    
+    $("#placa").inputmask({mask: ['AAA9999','AAA9A99']});
+    $("#ano").inputmask("9999");
+    $("#cor").inputmask("AAAAAAAAAAAA");
+});
 
-    if (mostrar) {
-        button.innerHTML = "Fechar Lotes"
-    } else {
-        button.innerHTML = "Abrir Lotes"
-    };
-}
+// var button = document.getElementById("btn-hide");
+
+// button.addEventListener("click", fnToggle);
+
+// function fnToggle() {
+//     var mostrar = document.getElementById("lote-pcp");
+//     mostrar.classList.toggle("hidden");
+
+//     if (mostrar) {
+//         button.innerHTML = "Fechar Lotes"
+//     } else {
+//         button.innerHTML = "Abrir Lotes"
+//     };
+// }
 

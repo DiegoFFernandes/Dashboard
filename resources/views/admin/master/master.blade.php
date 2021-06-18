@@ -13,7 +13,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    Dashboard
+                    {{isset($title_page) ? $title_page : 'Dashboard'}}
                     @if(isset($uri))
                     <small>{{$uri}}</small>
                     @else

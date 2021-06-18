@@ -2,23 +2,26 @@
 
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\LotePcpController;
+use App\Http\Controllers\Admin\MarcaVeiculoController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
 use App\Http\Controllers\Admin\ProducaoEtapaController;
 use App\Http\Controllers\admin\ProdutividadeController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VeiculoController;
 use App\Http\Controllers\Auth\LoginController;
+
+use App\Models\Veiculo;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-use Spatie\Permission\Models\Role;
 
-Route::get('/clear-cache-all', function() {
+Route::get('/clear-cache-all', function () {
 
-    Artisan::call('cache:clear');  
+ Artisan::call('cache:clear');
 
-    dd("Cache Clear All");
+ dd("Cache Clear All");
 
 });
 
@@ -34,7 +37,7 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
   /* Routas Etapas */
   Route::get('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas');
   Route::post('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas.do');
-  
+
   /*Rotas Quantide lote e atrasos*/
   Route::get('lote-pcp', [LotePcpController::class, 'index'])->name('admin.lote.pcp');
   Route::get('lote-pcp/{nr_lote}/pneus-lote', [PneusLotePcpController::class, 'index'])->name('admin.lote.pneu.pcp');
@@ -81,7 +84,25 @@ Route::prefix('producao')->group(function () {
  Route::get('produtividade-executores/quadrante-4', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante4');
 });
 
-Route::prefix('portaria')->group(function(){
- Route::get('cadastrar/entrada', [PortariaController::class, 'index'])->name('admin.portaria.entrada');
- Route::get('cadastrar/saida', [PortariaController::class, 'index'])->name('admin.portaria.saida');
+Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
+ Route::prefix('portaria')->group(function () {
+  Route::get('cadastrar/entrada', [PortariaController::class, 'index'])->name('admin.portaria.entrada');
+  Route::post('cadastrar/entrada/do', [PortariaController::class, 'create'])->name('admin.portaria.entrada.do');
+  Route::get('cadastrar/saida', [PortariaController::class, 'index'])->name('admin.portaria.saida');
+ });
+ Route::prefix('veiculo')->group(function () {
+  Route::get('cadastrar', [VeiculoController::class, 'create'])->name('admin.cadastrar.motorista.veiculos');
+  Route::post('cadastrar/do', [VeiculoController::class, 'save'])->name('admin.cadastrar-do.motorista.veiculos');
+  Route::get('listar', [VeiculoController::class, 'list'])->name('admin.listar.motorista.veiculos');
+  Route::get('editar/{id}', [VeiculoController::class, 'edit'])->name('admin.editar.motorista.veiculos');  
+  Route::post('editar/do', [VeiculoController::class, 'update'])->name('admin.editar-do.motorista.veiculos');
+  Route::get('load_marcas', [VeiculoController::class, 'loadMarcas'])->name('load_marcas');
+  Route::get('load_modelos', [VeiculoController::class, 'loadModelos'])->name('load_modelos');
+ });
+ Route::prefix('marca/veiculo')->group(function(){
+     Route::get('cadastrar', [MarcaVeiculoController::class, 'create'])->name('marca-veiculo.cadastrar');
+     Route::post('cadastrar/do', [MarcaVeiculoController::class, 'save'])->name('marca-veiculo.salvar');
+ });
+
 });
+

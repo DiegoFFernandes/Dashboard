@@ -12,7 +12,8 @@
                 <!-- /.box-header -->
 
                 <!-- form start -->
-                <form role="form" method="post" action="{{isset($user_id) ? route('admin.usuarios.update') : route('admin.usuarios.create')}}">
+                <form role="form" method="post"
+                    action="{{isset($user_id) ? route('admin.usuarios.update') : route('admin.usuarios.create')}}">
                     @csrf
                     <div class="box-body">
                         @if($errors->all())
@@ -20,7 +21,7 @@
                         <!-- alert -->
                         <div class="alert alert-warning alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="icon fa fa-check"></i>{{$error}}                            
+                            <i class="icon fa fa-check"></i>{{$error}}
                         </div>
                         <!-- /alert -->
                         @endforeach
@@ -29,51 +30,55 @@
                         <!-- alert -->
                         <div class="alert alert-warning alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="icon fa fa-check"></i>{{session('warning')}}                           
+                            <i class="icon fa fa-check"></i>{{session('warning')}}
                         </div>
                         <!-- /alert -->
-                        @endif  
+                        @endif
                         @if (session('status'))
                         <!-- alert -->
                         <div class="alert alert-success alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="icon fa fa-check"></i>{{session('status')}}                           
+                            <i class="icon fa fa-check"></i>{{session('status')}}
                         </div>
                         <!-- /alert -->
-                        @endif                        
+                        @endif
                         <div class="form-group">
                             @if(isset($user_id->name))
                             <input type="hidden" name="id" value="{{$user_id->id}}">
                             @endif
                             <label for="name">Nome:</label>
-                            <input type="name" name='name' class="form-control" id="name" placeholder="Nome usuario" value="{{isset($user_id->name) ? $user_id->name : ''}}">
+                            <input type="name" name='name' class="form-control" id="name" placeholder="Nome usuario"
+                                value="{{isset($user_id->name) ? $user_id->name : ''}}">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" name='email' class="form-control" id="email" placeholder="Email" value="{{isset($user_id->email) ? $user_id->email : ''}}">
+                            <input type="email" name='email' class="form-control" id="email" placeholder="Email"
+                                value="{{isset($user_id->email) ? $user_id->email : ''}}">
                         </div>
                         <div class="form-group">
                             <label for="password">Senha</label>
-                            <input type="password" name='password' class="form-control" id="password" placeholder="Digite uma senha" value="{{isset($user_id->password) ? $user_id->password : ''}}">
+                            <input type="password" name='password' class="form-control" id="password"
+                                placeholder="Digite uma senha"
+                                value="{{isset($user_id->password) ? $user_id->password : ''}}">
                         </div>
                         <!-- select -->
                         <div class="form-group">
                             <label>Empresa Principal</label>
-                            <select class="form-control" name="empresa"> 
-                                @if(isset($user_id))                              
+                            <select class="form-control" name="empresa">
+                                @if(isset($user_id))
                                 @foreach($empresas as $empresa)
                                 @if($user_id->empresa == $empresa->CD_EMPRESA)
                                 <option value="{{$empresa->CD_EMPRESA}}">{{$empresa->NM_EMPRESA}}</option>
                                 @endif
-                                @endforeach                                
+                                @endforeach
                                 @foreach($empresas as $empresa)
                                 @if($user_id->empresa <> $empresa->CD_EMPRESA)
                                 <option value="{{$empresa->CD_EMPRESA}}">{{$empresa->NM_EMPRESA}}</option>
                                 @endif
                                 @endforeach
                                 @else
-                                @foreach($empresas as $empresa)                                
-                                <option value="{{$empresa->CD_EMPRESA}}">{{$empresa->NM_EMPRESA}}</option>                                
+                                @foreach($empresas as $empresa)
+                                <option value="{{$empresa->CD_EMPRESA}}">{{$empresa->NM_EMPRESA}}</option>
                                 @endforeach
                                 @endif
                             </select>
@@ -84,11 +89,12 @@
                     <div class="box-footer">
                         @if(isset($user_id))
                         <button type="submit" class="btn btn-warning">Atualizar</button>
-                        <a href="{{route('admin.usuarios.delete', ['id' => $user_id->id])}}" class="btn btn-danger">Excluir</a>
+                        <a href="{{route('admin.usuarios.delete', ['id' => $user_id->id])}}"
+                            class="btn btn-danger">Excluir</a>
                         @else
                         <button type="submit" class="btn btn-primary">Cadastrar</button>
                         @endif
-                    </div>                    
+                    </div>
                 </form>
             </div>
             <!-- /.box -->
@@ -119,10 +125,12 @@
                                 <td>{{$user->email}}</td>
                                 <td>{{$user->empresa}}</td>
                                 <td>
-                                    <a href="{{route('admin.usuarios.edit', ['id' => $user->id])}}" class="fa fa-pencil"></a>
+                                    <a href="{{route('admin.usuarios.edit', ['id' => $user->id])}}"
+                                        class="fa fa-pencil"></a>
                                 </td>
                                 <td>
-                                    <a href="{{route('admin.usuarios.delete', ['id' => $user->id])}}" class="fa fa-trash"></a>
+                                    <a href="{{route('admin.usuarios.delete', ['id' => $user->id])}}"
+                                        class="fa fa-trash"></a>
                                 </td>
                             </tr>
                             @endforeach

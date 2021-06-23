@@ -17,24 +17,29 @@ class MarcaVeiculoTableSeeder extends Seeder
         MarcaVeiculo::create([
             'descricao' => 'VOLKSWAGEN', 
             'cd_frotaveiculos' => '1',
-            'cd_marca' => '2'
+            'cd_marca' => '2',
+            'cd_usuario' => '1'
         ]);
 
         MarcaVeiculo::create([
             'descricao' => 'VOLKSWAGEN', 
             'cd_frotaveiculos' => '2',
-            'cd_marca' => '2'
+            'cd_marca' => '2',
+            'cd_usuario' => '1'
         ]);
         MarcaVeiculo::create([
             'descricao' => 'FIAT', 
             'cd_frotaveiculos' => '1',
-            'cd_marca' => '3'
+            'cd_marca' => '3',
+            'cd_usuario' => '1'
         ]);
 
         MarcaVeiculo::create([
             'descricao' => 'FIAT', 
             'cd_frotaveiculos' => '2',
-            'cd_marca' => '3'
+            'cd_marca' => '3',
+            'cd_usuario' => '1'
+
         ]);
     }
 }

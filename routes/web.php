@@ -12,8 +12,6 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeiculoController;
 use App\Http\Controllers\Auth\LoginController;
-
-use App\Models\Veiculo;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -100,9 +98,10 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
   Route::get('load_modelos', [VeiculoController::class, 'loadModelos'])->name('load_modelos');
  });
  Route::prefix('marca/veiculo')->group(function(){
-     Route::get('cadastrar', [MarcaVeiculoController::class, 'create'])->name('marca-veiculo.cadastrar');
+     Route::get('listar', [MarcaVeiculoController::class, 'create'])->name('marca-veiculo.listar');
      Route::post('cadastrar/do', [MarcaVeiculoController::class, 'save'])->name('marca-veiculo.salvar');
+     Route::post('delete', [MarcaVeiculoController::class, 'delete'])->name('marca-veiculo.delete');
+     Route::post('editar', [MarcaVeiculoController::class, 'update'])->name('marca-veiculo.update');
  });
 
 });
-

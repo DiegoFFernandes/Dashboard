@@ -1,8 +1,5 @@
 //$('#meuModal').modal('toggle')
 
-// var button = document.getElementById("btn-hide");
-
-
 $(document).ready(function () {
     $('table.display').DataTable({
         "language": {
@@ -41,7 +38,7 @@ $(function () {
 $(document).ready(function () {
     $('#id_frotaveiculo').change(function () {
         const url = $('#MotoristaForm').attr("data-marcas-url");
-        const idFrota = $(this).val();       
+        const idFrota = $(this).val();
         $.ajax({
             url: url,
             data: {
@@ -55,14 +52,14 @@ $(document).ready(function () {
 
     $('#id_marca').change(function () {
         const url = $('#MotoristaForm').attr("data-modelos-url");
-        const idMarca = $(this).val();    
-        const idFrota = $('#id_frotaveiculo').val();  
-           
+        const idMarca = $(this).val();
+        const idFrota = $('#id_frotaveiculo').val();
+
         $.ajax({
             url: url,
             data: {
                 'id_frotaveiculo': idFrota,
-                'id_marca' : idMarca,
+                'id_marca': idMarca,
             },
             success: function (data) {
                 $("#id_modelo").html(data);
@@ -71,24 +68,62 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready(function(){    
-    $("#placa").inputmask({mask: ['AAA9999','AAA9A99']});
+$(document).ready(function () {
+    $("#placa").inputmask({ mask: ['AAA9999', 'AAA9A99'] });
     $("#ano").inputmask("9999");
     $("#cor").inputmask("AAAAAAAAAAAA");
 });
 
-// var button = document.getElementById("btn-hide");
+// Marca Veiculo
+// Deletar Marca veiculo
+$('#deleteMarcaVeiculo').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var recipientId = button.data('id');
+    var modal = $(this);
+    modal.find('#cd_delete_marca').val(recipientId);
+})
+// Fim Deletar
 
-// button.addEventListener("click", fnToggle);
+//Editar Marca Veiculo
+$(document).ready(function () {
+    var table = $('#mveiculodatatable').DataTable();
 
-// function fnToggle() {
-//     var mostrar = document.getElementById("lote-pcp");
-//     mostrar.classList.toggle("hidden");
+    table.on('click', '.edit', function () {
+        $tr = $(this).closest('tr');
+        if ($($tr).hasClass('child')) {
+            $tr = $tr.prev('.parent');
+        }
+        var data = table.row($tr).data();
+        console.log(data);
 
-//     if (mostrar) {
-//         button.innerHTML = "Fechar Lotes"
-//     } else {
-//         button.innerHTML = "Abrir Lotes"
-//     };
-// }
+        $('#id').val(data[0]);
+        $('#edit_marca').val(data[1]);
+        $('#dsmarca').val(data[2])
+
+        var $frotaveiculos = $("<option selected='selected'></option>").val(data[3]).text(data[4])
+        $("#frotaveiculos").append($frotaveiculos).trigger('change');
+
+    })
+})
+
+//Fim Editar
+
+//Fim Marca Veiculo
+
+// $(document).ready(function () {
+//     var button = document.getElementById("btn-hide");
+
+//     button.addEventListener("click", fnToggle);
+
+//     function fnToggle() {
+//         var mostrar = document.getElementById("lote-pcp");
+//         mostrar.classList.toggle("hidden");
+
+//         if (mostrar) {
+//             button.innerHTML = "Fechar Lotes"
+//         } else {
+//             button.innerHTML = "Abrir Lotes"
+//         };
+//     }
+// })
 

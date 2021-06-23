@@ -119,9 +119,9 @@
                                             </span>
                                         </a>
                                         <ul class="treeview-menu">
-                                            <li><a href="{{route('marca-veiculo.cadastrar')}}"><i class="fa fa-circle-o"></i>Cadastrar</a></li>
+                                            <li><a href="{{route('marca-veiculo.listar')}}"><i class="fa fa-circle-o"></i>Cadastrar</a></li>
                                             <li><a href=""><i class="fa fa-circle-o"></i>Editar</a></li>
-                                            <li><a href=""><i class="fa fa-circle-o"></i>Listar</a></li>
+                                            <li><a href="{{route('marca-veiculo.listar')}}"><i class="fa fa-circle-o"></i>Listar</a></li>
                                         </ul>
                                     </li>
                                     <li><a href="#"><i class="fa fa-circle-o"></i>Modelos</a></li>

@@ -13,6 +13,14 @@ class MarcaVeiculo extends Model
         'id', 
         'cd_marca',
         'descricao',
-        'cd_tipoveiculo'        
+        'cd_frotaveiculos',  
+        'cd_usuario'     
     ];
+
+    public function marcaAll(){
+       return MarcaVeiculo::select('marcaveiculos.id', 'marcaveiculos.cd_marca', 'marcaveiculos.descricao as marca', 'cd_frotaveiculos', 'frotaveiculos.descricao as frota')
+       ->join('frotaveiculos', 'frotaveiculos.id', '=', 'marcaveiculos.cd_frotaveiculos')
+       ->orderBy('frotaveiculos.descricao')
+       ->get();
+    }
 }

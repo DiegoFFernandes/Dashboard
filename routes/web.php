@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\LotePcpController;
+use App\Http\Controllers\Admin\MarcaModeloFrotaController;
 use App\Http\Controllers\Admin\MarcaVeiculoController;
+use App\Http\Controllers\Admin\ModeloVeiculoController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeiculoController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\MarcaModeloFrota;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -97,11 +100,30 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
   Route::get('load_marcas', [VeiculoController::class, 'loadMarcas'])->name('load_marcas');
   Route::get('load_modelos', [VeiculoController::class, 'loadModelos'])->name('load_modelos');
  });
+ /*Rotas Marca Veiculo */
  Route::prefix('marca/veiculo')->group(function(){
-     Route::get('listar', [MarcaVeiculoController::class, 'create'])->name('marca-veiculo.listar');
+     Route::get('listar', [MarcaVeiculoController::class, 'create'])->name('marca-veiculo');
      Route::post('cadastrar/do', [MarcaVeiculoController::class, 'save'])->name('marca-veiculo.salvar');
      Route::post('delete', [MarcaVeiculoController::class, 'delete'])->name('marca-veiculo.delete');
      Route::post('editar', [MarcaVeiculoController::class, 'update'])->name('marca-veiculo.update');
  });
+
+/*Rotas Modelos Veiculos */
+ Route::prefix('modelo/veiculo')->group(function(){
+    Route::get('listar', [ModeloVeiculoController::class, 'create'])->name('modelo-veiculo');
+    Route::post('cadastrar/do', [ModeloVeiculoController::class, 'save'])->name('modelo-veiculo.salvar');
+    Route::post('delete', [ModeloVeiculoController::class, 'delete'])->name('modelo-veiculo.delete');
+    Route::post('editar', [ModeloVeiculoController::class, 'update'])->name('modelo-veiculo.update');
+});
+
+/*Rotas Marca-Modelos Veiculos */
+Route::prefix('marca-modelo-frota/veiculo')->group(function(){
+    Route::get('listar', [MarcaModeloFrotaController::class, 'index'])->name('marca-modelo.index');
+    Route::get('get-marca-modelos', [MarcaModeloFrotaController::class, 'getMarcaModelos'])->name('get-marca-modelos');
+    Route::post('store', [MarcaModeloFrotaController::class, 'store'])->name('marca-modelo.store');
+    Route::get('edit/{id}', [MarcaModeloFrotaController::class, 'edit'])->name('marca-modelo.update');
+    Route::post('edit/{id}/do', [MarcaModeloFrotaController::class, 'update'])->name('marca-modelo.update.do');
+    Route::delete('delete/{id}', [MarcaModeloFrotaController::class, 'destroy'])->name('marca-modelo.delete');
+});
 
 });

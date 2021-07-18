@@ -21,4 +21,8 @@ class MotoristaVeiculo extends Model
         'ativo',
         'cd_usuario'
     ];
+
+    public function findMarcaModelo($id){
+        return MotoristaVeiculo::find($id);
+    }
 }

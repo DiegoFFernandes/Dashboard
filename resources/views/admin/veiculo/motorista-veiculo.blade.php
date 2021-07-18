@@ -6,6 +6,9 @@
     <div class="box box-default">
         <div class="box-header with-border">
             <h3 class="box-title">{{$title_page }}</h3>
+            <div class="pull-right">                
+                <a href="{{route('admin.listar.motorista.veiculos')}}" class="btn btn-info">Listar Motoristas</a>
+            </div>            
         </div>
         <form role="form" method="post"
             action="{{isset($veiculo[0]->cd_empresa) ? route('admin.editar-do.motorista.veiculos') : route('admin.cadastrar-do.motorista.veiculos')}}"
@@ -199,10 +202,10 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-2" required>
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label>Modelo</label>
-                            <select class="form-control select2" name="cd_modelo" id="id_modelo" style="width: 100%;"> required
+                            <select class="form-control select2" name="cd_modelo" id="id_modelo" style="width: 100%;">
                                 @if(isset($veiculo[0]->marca))
                                 <option value="{{$veiculo[0]->cd_modelo}}" selected="selected">{{$veiculo[0]->modelo}}
                                 </option>

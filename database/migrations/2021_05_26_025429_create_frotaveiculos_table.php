@@ -16,7 +16,10 @@ class CreateFrotaveiculosTable extends Migration
         Schema::create('frotaveiculos', function (Blueprint $table) {
             $table->id();
             $table->string('descricao');
+            $table->unsignedBigInteger('cd_usuario');
             $table->timestamps();
+            
+            $table->foreign('cd_usuario')->references('id')->on('users');
         });
     }
 

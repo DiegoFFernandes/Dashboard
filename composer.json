@@ -14,7 +14,8 @@
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "spatie/laravel-permission": "^4.0",
-        "supliu/laravel-query-monitor": "^1.0"
+        "supliu/laravel-query-monitor": "^1.0",
+        "yajra/laravel-datatables-oracle": "^9.18"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

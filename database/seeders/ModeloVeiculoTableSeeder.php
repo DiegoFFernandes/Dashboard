@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\ModeloVeiculo;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ModeloVeiculoTableSeeder extends Seeder
 {
@@ -14,22 +15,24 @@ class ModeloVeiculoTableSeeder extends Seeder
      */
     public function run()
     {
-        ModeloVeiculo::create([
-            'cd_marca'         => 2,
-            'cd_frotaveiculos' => 2,
-            'descricao'        => 'GOL',
-        ]);
+        DB::table('marca_modelo_frotas')->delete();
+        DB::table('modeloveiculos')->delete();
 
-        ModeloVeiculo::create([
-            'cd_marca'         => 3,
-            'cd_frotaveiculos' => 1,
-            'descricao'        => '190',
-        ]);
+        $modelos = [
+            ['descricao' => 'GOL', 'cd_usuario' => 1],
+            ['descricao' => 'FUSCA', 'cd_usuario' => 1],
+            ['descricao' => 'UNO', 'cd_usuario' => 1],
+            ['descricao' => 'ONIX', 'cd_usuario' => 1],
+            ['descricao' => 'F-350', 'cd_usuario' => 1],
+            ['descricao' => 'DAILY', 'cd_usuario' => 1],
+            ['descricao' => 'MONTANA', 'cd_usuario' => 1],
+            ['descricao' => 'S10', 'cd_usuario' => 1]
+          ];
 
-        ModeloVeiculo::create([
-            'cd_marca'         => 3,
-            'cd_frotaveiculos' => 2,
-            'descricao'        => '147',
-        ]);
+        
+        foreach($modelos as $m){
+            ModeloVeiculo::create($m);
+        }
+        
     }
 }

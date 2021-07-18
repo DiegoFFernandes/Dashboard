@@ -2,7 +2,6 @@
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
-
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MENU DE NAVEGAÇÃO</li>
@@ -112,21 +111,18 @@
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li class="treeview">
-                                        <a href="#"><i class="fa fa-circle-o"></i>Marcas
-                                            <span class="pull-right-container">
-                                                <i class="fa fa-angle-left pull-right"></i>
-                                            </span>
+                                    <li>
+                                        <a href="{{route('marca-veiculo')}}">
+                                            <i class="fa fa-circle-o"></i>Marcas
                                         </a>
-                                        <ul class="treeview-menu">
-                                            <li><a href="{{route('marca-veiculo.listar')}}"><i class="fa fa-circle-o"></i>Cadastrar</a></li>
-                                            <li><a href=""><i class="fa fa-circle-o"></i>Editar</a></li>
-                                            <li><a href="{{route('marca-veiculo.listar')}}"><i class="fa fa-circle-o"></i>Listar</a></li>
-                                        </ul>
                                     </li>
-                                    <li><a href="#"><i class="fa fa-circle-o"></i>Modelos</a></li>
-                                    <li><a href="{{route('admin.cadastrar.motorista.veiculos')}}"><i
-                                                class="fa fa-circle-o"></i>Motorista/Veiculos</a></li>
+                                    <li><a href="{{route('modelo-veiculo')}}"><i class="fa fa-circle-o"></i>Modelos</a></li>
+                                    <li><a href="{{route('marca-modelo.index')}}"><i class="fa fa-circle-o"></i>Marca/Modelos</a></li>
+                                    <li>
+                                        <a href="{{route('admin.cadastrar.motorista.veiculos')}}">
+                                            <i class="fa fa-circle-o"></i>Motorista/Veiculos
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>

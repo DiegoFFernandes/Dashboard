@@ -14,11 +14,12 @@ class CreateModeloveiculosTable extends Migration
     public function up()
     {
         Schema::create('modeloveiculos', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('cd_marca');
-            $table->unsignedBigInteger('cd_frotaveiculos');
+            $table->id();            
             $table->string('descricao', 30);
+            $table->unsignedBigInteger('cd_usuario');
             $table->timestamps();           
+            
+            $table->foreign('cd_usuario')->references('id')->on('users');
         });
     }
 

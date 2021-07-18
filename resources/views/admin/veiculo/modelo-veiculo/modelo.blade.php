@@ -9,7 +9,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{$title_page }}</h3>
                 </div>
-                <form role="form" method="post" action="{{route('marca-veiculo.salvar')}}">
+                <form role="form" method="post" action="{{route('modelo-veiculo.salvar')}}">
                     @csrf
                     <div class="box-body">
                         @if($errors->all())
@@ -41,12 +41,13 @@
                         <div class="row">                            
                             <div class="col-md-8">
                                 <div class="form-group">
-                                    <label>Descrição Marca</label>
+                                    <label>Descrição Modelo</label>
                                     <input type="text" class="form-control" name="descricao"
-                                        placeholder="Descrição Marca" required>
+                                        placeholder="Descrição Modelo" required>
                                 </div>
-                            </div>                            
+                            </div>                                                       
                         </div>
+
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-success">Criar</button>
@@ -58,27 +59,27 @@
         <div class="col-md-8">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Marcas Cadastradas</h3>
+                    <h3 class="box-title">Modelos Cadastrados</h3>
                 </div>
-                <!-- /.box-header id="mveiculodatatable"  -->
+                <!-- /.box-header -->
                 <div class="box-body">
-                    <table class="table table-bordered" id="mveiculodatatable">
+                    <table id="mveiculodatatable" class="table table-bordered">
                         <thead>
                             <tr>
-                                <th style="width: 10px">Id</th>                                
-                                <th>Marca</th>                                                                
+                                <th style="width: 10px">Id</th>
+                                <th>Modelo</th>                                                                
                                 <th>Editar</th>
                                 <th>Excluir</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($marcas as $m)
+                            @foreach($modelos as $m)
                             <tr>
-                                <td>{{$m->id}}</td>                                
-                                <td>{{$m->descricao}}</td>                               
+                                <td>{{$m->id}}</td>
+                                <td class="text-center">{{$m->descricao}}</td>                                             
                                 <td>
                                     <a href="" class="fa fa-pencil edit" data-toggle="modal"
-                                        data-target="#editarMarcaVeiculo" data-id="{{$m->id}}"></a>
+                                        data-target="#editarmodeloVeiculo" data-id="{{$m->id}}"></a>
                                 </td>
                                 <td>
                                     <a href="" class="fa fa-trash" data-toggle="modal" data-target="#delete"
@@ -95,7 +96,7 @@
     </div>
 
     <!-- Modal Deletar -->
-    <form action="{{route('marca-veiculo.delete')}}" method="post">
+    <form action="{{route('modelo-veiculo.delete')}}" method="post">
         @csrf
         <!-- @method('DELETE') -->
         <div class="modal fade" id="delete">
@@ -108,7 +109,7 @@
                     </div>
                     <div class="modal-body">
                         <p>Você tem certeza da exclusão?</p>
-                        <input type="hidden" name="cd_marca" id="cd_delete" value="">
+                        <input type="hidden" name="cd_modelo" id="cd_delete" value="">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
@@ -124,24 +125,24 @@
     <!-- Fim Modal Deletar -->
 
     <!-- Modal Editar -->
-    <form action="{{route('marca-veiculo.update')}}" method="post">
+    <form action="{{route('modelo-veiculo.update')}}" method="post">
         @csrf
-        <div class="modal fade" id="editarMarcaVeiculo">
+        <div class="modal fade" id="editarmodeloVeiculo">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Editar Marca</h4>
+                        <h4 class="modal-title">Editar modelo</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <input type="hidden" name="id" id="id">                            
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Descrição Marca</label>
+                                    <label>Descrição modelo</label>
                                     <input type="text" class="form-control" id="descricao" name="descricao"
-                                        value="Descrição Marca">
+                                        value="Descrição modelo">
                                 </div>
                             </div>
                         </div>

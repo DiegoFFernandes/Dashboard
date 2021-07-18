@@ -8,13 +8,9 @@
     </div>
     <div class="row">
         <div class="col-md-8 hidden" id="lote-pcp">
-            <div class="box box-primary">
-                <div class="box-header">
-
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <table class="table table-hover table-sm">
+            <div class="box box-primary">                
+                <div class="box-body table-responsive">
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>Lote</th>
@@ -22,8 +18,8 @@
                                 <th>Sq</th>
                                 <th>Data</th>
                                 <th>Total</th>
-                                <th>Prod</th>
-                                <th>Sem Exame</th>
+                                <th class="text-center">Produzidos</th>
+                                <th class="text-center">Sem Exame</th>
                                 <th>Ver Pneus</th>
                             </tr>
                         </thead>
@@ -36,8 +32,8 @@
                                 <td class="bg-danger">{!! utf8_encode($resultado->NRLOTESEQDIA) !!}</td>
                                 <td class="bg-danger">{!! utf8_encode($resultado->DTPRODUCAO) !!}</td>
                                 <td class="bg-danger">{!! utf8_encode($resultado->QTDE_TOT) !!}</td>
-                                <td class="bg-danger">{!! utf8_encode($resultado->QTDE_PROD) !!}</td>
-                                <td class="bg-danger">{!! utf8_encode($resultado->QTDE_SEMEXAME) !!}</td>
+                                <td class="bg-danger text-center">{!! utf8_encode($resultado->QTDE_PROD) !!}</td>
+                                <td class="bg-danger text-center">{!! utf8_encode($resultado->QTDE_SEMEXAME) !!}</td>
                                 <td class="bg-danger"><a href="lote-pcp/{{$resultado->NR_LOTE}}/pneus-lote"
                                         aria-label="Pesquisa pneus por lote">
                                         <i class="fa fa-search" aria-hidden="true"></i></a></td>
@@ -47,8 +43,8 @@
                                 <td class="bg-warning">{!! utf8_encode($resultado->NRLOTESEQDIA) !!}</td>
                                 <td class="bg-warning">{!! utf8_encode($resultado->DTPRODUCAO) !!}</td>
                                 <td class="bg-warning">{!! utf8_encode($resultado->QTDE_TOT) !!}</td>
-                                <td class="bg-warning">{!! utf8_encode($resultado->QTDE_PROD) !!}</td>
-                                <td class="bg-warning">{!! utf8_encode($resultado->QTDE_SEMEXAME) !!}</td>
+                                <td class="bg-warning text-center">{!! utf8_encode($resultado->QTDE_PROD) !!}</td>
+                                <td class="bg-warning text-center">{!! utf8_encode($resultado->QTDE_SEMEXAME) !!}</td>
                                 <td class="bg-warning"><a href="lote-pcp/{{$resultado->NR_LOTE}}/pneus-lote"
                                         aria-label="Pesquisa pneus por lote">
                                         <i class="fa fa-search" aria-hidden="true"></i></a></td>
@@ -58,8 +54,8 @@
                                 <td>{!! utf8_encode($resultado->NRLOTESEQDIA) !!}</td>
                                 <td>{!! utf8_encode($resultado->DTPRODUCAO) !!}</td>
                                 <td>{!! utf8_encode($resultado->QTDE_TOT) !!}</td>
-                                <td>{!! utf8_encode($resultado->QTDE_PROD) !!}</td>
-                                <td>{!! utf8_encode($resultado->QTDE_SEMEXAME) !!}</td>
+                                <td class="text-center">{!! utf8_encode($resultado->QTDE_PROD) !!}</td>
+                                <td class="text-center">{!! utf8_encode($resultado->QTDE_SEMEXAME) !!}</td>
                                 <td><a href="lote-pcp/{{$resultado->NR_LOTE}}/pneus-lote"
                                         aria-label="Pesquisa pneus por lote">
                                         <i class="fa fa-search" aria-hidden="true"></i></a></td>
@@ -75,7 +71,6 @@
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header">
-
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">

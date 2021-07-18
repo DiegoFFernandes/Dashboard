@@ -12,10 +12,11 @@ class FrotaVeiculos extends Model
     protected $table = 'frotaveiculos';
     protected $fillable = [
         'id',
-        'descricao'
+        'descricao',
+        'cd_usuario'
     ];
 
-    public function frotaveiculosAll(){
+    public function frotaAll(){
         return FrotaVeiculos::select('id', 'descricao', 'created_at')->get();
     }
 }

@@ -15,13 +15,16 @@ class FrotaVeiculosSeeder extends Seeder
     public function run()
     {
         FrotaVeiculos::create([
-            'descricao' => 'Caminhão'
+            'descricao' => 'Caminhão',
+            'cd_usuario' => 1
         ]);
         FrotaVeiculos::create([
-            'descricao' => 'Carro'
+            'descricao' => 'Carro',
+            'cd_usuario' => 1
         ]);
         FrotaVeiculos::create([
-            'descricao' => 'Moto'
+            'descricao' => 'Moto',
+            'cd_usuario' => 1
         ]);
     }
 }

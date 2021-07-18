@@ -14,14 +14,11 @@ class CreateMarcaveiculosTable extends Migration
     public function up()
     {
         Schema::create('marcaveiculos', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('cd_marca');
-            $table->string('descricao', 30);
-            $table->unsignedBigInteger('cd_frotaveiculos');
+            $table->id();            
+            $table->string('descricao', 30);            
             $table->unsignedBigInteger('cd_usuario');
-            $table->timestamps();
+            $table->timestamps();            
             
-            $table->foreign('cd_frotaveiculos')->references('id')->on('frotaveiculos');
             $table->foreign('cd_usuario')->references('id')->on('users');
         });
     }

@@ -28,7 +28,8 @@ class LoginController extends Controller
  {
   if (Auth::check() === true) {
    $user_auth = Auth::user();
-   return view('admin.index', compact('user_auth'));
+   $uri       = $this->resposta->route()->uri();
+   return view('admin.index', compact('user_auth', 'uri'));
   }
   return view('auth.login');
  }

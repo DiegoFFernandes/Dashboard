@@ -29,16 +29,16 @@ class VeiculoController extends Controller
   $user_auth  = $this->user;
   $uri        = $this->resposta->route()->uri();
 
-  $sql = "select motorista_veiculos.id, pessoas.name, motorista_veiculos.placa, concat( marcaveiculos.descricao, ' - ',
-            modeloveiculos.descricao,' - ', motorista_veiculos.ano,' - ',motorista_veiculos.cor) modelo, frotaveiculos.descricao as frota,
-            tipoveiculo.descricao as tipo, motorista_veiculos.ativo, motorista_veiculos.created_at as cadastro
-            from motorista_veiculos
-            inner join pessoas on (pessoas.id = motorista_veiculos.cd_pessoa)
-            inner join marcaveiculos on (marcaveiculos.id = motorista_veiculos.cd_marca)
-            inner join frotaveiculos on (frotaveiculos.id = marcaveiculos.cd_frotaveiculos)
-            inner join modeloveiculos on (modeloveiculos.cd_marca = marcaveiculos.cd_marca)
-            inner join tipoveiculo on (tipoveiculo.id = motorista_veiculos.cd_tipoveiculo)
-            order by pessoas.name";
+  $sql = "
+  SELECT motorista_veiculos.id, pessoas.name, motorista_veiculos.placa, motorista_veiculos.cor, marcaveiculos.descricao as dsmarca, 
+  modeloveiculos.descricao as dsmodelo, motorista_veiculos.ano, tipoveiculo.descricao as dstipo, frotaveiculos.descricao as dsfrota
+  FROM motorista_veiculos
+  inner join pessoas on (pessoas.id = motorista_veiculos.cd_pessoa)
+  inner join marcaveiculos on (marcaveiculos.cd_marca = motorista_veiculos.cd_marca)
+  inner join modeloveiculos on (modeloveiculos.id = motorista_veiculos.cd_modelo)
+  inner join tipoveiculo on (tipoveiculo.id = motorista_veiculos.cd_tipoveiculo)
+  inner join frotaveiculos on (frotaveiculos.id = marcaveiculos.cd_frotaveiculos)
+  group by motorista_veiculos.id, motorista_veiculos.cd_marca, marcaveiculos.descricao, frotaveiculos.descricao";
 
   $motoristas = DB::select($sql);
 
@@ -58,8 +58,7 @@ class VeiculoController extends Controller
    ->join('marcaveiculos', 'marcaveiculos.cd_marca', 'motorista_veiculos.cd_marca')
    ->join('frotaveiculos', 'frotaveiculos.id', 'marcaveiculos.cd_frotaveiculos')
    ->join('modeloveiculos', function ($join) {
-    $join->on('modeloveiculos.cd_marca', '=', 'marcaveiculos.cd_marca');
-    $join->on('modeloveiculos.cd_frotaveiculos', '=', 'marcaveiculos.cd_frotaveiculos');
+    $join->on('modeloveiculos.id_marca', '=', 'marcaveiculos.id');    
    })
    ->join('tipoveiculo', 'tipoveiculo.id', 'motorista_veiculos.cd_tipoveiculo')
    ->where('motorista_veiculos.id', $id)
@@ -122,13 +121,14 @@ class VeiculoController extends Controller
 
  public function loadModelos(Request $request)
  {
-  $dataForm = $request->all();
-  $frotaId  = $dataForm['id_frotaveiculo'];
-  $marcaId  = $dataForm['id_marca'];
+  //$dataForm = $request->id_marca;
+  // $frotaId  = $dataForm['id_frotaveiculo'];
+  $id_marca = $request->id_marca;
+  $cd_frotaveiculos = $request->id_frotaveiculo;
 
   $modelos = ModeloVeiculo::select('id', 'descricao')
-   ->where('cd_frotaveiculos', $frotaId)
-   ->where('cd_marca', $marcaId)
+   ->where('cd_frotaveiculos', $cd_frotaveiculos)
+   ->where('cd_marca', $id_marca)
    ->get();
 
   return view('admin.veiculo.modelo_ajax', compact('modelos'));
@@ -136,11 +136,11 @@ class VeiculoController extends Controller
 
  public function save(Request $request)
  {
-
   $placa_exists = MotoristaVeiculo::where('placa', $request->placa)->exists();
   if ($placa_exists) {
    return redirect()->route('admin.cadastrar.motorista.veiculos')->with('warning', 'A placa ' . $request->placa . ' já está cadastrada com outro motorista!');
   }
+  $request['cor'] = strtoupper($request->cor);
   $request['cd_usuario'] = $this->user->id;
   $motorista             = $this->_validate($request);
   $motorista             = MotoristaVeiculo::create($motorista);
@@ -150,10 +150,9 @@ class VeiculoController extends Controller
 
  public function update(Request $request)
  {
-
   $motorista = MotoristaVeiculo::findOrFail($request->id);
-
   $this->_validate($request);
+  $request['cor'] = strtoupper($request->cor);
   $request['cd_usuario'] = $this->user->id;
   $motorista->fill($request->all());
   $status = $motorista->save();

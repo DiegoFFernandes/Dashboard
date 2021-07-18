@@ -13,8 +13,16 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{asset('adminlte/bower_components/inputmask/dist/inputmask/inputmask.extensions.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/inputmask/dist/inputmask/jquery.inputmask.js')}}"></script>
 <!-- DataTables -->
-<script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<!-- <script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script> -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+<!-- <script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script> -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap.min.js"></script>
+
+
+
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- AdminLTE App -->
@@ -24,8 +32,9 @@ $.widget.bridge('uibutton', $.ui.button);
 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+@yield('scripts')
 <!-- My Scripts -->
 <script src="{{asset('adminlte/dist/js/scripts.js')}}"></script>
-
 <script src="{{asset('js/scripts.js')}}"></script>
 

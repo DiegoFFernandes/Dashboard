@@ -10,8 +10,13 @@ class ModeloVeiculo extends Model
     use HasFactory;
     protected $table = 'modeloveiculos';
     protected $fillable = [
-        'cd_marca',
-        'cd_frota',
-        'descricao'
+        'id',        
+        'descricao',
+        'cd_usuario'
     ];
+
+    public function modeloAll()
+    {
+       return ModeloVeiculo::all();
+    }
 }

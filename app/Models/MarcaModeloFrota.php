@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class MarcaModeloFrota extends Model
 {
@@ -60,5 +61,18 @@ class MarcaModeloFrota extends Model
         return MarcaModeloFrota::where('cd_marca', $cd_marca)
             ->where('cd_modelo', $cd_modelo)
             ->exists();
+    }
+
+    public function MarcaModeloDsAll(){
+        return MarcaModeloFrota::select('marca_modelo_frotas.id', DB::raw("CONCAT(marcaveiculos.descricao,' - ', modeloveiculos.descricao,' - ',
+        frotaveiculos.descricao) as dsmarca")
+        )
+        ->join('marcaveiculos', 'marcaveiculos.id', '=' ,'marca_modelo_frotas.cd_marca')
+        ->join('modeloveiculos', 'modeloveiculos.id','marca_modelo_frotas.cd_modelo')
+        ->join('users', 'users.id','marca_modelo_frotas.cd_usuario')
+        ->join('frotaveiculos', 'frotaveiculos.id','marca_modelo_frotas.cd_frota')
+        ->orderBy('marca_modelo_frotas.id')
+        ->get();
+        
     }
 }

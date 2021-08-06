@@ -27,7 +27,8 @@ class MarcaModeloFrotaController extends Controller
     MarcaVeiculo $marca,
     MarcaModeloFrota $marcamodelo,
     MotoristaVeiculo $motoristaveiculo,
-  ) {
+  ) 
+  {
     $this->empresa      = $empresa;
     $this->resposta     = $request;
     $this->frotaveiculo = $frotaveiculo;

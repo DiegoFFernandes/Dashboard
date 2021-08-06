@@ -34,9 +34,12 @@
         </div>
         <!-- /.content-wrapper -->
         @includeIf('admin.master.footer')
-    </div>
+    </div>   
+
     <!-- ./wrapper -->
-    @includeIf('admin.master.scripts')
+    @includeIf('admin.master.scripts')   
+
+    @yield('scripts')
 
 </body>
 

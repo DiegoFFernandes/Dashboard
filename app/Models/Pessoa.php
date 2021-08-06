@@ -13,4 +13,8 @@ class Pessoa extends Model
         'name',
     ];
 
+    public function PessoasAll(){
+       return Pessoa::select('id', 'name')->get();
+    }
+
 }

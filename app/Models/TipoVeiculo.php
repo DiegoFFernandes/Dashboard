@@ -14,4 +14,8 @@ class TipoVeiculo extends Model
         'id',
         'descricao'
     ];
+
+    public function TipoVeiculoAll(){
+        return TipoVeiculo::select('id', 'descricao')->get();
+    }
 }

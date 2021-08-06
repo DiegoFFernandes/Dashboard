@@ -119,7 +119,7 @@
                                     <li><a href="{{route('modelo-veiculo')}}"><i class="fa fa-circle-o"></i>Modelos</a></li>
                                     <li><a href="{{route('marca-modelo.index')}}"><i class="fa fa-circle-o"></i>Marca/Modelos</a></li>
                                     <li>
-                                        <a href="{{route('admin.cadastrar.motorista.veiculos')}}">
+                                        <a href="{{route('listar.motorista.veiculos')}}">
                                             <i class="fa fa-circle-o"></i>Motorista/Veiculos
                                         </a>
                                     </li>
@@ -134,7 +134,7 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="{{route('admin.listar.motorista.veiculos')}}"><i
+                            <li><a href="{{route('listar.motorista.veiculos')}}"><i
                                         class="fa fa-circle-o"></i>Listar Motorista/Veiculos</a></li>
 
                             <li><a href="{{route('admin.portaria.entrada')}}"><i

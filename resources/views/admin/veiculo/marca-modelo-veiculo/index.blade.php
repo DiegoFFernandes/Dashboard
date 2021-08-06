@@ -3,12 +3,13 @@
 @section('content')
     <section class="content">
         <div class="row">
+            {{-- index --}}
             <div class="col-md-12">
                 <div class="box box-default">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ $title_page }}</h3>
                         <button style="float: right; font-weight: 900;" class="btn btn-info btn-sm" type="button"
-                            data-toggle="modal" data-target="#CreateArticleModal">
+                            data-toggle="modal" data-target="#CreateMarcaModelModal">
                             Associar Marca/Modelo
                         </button>
                     </div>
@@ -36,9 +37,8 @@
                 <!-- /.box -->
             </div>
 
-
             <!-- Create Marca Modelo Modal -->
-            <div class="modal" id="CreateArticleModal">
+            <div class="modal" id="CreateMarcaModelModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <!-- Modal Header -->
@@ -49,9 +49,9 @@
                         </div>
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <div class="alert alert-dismissible hidden" id="alert">                                
+                            <div class="alert alert-dismissible hidden" id="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            </div>                            
+                            </div>
                             <form id="formMarcaModelo">
                                 <div class="col-md-4">
                                     <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -110,9 +110,9 @@
                         </div>
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <div class="alert alert-dismissible hidden" id="alert">                                
+                            <div class="alert alert-dismissible hidden" id="alert">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            </div>                            
+                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -161,15 +161,15 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <!-- Modal Header -->
-                        <div class="modal-header">                            
+                        <div class="modal-header">
                             <button type="button" class="close modelClose" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">Exclusão</h4>
                         </div>
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div id="deleteMsg"></div>
-                            <div class="alert alert-dismissible hidden">                               
-                            </div>                                                        
+                            <div class="alert alert-dismissible hidden">
+                            </div>
                         </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">
@@ -179,13 +179,18 @@
                     </div>
                 </div>
             </div>
-
-
-
+            
+            {{-- Icon loading --}}
             <div class="hidden" id="loading">
                 <img id="loading-image" class="mb-4" src="{{ Asset('img/loader.gif') }}" alt="Loading...">
             </div>
         </div>
     </section>
+@endsection
 
+@section('scripts')
+    @includeIf('admin.master.datatables')
+    <!-- My Scripts -->
+    <script src="{{ asset('adminlte/dist/js/scripts.js') }}"></script>
+    <script src="{{ asset('js/marca-modelo/scripts.js') }}"></script>
 @endsection

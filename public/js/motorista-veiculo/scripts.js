@@ -203,7 +203,7 @@ $(document).ready(function () {
     var deleteId;
     $('body').on('click', '#getDeleteId', function () {
         deleteId = $(this).data('id');
-        $("#btnCancel").text('Cancelar');
+        $("#btnCancel").text('Cancelar').removeClass('btn-success').addClass('btn-default');
         $('#SubmitDeleteMotoristaVeiculoForm').removeClass('hidden'); 
         $('#deleteMsg').removeClass('hidden');
         $('#deleteMsg').html('');
@@ -240,7 +240,7 @@ $(document).ready(function () {
 
                 } else {
                     $("#loading").addClass('hidden');
-                    $("#btnCancel").text('Sair');
+                    $("#btnCancel").text('Sair').removeClass('btn-default').addClass('btn-success');
                     $("#deleteMsg").addClass('hidden'); 
                     $('.alert').html('');
                     $('.alert').removeClass('hidden');

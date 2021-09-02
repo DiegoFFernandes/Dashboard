@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
+use App\Http\Controllers\Admin\Email\EmailController;
 use App\Http\Controllers\Admin\LotePcpController;
 use App\Http\Controllers\Admin\MarcaModeloFrotaController;
 use App\Http\Controllers\Admin\MarcaVeiculoController;
 use App\Http\Controllers\Admin\ModeloVeiculoController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\Admin\Pessoa\PessoaController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
 use App\Http\Controllers\Admin\ProducaoEtapaController;
@@ -122,5 +124,25 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::get('edit/{id}', [MarcaModeloFrotaController::class, 'edit'])->name('marca-modelo.update');
         Route::post('edit/{id}/do', [MarcaModeloFrotaController::class, 'update'])->name('marca-modelo.update.do');
         Route::delete('delete/{id}', [MarcaModeloFrotaController::class, 'destroy'])->name('marca-modelo.delete');
+    });
+
+    //Rotas Pessoa
+    Route::prefix('pessoa')->group(function () {
+        Route::get('listar', [PessoaController::class, 'index'])->name('pessoa.index');
+        Route::get('get-pessoa', [PessoaController::class, 'getpessoa'])->name('get-pessoa');
+        Route::post('store', [PessoaController::class, 'store'])->name('pessoa.store');
+        Route::get('edit/{id}', [PessoaController::class, 'edit'])->name('pessoa.update');
+        Route::post('edit/{id}/do', [PessoaController::class, 'update'])->name('pessoa.update.do');
+        Route::delete('delete/{id}', [PessoaController::class, 'destroy'])->name('pessoa.delete');
+    });
+
+    //Rotas Email
+    Route::prefix('email')->group(function () {
+        Route::get('listar', [EmailController::class, 'index'])->name('email.index');
+        Route::get('get-email', [EmailController::class, 'getemail'])->name('get-email');
+        Route::post('store', [EmailController::class, 'store'])->name('email.store');
+        Route::get('edit/{id}', [EmailController::class, 'edit'])->name('email.update');
+        Route::post('edit/{id}/do', [EmailController::class, 'update'])->name('email.update.do');
+        Route::delete('delete/{id}', [EmailController::class, 'destroy'])->name('email.delete');
     });
 });

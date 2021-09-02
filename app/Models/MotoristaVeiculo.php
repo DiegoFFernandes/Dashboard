@@ -83,4 +83,8 @@ class MotoristaVeiculo extends Model
     {
         return MotoristaVeiculo::find($id)->delete();
     }
+
+    public function findPessoa($cd_pessoa){
+        return MotoristaVeiculo::where('cd_pessoa', $cd_pessoa)->exists();
+    }
 }

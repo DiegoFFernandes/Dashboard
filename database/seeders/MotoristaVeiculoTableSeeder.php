@@ -22,6 +22,7 @@ class MotoristaVeiculoTableSeeder extends Seeder
    'cd_marcamodelofrota' => '1',
    'ano'                 => 2011,
    'cd_tipoveiculo'      => 3,
+   'cd_linha'            => 1,   
    'ativo'               => 'S',
    'cd_usuario'          => 1,
   ]);

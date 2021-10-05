@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PessoaTableSeeder::class);     
         $this->call(MarcaModeloFrotaTableSeeder::class); 
         $this->call(MotoristaVeiculoTableSeeder::class);
+        $this->call(LinhaMotoristaTableSeeder::class);
         
     }
 }

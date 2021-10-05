@@ -161,5 +161,6 @@
     @includeIf('admin.master.datatables')
     <!-- My Scripts -->
     <script src="{{ asset('adminlte/dist/js/scripts.js') }}"></script>
+    <script src="{{ asset('js/pcp/scripts.js') }}"></script>
     <script src="{{ asset('js/scripts.js') }}"></script>
 @endsection

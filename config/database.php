@@ -91,7 +91,7 @@ return [
             'prefix_indexes' => true,
         ],
         
-        'firebird' => [
+        'firebird_campina' => [
             'driver'=> 'firebird',
             'host'=> env('DB_FIREBIRD_HOST', 'localhost'),
             'database' => env('DB_FIREBIRD_DATABASE', 'C:\Banco\IVORECAP30.FDB'),

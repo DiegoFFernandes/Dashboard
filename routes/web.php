@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
+use App\Http\Controllers\Admin\Comercial\ComercialController;
 use App\Http\Controllers\Admin\Email\EmailController;
+use App\Http\Controllers\Admin\EmpresaController;
 use App\Http\Controllers\Admin\LotePcpController;
 use App\Http\Controllers\Admin\MarcaModeloFrotaController;
 use App\Http\Controllers\Admin\MarcaVeiculoController;
@@ -33,6 +35,8 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.log
 Route::post('/login/do', [LoginController::class, 'Login'])->name('admin.login.do');
 Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
 Route::get('/admin', [LoginController::class, 'dashboard'])->name('admin.dashborad');
+
+Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 
 Route::middleware(['auth', 'role:admin|producao'])->group(function () {
     Route::prefix('producao')->group(function () {
@@ -72,6 +76,7 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
     });
 });
 
+/*Rotas sem autenticação*/
 Route::prefix('producao')->group(function () {
     /*Rotas de acompanhamento de ordem */
     Route::get('acompanha-ordem', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem');
@@ -87,9 +92,15 @@ Route::prefix('producao')->group(function () {
 
 Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
     Route::prefix('portaria')->group(function () {
-        Route::get('cadastrar/entrada', [PortariaController::class, 'index'])->name('admin.portaria.entrada');
-        Route::post('cadastrar/entrada/do', [PortariaController::class, 'create'])->name('admin.portaria.entrada.do');
-        Route::get('cadastrar/saida', [PortariaController::class, 'index'])->name('admin.portaria.saida');
+        Route::get('movimento/entrada', [PortariaController::class, 'index'])->name('admin.portaria.entrada');        
+        Route::get('movimento/saida', [PortariaController::class, 'index'])->name('admin.portaria.saida');
+
+        Route::post('movimento/entrada', [PortariaController::class, 'list'])->name('portaria.entrada');
+        Route::post('movimento/saida', [PortariaController::class, 'list'])->name('portaria.saida');
+
+        Route::post('movimento/entrada/do', [PortariaController::class, 'saveEntrada'])->name('portaria.entrada.do');
+        Route::post('movimento/saida/do', [PortariaController::class, 'saveSaida'])->name('portaria.saida.do');
+
     });
     Route::prefix('veiculo')->group(function () {
         Route::get('listar', [VeiculoController::class, 'index'])->name('listar.motorista.veiculos');
@@ -98,7 +109,6 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::get('edit/{id}', [VeiculoController::class, 'edit'])->name('motorista-veiculo.edit');
         Route::post('edit/{id}/do', [VeiculoController::class, 'update'])->name('motorista-veiculo.update');
         Route::delete('delete/{id}', [VeiculoController::class, 'destroy'])->name('motorista-veiculo.destroy');
-
     });
     /*Rotas Marca Veiculo */
     Route::prefix('marca/veiculo')->group(function () {
@@ -107,7 +117,6 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::post('delete', [MarcaVeiculoController::class, 'delete'])->name('marca-veiculo.delete');
         Route::post('editar', [MarcaVeiculoController::class, 'update'])->name('marca-veiculo.update');
     });
-
     /*Rotas Modelos Veiculos */
     Route::prefix('modelo/veiculo')->group(function () {
         Route::get('listar', [ModeloVeiculoController::class, 'create'])->name('modelo-veiculo');
@@ -115,7 +124,6 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::post('delete', [ModeloVeiculoController::class, 'delete'])->name('modelo-veiculo.delete');
         Route::post('editar', [ModeloVeiculoController::class, 'update'])->name('modelo-veiculo.update');
     });
-
     /*Rotas Marca-Modelos Veiculos */
     Route::prefix('marca-modelo-frota/veiculo')->group(function () {
         Route::get('listar', [MarcaModeloFrotaController::class, 'index'])->name('marca-modelo.index');
@@ -125,7 +133,6 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::post('edit/{id}/do', [MarcaModeloFrotaController::class, 'update'])->name('marca-modelo.update.do');
         Route::delete('delete/{id}', [MarcaModeloFrotaController::class, 'destroy'])->name('marca-modelo.delete');
     });
-
     //Rotas Pessoa
     Route::prefix('pessoa')->group(function () {
         Route::get('listar', [PessoaController::class, 'index'])->name('pessoa.index');
@@ -135,7 +142,6 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::post('edit/{id}/do', [PessoaController::class, 'update'])->name('pessoa.update.do');
         Route::delete('delete/{id}', [PessoaController::class, 'destroy'])->name('pessoa.delete');
     });
-
     //Rotas Email
     Route::prefix('email')->group(function () {
         Route::get('listar', [EmailController::class, 'index'])->name('email.index');
@@ -144,5 +150,16 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::get('edit/{id}', [EmailController::class, 'edit'])->name('email.update');
         Route::post('edit/{id}/do', [EmailController::class, 'update'])->name('email.update.do');
         Route::delete('delete/{id}', [EmailController::class, 'destroy'])->name('email.delete');
+    });
+
+    Route::prefix('placa')->group(function () {
+        Route::post('autocomplete', [PortariaController::class, 'autocomplete'])->name('placa.autocomplete');
+        Route::get('search', [PortariaController::class, 'search'])->name('placa.search');
+    });
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::prefix('comercial')->group(function () {
+        Route::get('listar', [ComercialController::class, 'index'])->name('comercial.index');
     });
 });

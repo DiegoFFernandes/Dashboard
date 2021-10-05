@@ -53,7 +53,7 @@ class PessoaController extends Controller
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
                 return '
-            <a href="#" class="btn btn-success btn-sm btn-edit">Editar</a>
+            <a href="#" class="btn btn-success btn-sm btn-edit">Visualizar</a>
             <button type="button" data-id="' . $data->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
             })
             ->rawColumns(['Actions'])

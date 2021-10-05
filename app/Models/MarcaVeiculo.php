@@ -19,5 +19,9 @@ class MarcaVeiculo extends Model
        return MarcaVeiculo::all();
     }
 
+    public function delete(){
+        
+    }
+
     
 }

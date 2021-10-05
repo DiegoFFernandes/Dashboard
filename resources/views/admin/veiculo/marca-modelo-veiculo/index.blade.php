@@ -8,10 +8,15 @@
                 <div class="box box-default">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ $title_page }}</h3>
-                        <button style="float: right; font-weight: 900;" class="btn btn-info btn-sm" type="button"
-                            data-toggle="modal" data-target="#CreateMarcaModelModal">
-                            Associar Marca/Modelo
-                        </button>
+                        <div style="float: right; font-weight: 900;">
+                            <button class="btn btn-info btn-sm" type="button" data-toggle="modal"
+                                data-target="#CreateMarcaModelModal">
+                                Associar Marca/Modelo
+                            </button>
+                            <a href="{{route('modelo-veiculo')}}" class="btn btn-info btn-sm">Cadastro Modelo</a>
+                            <a href="{{route('marca-veiculo')}}" class="btn btn-info btn-sm">Cadastro Modelo</a>
+                        </div>
+
                     </div>
                     <div class="box-body">
                         <div class="table-responsive">
@@ -50,14 +55,15 @@
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="alert alert-dismissible hidden" id="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <button type="button" class="close" data-dismiss="alert"
+                                    aria-hidden="true">×</button>
                             </div>
                             <form id="formMarcaModelo">
                                 <div class="col-md-4">
                                     <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
                                     <div class="form-group">
                                         <label>Marca</label>
-                                        <select class="form-control" name="cd_marca" id="cd_marca">
+                                        <select class="form-control select2" name="cd_marca" id="cd_marca">
                                             <option selected>Selecione</option>
                                             @foreach ($marcas as $marca)
                                                 <option value="{{ $marca->id }}">{{ $marca->descricao }}</option>
@@ -111,7 +117,8 @@
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="alert alert-dismissible hidden" id="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <button type="button" class="close" data-dismiss="alert"
+                                    aria-hidden="true">×</button>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
@@ -179,7 +186,7 @@
                     </div>
                 </div>
             </div>
-            
+
             {{-- Icon loading --}}
             <div class="hidden" id="loading">
                 <img id="loading-image" class="mb-4" src="{{ Asset('img/loader.gif') }}" alt="Loading...">
@@ -193,4 +200,5 @@
     <!-- My Scripts -->
     <script src="{{ asset('adminlte/dist/js/scripts.js') }}"></script>
     <script src="{{ asset('js/marca-modelo/scripts.js') }}"></script>
+    <script src="{{ asset('js/scripts.js') }}"></script>
 @endsection

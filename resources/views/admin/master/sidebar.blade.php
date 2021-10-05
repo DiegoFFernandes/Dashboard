@@ -166,10 +166,7 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li><a href="{{ route('listar.motorista.veiculos') }}"><i class="fa fa-circle-o"></i>Listar
-                                    Motorista/Veiculos</a></li>
-
+                        <ul class="treeview-menu">                            
                             <li><a href="{{ route('admin.portaria.entrada') }}"><i
                                         class="fa fa-plus-circle"></i>Entrada</a></li>
                             <li><a href="{{ route('admin.portaria.saida') }}"><i
@@ -182,6 +179,18 @@
                 </ul>
             </li>
             @endrole
+            <li class="treeview" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-th"></i> <span>Comercial</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class="active"><a href="{{ route('comercial.index') }}"><i class="fa fa-home"></i>Acesso</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

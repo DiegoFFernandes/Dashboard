@@ -84,7 +84,42 @@ class MotoristaVeiculo extends Model
         return MotoristaVeiculo::find($id)->delete();
     }
 
-    public function findPessoa($cd_pessoa){
+    public function findPessoa($cd_pessoa)
+    {
         return MotoristaVeiculo::where('cd_pessoa', $cd_pessoa)->exists();
+    }
+
+    public function findPlaca($placa)
+    {
+        return MotoristaVeiculo::select('id', 'placa')->where('placa', 'like', '%' . $placa . '%')->take(10)->get();
+    }
+
+    public function listPlaca($id)
+    {
+        return MotoristaVeiculo::select(
+            'motorista_veiculos.id',
+            'motorista_veiculos.cd_empresa',
+            'motorista_veiculos.cd_pessoa',
+            'pessoas.name',
+            'motorista_veiculos.placa',
+            'motorista_veiculos.cor',
+            DB::raw("CONCAT(marcaveiculos.descricao,' - ', modeloveiculos.descricao,' - ',
+            frotaveiculos.descricao) as dsmarca"),
+            'motorista_veiculos.ano',
+            'motorista_veiculos.cd_tipoveiculo',
+            'tipoveiculo.descricao as dstipo',
+            'motorista_veiculos.cd_linha',
+            DB::raw('(CASE WHEN ativo = "S" THEN "SIM" else "NÃO" END) as ativo')
+        )
+            ->join('pessoas', 'pessoas.id', 'motorista_veiculos.cd_pessoa')
+            ->join('marca_modelo_frotas', 'marca_modelo_frotas.id', 'motorista_veiculos.cd_marcamodelofrota')
+            ->join('marcaveiculos', 'marcaveiculos.id', 'marca_modelo_frotas.cd_marca')
+            ->join('frotaveiculos', 'frotaveiculos.id', 'marca_modelo_frotas.cd_frota')
+            ->join('modeloveiculos', 'modeloveiculos.id', 'marca_modelo_frotas.cd_modelo')
+            ->join('tipoveiculo', 'tipoveiculo.id', 'motorista_veiculos.cd_tipoveiculo')
+            ->where('motorista_veiculos.id', $id)
+
+            // ->orderBy('motorista_veiculos.id')
+            ->get();
     }
 }

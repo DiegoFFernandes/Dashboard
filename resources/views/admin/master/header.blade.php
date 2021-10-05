@@ -18,15 +18,15 @@
             <ul class="nav navbar-nav">
                 @role('portaria|admin')
                 <li class="">
-                    <a href="#">
+                    <a href="{{route('admin.portaria.entrada')}}">
                         Entrada
-                        <span class="label label-success">65</span>
+                        <span class="label label-success">{{$qtdEntrada}}</span>
                     </a>
                 </li>
                 <li class="">
-                    <a href="#">
+                    <a href="{{route('admin.portaria.saida')}}">
                         Saida
-                        <span class="label label-warning">58</span>
+                        <span class="label label-warning">{{$qtdSaida}}</span>
                     </a>
                 </li>
                 @endrole

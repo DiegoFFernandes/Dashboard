@@ -9,68 +9,66 @@ use Illuminate\Support\Facades\DB;
 
 class ProducaoEtapaController extends Controller
 {
- public $user;
- public $resposta;
+        public $user;
+        public $resposta;
 
- public function __construct(Request $request)
- {
-  $this->resposta = $request;
-  $this->middleware(function ($request, $next) {
-   $this->user = Auth::user();
-   return $next($request);
-  });
+        public function __construct(Request $request)
+        {
+                $this->resposta = $request;
+                $this->middleware(function ($request, $next) {
+                        $this->user = Auth::user();
+                        return $next($request);
+                });
+        }
 
- }
+        public function index(Request $request)
+        {
+                $current_date = date('m-d-Y');
 
- public function index(Request $request)
- {
-  $current_date = date('m-d-Y');
+                if ($_POST) {
+                        $date     = $request->date;
+                        $bindings = [
+                                'data_Iexini'   => $date . ' 00:00:00', 'data_Fexini'   => $date . ' 23:59:59',
+                                'data_Iraspa'   => $date . ' 00:00:00', 'data_Fraspa'   => $date . ' 23:59:59',
+                                'data_Ibanda'   => $date . ' 00:00:00', 'data_Fbanda'   => $date . ' 23:59:59',
+                                'data_Iescar'   => $date . ' 00:00:00', 'data_Fescar'   => $date . ' 23:59:59',
+                                'data_Icobert'  => $date . ' 00:00:00', 'data_Fcobert'  => $date . ' 23:59:59',
+                                'data_Ivulc'    => $date . ' 00:00:00', 'data_Fvulc'    => $date . ' 23:59:59',
+                                'data_Iexfin'   => $date . ' 00:00:00', 'data_Fexfin'   => $date . ' 23:59:59',
+                                'data_Imanchao' => $date . ' 00:00:00', 'data_Fmanchao' => $date . ' 23:59:59',
+                                'data_Icola'    => $date . ' 00:00:00', 'data_Fcola'    => $date . ' 23:59:59',
+                                'data_Iconser'  => $date . ' 00:00:00', 'data_Fconser'  => $date . ' 23:59:59',
+                                'data_Iextru'   => $date . ' 00:00:00', 'data_Fextru'   => $date . ' 23:59:59',
+                                'data_Imonta'   => $date . ' 00:00:00', 'data_Fmonta'   => $date . ' 23:59:59',
+                                'data_Ienvel'   => $date . ' 00:00:00', 'data_Fenvel'   => $date . ' 23:59:59',
+                                'data_Idesen'   => $date . ' 00:00:00', 'data_Fdesen'   => $date . ' 23:59:59',
+                                'data_Iuti'     => $date . ' 00:00:00', 'data_Futi'     => $date . ' 23:59:59',
+                                'data_IAz'      => $date . ' 00:00:00', 'data_FAz'      => $date . ' 23:59:59',
+                        ];
+                } else {
+                        $bindings = [
+                                'data_Iexini'   => $current_date . ' 00:00:00', 'data_Fexini'   => $current_date . ' 23:59:59',
+                                'data_Iraspa'   => $current_date . ' 00:00:00', 'data_Fraspa'   => $current_date . ' 23:59:59',
+                                'data_Ibanda'   => $current_date . ' 00:00:00', 'data_Fbanda'   => $current_date . ' 23:59:59',
+                                'data_Iescar'   => $current_date . ' 00:00:00', 'data_Fescar'   => $current_date . ' 23:59:59',
+                                'data_Icobert'  => $current_date . ' 00:00:00', 'data_Fcobert'  => $current_date . ' 23:59:59',
+                                'data_Ivulc'    => $current_date . ' 00:00:00', 'data_Fvulc'    => $current_date . ' 23:59:59',
+                                'data_Iexfin'   => $current_date . ' 00:00:00', 'data_Fexfin'   => $current_date . ' 23:59:59',
+                                'data_Imanchao' => $current_date . ' 00:00:00', 'data_Fmanchao' => $current_date . ' 23:59:59',
+                                'data_Icola'    => $current_date . ' 00:00:00', 'data_Fcola'    => $current_date . ' 23:59:59',
+                                'data_Iconser'  => $current_date . ' 00:00:00', 'data_Fconser'  => $current_date . ' 23:59:59',
+                                'data_Iextru'   => $current_date . ' 00:00:00', 'data_Fextru'   => $current_date . ' 23:59:59',
+                                'data_Imonta'   => $current_date . ' 00:00:00', 'data_Fmonta'   => $current_date . ' 23:59:59',
+                                'data_Ienvel'   => $current_date . ' 00:00:00', 'data_Fenvel'   => $current_date . ' 23:59:59',
+                                'data_Idesen'   => $current_date . ' 00:00:00', 'data_Fdesen'   => $current_date . ' 23:59:59',
+                                'data_Iuti'     => $current_date . ' 00:00:00', 'data_Futi'     => $current_date . ' 23:59:59',
+                                'data_IAz'      => $current_date . ' 00:00:00', 'data_FAz'      => $current_date . ' 23:59:59',
+                        ];
+                }
 
-  if ($_POST) {
-   $date     = $request->date;
-   $bindings = [
-    'data_Iexini'   => $date . ' 00:00:00', 'data_Fexini'   => $date . ' 23:59:59',
-    'data_Iraspa'   => $date . ' 00:00:00', 'data_Fraspa'   => $date . ' 23:59:59',
-    'data_Ibanda'   => $date . ' 00:00:00', 'data_Fbanda'   => $date . ' 23:59:59',
-    'data_Iescar'   => $date . ' 00:00:00', 'data_Fescar'   => $date . ' 23:59:59',
-    'data_Icobert'  => $date . ' 00:00:00', 'data_Fcobert'  => $date . ' 23:59:59',
-    'data_Ivulc'    => $date . ' 00:00:00', 'data_Fvulc'    => $date . ' 23:59:59',
-    'data_Iexfin'   => $date . ' 00:00:00', 'data_Fexfin'   => $date . ' 23:59:59',
-    'data_Imanchao' => $date . ' 00:00:00', 'data_Fmanchao' => $date . ' 23:59:59',
-    'data_Icola'    => $date . ' 00:00:00', 'data_Fcola'    => $date . ' 23:59:59',
-    'data_Iconser'  => $date . ' 00:00:00', 'data_Fconser'  => $date . ' 23:59:59',
-    'data_Iextru'   => $date . ' 00:00:00', 'data_Fextru'   => $date . ' 23:59:59',
-    'data_Imonta'   => $date . ' 00:00:00', 'data_Fmonta'   => $date . ' 23:59:59',
-    'data_Ienvel'   => $date . ' 00:00:00', 'data_Fenvel'   => $date . ' 23:59:59',
-    'data_Idesen'   => $date . ' 00:00:00', 'data_Fdesen'   => $date . ' 23:59:59',
-    'data_Iuti'     => $date . ' 00:00:00', 'data_Futi'     => $date . ' 23:59:59',
-    'data_IAz'      => $date . ' 00:00:00', 'data_FAz'      => $date . ' 23:59:59',
-   ];
-
-  } else {
-   $bindings = [
-        'data_Iexini'   => $current_date . ' 00:00:00', 'data_Fexini'   => $current_date . ' 23:59:59',
-        'data_Iraspa'   => $current_date . ' 00:00:00', 'data_Fraspa'   => $current_date . ' 23:59:59',
-        'data_Ibanda'   => $current_date . ' 00:00:00', 'data_Fbanda'   => $current_date . ' 23:59:59',
-        'data_Iescar'   => $current_date . ' 00:00:00', 'data_Fescar'   => $current_date . ' 23:59:59',
-        'data_Icobert'  => $current_date . ' 00:00:00', 'data_Fcobert'  => $current_date . ' 23:59:59',
-        'data_Ivulc'    => $current_date . ' 00:00:00', 'data_Fvulc'    => $current_date . ' 23:59:59',
-        'data_Iexfin'   => $current_date . ' 00:00:00', 'data_Fexfin'   => $current_date . ' 23:59:59',
-        'data_Imanchao' => $current_date . ' 00:00:00', 'data_Fmanchao' => $current_date . ' 23:59:59',
-        'data_Icola'    => $current_date . ' 00:00:00', 'data_Fcola'    => $current_date . ' 23:59:59',
-        'data_Iconser'  => $current_date . ' 00:00:00', 'data_Fconser'  => $current_date . ' 23:59:59',
-        'data_Iextru'   => $current_date . ' 00:00:00', 'data_Fextru'   => $current_date . ' 23:59:59',
-        'data_Imonta'   => $current_date . ' 00:00:00', 'data_Fmonta'   => $current_date . ' 23:59:59',
-        'data_Ienvel'   => $current_date . ' 00:00:00', 'data_Fenvel'   => $current_date . ' 23:59:59',
-        'data_Idesen'   => $current_date . ' 00:00:00', 'data_Fdesen'   => $current_date . ' 23:59:59',
-        'data_Iuti'     => $current_date . ' 00:00:00', 'data_Futi'     => $current_date . ' 23:59:59',
-        'data_IAz'      => $current_date . ' 00:00:00', 'data_FAz'      => $current_date . ' 23:59:59',
-   ];
-  }
-
-  $uri  = $this->resposta->route()->uri();
-  $user_auth = $this->user;
-  $sql  = "SELECT
+                $uri  = $this->resposta->route()->uri();
+                $user_auth = $this->user;
+                $sql  = "SELECT
   SUM(X.NR_EXINI) NR_EXINI,
   SUM(X.NR_RASPA) NR_RASPA,
   SUM(X.NR_BANDA) NR_BANDA,
@@ -583,10 +581,8 @@ FROM (
 ) X
 ";
 
-  $etapas = DB::connection('firebird')->select($sql, $bindings);
+                $etapas = DB::connection('firebird_campina')->select($sql, $bindings);
 
-  return view('admin.pcp.etapas', compact('user_auth', 'uri', 'etapas'));
-
- }
-
+                return view('admin.pcp.etapas', compact('user_auth', 'uri', 'etapas'));
+        }
 }

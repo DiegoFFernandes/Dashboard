@@ -38,7 +38,7 @@ class LotePcpController extends Controller
        INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
        WHERE IPP.STCANCELADO = 'N'
            AND IPP.STGARANTIA = 'N'
-           AND PP.IDEMPRESA IN (1,2)
+           AND PP.IDEMPRESA IN (3)
            AND M.STLOTE = 'P'
           --AND OPR.STORDEM NOT IN ('F', 'C')
           --AND OPR.ID = 905
@@ -58,7 +58,7 @@ class LotePcpController extends Controller
        INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
        WHERE IPP.STCANCELADO = 'N'
          AND IPP.STGARANTIA = 'N'
-           AND PP.IDEMPRESA IN (1,2)
+           AND PP.IDEMPRESA IN (3)
            AND M.STLOTE = 'P'
            AND OPR.STORDEM = 'A'
        GROUP BY C.DSCONTROLELOTEPCP, M.ID, M.NRLOTESEQDIA, M.DTPRODUCAO
@@ -76,7 +76,7 @@ class LotePcpController extends Controller
        LEFT JOIN EXAMEINICIAL EI ON (EI.IDORDEMPRODUCAORECAP = OPR.ID)
        WHERE IPP.STCANCELADO = 'N'
          AND IPP.STGARANTIA = 'N'
-           AND PP.IDEMPRESA IN (1,2)
+           AND PP.IDEMPRESA IN (3)
            AND M.STLOTE = 'P'
            AND OPR.STORDEM = 'A'
            AND EI.ID IS NULL
@@ -265,8 +265,8 @@ class LotePcpController extends Controller
     LEFT JOIN MOTIVOPNEU MP ON (MP.ID = X.CD_MOTIVOALTDTENTREGA)
     ORDER BY X.DTFIM DESC, X.NR_LOTE, X.NRLOTESEQDIA, X.ID");
 
-  $resultados = DB::connection('firebird')->select($sql);
-  $pneus = DB::connection('firebird')->select($sql_pneus);
+  $resultados = DB::connection('firebird_campina')->select($sql);
+  $pneus = DB::connection('firebird_campina')->select($sql_pneus);
 
   return view('admin.pcp.lote-pcp', compact('resultados', 'pneus', 'user_auth', 'uri'));
  }

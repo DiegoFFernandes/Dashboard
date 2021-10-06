@@ -45,7 +45,7 @@ class PneusLotePcpController extends Controller
         AND OPR.stexamefinal NOT IN ('A', 'R')
         AND OPR.stordem NOT IN ('F', 'C')";
 
-  $pneus_lote = DB::connection('firebird')->select($sql_pneu_lote, $bindings);
+  $pneus_lote = DB::connection('firebird_campina')->select($sql_pneu_lote, $bindings);
   
   return view('admin.pcp.pneus-lote-pcp', compact('uri', 'user_auth', 'pneus_lote'));
  }

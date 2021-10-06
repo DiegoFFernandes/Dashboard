@@ -45,7 +45,7 @@ class AcompanhaOrdemController extends Controller
 
   /*Com a informação do usuario, consulta no banco e pega o ID do itempedidopneu*/
   $sql_idpneu       = "select IDITEMPEDIDOPNEU from ordemproducaorecap where id = ?";
-  $iditempedidopneu = DB::connection('firebird')->select($sql_idpneu, [$nr_ordem]);
+  $iditempedidopneu = DB::connection('firebird_campina')->select($sql_idpneu, [$nr_ordem]);
 
   /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
   if ($nr_ordem >= 9999999999 || $iditempedidopneu === []) {
@@ -59,7 +59,7 @@ class AcompanhaOrdemController extends Controller
    FROM RETORNA_ACOMPANHAMENTOPNEU (?) R
    ORDER BY CAST(R.O_DT_ENTRADA||' '||R.O_HR_ENTRADA AS DOM_TIMESTAMP)";
 
-  $status_etapas = DB::connection('firebird')->select($sql_etapas, [$iditempedidopneu[0]->IDITEMPEDIDOPNEU]);
+  $status_etapas = DB::connection('firebird_campina')->select($sql_etapas, [$iditempedidopneu[0]->IDITEMPEDIDOPNEU]);
 
   /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
   if ($status_etapas === []) {
@@ -85,7 +85,7 @@ class AcompanhaOrdemController extends Controller
   LEFT JOIN controlelotepcprecap CLR ON (CLR.id = MLP.idcontrolelotepcprecap)
   where OPR.id = ?";
 
-  $info_pneu = DB::connection('firebird')->select($sql_info_pneu, [$nr_ordem]);
+  $info_pneu = DB::connection('firebird_campina')->select($sql_info_pneu, [$nr_ordem]);
 
   return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'status_etapas', 'info_pneu'));
  }

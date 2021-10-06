@@ -39,7 +39,8 @@ class CreateMotoristaVeiculosTable extends Migration
      * @return void
      */
     public function down()
-    {
-        Schema::dropIfExists('motorista_veiculos');
+    {   
+        Schema::dropIfExists('movimento_veiculos');        
+        Schema::dropIfExists('motorista_veiculos');        
     }
 }

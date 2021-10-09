@@ -169,7 +169,7 @@
     background: white;
 }
 
-.iframe-embed {
+iframe {
     position: absolute;
     top: 0;
     left: 0;
@@ -188,5 +188,5 @@
 }
 
 .iframe-embed-responsive-16by9 {
-    padding-bottom: 56.25%;
+    padding-bottom: 52.2%;
 }

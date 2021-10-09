@@ -174,7 +174,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li><a href=""><i class="fa fa-plus-circle"></i>Relátorios</a>
+                    <li><a href="{{route('portaria.movimentos')}}"><i class="fa fa-plus-circle"></i>Relátorios</a>
                     </li>
                 </ul>
             </li>

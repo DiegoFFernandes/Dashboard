@@ -53,4 +53,15 @@ class MovimentoVeiculo extends Model
     public function qtdMovimento($movimento, $dtInicio){        
         return MovimentoVeiculo::whereBetween($movimento, [$dtInicio, date('Y-m-d H:m:s')])->count();
     }
+
+    public function movimentoAll(){
+        return MovimentoVeiculo::select('pessoas.name as motorista', 'motorista_veiculos.placa', 'linha_motoristas.linha', 'user_entrada.name as resp_entrada', 
+        'movimento_veiculos.entrada', 'user_saida.name as resp_saida', 'movimento_veiculos.saida')
+        ->join('motorista_veiculos', 'motorista_veiculos.id', 'movimento_veiculos.cd_motorista_veiculos')
+        ->join('pessoas', 'pessoas.id', 'motorista_veiculos.cd_pessoa')
+        ->join('users as user_entrada', 'user_entrada.id', 'movimento_veiculos.cd_resp_entrada')
+        ->leftJoin('users as user_saida', 'user_saida.id', 'movimento_veiculos.cd_resp_saida')
+        ->join('linha_motoristas', 'linha_motoristas.id', 'movimento_veiculos.cd_linha')
+        ->get();
+    }
 }

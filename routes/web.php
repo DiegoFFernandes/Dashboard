@@ -101,6 +101,9 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::post('movimento/entrada/do', [PortariaController::class, 'saveEntrada'])->name('portaria.entrada.do');
         Route::post('movimento/saida/do', [PortariaController::class, 'saveSaida'])->name('portaria.saida.do');
 
+        Route::get('relatorio/movimento', [PortariaController::class, 'movimentos'])->name('portaria.movimentos');
+        Route::get('get-movimento', [PortariaController::class, 'getMovimento'])->name('get.portaria.movimentos');
+
     });
     Route::prefix('veiculo')->group(function () {
         Route::get('listar', [VeiculoController::class, 'index'])->name('listar.motorista.veiculos');

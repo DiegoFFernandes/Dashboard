@@ -19,14 +19,14 @@ class CreateMovimentoVeiculosTable extends Migration
             $table->unsignedBigInteger('cd_motorista_veiculos');
             $table->unsignedBigInteger('cd_pessoa');
             $table->unsignedBigInteger('cd_linha');
-            $table->text('observacao')->nullable();
-            $table->timestamp('entrada')->nullable();
+            $table->text('observacao')->nullable();            
+            $table->timestamp('entrada')->nullable();            
             $table->timestamp('saida')->nullable();
             $table->timestamps();
 
             $table->foreign('cd_pessoa')->references('id')->on('pessoas');
             $table->foreign('cd_motorista_veiculos')->references('id')->on('motorista_veiculos');  
-            $table->foreign('cd_linha')->references('id')->on('linha_motoristas');
+            $table->foreign('cd_linha')->references('id')->on('linha_motoristas');            
         });
     }
 

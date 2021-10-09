@@ -23,12 +23,11 @@ class LoginController extends Controller
         if (Auth::check() === true) {
             $user_auth = Auth::user();
             $uri       = $this->resposta->route()->uri();
-            $user = Auth::user();
-            $roles = json_decode($user->getRoleNames());
-            
-            if (in_array("portaria", $roles)) { 
-                //echo "Tem portaria";
-            }
+
+            // $roles = json_decode($user_auth->getRoleNames());            
+            // if (in_array("portaria", $roles)) { 
+            //     echo "Tem portaria";
+            // }
 
             return view('admin.index', compact('user_auth', 'uri'));
         }

@@ -11,6 +11,7 @@ use App\Models\Pessoa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
 
 class PortariaController extends Controller
 {
@@ -154,5 +155,23 @@ class PortariaController extends Controller
                 'cd_empresa.not_in' => 'Código da empresa não pode ser zero'
             ]
         );
+    }
+
+    public function movimentos()
+    {
+        $title_page    = 'Movimentos veiculos';
+        $user_auth     = $this->user;
+        $uri           = $this->resposta->route()->uri();
+
+        return view(
+            'admin.portaria.movimentos',
+            compact('title_page', 'user_auth', 'uri')
+        );
+    }
+
+    public function getMovimento()
+    {
+        $data = $this->movimento->movimentoAll();
+        return DataTables::of($data)->make(true);
     }
 }

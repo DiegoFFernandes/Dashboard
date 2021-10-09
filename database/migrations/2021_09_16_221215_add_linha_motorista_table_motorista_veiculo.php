@@ -14,7 +14,7 @@ class AddLinhaMotoristaTableMotoristaVeiculo extends Migration
     public function up()
     {
         Schema::table('motorista_veiculos', function (Blueprint $table) {
-            $table->unsignedBigInteger('cd_linha')->after('cd_tipoveiculo');
+            $table->unsignedBigInteger('cd_linha')->nullable()->after('cd_tipoveiculo');
 
             $table->foreign('cd_linha')->references('id')->on('linha_motoristas');
         });
@@ -27,8 +27,9 @@ class AddLinhaMotoristaTableMotoristaVeiculo extends Migration
      */
     public function down()
     {
-        Schema::table('motorista_veiculos', function (Blueprint $table) {
-            $table->dropColumn('cd_linha');
-        });
+        Schema::dropIfExists('motorista_veiculos');
+        // Schema::table('motorista_veiculos', function (Blueprint $table) {
+        //     $table->dropColumn('cd_linha');
+        // });
     }
 }

@@ -29,6 +29,7 @@ class CreateLinhaMotoristasTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('movimento_veiculos');
         Schema::dropIfExists('linha_motoristas');
     }
 }

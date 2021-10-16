@@ -179,6 +179,7 @@
                 </ul>
             </li>
             @endrole
+            @role('comercial|admin')
             <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-th"></i> <span>Comercial</span>
@@ -191,6 +192,7 @@
                     </li>
                 </ul>
             </li>
+            @endrole
         </ul>
     </section>
     <!-- /.sidebar -->

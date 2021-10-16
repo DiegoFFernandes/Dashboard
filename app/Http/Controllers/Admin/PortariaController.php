@@ -63,7 +63,6 @@ class PortariaController extends Controller
         $pessoas    = $this->pessoa->PessoasAll();
         $linhas     = $this->linha->linhaAll();
 
-
         if ($uri == 'portaria/movimento/entrada') {
             $title_page = 'Entrada Veiculo';
         } else {
@@ -103,6 +102,8 @@ class PortariaController extends Controller
     public function saveEntrada(Request $request)
     {
         $this->_validatorMovimento($request);
+        $request['cd_resp_entrada'] = $this->user->id;
+        $request['cd_resp_saida'] = 0;
 
         $store = $this->movimento->storeDataEntrada($request);
 
@@ -115,7 +116,9 @@ class PortariaController extends Controller
 
     public function saveSaida(Request $request)
     {
-        $this->_validatorMovimento($request);
+        $this->_validatorMovimento($request);        
+        $request['cd_resp_saida'] = $this->user->id;
+        
         $update = $this->movimento->storeDataSaida($request);
 
         if ($update) {
@@ -147,7 +150,7 @@ class PortariaController extends Controller
                 'cd_empresa' => 'integer|required|not_in:0',
                 'cd_motorista_veiculos' => 'integer|required|not_in:0',
                 'cd_pessoa' => 'integer|required|not_in:0',
-                'cd_linha' => 'integer|required|not_in:0',
+                'cd_linha' => 'integer|required|not_in:0',                
             ],
             [
                 'cd_empresa.integer' => 'Código da empresa deve ser númerico',

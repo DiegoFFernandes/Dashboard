@@ -15,7 +15,9 @@ class MovimentoVeiculo extends Model
         "cd_motorista_veiculos",
         "cd_pessoa",
         "cd_linha",
+        "cd_resp_entrada",
         "entrada",
+        "cd_resp_saida",
         "saida",
         "observacao"
     ];
@@ -32,7 +34,10 @@ class MovimentoVeiculo extends Model
             "cd_pessoa" => $input->cd_pessoa,
             "cd_linha" => $input->cd_linha,
             "observacao" => $input->observacao,
-            "entrada" => $input->entrada
+            "cd_resp_entrada" => $input->cd_resp_entrada,
+            "entrada" => $input->entrada,
+            "cd_resp_saida" => $input->cd_resp_saida,
+
         ]);
     }
 
@@ -44,24 +49,36 @@ class MovimentoVeiculo extends Model
             ->value('id');
 
         if (isset($id)) {
-            return MovimentoVeiculo::find($id)->update(['saida' => $input->saida]);
+            return MovimentoVeiculo::find($id)
+                ->update(['cd_resp_saida' => $input->cd_resp_saida, 'saida' => $input->saida]);
         } else {
             return 0;
         }
     }
 
-    public function qtdMovimento($movimento, $dtInicio){        
+    public function qtdMovimento($movimento, $dtInicio)
+    {
         return MovimentoVeiculo::whereBetween($movimento, [$dtInicio, date('Y-m-d H:m:s')])->count();
     }
 
-    public function movimentoAll(){
-        return MovimentoVeiculo::select('pessoas.name as motorista', 'motorista_veiculos.placa', 'linha_motoristas.linha', 'user_entrada.name as resp_entrada', 
-        'movimento_veiculos.entrada', 'user_saida.name as resp_saida', 'movimento_veiculos.saida')
-        ->join('motorista_veiculos', 'motorista_veiculos.id', 'movimento_veiculos.cd_motorista_veiculos')
-        ->join('pessoas', 'pessoas.id', 'motorista_veiculos.cd_pessoa')
-        ->join('users as user_entrada', 'user_entrada.id', 'movimento_veiculos.cd_resp_entrada')
-        ->leftJoin('users as user_saida', 'user_saida.id', 'movimento_veiculos.cd_resp_saida')
-        ->join('linha_motoristas', 'linha_motoristas.id', 'movimento_veiculos.cd_linha')
-        ->get();
+    public function movimentoAll()
+    {
+        return MovimentoVeiculo::select(
+            'movimento_veiculos.id',
+            'pessoas.name as motorista',
+            'motorista_veiculos.placa',
+            'linha_motoristas.linha',
+            'user_entrada.name as resp_entrada',
+            'movimento_veiculos.entrada',
+            'user_saida.name as resp_saida',
+            'movimento_veiculos.saida'
+        )
+            ->join('motorista_veiculos', 'motorista_veiculos.id', 'movimento_veiculos.cd_motorista_veiculos')
+            ->join('pessoas', 'pessoas.id', 'motorista_veiculos.cd_pessoa')
+            ->join('users as user_entrada', 'user_entrada.id', 'movimento_veiculos.cd_resp_entrada')
+            ->leftJoin('users as user_saida', 'user_saida.id', 'movimento_veiculos.cd_resp_saida')
+            ->join('linha_motoristas', 'linha_motoristas.id', 'movimento_veiculos.cd_linha')
+            ->orderBy('movimento_veiculos.id', 'asc')
+            ->get();
     }
 }

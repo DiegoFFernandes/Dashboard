@@ -190,3 +190,11 @@ iframe {
 .iframe-embed-responsive-16by9 {
     padding-bottom: 52.2%;
 }
+
+.background-green {
+    background-color: rgb(190, 221, 191) !important;
+}
+
+.background-red {
+    background-color: rgb(240, 166, 166) !important;
+}

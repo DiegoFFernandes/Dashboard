@@ -91,7 +91,7 @@ class MotoristaVeiculo extends Model
 
     public function findPlaca($placa)
     {
-        return MotoristaVeiculo::select('id', 'placa')->where('placa', 'like', '%' . $placa . '%')->take(10)->get();
+        return MotoristaVeiculo::select('id', 'placa')->where('placa', 'like', "%$placa%")->take(10)->get();
     }
 
     public function listPlaca($id)

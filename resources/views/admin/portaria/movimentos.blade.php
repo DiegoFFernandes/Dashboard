@@ -15,9 +15,10 @@
                     <!-- /.box-header -->
                     <div class="box-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered datatable">
+                            <table class="table datatable cell-border compact stripe">
                                 <thead>
                                     <tr>
+                                        <th>Id</th>
                                         <th>Motorista</th>
                                         <th>Placa</th>
                                         <th>Linha</th>
@@ -54,11 +55,17 @@
                 pageLength: 5,
                 // scrollX: true,
                 "order": [
-                    [0, "asc"]
+                    [0, "desc"]
                 ],
+
                 "pageLength": 10,
                 ajax: "{{ route('get.portaria.movimentos') }}",
-                columns: [{
+                columns: [
+                    {
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
                         data: 'motorista',
                         name: 'motorista'
                     },
@@ -85,10 +92,25 @@
                     {
                         data: 'saida',
                         name: 'saida'
-                    }                    
-                ]
+                    }
+                ],
+                columnDefs: [
+                    {
+                    "className": "background-green",
+                    targets: [4, 5],
+                    },
+                    {
+                    "className": "background-red",
+                    targets: [6, 7],
+                    }
+                    ],
+
+
 
             });
+
+
+
 
         });
     </script>

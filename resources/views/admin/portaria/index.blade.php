@@ -68,7 +68,7 @@
                                     <div class="form-group">
                                         <label for="cd_porteiro">Porteiro</label>
                                         <input type="text" class="form-control" name="cd_porteiro" id="cd_porteiro"
-                                            value="" disabled>
+                                            value="{{ $user_auth->name }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -181,8 +181,40 @@
 @endsection
 
 @section('scripts')
-    <!-- My Scripts -->
-    <script src="{{ asset('js/portaria/scripts.js') }}"></script>
-    {{-- <script src="{{ asset('js/scripts.js') }}"></script> --}}
+    <script>
+        $('.select2').select2({
+            allowClear: true
+        })
+        $(document).ready(function() {
+            $(document).on('click', 'li', function() {
+                $('#placa').val($(this).text());
+                $('#placaList').fadeOut();
+            });
 
+            $('.SearchPlaca').select2({
+                placeholder: 'Selecione uma placa',
+                minimumInputLength: 1,
+                ajax: {
+                    url: "{{ route('placa.search') }}",
+                    dataType: 'json',
+                    //delay: 250,
+                    results: function(data) {
+                        console.log(data);
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    text: item.placa,
+                                    id: item.id,
+                                }
+                            }),
+
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+    </script>
 @endsection

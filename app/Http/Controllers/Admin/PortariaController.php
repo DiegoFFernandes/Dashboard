@@ -103,7 +103,7 @@ class PortariaController extends Controller
     {
         $this->_validatorMovimento($request);
         $request['cd_resp_entrada'] = $this->user->id;
-        $request['cd_resp_saida'] = 0;
+        $request['cd_resp_saida'] = 1;
 
         $store = $this->movimento->storeDataEntrada($request);
 

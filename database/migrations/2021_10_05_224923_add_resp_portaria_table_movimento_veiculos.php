@@ -30,10 +30,7 @@ class AddRespPortariaTableMovimentoVeiculos extends Migration
      */
     public function down()
     {
-        Schema::table('movimento_veiculos', function(Blueprint $table){
-            $table->dropColumn('cd_resp_entrada');
-            $table->dropColumn('cd_resp_saida');
-        });
+        Schema::dropIfExists('movimento_veiculos');       
         
     }
 }

@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        /* Inicia o envio das variaveis da portaria referindo-se a quantidades de entrada e saida*/
+        // /* Inicia o envio das variaveis da portaria referindo-se a quantidades de entrada e saida*/
         $dtInicio = date('Y-m-d 00:00:00');
         $entrada = 'entrada';
         $saida = 'saida';

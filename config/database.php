@@ -101,6 +101,16 @@ return [
             'collation' => 'utf8_unicode_ci',
         ],
 
+        'firebird_paranavai' => [
+            'driver'=> 'firebird',
+            'host'=> env('DB_FIREBIRD_HOST', 'localhost'),
+            'database' => env('DB_FIREBIRD_DATABASE_PVAI', 'C:\Banco\IVORECAP_PVAI.FDB'),
+            'username' => env('DB_FIREBIRD_USERNAME', 'SYSDBA'),
+            'password' => env('DB_FIREBIRD_PASSWORD', 'masterkey'),
+            'charset' => env('DB_FIREBIRD_CHARSET', 'UTF8'),
+            'collation' => 'utf8_unicode_ci',
+        ],
+
     ],
 
     /*

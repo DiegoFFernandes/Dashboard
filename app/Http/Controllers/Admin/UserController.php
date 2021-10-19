@@ -39,7 +39,7 @@ class UserController extends Controller
         foreach ($empresas as $empresa) {
             if ($empresa->CD_EMPRESA == $request->empresa) {
                 $request['conexao'] = $empresa->CONEXAO;
-            } 
+            }
         }
         $request['password'] = Hash::make($request['password']);
         $user                = $this->_validade($request);
@@ -62,14 +62,19 @@ class UserController extends Controller
         $data             = $this->_validade($request);
         $data['name']     = $request->name;
         $data['email']    = $request->email;
-        $data['password'] = Hash::make($request->password);
         $data['empresa']  = $request->empresa;
+
+        if ($user->password == $request->password) {
+            $data['password'] = $request->password;
+        } else {
+            $data['password'] = Hash::make($request->password);
+        }
 
         $empresas  = $this->empresa->empresa();
         foreach ($empresas as $empresa) {
             if ($empresa->CD_EMPRESA == $request->empresa) {
                 $data['conexao'] = $empresa->CONEXAO;
-            } 
+            }
         }
 
         $user->fill($data);

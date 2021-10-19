@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
+use App\Http\Controllers\Admin\Cobranca\CobrancaController;
 use App\Http\Controllers\Admin\Comercial\ComercialController;
 use App\Http\Controllers\Admin\Email\EmailController;
 use App\Http\Controllers\Admin\EmpresaController;
@@ -166,5 +167,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('edit/{id}', [EmailController::class, 'edit'])->name('email.update');
         Route::post('edit/{id}/do', [EmailController::class, 'update'])->name('email.update.do');
         Route::delete('delete/{id}', [EmailController::class, 'destroy'])->name('email.delete');
+    });
+});
+
+Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
+    Route::prefix('cobranca')->group(function () {
+        Route::get('index', [CobrancaController::class, 'index'])->name('cobranca.index');
     });
 });

@@ -28,17 +28,18 @@ class Empresa extends Model
         //$this->setConnet();
         //return Empresa::select('CD_EMPRESA', 'NM_EMPRESA')->get();
 
-        $campina = DB::connection('firebird_campina')->select('select CD_EMPRESA, NM_EMPRESA from EMPRESA');
-
-        foreach ($campina as $c) {
-            $c->CONEXAO = 'firebird_campina';
-        }
-
-        $paravanai = DB::connection('firebird_paranavai')->select('select CD_EMPRESA, NM_EMPRESA from EMPRESA');
-        foreach ($paravanai as $p) {
-            $p->CONEXAO = 'firebird_paranavai';
-        }
-
+        $campina = $this->CarregaEmpresa('firebird_campina');
+        $paravanai = $this->CarregaEmpresa('firebird_paranavai');
+        
         return array_merge((array) $campina, (array) $paravanai);
+    }
+
+    public function CarregaEmpresa($firebird){
+        $banco = DB::connection($firebird)->select("select CD_EMPRESA, (CD_EMPRESA||' - '||NM_EMPRESA) AS NM_EMPRESA from EMPRESA WHERE ST_ATIVO = 'S'");
+
+        foreach ($banco as $b) {
+            $b->CONEXAO = $firebird;
+        }
+        return $banco;
     }
 }

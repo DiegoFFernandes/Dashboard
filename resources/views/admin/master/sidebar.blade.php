@@ -193,6 +193,20 @@
                 </ul>
             </li>
             @endrole
+            @role('cobranca|admin')
+            <li class="treeview" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-credit-card"></i> <span>Cobranca</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class="active"><a href="{{route('cobranca.index')}}"><i class="fa fa-address-book-o"></i>Agenda</a>
+                    </li>
+                </ul>
+            </li>
+            @endrole
         </ul>
     </section>
     <!-- /.sidebar -->

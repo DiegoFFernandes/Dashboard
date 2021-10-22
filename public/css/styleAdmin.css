@@ -198,3 +198,35 @@ iframe {
 .background-red {
     background-color: rgb(240, 166, 166) !important;
 }
+
+.iframebox {
+    width: 100%;
+    float: left;
+    position: relative;
+    overflow: hidden
+}
+
+.iframefooter {
+    width: calc(60% - 100px);
+    background: #eaeaea;
+    height: 31px;
+    display: block;
+    position: absolute;
+    bottom: 6px;
+    right: 50px;
+    z-index: 9999999999;
+}
+
+.blueborder {
+    position: absolute;
+    left: 0;
+    bottom: 41px;
+    height: 1px;
+    background: #eaeaea;
+    z-index: 999999999999999999;
+    width: 100%;
+}
+
+.ms-dlgContent {
+    z-index: 99999999999 !important;
+}

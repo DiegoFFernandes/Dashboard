@@ -208,7 +208,7 @@ iframe {
 
 .iframefooter {
     width: calc(60% - 100px);
-    background: #eaeaea00;
+    background: #eaeaea;
     height: 31px;
     display: block;
     position: absolute;

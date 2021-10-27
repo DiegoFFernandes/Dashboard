@@ -93,8 +93,8 @@ return [
         
         'firebird_campina' => [
             'driver'=> 'firebird',
-            'host'=> env('DB_FIREBIRD_HOST', 'localhost'),
-            'database' => env('DB_FIREBIRD_DATABASE', 'C:\Banco\IVORECAP30.FDB'),
+            'host'=> env('DB_FIREBIRD_HOST', ''),
+            'database' => env('DB_FIREBIRD_DATABASE', ''),
             'username' => env('DB_FIREBIRD_USERNAME', 'SYSDBA'),
             'password' => env('DB_FIREBIRD_PASSWORD', 'masterkey'),
             'charset' => env('DB_FIREBIRD_CHARSET', 'UTF8'),

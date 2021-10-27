@@ -12,13 +12,15 @@ class CobrancaController extends Controller
 {
     public function __construct(
         Request $request,
-        Empresa $empresa, 
+        Empresa $empresa,
         AgendaPessoa $agenda
 
     ) {
         $this->empresa  = $empresa;
         $this->resposta = $request;
         $this->agenda = $agenda;
+        $this->p_dia = '1';
+        $this->atual_dia = date("d");
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -27,11 +29,17 @@ class CobrancaController extends Controller
     }
     public function index()
     {
-        return $this->agenda->AgendaOperador();
-        $title_page   = 'Cobranca';
+        $p_dia = $this->p_dia;
+        $dia_atual = $this->atual_dia;        
+        $operadores = $this->agenda->Operadores();      
+        
+        
+        $agenda = $this->agenda->AgendaOperadorMes($operadores);  
+        //dd($agenda);        
+        $title_page   = 'Agenda';
         $user_auth    = $this->user;
         $uri         = $this->resposta->route()->uri();
         
-        return view('admin.cobranca.index', compact('title_page', 'user_auth', 'uri'));
+        return view('admin.cobranca.index', compact('title_page', 'user_auth', 'uri', 'agenda', 'operadores'));
     }
 }

@@ -10,17 +10,37 @@
                         <h3 class="box-title">Total 3 últimos meses</h3>
                     </div>
                     <div class="box-body no-padding">
-
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Cód. Usuario</th>
+                                <th>Nome</th>
+                                <th>{{Config::get('constants.meses.nMes30')}}</th>
+                                <th>{{Config::get('constants.meses.nMes60')}}</th>
+                                <th>{{Config::get('constants.meses.nMes90')}}</th>
+                            </thead>
+                            <tbody>                                
+                                    @foreach ($meses as $m )
+                                    <tr>
+                                        <td>{{$m->CD_USUARIO}}</td>
+                                        <td>{{$m->NM_USUARIO}}</td>
+                                        <td>{{$m->MES1}}</td>
+                                        <td>{{$m->MES2}}</td>
+                                        <td>{{$m->MES3}}</td>                                        
+                                    </tr>                                        
+                                    @endforeach
+                                                             
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Total Hoje</h3>
+                        <h3 class="box-title">Progresso</h3>
                     </div>
                     <div class="box-body no-padding">
-
+                        
                     </div>
                 </div>
             </div>
@@ -36,10 +56,8 @@
                         <table class="table table-hover table-agenda">
                             <thead>
                                 <tr>
-                                    
                                     <td colspan="2"></td>
-                                    <th class="bg-success text-center" colspan="26">Dias</th>  
-                                    
+                                    <th class="bg-success text-center" colspan="{{ date('d') }}">{{Config::get('constants.meses.nMesHj')}} / Dias</th>
                                 </tr>
                                 <tr>
                                     <th class="bg-light-blue">Cód. Usuario</th>
@@ -56,11 +74,11 @@
                                     <tr>
                                         <td>{{ $operadores[$key]->CD_USUARIO }}</td>
                                         <td>{{ $operadores[$key]->NM_USUARIO }}</td>
-                                        @foreach ($agenda[$key] as $a)  
-                                             @php $total += $a->QTD @endphp                                          
-                                            <td>{{ $a->QTD}}</td>
+                                        @foreach ($agenda[$key] as $a)
+                                            @php $total += $a->QTD @endphp
+                                            <td>{{ $a->QTD }}</td>
                                         @endforeach
-                                        <td class="bg-light-blue">{{$total}}</td>
+                                        <td class="bg-light-blue">{{ $total }}</td>
                                     </tr>
                                 @endforeach
 

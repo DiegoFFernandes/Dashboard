@@ -83,7 +83,9 @@ class AcompanhaOrdemController extends Controller
   LEFT JOIN LOTEPCPORDEMPRODUCAORECAP LOPR ON (LOPR.idordemproducao = OPR.ID)
   LEFT JOIN MONTAGEMLOTEPCPRECAP MLP ON (MLP.id = LOPR.idmontagemlotepcp)
   LEFT JOIN controlelotepcprecap CLR ON (CLR.id = MLP.idcontrolelotepcprecap)
-  where OPR.id = ?";
+  where OPR.id = ?
+  group by IPP.idpedidopneu, OPR.id, PP.idpessoa, P.NM_PESSOA, SP.dsservico, MODELO, MD.dsmedidapneu,
+  PN.nrserie, PN.nrfogo, PN.nrdot, LOPR.idmontagemlotepcp, CLR.dscontrolelotepcp";
 
   $info_pneu = DB::connection('firebird_campina')->select($sql_info_pneu, [$nr_ordem]);
 

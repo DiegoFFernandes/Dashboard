@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Config;
 
 class AgendaPessoa extends Model
 {
@@ -25,35 +26,38 @@ class AgendaPessoa extends Model
         return $this->connection = Auth::user()->conexao;
     }
 
-    public function AgendaOperador()
-    {        
+    public function AgendaOperador3Meses()
+    {     
+         
+        $config = Config::get('constants.options');        
+   
         $banco = $this->setConnet();
-        $query =
-            "select x.cd_usuario, x.nm_usuario, sum(x.hoje) hoje, sum(x.ontem) ontem, sum(x.anteontem) anteontem
+        $query = 
+          "select x.cd_usuario, x.nm_usuario, sum(x.mes1) mes1, sum(x.mes2) mes2, sum(x.mes3) mes3
             from (
-                select ap.cd_usuario, u.nm_usuario, count(ap.cd_usuario) hoje, 0 ontem, 0 anteontem
-                from agendapessoa ap
-                inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-                where CAST(ap.dt_registro AS DATE) = CURRENT_DATE-100
-                group by ap.cd_usuario, u.nm_usuario
-            
-                union all
-            
-                select ap.cd_usuario, u.nm_usuario, 0 hoje, count(ap.cd_usuario) ontem, 0 anteontem
-                from agendapessoa ap
-                inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-                where CAST(ap.dt_registro AS DATE) = CURRENT_DATE-101
-                group by ap.cd_usuario, u.nm_usuario
-            
-                union all
-            
-                select ap.cd_usuario, u.nm_usuario, 0 hoje, 0 ontem, count(ap.cd_usuario) anteontem
-                from agendapessoa ap
-                inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-                where CAST(ap.dt_registro AS DATE) = CURRENT_DATE-102
-                group by ap.cd_usuario, u.nm_usuario
+            select ap.cd_usuario, u.nm_usuario, count(ap.cd_usuario) mes1, 0 mes2, 0 mes3
+            from agendapessoa ap
+            inner join usuario u on (u.cd_usuario = ap.cd_usuario)
+            where ap.dt_registro between '09-01-2021 00:00:00' and '09-30-2021 23:59:59'
+            group by ap.cd_usuario, u.nm_usuario
+        
+            union all
+        
+            select ap.cd_usuario, u.nm_usuario, 0 mes1, count(ap.cd_usuario) mes2, 0 mes3
+            from agendapessoa ap
+            inner join usuario u on (u.cd_usuario = ap.cd_usuario)
+            where ap.dt_registro between '08-01-2021 00:00:00' and '08-31-2021 23:59:59'
+            group by ap.cd_usuario, u.nm_usuario
+        
+            union all
+        
+            select ap.cd_usuario, u.nm_usuario, 0 mes1, 0 mes2, count(ap.cd_usuario) mes3
+            from agendapessoa ap
+            inner join usuario u on (u.cd_usuario = ap.cd_usuario)
+            where ap.dt_registro between '07-01-2021 00:00:00' and '07-31-2021 23:59:59'
+            group by ap.cd_usuario, u.nm_usuario
             ) x
-            group by x.cd_usuario, x.nm_usuario";
+          group by x.cd_usuario, x.nm_usuario";
 
         return DB::connection($banco)->select($query);
     }

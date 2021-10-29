@@ -4,7 +4,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="box box-info">
                     <div class="box-header">
                         <h3 class="box-title">Total 3 últimos meses</h3>
@@ -14,33 +14,55 @@
                             <thead>
                                 <th>Cód. Usuario</th>
                                 <th>Nome</th>
-                                <th>{{Config::get('constants.meses.nMes30')}}</th>
-                                <th>{{Config::get('constants.meses.nMes60')}}</th>
-                                <th>{{Config::get('constants.meses.nMes90')}}</th>
+                                <th>{{ Config::get('constants.meses.nMes30') }}</th>
+                                <th>{{ Config::get('constants.meses.nMes60') }}</th>
+                                <th>{{ Config::get('constants.meses.nMes90') }}</th>
                             </thead>
-                            <tbody>                                
-                                    @foreach ($meses as $m )
+                            <tbody>
+                                @foreach ($meses as $m)
                                     <tr>
-                                        <td>{{$m->CD_USUARIO}}</td>
-                                        <td>{{$m->NM_USUARIO}}</td>
-                                        <td>{{$m->MES1}}</td>
-                                        <td>{{$m->MES2}}</td>
-                                        <td>{{$m->MES3}}</td>                                        
-                                    </tr>                                        
-                                    @endforeach
-                                                             
+                                        <td>{{ $m->CD_USUARIO }}</td>
+                                        <td>{{ $m->NM_USUARIO }}</td>
+                                        <td>{{ $m->MES1 }}</td>
+                                        <td>{{ $m->MES2 }}</td>
+                                        <td>{{ $m->MES3 }}</td>
+                                    </tr>
+                                @endforeach
+
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Progresso</h3>
+                        <h3 class="box-title">Clientes novos</h3>
                     </div>
                     <div class="box-body no-padding">
-                        
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Progresso Mês</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            {!! $chart->container() !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Novos Clientes</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,7 +79,8 @@
                             <thead>
                                 <tr>
                                     <td colspan="2"></td>
-                                    <th class="bg-success text-center" colspan="{{ date('d') }}">{{Config::get('constants.meses.nMesHj')}} / Dias</th>
+                                    <th class="bg-success text-center" colspan="{{ date('d') }}">
+                                        {{ Config::get('constants.meses.nMesHj') }} / Dias</th>
                                 </tr>
                                 <tr>
                                     <th class="bg-light-blue">Cód. Usuario</th>
@@ -98,4 +121,5 @@
 @section('scripts')
     @includeIf('admin.master.datatables')
     <script src="{{ asset('js/scripts.js') }}"></script>
+    {!! $chart->script() !!}
 @endsection

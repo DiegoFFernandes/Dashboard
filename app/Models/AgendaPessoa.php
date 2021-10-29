@@ -27,37 +27,39 @@ class AgendaPessoa extends Model
     }
 
     public function AgendaOperador3Meses()
-    {     
-         
-        $config = Config::get('constants.options');        
-   
+    {  
+        $dti30dias = Config::get('constants.options.dti30dias'); 
+        $dtf30dias = Config::get('constants.options.dtf30dias');       
+        
         $banco = $this->setConnet();
         $query = 
-          "select x.cd_usuario, x.nm_usuario, sum(x.mes1) mes1, sum(x.mes2) mes2, sum(x.mes3) mes3
-            from (
-            select ap.cd_usuario, u.nm_usuario, count(ap.cd_usuario) mes1, 0 mes2, 0 mes3
-            from agendapessoa ap
-            inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-            where ap.dt_registro between '09-01-2021 00:00:00' and '09-30-2021 23:59:59'
-            group by ap.cd_usuario, u.nm_usuario
-        
-            union all
-        
-            select ap.cd_usuario, u.nm_usuario, 0 mes1, count(ap.cd_usuario) mes2, 0 mes3
-            from agendapessoa ap
-            inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-            where ap.dt_registro between '08-01-2021 00:00:00' and '08-31-2021 23:59:59'
-            group by ap.cd_usuario, u.nm_usuario
-        
-            union all
-        
-            select ap.cd_usuario, u.nm_usuario, 0 mes1, 0 mes2, count(ap.cd_usuario) mes3
-            from agendapessoa ap
-            inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-            where ap.dt_registro between '07-01-2021 00:00:00' and '07-31-2021 23:59:59'
-            group by ap.cd_usuario, u.nm_usuario
-            ) x
-          group by x.cd_usuario, x.nm_usuario";
+          "select x.cd_usuario,
+          DECODE(POSITION(' ',x.nm_usuario),0,x.nm_usuario, SUBSTRING(x.nm_usuario FROM 1 FOR POSITION(' ',x.nm_usuario))) nm_usuario, 
+          sum(x.mes1) mes1, sum(x.mes2) mes2, sum(x.mes3) mes3
+             from (
+             select ap.cd_usuario, u.nm_usuario, count(ap.cd_usuario) mes1, 0 mes2, 0 mes3
+             from agendapessoa ap
+             inner join usuario u on (u.cd_usuario = ap.cd_usuario)
+             where ap.dt_registro between '$dti30dias 00:00:00' and '$dtf30dias 23:59:59'
+             group by ap.cd_usuario, u.nm_usuario
+         
+             union all
+         
+             select ap.cd_usuario, u.nm_usuario, 0 mes1, count(ap.cd_usuario) mes2, 0 mes3
+             from agendapessoa ap
+             inner join usuario u on (u.cd_usuario = ap.cd_usuario)
+             where ap.dt_registro between '08-01-2021 00:00:00' and '08-31-2021 23:59:59'
+             group by ap.cd_usuario, u.nm_usuario
+         
+             union all
+         
+             select ap.cd_usuario, u.nm_usuario, 0 mes1, 0 mes2, count(ap.cd_usuario) mes3
+             from agendapessoa ap
+             inner join usuario u on (u.cd_usuario = ap.cd_usuario)
+             where ap.dt_registro between '07-01-2021 00:00:00' and '07-31-2021 23:59:59'
+             group by ap.cd_usuario, u.nm_usuario
+             ) x
+           group by x.cd_usuario, x.nm_usuario";
 
         return DB::connection($banco)->select($query);
     }
@@ -74,7 +76,7 @@ class AgendaPessoa extends Model
                 select dt.dt + 1
                 from dt
                 where dt < cast(current_date as date))              
-              select dt.dt, ap.cd_usuario, u.nm_usuario, count(ap.dt_registro) as qtd
+              select dt.dt, ap.cd_usuario, DECODE(POSITION(' ',u.nm_usuario),0,u.nm_usuario, SUBSTRING(u.nm_usuario FROM 1 FOR POSITION(' ', u.nm_usuario))) nm_usuario, count(ap.dt_registro) as qtd
               from dt
               left join (select * from agendapessoa ap where ap.cd_usuario = '$o->CD_USUARIO'
                   and ap.dt_registro between '$this->p_dia' and current_timestamp) ap on ((cast(ap.dt_registro as date)) = dt.dt)
@@ -91,7 +93,7 @@ class AgendaPessoa extends Model
     public function Operadores()
     {
         $banco = $this->setConnet();
-        $query = "select ap.cd_usuario, u.nm_usuario, count(*)
+        $query = "select ap.cd_usuario, DECODE(POSITION(' ',u.nm_usuario),0,u.nm_usuario, SUBSTRING(u.nm_usuario FROM 1 FOR POSITION(' ', u.nm_usuario))) nm_usuario, count(*)
         from agendapessoa ap
         inner join usuario u on (u.cd_usuario = ap.cd_usuario)
         where ap.dt_registro between '$this->p_dia' and current_date

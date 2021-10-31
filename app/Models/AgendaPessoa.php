@@ -29,7 +29,11 @@ class AgendaPessoa extends Model
     public function AgendaOperador3Meses()
     {  
         $dti30dias = Config::get('constants.options.dti30dias'); 
-        $dtf30dias = Config::get('constants.options.dtf30dias');       
+        $dtf30dias = Config::get('constants.options.dtf30dias');   
+        $dti60dias = Config::get('constants.options.dti60dias'); 
+        $dtf60dias = Config::get('constants.options.dtf60dias');  
+        $dti90dias = Config::get('constants.options.dti90dias'); 
+        $dtf90dias = Config::get('constants.options.dtf90dias');     
         
         $banco = $this->setConnet();
         $query = 
@@ -48,7 +52,7 @@ class AgendaPessoa extends Model
              select ap.cd_usuario, u.nm_usuario, 0 mes1, count(ap.cd_usuario) mes2, 0 mes3
              from agendapessoa ap
              inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-             where ap.dt_registro between '08-01-2021 00:00:00' and '08-31-2021 23:59:59'
+             where ap.dt_registro between '$dti60dias 00:00:00' and '$dtf60dias 23:59:59'
              group by ap.cd_usuario, u.nm_usuario
          
              union all
@@ -56,7 +60,7 @@ class AgendaPessoa extends Model
              select ap.cd_usuario, u.nm_usuario, 0 mes1, 0 mes2, count(ap.cd_usuario) mes3
              from agendapessoa ap
              inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-             where ap.dt_registro between '07-01-2021 00:00:00' and '07-31-2021 23:59:59'
+             where ap.dt_registro between '$dti90dias 00:00:00' and '$dtf90dias 23:59:59'
              group by ap.cd_usuario, u.nm_usuario
              ) x
            group by x.cd_usuario, x.nm_usuario";

@@ -173,5 +173,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
     Route::prefix('cobranca')->group(function () {
         Route::get('index', [CobrancaController::class, 'index'])->name('cobranca.index');
+        Route::get('detalhe-agenda/usuario/{cdusuario}/data/{dt}', [CobrancaController::class, 'DetalheAgenda'])->name('cobranca.detalhe-agenda');
     });
 });

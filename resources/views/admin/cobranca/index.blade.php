@@ -61,7 +61,7 @@
                             <h3 class="box-title">Novos Clientes</h3>
                         </div>
                         <div class="box-body no-padding">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -99,7 +99,10 @@
                                         <td>{{ $operadores[$key]->NM_USUARIO }}</td>
                                         @foreach ($agenda[$key] as $a)
                                             @php $total += $a->QTD @endphp
-                                            <td>{{ $a->QTD }}</td>
+                                            <td data-toggle="tooltip" data-placement="bottom"
+                                                title="Clique para ver detalhes">
+                                                <a href="{{route('cobranca.detalhe-agenda', ['cdusuario' => $operadores[$key]->CD_USUARIO, 'dt' => $a->DT])}}">{{ $a->QTD }}</a>
+                                            </td>
                                         @endforeach
                                         <td class="bg-light-blue">{{ $total }}</td>
                                     </tr>

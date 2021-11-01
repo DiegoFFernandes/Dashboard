@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\MovimentoVeiculo;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+       
         // /* Inicia o envio das variaveis da portaria referindo-se a quantidades de entrada e saida*/
         $dtInicio = date('Y-m-d 00:00:00');
         $entrada = 'entrada';
@@ -38,8 +40,8 @@ class AppServiceProvider extends ServiceProvider
         $qtdEntrada =  $movimento->qtdMovimento($entrada, $dtInicio);
         $qtdSaida =  $movimento->qtdMovimento($saida, $dtInicio);
 
-        View::share('qtdEntrada', $qtdEntrada);
-        View::share('qtdSaida', $qtdSaida);
+        
+        View::share(compact('qtdEntrada', 'qtdSaida'));
 
         /*fim variaveis portaria*/
     }

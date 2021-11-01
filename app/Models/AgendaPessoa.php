@@ -19,6 +19,7 @@ class AgendaPessoa extends Model
     {
         $this->connection = 'Sempre setar o banco firebird com SetConnet';
         $this->p_dia = date("m/01/Y");
+        $this->dti30dias = Config::get('constants.options.dti30dias');
     }
 
     public function setConnet()
@@ -27,17 +28,17 @@ class AgendaPessoa extends Model
     }
 
     public function AgendaOperador3Meses()
-    {  
-        $dti30dias = Config::get('constants.options.dti30dias'); 
-        $dtf30dias = Config::get('constants.options.dtf30dias');   
-        $dti60dias = Config::get('constants.options.dti60dias'); 
-        $dtf60dias = Config::get('constants.options.dtf60dias');  
-        $dti90dias = Config::get('constants.options.dti90dias'); 
-        $dtf90dias = Config::get('constants.options.dtf90dias');     
-        
+    {
+        $dti30dias = Config::get('constants.options.dti30dias');       
+        $dtf30dias = Config::get('constants.options.dtf30dias');
+        $dti60dias = Config::get('constants.options.dti60dias');
+        $dtf60dias = Config::get('constants.options.dtf60dias');
+        $dti90dias = Config::get('constants.options.dti90dias');
+        $dtf90dias = Config::get('constants.options.dtf90dias');
+
         $banco = $this->setConnet();
-        $query = 
-          "select x.cd_usuario,
+        $query =
+            "select x.cd_usuario,
           DECODE(POSITION(' ',x.nm_usuario),0,x.nm_usuario, SUBSTRING(x.nm_usuario FROM 1 FOR POSITION(' ',x.nm_usuario))) nm_usuario, 
           sum(x.mes1) mes1, sum(x.mes2) mes2, sum(x.mes3) mes3
              from (
@@ -67,11 +68,9 @@ class AgendaPessoa extends Model
 
         return DB::connection($banco)->select($query);
     }
-
     public function AgendaOperadorMes($operadores)
     {
-        $banco = $this->setConnet();       
-
+        $banco = $this->setConnet();        
         foreach ($operadores as $o) {
             $query = "with recursive dt as (
                 select cast('$this->p_dia' as date) as dt
@@ -90,18 +89,37 @@ class AgendaPessoa extends Model
 
             $operador[] = DB::connection($banco)->select($query);
         }
-
+        
         return $operador;
     }
-
     public function Operadores()
     {
         $banco = $this->setConnet();
         $query = "select ap.cd_usuario, DECODE(POSITION(' ',u.nm_usuario),0,u.nm_usuario, SUBSTRING(u.nm_usuario FROM 1 FOR POSITION(' ', u.nm_usuario))) nm_usuario, count(*)
         from agendapessoa ap
         inner join usuario u on (u.cd_usuario = ap.cd_usuario)
-        where ap.dt_registro between '$this->p_dia' and current_date
+        where ap.dt_registro between '$this->dti30dias' and current_date
         group by ap.cd_usuario, u.nm_usuario";
+
         return DB::connection($banco)->select($query);
+    }
+
+    public function Detalhe($cdusuario, $data)
+    {
+        $query = "select ap.nr_sequencia,
+        cast((ap.cd_pessoa||' - '|| p.nm_pessoa) as varchar(200) character set utf8) nm_pessoa, 
+         ap.cd_usuario, 
+        cast(ap.ds_agenda as blob sub_type text character set utf8) as ds_agenda, 
+        ap.dt_registro,
+            case ap.st_contato
+            when 'D' then 'Entramos em contato'
+            else 'Cliente ligou'
+            end st_contato
+        from agendapessoa ap
+        inner join pessoa p on (p.cd_pessoa = ap.cd_pessoa)
+        where cast(ap.dt_registro as date) = '$data' and ap.cd_usuario = '$cdusuario'";
+        
+
+        return DB::connection($this->setConnet())->select($query);
     }
 }

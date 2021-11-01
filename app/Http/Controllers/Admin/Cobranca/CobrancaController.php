@@ -66,7 +66,6 @@ class CobrancaController extends Controller
 
         return $this->GeraCharts($keys, $mes1, $mes2, $mes3);
     }
-
     public function GeraCharts($keys, $mes1, $mes2, $mes3)
     {
 
@@ -93,5 +92,16 @@ class CobrancaController extends Controller
         ]);
 
         return $chart;
+    }
+    public function DetalheAgenda($cdusuario, $dt){      
+        $title_page   = 'Detalhes Agenda';
+        $user_auth    = $this->user;        
+        $exploder = explode('/', $this->resposta->route()->uri());
+        $uri       = ucfirst($exploder[1]);
+        
+        $dt  = date('m-d-Y', strtotime($dt));
+        $detalhes = $this->agenda->Detalhe($cdusuario, $dt);
+
+        return view('admin.cobranca.detalhe-agenda', compact('detalhes', 'user_auth', 'uri'));
     }
 }

@@ -91,7 +91,7 @@ Route::prefix('producao')->group(function () {
     Route::get('produtividade-executores/quadrante-4', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante4');
 });
 
-Route::middleware(['auth', 'role:admin|comercial'])->group(function () {
+Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
     Route::prefix('portaria')->group(function () {
         Route::get('movimento/entrada', [PortariaController::class, 'index'])->name('admin.portaria.entrada');
         Route::get('movimento/saida', [PortariaController::class, 'index'])->name('admin.portaria.saida');
@@ -143,15 +143,26 @@ Route::middleware(['auth', 'role:admin|comercial'])->group(function () {
     });
 });
 
-Route::middleware(['auth', 'role:comercial'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::prefix('comercial')->group(function () {
-        
-            Route::get('ivorecap-norte', [ComercialController::class, 'ivoNorte'])->name('comercial.ivo-norte');
-        
-        
-            Route::get('ivorecap-sul', [ComercialController::class, 'ivoSul'])->name('comercial.ivo-sul');
+        Route::middleware(['auth', 'permission:ver-comercial-norte'])->group(function () {
+            Route::get('ivorecap-norte', [ComercialController::class, 'ivoComercialNorte'])->name('comercial.ivo-norte');
+        });
+        Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
+            Route::get('ivorecap-sul', [ComercialController::class, 'ivoComercialSul'])->name('comercial.ivo-sul');
         });
     });
+});
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('diretoria')->group(function () {
+        Route::middleware(['auth', 'permission:ver-diretoria-norte'])->group(function () {
+            Route::get('ivorecap-norte', [ComercialController::class, 'ivoDiretoriaNorte'])->name('diretoria.ivo-norte');
+        });
+        Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
+            Route::get('ivorecap-sul', [ComercialController::class, 'ivoDiretoriaSul'])->name('diretoria.ivo-sul');
+        });
+    });
+});
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

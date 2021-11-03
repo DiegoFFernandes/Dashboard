@@ -24,20 +24,35 @@ class ComercialController extends Controller
         });
     }
 
-    public function ivoNorte(){
-        $title_page   = 'Comercial';
+    public function ivoComercialNorte(){
+        $title_page   = 'Rede Ivorecap - Norte';
         $user_auth    = $this->user;
 
         $uri         = $this->resposta->route()->uri();
         
-        return view('admin.comercial.index', compact('title_page', 'user_auth', 'uri'));
+        return view('admin.comercial.comercial-norte', compact('title_page', 'user_auth', 'uri'));
     }
 
-    public function ivoSul(){
-        $title_page   = 'Comercial';
+    public function ivoComercialSul(){
+        $title_page   = 'Rede Ivorecap - Sul';
         $user_auth    = $this->user;
         $uri         = $this->resposta->route()->uri();
         
-        return view('admin.comercial.index', compact('title_page', 'user_auth', 'uri'));
+        return view('admin.comercial.comercial-sul', compact('title_page', 'user_auth', 'uri'));
+    }
+
+    public function ivoDiretoriaNorte(){
+        $title_page   = 'Rede Ivorecap - Norte';
+        $user_auth    = $this->user;
+        $uri         = $this->resposta->route()->uri();
+        
+        return view('admin.diretoria.diretoria-norte', compact('title_page', 'user_auth', 'uri'));
+    }
+    public function ivoDiretoriaSul(){
+        $title_page   = 'Rede Ivorecap - Sul';
+        $user_auth    = $this->user;
+        $uri         = $this->resposta->route()->uri();
+        
+        return view('admin.diretoria.diretoria-sul', compact('title_page', 'user_auth', 'uri'));
     }
 }

@@ -203,6 +203,28 @@
                     </ul>
                 </li>
             @endcanany
+            @canany(['ver-diretoria-norte','ver-diretoria-sul'])
+                <li class="treeview" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-suitcase"></i> <span>Diretoria</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        @can('ver-diretoria-norte')
+                            <li class="active"><a href="{{ route('diretoria.ivo-norte') }}"><i
+                                        class="fa fa-arrow-up"></i>Ivo Recap - Norte</a>
+                            </li>
+                        @endcan
+                        @can('ver-diretoria-sul')
+                            <li class="active"><a href="{{ route('diretoria.ivo-sul') }}"><i
+                                        class="fa fa-arrow-down"></i>Ivo Recap - Sul</a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+            @endcanany
             @role('cobranca|admin')
                 <li class="treeview" style="height: auto;">
                     <a href="#">

@@ -24,13 +24,20 @@ class ComercialController extends Controller
         });
     }
 
-    public function index(){
+    public function ivoNorte(){
         $title_page   = 'Comercial';
         $user_auth    = $this->user;
 
         $uri         = $this->resposta->route()->uri();
-        $src =  'https://is.gd/IVOBI_COMCGS';
+        
+        return view('admin.comercial.index', compact('title_page', 'user_auth', 'uri'));
+    }
 
+    public function ivoSul(){
+        $title_page   = 'Comercial';
+        $user_auth    = $this->user;
+        $uri         = $this->resposta->route()->uri();
+        
         return view('admin.comercial.index', compact('title_page', 'user_auth', 'uri'));
     }
 }

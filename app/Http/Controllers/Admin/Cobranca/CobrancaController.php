@@ -34,12 +34,14 @@ class CobrancaController extends Controller
         $p_dia = $this->p_dia;
         $dia_atual = $this->atual_dia;
         $operadores = $this->agenda->Operadores();
+        
         $meses = $this->agenda->AgendaOperador3Meses();
 
+        $clientesNovos = $this->agenda->CadastroNovos();
+        $chartClienteNovos = $this->CarregaVariavel($clientesNovos);
         $chart = $this->CarregaVariavel($meses);
-
         $agenda = $this->agenda->AgendaOperadorMes($operadores);
-
+        $clientesNovosDia = $this->agenda->ClientesNovosMes($operadores);
 
         $title_page   = 'Agenda';
         $user_auth    = $this->user;
@@ -52,7 +54,10 @@ class CobrancaController extends Controller
             'agenda',
             'operadores',
             'meses',
-            'chart'
+            'chart', 
+            'clientesNovos',
+            'chartClienteNovos',
+            'clientesNovosDia'
         ));
     }
     public function CarregaVariavel($meses)
@@ -74,19 +79,19 @@ class CobrancaController extends Controller
         $chart->displaylegend(true);
         $chart->height(180);
 
-        $chart->dataset(Config::get('constants.meses.nMes30'), 'bar', $mes1)
+        $chart->dataset(Config::get('constants.meses.nMes30'), 'line', $mes1)
             ->color("rgb(255, 99, 132)")
             ->backgroundcolor("rgb(255, 99, 132)")
             ->fill(false)
             ->linetension(0.1)
             ->dashed([5]);
-        $chart->dataset(Config::get('constants.meses.nMes60'), 'bar', $mes2)
+        $chart->dataset(Config::get('constants.meses.nMes60'), 'line', $mes2)
             ->options([
                 'show'            => true,
                 'backgroundColor' => '#D1F2EB',
                 'displaylegend' => false
             ]);
-        $chart->dataset(Config::get('constants.meses.nMes90'), 'bar', $mes3)->options([
+        $chart->dataset(Config::get('constants.meses.nMes90'), 'line', $mes3)->options([
             'show'            => true,
             'backgroundColor' => '#D5DBDB',
         ]);
@@ -103,5 +108,8 @@ class CobrancaController extends Controller
         $detalhes = $this->agenda->Detalhe($cdusuario, $dt);
 
         return view('admin.cobranca.detalhe-agenda', compact('detalhes', 'user_auth', 'uri'));
+    }
+    public function ClientesNovos($cdusuario, $dt){
+        return $cdusuario;
     }
 }

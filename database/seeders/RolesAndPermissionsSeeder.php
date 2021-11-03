@@ -24,29 +24,33 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'excluir']);
         Permission::create(['name' => 'listar']);
         Permission::create(['name' => 'criar']);
-        Permission::create(['name' => 'ver financeiro']);
-        Permission::create(['name' => 'ver cobranca']);
-        Permission::create(['name' => 'ver faturamento']);
-        Permission::create(['name' => 'ver comercial']);
-        Permission::create(['name' => 'ver producao']);
+        Permission::create(['name' => 'ver-financeiro']);
+        Permission::create(['name' => 'ver-cobranca-sul']);
+        Permission::create(['name' => 'ver-cobranca-norte']);
+        Permission::create(['name' => 'ver-faturamento']);
+        Permission::create(['name' => 'ver-comercial']);
+        Permission::create(['name' => 'ver-producao']);
 
         $role = Role::create(['name' => 'admin']);
         $role->givePermissionTo([
-            'editar', 'listar', 'criar', 'ver financeiro', 'ver cobranca', 'ver faturamento', 'ver comercial', 'ver producao']);
+            'editar', 'listar', 'criar', 'ver-financeiro', 'ver-cobranca', 'ver-faturamento', 'ver-comercial-sul', 'ver-comercial-norte','ver-producao']);
 
         $role = Role::create(['name' => 'portaria'])
         ->givePermissionTo(['editar', 'listar', 'criar']);
 
         $role = Role::create(['name' => 'comercial'])
-        ->givePermissionTo(['ver comercial']);
+        ->givePermissionTo(['ver-comercial-sul', 'ver-comercial-norte']);
 
         $role = Role::create(['name' => 'financeiro'])
-        ->givePermissionTo(['ver financeiro']);
+        ->givePermissionTo(['ver-financeiro']);
 
         $role = Role::create(['name' => 'producao'])
-        ->givePermissionTo(['ver producao']);
+        ->givePermissionTo(['ver-producao']);
 
         $role = Role::create(['name' => 'usuario']);
+
+        $role = Role::create(['name' => 'diretoria'])
+        ->givePermissionTo(['diretoria-sul', 'diretoria-norte']);
         
     }
 }

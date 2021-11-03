@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $uri       = $this->resposta->route()->uri();
         $user_auth = $this->user;
-        $users     = User::all();
+        $users     = User::where('id','<>', 1)->get();
         $empresas  = $this->empresa->empresa();
 
         return view('admin.usuarios.usuarios', compact('users', 'user_auth', 'empresas', 'uri'));

@@ -37,11 +37,17 @@ return [
         'dtf60dias' => $dtf60dias,
         'dti90dias' => $dti90dias,
         'dtf90dias' => $dtf90dias,
+        'dti120dias' => $dti120dias,
+        'dtf120dias' => $dtf120dias,
+        'dti150dias' => $dti150dias,
+        'dtf150dias' => $dtf150dias,
     ],
     'meses' => [
         'nMesHj' => $nMesHj,
         'nMes30' => $nMes30,
         'nMes60' => $nMes60,
         'nMes90' => $nMes90,
+        'nMes120' => $nMes120,
+        'nMes150' => $nMes150,        
     ]
 ];

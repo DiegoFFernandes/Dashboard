@@ -91,7 +91,7 @@ Route::prefix('producao')->group(function () {
     Route::get('produtividade-executores/quadrante-4', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante4');
 });
 
-Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
+Route::middleware(['auth', 'role:admin|comercial'])->group(function () {
     Route::prefix('portaria')->group(function () {
         Route::get('movimento/entrada', [PortariaController::class, 'index'])->name('admin.portaria.entrada');
         Route::get('movimento/saida', [PortariaController::class, 'index'])->name('admin.portaria.saida');
@@ -143,11 +143,16 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
     });
 });
 
-Route::middleware(['auth', 'role:admin|comercial'])->group(function () {
+Route::middleware(['auth', 'role:comercial'])->group(function () {
     Route::prefix('comercial')->group(function () {
-        Route::get('listar', [ComercialController::class, 'index'])->name('comercial.index');
+        
+            Route::get('ivorecap-norte', [ComercialController::class, 'ivoNorte'])->name('comercial.ivo-norte');
+        
+        
+            Route::get('ivorecap-sul', [ComercialController::class, 'ivoSul'])->name('comercial.ivo-sul');
+        });
     });
-});
+
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     //Rotas Pessoa
@@ -174,5 +179,6 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
     Route::prefix('cobranca')->group(function () {
         Route::get('index', [CobrancaController::class, 'index'])->name('cobranca.index');
         Route::get('detalhe-agenda/usuario/{cdusuario}/data/{dt}', [CobrancaController::class, 'DetalheAgenda'])->name('cobranca.detalhe-agenda');
+        Route::get('clientes-novos/usuario/{cdusuario}/data/{dt}', [CobrancaController::class, 'ClientesNovos'])->name('cobranca.clientes-novos');
     });
 });

@@ -34,7 +34,7 @@ class CobrancaController extends Controller
         $p_dia = $this->p_dia;
         $dia_atual = $this->atual_dia;
         $operadores = $this->agenda->Operadores();
-        
+
         $meses = $this->agenda->AgendaOperador3Meses();
 
         $clientesNovos = $this->agenda->CadastroNovos();
@@ -54,7 +54,7 @@ class CobrancaController extends Controller
             'agenda',
             'operadores',
             'meses',
-            'chart', 
+            'chart',
             'clientesNovos',
             'chartClienteNovos',
             'clientesNovosDia'
@@ -73,43 +73,92 @@ class CobrancaController extends Controller
     }
     public function GeraCharts($keys, $mes1, $mes2, $mes3)
     {
-
         $chart = new AgendaPessoaChart();
         $chart->labels($keys);
         $chart->displaylegend(true);
         $chart->height(180);
 
-        $chart->dataset(Config::get('constants.meses.nMes30'), 'line', $mes1)
+        $chart->dataset(Config::get('constants.meses.nMes30'), 'bar', $mes1)
             ->color("rgb(255, 99, 132)")
             ->backgroundcolor("rgb(255, 99, 132)")
             ->fill(false)
             ->linetension(0.1)
             ->dashed([5]);
-        $chart->dataset(Config::get('constants.meses.nMes60'), 'line', $mes2)
+        $chart->dataset(Config::get('constants.meses.nMes60'), 'bar', $mes2)
             ->options([
                 'show'            => true,
                 'backgroundColor' => '#D1F2EB',
                 'displaylegend' => false
             ]);
-        $chart->dataset(Config::get('constants.meses.nMes90'), 'line', $mes3)->options([
+        $chart->dataset(Config::get('constants.meses.nMes90'), 'bar', $mes3)->options([
             'show'            => true,
             'backgroundColor' => '#D5DBDB',
         ]);
 
         return $chart;
     }
-    public function DetalheAgenda($cdusuario, $dt){      
+    public function DetalheAgenda($cdusuario, $dt)
+    {
         $title_page   = 'Detalhes Agenda';
-        $user_auth    = $this->user;        
+        $user_auth    = $this->user;
         $exploder = explode('/', $this->resposta->route()->uri());
         $uri       = ucfirst($exploder[1]);
-        
+
         $dt  = date('m-d-Y', strtotime($dt));
         $detalhes = $this->agenda->Detalhe($cdusuario, $dt);
 
         return view('admin.cobranca.detalhe-agenda', compact('detalhes', 'user_auth', 'uri'));
     }
-    public function ClientesNovos($cdusuario, $dt){
+    public function ClientesNovos($cdusuario, $dt)
+    {
         return $cdusuario;
+    }
+    public function AgendaData(Request $request)
+    {
+        $dt = $request->dt;
+        if ($dt == 120) {
+            $datai = Config::get('constants.options.dti120dias');
+            $dataf = Config::get('constants.options.dtf120dias');
+        } elseif ($dt == 150) {
+            $datai = Config::get('constants.options.dti150dias');
+            $dataf = Config::get('constants.options.dtf150dias');
+        } elseif ($dt == 180) {
+            $datai = Config::get('constants.options.dti180dias');
+            $dataf = Config::get('constants.options.dtf180dias');
+        } elseif ($dt == 210) {
+            $datai = Config::get('constants.options.dti210dias');
+            $dataf = Config::get('constants.options.dtf210dias');
+        } elseif ($dt == 240) {
+            $datai = Config::get('constants.options.dti240dias');
+            $dataf = Config::get('constants.options.dtf240dias');
+        } elseif ($dt == 270) {
+            $datai = Config::get('constants.options.dti270dias');
+            $dataf = Config::get('constants.options.dtf270dias');
+        } elseif ($dt == 300) {
+            $datai = Config::get('constants.options.dti300dias');
+            $dataf = Config::get('constants.options.dtf300dias');
+        }
+        $data = $this->agenda->AgendaMes($datai, $dataf);
+
+        $html = '<table id="table-agenda-mes" class="table">
+                <thead>
+                <tr>
+                    <th style="width:100px">Cód. Usuario</th>
+                    <th style="width:100px">Nome</th>
+                    <th>Quantidade</th>
+                </tr>
+                </thead>
+                <tbody>';
+        foreach ($data as $d) {
+            $html .= '
+                <tr>
+                    <td>' . $d->CD_USUARIO . '</td>
+                    <td>' . $d->NM_USUARIO . '</td>
+                    <td>' . $d->MES . '</td>
+                </tr>';
+        }
+        $html .= '</tbody>';
+        return $html;
+        //return response()->json($data);
     }
 }

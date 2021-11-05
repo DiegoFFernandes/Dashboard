@@ -20,6 +20,19 @@ $dti120dias = date('m-d-Y', strtotime('-4 month', strtotime(str_replace('-', '/'
 $dtf120dias = date('m-t-Y', strtotime('-4 month', strtotime(str_replace('-', '/', $data_ini))));
 $dti150dias = date('m-d-Y', strtotime('-5 month', strtotime(str_replace('-', '/', $data_ini))));
 $dtf150dias = date('m-t-Y', strtotime('-5 month', strtotime(str_replace('-', '/', $data_ini))));
+$dti180dias = date('m-d-Y', strtotime('-6 month', strtotime(str_replace('-', '/', $data_ini))));
+$dtf180dias = date('m-t-Y', strtotime('-6 month', strtotime(str_replace('-', '/', $data_ini))));
+$dti210dias = date('m-d-Y', strtotime('-7 month', strtotime(str_replace('-', '/', $data_ini))));
+$dtf210dias = date('m-t-Y', strtotime('-7 month', strtotime(str_replace('-', '/', $data_ini))));
+$dti240dias = date('m-d-Y', strtotime('-8 month', strtotime(str_replace('-', '/', $data_ini))));
+$dtf240dias = date('m-t-Y', strtotime('-8 month', strtotime(str_replace('-', '/', $data_ini))));
+$dti270dias = date('m-d-Y', strtotime('-9 month', strtotime(str_replace('-', '/', $data_ini))));
+$dtf270dias = date('m-t-Y', strtotime('-9 month', strtotime(str_replace('-', '/', $data_ini))));
+$dti300dias = date('m-d-Y', strtotime('-10 month', strtotime(str_replace('-', '/', $data_ini))));
+$dtf300dias = date('m-t-Y', strtotime('-10 month', strtotime(str_replace('-', '/', $data_ini))));
+$dti330dias = date('m-d-Y', strtotime('-11 month', strtotime(str_replace('-', '/', $data_ini))));
+$dtf330dias = date('m-t-Y', strtotime('-11 month', strtotime(str_replace('-', '/', $data_ini))));
+
 
 //Nome dos 5 ultimos meses da data atual
 $nMesHj = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $today)))));
@@ -28,6 +41,12 @@ $nMes60 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dt
 $nMes90 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti90dias)))));
 $nMes120 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti120dias)))));
 $nMes150 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti150dias)))));
+$nMes180 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti180dias)))));
+$nMes210 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti210dias)))));
+$nMes240 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti240dias)))));
+$nMes270 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti270dias)))));
+$nMes300 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti300dias)))));
+$nMes330 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti330dias)))));
 
 return [
     'options' => [
@@ -41,6 +60,18 @@ return [
         'dtf120dias' => $dtf120dias,
         'dti150dias' => $dti150dias,
         'dtf150dias' => $dtf150dias,
+        'dti180dias' => $dti180dias,
+        'dtf180dias' => $dtf180dias,
+        'dti210dias' => $dti210dias,
+        'dtf210dias' => $dtf210dias,
+        'dti240dias' => $dti240dias,
+        'dtf240dias' => $dtf240dias,
+        'dti270dias' => $dti270dias,
+        'dtf270dias' => $dtf270dias,
+        'dti300dias' => $dti300dias,
+        'dtf300dias' => $dtf300dias,
+        'dti330dias' => $dti330dias,
+        'dtf330dias' => $dtf330dias,
     ],
     'meses' => [
         'nMesHj' => $nMesHj,
@@ -48,6 +79,12 @@ return [
         'nMes60' => $nMes60,
         'nMes90' => $nMes90,
         'nMes120' => $nMes120,
-        'nMes150' => $nMes150,        
+        'nMes150' => $nMes150,   
+        'nMes180' => $nMes180,
+        'nMes210' => $nMes210,
+        'nMes240' => $nMes240,
+        'nMes270' => $nMes270,
+        'nMes300' => $nMes300,
+        'nMes330' => $nMes330,     
     ]
 ];

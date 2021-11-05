@@ -177,4 +177,15 @@ class AgendaPessoa extends Model
         return $operador;
         
     }
+    public function AgendaMes($dti, $dtf){
+        $query = "select ap.cd_usuario,
+        DECODE(POSITION(' ',u.nm_usuario),0,u.nm_usuario, SUBSTRING(u.nm_usuario FROM 1 FOR POSITION(' ',u.nm_usuario))) nm_usuario,
+        count(ap.cd_usuario) mes
+        from agendapessoa ap
+        inner join usuario u on (u.cd_usuario = ap.cd_usuario)
+        where ap.dt_registro between '$dti 00:00:00' and '$dtf 23:59:59'
+        group by ap.cd_usuario, u.nm_usuario";
+
+       return DB::connection($this->setConnet())->select($query);       
+    }
 }

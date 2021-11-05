@@ -4,102 +4,6 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-md-4">
-                <div class="box box-info">
-                    <div class="box-header">
-                        <h3 class="box-title">Agenda 3 últimos meses</h3>
-
-                        <div class="box-tools pull-right">
-                            <form action="" method="POST">
-                                <select>
-                                    <option>Escolha o mês</option>
-                                    <option value="120">{{ Config::get('constants.meses.nMes120') }}</option>
-                                    <option value="150">{{ Config::get('constants.meses.nMes150') }}</option>
-                                </select>
-                                <button type="submmit" class="btn btn-box-tool">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="box-body no-padding">
-                        <table class="table table-striped">
-                            <thead>
-                                <th>Cód. Usuario</th>
-                                <th>Nome</th>
-                                <th>{{ Config::get('constants.meses.nMes30') }}</th>
-                                <th>{{ Config::get('constants.meses.nMes60') }}</th>
-                                <th>{{ Config::get('constants.meses.nMes90') }}</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($meses as $m)
-                                    <tr>
-                                        <td>{{ $m->CD_USUARIO }}</td>
-                                        <td>{{ $m->NM_USUARIO }}</td>
-                                        <td>{{ $m->MES1 }}</td>
-                                        <td>{{ $m->MES2 }}</td>
-                                        <td>{{ $m->MES3 }}</td>
-                                    </tr>
-                                @endforeach
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="box box-primary">
-                    <div class="box-header">
-                        <h3 class="box-title">Clientes novos 3 últimos meses </h3>
-                    </div>
-                    <div class="box-body no-padding">
-                        <table class="table table-striped">
-                            <thead>
-                                <th>Cód. Usuario</th>
-                                <th>Nome</th>
-                                <th>{{ Config::get('constants.meses.nMes30') }}</th>
-                                <th>{{ Config::get('constants.meses.nMes60') }}</th>
-                                <th>{{ Config::get('constants.meses.nMes90') }}</th>
-                            </thead>
-                            <tbody>
-                                @foreach ($clientesNovos as $m)
-                                    <tr>
-                                        <td>{{ $m->CD_USUARIOCAD }}</td>
-                                        <td>{{ $m->NM_USUARIO }}</td>
-                                        <td>{{ $m->MES1 }}</td>
-                                        <td>{{ $m->MES2 }}</td>
-                                        <td>{{ $m->MES3 }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 no-padding">
-                <div class="col-md-12">
-                    <div class="box box-primary">
-                        <div class="box-header">
-                            <h3 class="box-title">Progresso Mês</h3>
-                        </div>
-                        <div class="box-body no-padding">
-                            {!! $chart->container() !!}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="box box-primary">
-                        <div class="box-header">
-                            <h3 class="box-title">Novos Clientes</h3>
-                        </div>
-                        <div class="box-body no-padding">
-                            {!! $chartClienteNovos->container() !!}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-12">
                 <div class="nav-tabs-custom" style="cursor: move;">
                     <!-- Tabs within a box -->
@@ -194,6 +98,103 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="box box-info">
+                    <div class="box-header">
+                        <h3 class="box-title" id="title-agenda">Agenda 3 últimos meses</h3>
+                        <div class="box-tools pull-right">
+                            <select id="mesagenda">
+                                <option value="0">3 últimos meses</option>
+                                <option value="120">{{ Config::get('constants.meses.nMes120') }}</option>
+                                <option value="150">{{ Config::get('constants.meses.nMes150') }}</option>
+                                <option value="180">{{ Config::get('constants.meses.nMes180') }}</option>
+                                <option value="210">{{ Config::get('constants.meses.nMes210') }}</option>
+                                <option value="240">{{ Config::get('constants.meses.nMes240') }}</option>
+                                <option value="270">{{ Config::get('constants.meses.nMes270') }}</option>
+                                <option value="300">{{ Config::get('constants.meses.nMes300') }}</option>                                                               
+                            </select>
+                        </div>
+                    </div>
+                    <div class="box-body no-padding" id="table-agenda">
+                        <table class="table table-striped" id="table-agenda-3-meses">
+                            <thead>
+                                <tr>
+                                    <th>Cód. Usuario</th>
+                                    <th>Nome</th>
+                                    <th>{{ Config::get('constants.meses.nMes30') }}</th>
+                                    <th>{{ Config::get('constants.meses.nMes60') }}</th>
+                                    <th>{{ Config::get('constants.meses.nMes90') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($meses as $m)
+                                    <tr>
+                                        <td>{{ $m->CD_USUARIO }}</td>
+                                        <td>{{ $m->NM_USUARIO }}</td>
+                                        <td>{{ $m->MES1 }}</td>
+                                        <td>{{ $m->MES2 }}</td>
+                                        <td>{{ $m->MES3 }}</td>
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h3 class="box-title">Clientes novos 3 últimos meses </h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Cód. Usuario</th>
+                                <th>Nome</th>
+                                <th>{{ Config::get('constants.meses.nMes30') }}</th>
+                                <th>{{ Config::get('constants.meses.nMes60') }}</th>
+                                <th>{{ Config::get('constants.meses.nMes90') }}</th>
+                            </thead>
+                            <tbody>
+                                @foreach ($clientesNovos as $m)
+                                    <tr>
+                                        <td>{{ $m->CD_USUARIOCAD }}</td>
+                                        <td>{{ $m->NM_USUARIO }}</td>
+                                        <td>{{ $m->MES1 }}</td>
+                                        <td>{{ $m->MES2 }}</td>
+                                        <td>{{ $m->MES3 }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 no-padding">
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Progresso Mês</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            {!! $chart->container() !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header">
+                            <h3 class="box-title">Novos Clientes</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            {!! $chartClienteNovos->container() !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>       
 
 
     </section>
@@ -205,4 +206,26 @@
     <script src="{{ asset('js/scripts.js') }}"></script>
     {!! $chart->script() !!}
     {!! $chartClienteNovos->script() !!}
+    <script>
+        $('#mesagenda').change(function() {
+            var mes = $(this).val();
+            if (mes == 0) {
+                $("#title-agenda").text("Agenda 3 últimos meses");
+                $("#table-agenda-mes").hide();
+                $("#table-agenda-3-meses").show();
+            } else {
+                $.ajax({
+                    url: "{{ route('cobranca.agenda.mes') }}?dt=" + mes,
+                    method: 'GET',
+                    success: function(data) {
+                        $("#title-agenda").text("Agenda por Mês");
+                        $("#table-agenda-mes").remove();
+                        $("#table-agenda-3-meses").hide();
+                        $("#table-agenda").append(data);
+                    }
+                });
+            }
+
+        });
+    </script>
 @endsection

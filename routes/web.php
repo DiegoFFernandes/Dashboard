@@ -142,7 +142,6 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::get('search', [PortariaController::class, 'search'])->name('placa.search');
     });
 });
-
 Route::middleware(['auth'])->group(function () {
     Route::prefix('comercial')->group(function () {
         Route::middleware(['auth', 'permission:ver-comercial-norte'])->group(function () {
@@ -163,8 +162,6 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 });
-
-
 Route::middleware(['auth', 'role:admin'])->group(function () {
     //Rotas Pessoa
     Route::prefix('pessoa')->group(function () {
@@ -185,11 +182,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('delete/{id}', [EmailController::class, 'destroy'])->name('email.delete');
     });
 });
-
 Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
     Route::prefix('cobranca')->group(function () {
         Route::get('index', [CobrancaController::class, 'index'])->name('cobranca.index');
         Route::get('detalhe-agenda/usuario/{cdusuario}/data/{dt}', [CobrancaController::class, 'DetalheAgenda'])->name('cobranca.detalhe-agenda');
         Route::get('clientes-novos/usuario/{cdusuario}/data/{dt}', [CobrancaController::class, 'ClientesNovos'])->name('cobranca.clientes-novos');
+        Route::get('agenda/data', [CobrancaController::class, 'AgendaData'])->name('cobranca.agenda.mes');
     });
 });

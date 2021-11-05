@@ -10,23 +10,25 @@
                         <h3 class="box-title">Detalhe agenda por Operador</h3>
                         <div class="box-tools">
                             <ul class="pagination pagination-sm no-margin pull-right">
-                              <li><a href="#">«</a></li>
-                              <li><a href="#">1</a></li>
-                              <li><a href="#">2</a></li>
-                              <li><a href="#">3</a></li>
-                              <li><a href="#">»</a></li>
+                                <li><a href="#">«</a></li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">»</a></li>
                             </ul>
-                          </div>
+                        </div>
                     </div>
                     <div class="box-body no-padding">
-                        <table class="table table-striped">
+                        <table class="table display">
                             <thead>
-                                <th>Nrº Agenda</th>
-                                <th>Cliente</th>
-                                <th>Usuario</th>
-                                <th>Descrição</th>
-                                <th>Data Contato</th>
-                                <th>Status Contato</th>
+                                <tr>
+                                    <th>Agenda</th>
+                                    <th>Cliente</th>
+                                    <th>Usuario</th>
+                                    <th>Descrição</th>
+                                    <th>Data Contato</th>
+                                    <th>Status Contato</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 @foreach ($detalhes as $d)
@@ -43,13 +45,13 @@
                         </table>
                     </div>
                 </div>
-            </div>            
-        </div>     
+            </div>
+        </div>
     </section>
     <!-- /.content -->
 @endsection
 
 @section('scripts')
     @includeIf('admin.master.datatables')
-    <script src="{{ asset('js/scripts.js') }}"></script>    
+    <script src="{{ asset('js/scripts.js') }}"></script>
 @endsection

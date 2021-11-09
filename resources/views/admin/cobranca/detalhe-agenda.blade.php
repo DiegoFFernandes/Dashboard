@@ -18,19 +18,19 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="box-body no-padding">
-                        <table class="table display">
-                            <thead>
+                    <div class="box-body">
+                        <table class="table table-striped table-bordered compact" id="table-detalhe-agenda">
+                            <thead  style="font-size: 12px">
                                 <tr>
                                     <th>Agenda</th>
-                                    <th>Cliente</th>
+                                    <th style="width: 20px">Cliente</th>
                                     <th>Usuario</th>
                                     <th>Descrição</th>
                                     <th>Data Contato</th>
                                     <th>Status Contato</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody  style="font-size: 11px">
                                 @foreach ($detalhes as $d)
                                     <tr>
                                         <td>{{ $d->NR_SEQUENCIA }}</td>
@@ -53,5 +53,14 @@
 
 @section('scripts')
     @includeIf('admin.master.datatables')
-    <script src="{{ asset('js/scripts.js') }}"></script>
+    
+    <script>
+        $('#table-detalhe-agenda').DataTable({        
+        "columnDefs": [
+            { width: '15%', targets: 1 },
+            { width: '5%', targets: 2 },
+            { width: '40%', targets: 3 },
+        ]
+    });
+    </script>
 @endsection

@@ -50,6 +50,8 @@ $nMes330 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $d
 
 return [
     'options' => [
+        'dti' => $data_ini,
+        'dtf' => $data_fim,
         'dti30dias' => $dti30dias,
         'dtf30dias' => $dtf30dias,
         'dti60dias' => $dti60dias,

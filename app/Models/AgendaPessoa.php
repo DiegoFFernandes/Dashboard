@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Config;
 class AgendaPessoa extends Model
 {
     use HasFactory;
-
     protected $table = 'AGENDAPESSOA';
     protected $connection;
 
@@ -155,7 +154,7 @@ class AgendaPessoa extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
-    public function ClientesNovosMes($operadores){
+    public function ClientesNovos3Mes($operadores){
         foreach ($operadores as $o) {
             $query = "with recursive dt as (
             select cast('$this->p_dia' as date) as dt
@@ -176,6 +175,19 @@ class AgendaPessoa extends Model
         }
         return $operador;
         
+    }
+    public function ClientesNovosMes($dti, $dtf){
+        $query = "select p.cd_usuariocad cd_usuario,
+        DECODE(POSITION(' ',u.nm_usuario),0,u.nm_usuario, SUBSTRING(u.nm_usuario FROM 1 FOR POSITION(' ',u.nm_usuario))) nm_usuario,
+        count(p.cd_usuariocad) mes
+        from pessoa p
+        inner join usuario u on (u.cd_usuario = p.cd_usuariocad)
+        where p.dt_cadastro between '$dti' and '$dtf'
+        and p.cd_usuariocad not in ('ti02', 'ti04')
+        and u.cd_emprpadrao = '3'
+        group by p.cd_usuariocad, u.nm_usuario";
+
+        return DB::connection($this->setConnet())->select($query);
     }
     public function AgendaMes($dti, $dtf){
         $query = "select ap.cd_usuario,

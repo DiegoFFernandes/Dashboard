@@ -4,6 +4,74 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
+            <div class="col-md-4">
+                <div class="info-box bg-green">
+                    <span class="info-box-icon"><i class="fa fa-plus-circle"></i></span>
+                    <div class="info-box-content">
+                        <div class="box-tools pull-right">
+                            <select class="form-control form-control-sm no-padding" style="height: auto;" id="">
+                                <option value="0">{{ Config::get('constants.meses.nMesHj') }}</option>
+                                <option value="120">{{ Config::get('constants.meses.nMes120') }}</option>
+                                <option value="150">{{ Config::get('constants.meses.nMes150') }}</option>
+                                <option value="180">{{ Config::get('constants.meses.nMes180') }}</option>
+                                <option value="210">{{ Config::get('constants.meses.nMes210') }}</option>
+                                <option value="240">{{ Config::get('constants.meses.nMes240') }}</option>
+                                <option value="270">{{ Config::get('constants.meses.nMes270') }}</option>
+                                <option value="300">{{ Config::get('constants.meses.nMes300') }}</option>
+                            </select>
+                        </div>
+                        <span class="info-box-text">Clientes Novos</span>
+                        <span class="info-box-number">{{ $qtdClientesNovosMes[0]->QTD }}</span>
+
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 70%"></div>
+                        </div>
+                        <span class="progress-description">
+                            {{ Config::get('constants.meses.nMesHj') }}
+                        </span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+                <!-- /.info-box -->
+            </div>
+            <div class="col-md-3">
+                <div class="box box box-success collapsed-box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Clientes Novos Forma Pagamento</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body" style="display: none;">
+                        <table class="table table-sm table-borderless">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Qtd</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($qtdClientesFormaPagamento as $q)
+                                    <tr>
+                                        <td>{{$q->CD_FORMAPAGTO}}</td>
+                                        <td>{{$q->QTD}}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+
+        <div class="row">
             <div class="col-md-12">
                 <div class="nav-tabs-custom" style="cursor: move;">
                     <!-- Tabs within a box -->
@@ -90,7 +158,6 @@
                                             <td class="bg-green">{{ $total }}</td>
                                         </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
                         </div>
@@ -112,7 +179,7 @@
                                 <option value="210">{{ Config::get('constants.meses.nMes210') }}</option>
                                 <option value="240">{{ Config::get('constants.meses.nMes240') }}</option>
                                 <option value="270">{{ Config::get('constants.meses.nMes270') }}</option>
-                                <option value="300">{{ Config::get('constants.meses.nMes300') }}</option>                                                               
+                                <option value="300">{{ Config::get('constants.meses.nMes300') }}</option>
                             </select>
                         </div>
                     </div>
@@ -137,7 +204,6 @@
                                         <td>{{ $m->MES3 }}</td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>
@@ -146,10 +212,22 @@
             <div class="col-md-4">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Clientes novos 3 últimos meses </h3>
+                        <h3 class="box-title" id="title-clientes-novos">Clientes novos 3 últimos meses </h3>
+                        <div class="box-tools pull-right">
+                            <select id="mesclientesnovos">
+                                <option value="0">3 últimos meses</option>
+                                <option value="120">{{ Config::get('constants.meses.nMes120') }}</option>
+                                <option value="150">{{ Config::get('constants.meses.nMes150') }}</option>
+                                <option value="180">{{ Config::get('constants.meses.nMes180') }}</option>
+                                <option value="210">{{ Config::get('constants.meses.nMes210') }}</option>
+                                <option value="240">{{ Config::get('constants.meses.nMes240') }}</option>
+                                <option value="270">{{ Config::get('constants.meses.nMes270') }}</option>
+                                <option value="300">{{ Config::get('constants.meses.nMes300') }}</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="box-body no-padding">
-                        <table class="table table-striped">
+                    <div class="box-body no-padding" id="table-clientes-novos">
+                        <table class="table table-striped" id="table-clientes-novos-3-meses">
                             <thead>
                                 <th>Cód. Usuario</th>
                                 <th>Nome</th>
@@ -178,7 +256,7 @@
                         <div class="box-header">
                             <h3 class="box-title">Progresso Mês</h3>
                         </div>
-                        <div class="box-body no-padding">
+                        <div class="box-body no-padding chart-progresso-mes">
                             {!! $chart->container() !!}
                         </div>
                     </div>
@@ -188,15 +266,13 @@
                         <div class="box-header">
                             <h3 class="box-title">Novos Clientes</h3>
                         </div>
-                        <div class="box-body no-padding">
+                        <div class="box-body no-padding chart-clientes-novos">
                             {!! $chartClienteNovos->container() !!}
                         </div>
                     </div>
                 </div>
             </div>
-        </div>       
-
-
+        </div>
     </section>
     <!-- /.content -->
 @endsection
@@ -206,7 +282,8 @@
     <script src="{{ asset('js/scripts.js') }}"></script>
     {!! $chart->script() !!}
     {!! $chartClienteNovos->script() !!}
-    <script>
+
+    <script type="text/javascript">
         $('#mesagenda').change(function() {
             var mes = $(this).val();
             if (mes == 0) {
@@ -225,7 +302,51 @@
                     }
                 });
             }
+        });
+        $('#mesclientesnovos').change(function() {
+            var mes = $(this).val();
+            if (mes == 0) {
+                $("#title-clientes-novos").text("Clientes novos 3 últimos meses");
+                $("#table-clientes-novos-mes").hide();
+                $("#table-clientes-novos-3-meses").show();
+            } else {
+                $.ajax({
+                    url: "{{ route('cobranca.clientes-novos-mes') }}?dt=" + mes,
+                    method: 'GET',
+                    success: function(data) {
+                        $("#title-clientes-novos").text("Cliente novos por Mês");
+                        $("#table-clientes-novos-mes").remove();
+                        $("#table-clientes-novos-3-meses").hide();
+                        $("#table-clientes-novos").append(data.html);
 
+                        let clientesNovos = $('.chart-clientes-novos>canvas').attr('id');
+                        let graphClientes = document.getElementById(clientesNovos).getContext("2d");
+
+                        progresso = new Chart(graphClientes, {
+                            type: 'bar',
+                            data: {
+                                labels: data.labels,
+                                datasets: [{
+                                    label: '# Mês',
+                                    data: data.qtd,
+                                    backgroundColor: 'rgba(75, 192, 192)',
+                                }],
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        progresso.update();
+                    }
+
+
+                });
+            }
         });
     </script>
+
 @endsection

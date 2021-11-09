@@ -6,6 +6,7 @@ use App\Charts\AgendaPessoaChart;
 use App\Http\Controllers\Controller;
 use App\Models\AgendaPessoa;
 use App\Models\Empresa;
+use App\Models\Pessoa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -15,7 +16,8 @@ class CobrancaController extends Controller
     public function __construct(
         Request $request,
         Empresa $empresa,
-        AgendaPessoa $agenda
+        AgendaPessoa $agenda,
+        Pessoa $pessoa
 
     ) {
         $this->empresa  = $empresa;
@@ -23,6 +25,7 @@ class CobrancaController extends Controller
         $this->agenda = $agenda;
         $this->p_dia = '1';
         $this->atual_dia = date("d");
+        $this->pessoa = $pessoa;
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -30,18 +33,20 @@ class CobrancaController extends Controller
         });
     }
     public function index()
-    {
-        $p_dia = $this->p_dia;
-        $dia_atual = $this->atual_dia;
+    {   
+        //Data inicial e Final do Mes
+        $dti = Config::get('constants.options.dti');        
+        $dtf = Config::get('constants.options.dtf');
+        
         $operadores = $this->agenda->Operadores();
-
         $meses = $this->agenda->AgendaOperador3Meses();
-
         $clientesNovos = $this->agenda->CadastroNovos();
         $chartClienteNovos = $this->CarregaVariavel($clientesNovos);
         $chart = $this->CarregaVariavel($meses);
         $agenda = $this->agenda->AgendaOperadorMes($operadores);
-        $clientesNovosDia = $this->agenda->ClientesNovosMes($operadores);
+        $clientesNovosDia = $this->agenda->ClientesNovos3Mes($operadores);
+        $qtdClientesNovosMes = $this->pessoa->QtdClientesNovosMes($dti, $dtf);  
+        $qtdClientesFormaPagamento  = $this->pessoa->QtdClientesFormaPagamento($dti, $dtf);   
 
         $title_page   = 'Agenda';
         $user_auth    = $this->user;
@@ -57,7 +62,9 @@ class CobrancaController extends Controller
             'chart',
             'clientesNovos',
             'chartClienteNovos',
-            'clientesNovosDia'
+            'clientesNovosDia',
+            'qtdClientesNovosMes',
+            'qtdClientesFormaPagamento'
         ));
     }
     public function CarregaVariavel($meses)
@@ -111,11 +118,77 @@ class CobrancaController extends Controller
     }
     public function ClientesNovos($cdusuario, $dt)
     {
-        return $cdusuario;
+        $title_page   = 'Agenda';
+        $user_auth    = $this->user;
+        $exploder = explode('/', $this->resposta->route()->uri());
+        $uri       = ucfirst($exploder[1]);
+
+        return view('admin.cobranca.detalhe-clientes-novos', compact('title_page', 'user_auth', 'uri'));
+    }
+    public function ClientesNovosMes(Request $request)
+    {
+        $dt = $this->VerificaData($request->dt);
+        $datai = $dt[0];
+        $dataf = $dt[1];
+        $data = $this->agenda->ClientesNovosMes($datai, $dataf);
+
+        foreach ($data as $d) {
+            $labels[] = $d->NM_USUARIO;
+            $mes[] = $d->MES;            
+        }        
+        $chartest = new AgendaPessoaChart();
+        $chartest->labels(1, 2, 3, 4);
+        $chartest->dataset('My dataset 1', 'line', [1, 2, 3, 4]);
+
+        $html = '<table id="table-clientes-novos-mes" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th style="width:100px">Cód. Usuario</th>
+                        <th style="width:100px">Nome</th>
+                        <th>Quantidade</th>
+                    </tr>
+                    </thead>
+                <tbody>';
+        foreach ($data as $d) {
+            $html .= '
+                <tr>
+                    <td>' . $d->CD_USUARIO . '</td>
+                    <td>' . $d->NM_USUARIO . '</td>
+                    <td>' . $d->MES . '</td>
+                </tr>';
+        }
+        $html .= '</tbody>';
+        // return $html;
+        return response()->json(['html' => $html, 'labels' => $labels, 'qtd' => $mes]);
     }
     public function AgendaData(Request $request)
     {
-        $dt = $request->dt;
+        $dt = $this->VerificaData($request->dt);
+        $datai = $dt[0];
+        $dataf = $dt[1];
+        $data = $this->agenda->AgendaMes($datai, $dataf);
+        $html = '<table id="table-agenda-mes" class="table table-striped">
+                <thead>
+                <tr>
+                    <th style="width:100px">Cód. Usuario</th>
+                    <th style="width:100px">Nome</th>
+                    <th>Quantidade</th>
+                </tr>
+                </thead>
+                <tbody>';
+        foreach ($data as $d) {
+            $html .= '
+                <tr>
+                    <td>' . $d->CD_USUARIO . '</td>
+                    <td>' . $d->NM_USUARIO . '</td>
+                    <td>' . $d->MES . '</td>
+                </tr>';
+        }
+        $html .= '</tbody>';
+        return $html;
+    }
+    private function VerificaData($dt)
+    {
         if ($dt == 120) {
             $datai = Config::get('constants.options.dti120dias');
             $dataf = Config::get('constants.options.dtf120dias');
@@ -138,27 +211,31 @@ class CobrancaController extends Controller
             $datai = Config::get('constants.options.dti300dias');
             $dataf = Config::get('constants.options.dtf300dias');
         }
-        $data = $this->agenda->AgendaMes($datai, $dataf);
 
-        $html = '<table id="table-agenda-mes" class="table">
-                <thead>
-                <tr>
-                    <th style="width:100px">Cód. Usuario</th>
-                    <th style="width:100px">Nome</th>
-                    <th>Quantidade</th>
-                </tr>
-                </thead>
-                <tbody>';
-        foreach ($data as $d) {
-            $html .= '
-                <tr>
-                    <td>' . $d->CD_USUARIO . '</td>
-                    <td>' . $d->NM_USUARIO . '</td>
-                    <td>' . $d->MES . '</td>
-                </tr>';
-        }
-        $html .= '</tbody>';
-        return $html;
-        //return response()->json($data);
+        return array($datai, $dataf);
+    }
+
+
+    public function testeChart()
+    {
+        $api = url(route('cobranca.chart-api'));
+        $chart = new AgendaPessoaChart;
+        $chart->labels(['One', 'Two', 'Three', 'Four']);
+        // $chart->labels(['One', 'Two', 'Three', 'Four'])->load($api);
+        $chart->dataset('My dataset', 'line', [1, 2, 3, 4]);
+
+        return view('admin.cobranca.teste', compact('chart'));
+    }
+    public function chartLineAjax(Request $request)
+    {
+        $chart = new AgendaPessoaChart;
+
+        $chart->dataset('New User Register Chart', 'line', [1, 2, 3, 4])
+            ->options([
+                'fill' => 'true',
+                'borderColor' => '#51C1C0'
+            ]);
+
+        return $chart->api();
     }
 }

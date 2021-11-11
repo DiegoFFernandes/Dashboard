@@ -68,7 +68,7 @@ $(function() {
 $(document).ready(function() {
     $("#placa").inputmask({ mask: ['AAA9999', 'AAA9A99'] });
     $("#ano").inputmask("9999");
-
+    $("#peso").inputmask("99,99");
 });
 //Fim Mascara Input
 

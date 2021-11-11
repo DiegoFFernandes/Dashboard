@@ -35,6 +35,7 @@
                         <h3 class="box-title">Lotes Criados</h3>
                     </div>
                     <div class="box-body">
+                        @includeIf('admin.master.messages')
                         <table class="table table-striped display">
                             <thead>
                                 <tr>
@@ -92,7 +93,8 @@
                     },
                     {
                         data: 'cd_usuario',
-                        name: 'cd_usuario'
+                        name: 'cd_usuario',
+                        visible: false
                     },
                     {
                         data: 'created_at',

@@ -10,49 +10,71 @@
                         <h3 class="box-title">{{ $title_page }}</h3>
                     </div>
                     <div class="box-body">
+                        @includeIf('admin.master.messages')
                         <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="lote">Cód. Lote</label>
-                                <input type="email" class="form-control" id="id_lote" value="{{$lote->id}}" disabled>
+                                <input type="email" class="form-control" id="id_lote" value="{{ $lote->id }}" disabled>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="ds_lote">Descrição</label>
-                                <input type="text" class="form-control" id="ds_lote" value="{{$lote->descricao}}" disabled>
+                                <input type="text" class="form-control" id="ds_lote" value="{{ $lote->descricao }}"
+                                    disabled>
                             </div>
-                        </div>   
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="responsavel">Responsável</label>
+                                <input type="text" class="form-control" id="responsavel" value="{{ $lote->cd_usuario }}"
+                                    disabled>
+                            </div>
+                        </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="ds_lote">Usuário Responsável</label>
-                                <input type="text" class="form-control" id="ds_lote" value="{{$lote->cd_usuario}}" disabled>
+                                <label for="created_at">Criado em:</label>
+                                <input type="text" class="form-control" id="created_at" value="{{ $lote->created_at }}"
+                                    disabled>
                             </div>
-                        </div>  
+                        </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="ds_lote">Criado em:</label>
-                                <input type="text" class="form-control" id="ds_lote" value="{{$lote->created_at}}" disabled>
+                                <label for="cd_barras">Cód. Produto</label>
+                                <input type="text" class="form-control" id="cd_barras" placeholder="Cód. Barras">
                             </div>
-                        </div>                      
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ds_produto">Descrição Produto</label>
+                                <input type="text" class="form-control" id="ds_produto" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="peso">Peso</label>
+                                <input type="text" class="form-control" id="peso">
+                            </div>
+                        </div>
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <button id="submit-lote" class="btn btn-primary pull-right">Adicionar item</button>
+                        <button id="submit-add-item" class="btn btn-primary pull-right">Adicionar item</button>
                     </div>
                 </div>
                 {{-- Icon loading --}}
                 <div class="hidden" id="loading">
                     <img id="loading-image" class="mb-4" src="{{ Asset('img/loader.gif') }}" alt="Loading...">
                 </div>
-            </div>            
+            </div>
     </section>
     <!-- /.content -->
 @endsection
 
 @section('scripts')
     @includeIf('admin.master.datatables')
-    <script type="text/javascript">
+    <script type="text/javascript">        
         $(document).ready(function() {
             // init datatable.    
             var dataTable = $('.display').DataTable({
@@ -103,23 +125,27 @@
 
             });
 
-            $('#submit-lote').click(function() {
-                $.ajax({
-                    url: "{{ route('estoque.cria-lote') }}",
-                    method: 'POST',
-                    data: {
-                        ds_lote: $("#ds_lote").val(),
-                        _token: $('#token').val(),
-                    },
-                    beforeSend: function() {
-                        $("#loading").removeClass('hidden');
-                    },
-                    success: function(result) {
-                        $("#loading").addClass('hidden');
-                        alert(result.success);
-                        location.reload();
-                    }
-                });
+        });
+        $(document).ready(function() {
+            $("#peso").inputmask("99.99");
+            $("#cd_barras").keydown(function(event) {
+                var keycode = (event.keyCode ? event.keyCode : event.which);
+                var cd_barras = $("#cd_barras").val();
+                var url = "{{ route('get-item-lote', ':cd_barras') }}";
+                url = url.replace(':cd_barras', cd_barras);
+                if (keycode == '9' || keycode == '13') {
+                    $.ajax({
+                        url: url,
+                        method: "GET",
+                        success: function(result) {
+                            if (result.error) {
+                                alert(result.error)
+                            } else {                                                           
+                                $("#ds_produto").val(result.ds_item);
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>

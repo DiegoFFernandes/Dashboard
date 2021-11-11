@@ -57,7 +57,12 @@ class Item extends Model
                 die("Houve um erro ao importar os produtos da Junsoft, favor contatar desenvolvimento!");
             }
         }
-
         return "Items importados com sucesso!";
+    }
+    public function ItemFind($cd_barra)
+    {
+        return Item::where('cd_codbarraemb', $cd_barra)->firstOr(function () {
+            return response()->json(['error' => 'Produto não existe!']);
+        });
     }
 }

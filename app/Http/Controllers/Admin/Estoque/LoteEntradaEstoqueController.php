@@ -43,7 +43,7 @@ class LoteEntradaEstoqueController extends Controller
         $lotes = $this->lote->lotesAll();
         return DataTables::of($lotes)
             ->addColumn('Actions', function ($lotes) {
-                return ' <a href="' . route('add-item-lote.index', $lotes->id) . '" id="add-itens" class="btn btn-default btn-sm btn-edit">Adicionar Itens</a>
+                return ' <a href="' . route('add-item-lote.index', $lotes->id) . '" id="add-itens" class="btn btn-default btn-sm btn-edit">Add Itens</a>
                         <button type="button" data-id="' . $lotes->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
             })
             ->rawColumns(['Actions'])

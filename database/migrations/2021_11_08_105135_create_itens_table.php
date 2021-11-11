@@ -15,8 +15,8 @@ class CreateItensTable extends Migration
     {
         Schema::create('itens', function (Blueprint $table) {
             $table->id();
-            $table->string('cd_codbarraemb', 100)->nullable();
-            $table->bigInteger('cd_item');
+            $table->string('cd_codbarraemb', 100)->nullable()->unique();
+            $table->bigInteger('cd_item')->unique();
             $table->string('ds_item', 100);
             $table->float('ps_liquido', 8, 2)->nullable();
             $table->string('sg_unidmed', 2); 

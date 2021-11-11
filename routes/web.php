@@ -206,5 +206,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('get-lotes', [LoteEntradaEstoqueController::class, 'getLotes'])->name('estoque.get-lotes');
 
         Route::get('add-item-lote/{id}', [ItemLoteEntradaEstoqueController::class, 'index'])->name('add-item-lote.index');
+        Route::get('get-busca-item/{cd_barras}', [ItemLoteEntradaEstoqueController::class, 'getBuscaItem'])->name('get-item-lote');
+    
     });
 });

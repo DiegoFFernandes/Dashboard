@@ -27,5 +27,5 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('js/comercial/script.js') }}"></script>   
+    <script src="{{ asset('js/comercial-sul/script.js') }}"></script>   
 @endsection

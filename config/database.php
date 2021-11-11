@@ -97,7 +97,7 @@ return [
             'database' => env('DB_FIREBIRD_DATABASE', ''),
             'username' => env('DB_FIREBIRD_USERNAME', 'SYSDBA'),
             'password' => env('DB_FIREBIRD_PASSWORD', 'masterkey'),
-            'charset' => env('DB_FIREBIRD_CHARSET', 'UTF8'),
+            'charset' => env('DB_FIREBIRD_CHARSET', 'ISO8859_1'),
             'collation' => 'utf8_unicode_ci',
         ],
 

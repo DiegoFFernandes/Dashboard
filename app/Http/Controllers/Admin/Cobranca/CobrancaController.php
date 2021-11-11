@@ -214,8 +214,6 @@ class CobrancaController extends Controller
 
         return array($datai, $dataf);
     }
-
-
     public function testeChart()
     {
         $api = url(route('cobranca.chart-api'));

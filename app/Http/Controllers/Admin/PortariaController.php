@@ -87,7 +87,6 @@ class PortariaController extends Controller
         $output .= '</ul>';
         return $output;
     }
-
     public function search(Request $request)
     {
         $data = [];
@@ -98,7 +97,6 @@ class PortariaController extends Controller
         }
         return response()->json($data);
     }
-
     public function saveEntrada(Request $request)
     {
         $this->_validatorMovimento($request);

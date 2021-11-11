@@ -12,6 +12,7 @@ class Pessoa extends Model
 {
     use HasFactory;
     protected $table = 'pessoas';
+    //protected $connection = 'mysql';
     protected $fillable = [
         'cd_empresa',
         'name',
@@ -23,23 +24,13 @@ class Pessoa extends Model
         'cd_usuario'
     ];
 
-    public function __construct()
-    {
-        $this->connection = 'Sempre setar o banco firebird com SetConnet';
-        $this->p_dia = date("m/01/Y");
-        $this->dti30dias = Config::get('constants.options.dti30dias');
-        $this->dtf30dias = Config::get('constants.options.dtf30dias');
-        $this->dti60dias = Config::get('constants.options.dti60dias');
-        $this->dtf60dias = Config::get('constants.options.dtf60dias');
-        $this->dti90dias = Config::get('constants.options.dti90dias');
-        $this->dtf90dias = Config::get('constants.options.dtf90dias');
-    }
     public function setConnet()
     {
         return $this->connection = Auth::user()->conexao;
     }
+    
     public function PessoasAll()
-    {
+    {        
         return Pessoa::select(
             'pessoas.id',
             'pessoas.cd_empresa',
@@ -57,24 +48,37 @@ class Pessoa extends Model
     }
     public function verifyIfExists($cpf)
     {
+        $this->connection = 'mysql';
         return Pessoa::where('cpf', $cpf)
             ->exists();
     }
     public function storeData($input)
     {
-        return Pessoa::create($input);
+        $pessoa = new Pessoa;
+        $pessoa->setConnection('mysql');
+    
+        return $pessoa::create([
+            'cd_empresa' => $input['cd_empresa'],
+            'name' => $input['name'],
+            'cpf' => $input['cpf'],
+            'cd_email' => $input['cd_email'],
+            'endereco' => $input['endereco'],
+            'numero' => $input['numero'],
+            'phone' => $input['phone'],
+            'cd_usuario' => $input['cd_usuario']
+        ]);
     }
     public function updateData($id, $input)
-    {
+    {        
         return Pessoa::find($id)->update($input);
     }
     public function destroyData($id)
-    {
+    {        
         return Pessoa::find($id)->delete();
     }
     public function findEmail($inputEmail)
     {
-        return Pessoa::where('cd_email', $inputEmail)->exists();
+       return Pessoa::where('cd_email', $inputEmail)->exists();
     }
     public function QtdClientesNovosMes($dti, $dtf)
     {
@@ -87,7 +91,8 @@ class Pessoa extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
-    public function QtdClientesFormaPagamento($dti, $dtf){
+    public function QtdClientesFormaPagamento($dti, $dtf)
+    {
         $query = "select ep.cd_formapagto, count(*) qtd
                     from enderecopessoa ep
                     inner join pessoa p on (p.cd_pessoa = ep.cd_pessoa)

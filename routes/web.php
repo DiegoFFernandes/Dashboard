@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\Cobranca\CobrancaController;
 use App\Http\Controllers\Admin\Comercial\ComercialController;
 use App\Http\Controllers\Admin\Email\EmailController;
 use App\Http\Controllers\Admin\EmpresaController;
+use App\Http\Controllers\Admin\Estoque\ItemLoteEntradaEstoqueController;
+use App\Http\Controllers\Admin\Estoque\LoteEntradaEstoqueController;
 use App\Http\Controllers\Admin\LotePcpController;
 use App\Http\Controllers\Admin\MarcaModeloFrotaController;
 use App\Http\Controllers\Admin\MarcaVeiculoController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
 use App\Http\Controllers\Admin\ProducaoEtapaController;
 use App\Http\Controllers\admin\ProdutividadeController;
+use App\Http\Controllers\Admin\Produto\ImportaItemJunsoftController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeiculoController;
@@ -76,7 +79,6 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
         Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
     });
 });
-
 /*Rotas sem autenticação*/
 Route::prefix('producao')->group(function () {
     /*Rotas de acompanhamento de ordem */
@@ -90,7 +92,6 @@ Route::prefix('producao')->group(function () {
     Route::get('produtividade-executores/quadrante-3', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante3');
     Route::get('produtividade-executores/quadrante-4', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante4');
 });
-
 Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
     Route::prefix('portaria')->group(function () {
         Route::get('movimento/entrada', [PortariaController::class, 'index'])->name('admin.portaria.entrada');
@@ -189,9 +190,21 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
         Route::get('clientes-novos/usuario/{cdusuario}/data/{dt}', [CobrancaController::class, 'ClientesNovos'])->name('cobranca.clientes-novos');
         Route::get('agenda/data', [CobrancaController::class, 'AgendaData'])->name('cobranca.agenda.mes');
         Route::get('clientes-novos/data', [CobrancaController::class, 'ClientesNovosMes'])->name('cobranca.clientes-novos-mes');
-        
+
         Route::get('chart-data', [CobrancaController::class, 'chartLineAjax'])->name('cobranca.chart-api');
-        Route::get('teste', [CobrancaController::class, 'testeChart'])->name('cobranca.teste');
-    
+        //Route::get('teste', [CobrancaController::class, 'testeChart'])->name('cobranca.teste');    
+    });
+});
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::prefix('importa-item-junsoft')->group(function () {
+        Route::get('index', [ImportaItemJunsoftController::class, 'index'])->name('importa.index');
+        Route::post('id-marca-ajax', [ImportaItemJunsoftController::class, 'AjaxImportaItem'])->name('importa-item.index');
+    });
+    Route::prefix('estoque-entrada')->group(function () {
+        Route::get('index', [LoteEntradaEstoqueController::class, 'index'])->name('estoque.index');
+        Route::post('cria-lote', [LoteEntradaEstoqueController::class, 'store'])->name('estoque.cria-lote');
+        Route::get('get-lotes', [LoteEntradaEstoqueController::class, 'getLotes'])->name('estoque.get-lotes');
+
+        Route::get('add-item-lote/{id}', [ItemLoteEntradaEstoqueController::class, 'index'])->name('add-item-lote.index');
     });
 });

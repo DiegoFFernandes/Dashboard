@@ -181,7 +181,7 @@
                     </ul>
                 </li>
             @endrole
-            @canany(['ver-comercial-norte','ver-comercial-sul'])
+            @canany(['ver-comercial-norte', 'ver-comercial-sul'])
                 <li class="treeview" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-map"></i> <span>Comercial</span>
@@ -203,7 +203,7 @@
                     </ul>
                 </li>
             @endcanany
-            @canany(['ver-diretoria-norte','ver-diretoria-sul'])
+            @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
                 <li class="treeview" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-suitcase"></i> <span>Diretoria</span>
@@ -236,6 +236,24 @@
                     <ul class="treeview-menu" style="display: none;">
                         <li class="active"><a href="{{ route('cobranca.index') }}"><i
                                     class="fa fa-address-book-o"></i>Agenda</a>
+                        </li>
+                    </ul>
+                </li>
+            @endrole
+            @role('admin')
+                <li class="treeview" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-industry"></i> <span>Estoque</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="active"><a href="{{ route('importa.index') }}"><i
+                                    class="fa fa-archive"></i>Importa Item Junsoft</a>
+                        </li>
+                        <li class="active"><a href="{{ route('estoque.index', 1) }}"><i
+                                    class="fa fa-archive"></i>Criar Lote Entrada</a>
                         </li>
                     </ul>
                 </li>

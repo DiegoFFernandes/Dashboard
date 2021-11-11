@@ -60,8 +60,7 @@
 
                 "pageLength": 10,
                 ajax: "{{ route('get.portaria.movimentos') }}",
-                columns: [
-                    {
+                columns: [{
                         data: 'id',
                         name: 'id'
                     },
@@ -94,24 +93,16 @@
                         name: 'saida'
                     }
                 ],
-                columnDefs: [
-                    {
-                    "className": "background-green",
-                    targets: [4, 5],
+                columnDefs: [{
+                        "className": "background-green",
+                        targets: [4, 5],
                     },
                     {
-                    "className": "background-red",
-                    targets: [6, 7],
+                        "className": "background-red",
+                        targets: [6, 7],
                     }
-                    ],
-
-
-
+                ],
             });
-
-
-
-
         });
     </script>
     <script src="{{ asset('js/scripts.js') }}"></script>

@@ -57,17 +57,18 @@ class PessoaController extends Controller
             <button type="button" data-id="' . $data->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
             })
             ->rawColumns(['Actions'])
-            ->make(true);
+            ->make(true);        
     }
     public function store(Request $request)
-    {
+    {      
         $request['cd_usuario'] = $this->user->id;
         $request['name'] = ucwords(strtolower($request['name']));
         $request['cpf'] = $this->limpaCaracters($request['cpf']);
         $request['phone'] = $this->limpaCaracters($request['phone']);
         $request['cd_email'] = intval($request['cd_email']);
+        $request['cd_empresa'] = intval($request['cd_empresa']);
         $validator = $this->_validator($request);
-
+        
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }

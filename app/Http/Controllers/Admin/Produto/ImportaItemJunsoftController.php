@@ -27,7 +27,7 @@ class ImportaItemJunsoftController extends Controller
         });
     }
     public function index()
-    {
+    {   
         $title_page   = 'Importa/Atualiza produtos cadastrados Junsoft(TPO001)';
         $user_auth    = $this->user;
         $uri          = $this->resposta->route()->uri();
@@ -36,8 +36,12 @@ class ImportaItemJunsoftController extends Controller
             'title_page', 'user_auth', 'uri', 'marcas'));
     }
     public function AjaxImportaItem(){
-        $cd_marca = $this->resposta->cd_marca;
+        $cd_marca = $this->resposta->cd_marca;             
         $import = $this->item->ImportaItemJunsoft($cd_marca);
-        return response()->json(['msg' => $import]);
+        
+        if($import == 1){
+            return response()->json(['msg' => "Importação de produto realizada com sucesso!"]);
+        }
+        return response()->json(['msg' => "Houve algum erro!"]);
     }
 }

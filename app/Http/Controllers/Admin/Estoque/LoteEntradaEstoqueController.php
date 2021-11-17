@@ -7,6 +7,7 @@ use App\Models\Empresa;
 use App\Models\LoteEntradaEstoque;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -43,7 +44,7 @@ class LoteEntradaEstoqueController extends Controller
         $lotes = $this->lote->lotesAll();
         return DataTables::of($lotes)
             ->addColumn('Actions', function ($lotes) {
-                return ' <a href="' . route('add-item-lote.index', $lotes->id) . '" id="add-itens" class="btn btn-default btn-sm btn-edit">Add Itens</a>
+                return ' <a href="' . route('add-item-lote.index', Crypt::encryptString($lotes->id)) . '" id="add-itens" class="btn btn-default btn-sm btn-edit">Add Itens</a>
                         <button type="button" data-id="' . $lotes->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
             })
             ->rawColumns(['Actions'])
@@ -54,10 +55,13 @@ class LoteEntradaEstoqueController extends Controller
     }
     public function store(Request $request)
     {
-
         $request['cd_usuario'] = Auth::user()->id;
         $request['status'] = 'A';
         $validator = $this->_validator($request);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
         $this->lote->storeData($this->resposta);
 
         return response()->json(['success' => 'Lote Criado com sucesso!']);
@@ -67,7 +71,7 @@ class LoteEntradaEstoqueController extends Controller
         return Validator::make(
             $request->all(),
             ['ds_lote'  => 'required'],
-            ['ds_lote.required' => 'Empresa deve ser preenchida']
+            ['ds_lote.required' => 'Descrição deve ser preenchida']
         );
     }
 }

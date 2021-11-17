@@ -29,6 +29,7 @@ class Item extends Model
                     where i.cd_marca = $cd_marca
                     and i.tp_item = 'I'
                     and i.cd_grupo = 1
+                    and i.cd_subgrupo = '101'
                     --and i.cd_item = 1002289";
         $itens = DB::connection($this->setConnet())->select($query);
 
@@ -54,15 +55,15 @@ class Item extends Model
                     ]
                 );
             } catch (\Illuminate\Database\QueryException $ex) {
-                die("Houve um erro ao importar os produtos da Junsoft, favor contatar desenvolvimento!");
+                return 0;
             }
         }
-        return "Items importados com sucesso!";
+        return 1;
     }
     public function ItemFind($cd_barra)
     {
         return Item::where('cd_codbarraemb', $cd_barra)->firstOr(function () {
-            return response()->json(['error' => 'Produto não existe!']);
+            return 0;
         });
     }
 }

@@ -31,14 +31,14 @@
             </div>
             <div class="col-md-8">
                 <div class="box box-info">
-                    <div class="box-header">
+                    <div class="box-header with-border">
                         <h3 class="box-title">Lotes Criados</h3>
                     </div>
                     <div class="box-body">
                         @includeIf('admin.master.messages')
-                        <table class="table table-striped display">
+                        <table id="table-lote" class="table table-bordered display nowrap" cellspacing="0" width="100%">
                             <thead>
-                                <tr>
+                                <tr class="info">
                                     <th style="width: 10px">Cód.</th>
                                     <th>Descrição</th>
                                     <th>Qtda Items</th>
@@ -62,8 +62,12 @@
     <script type="text/javascript">
         $(document).ready(function() {
             // init datatable.    
-            var dataTable = $('.display').DataTable({
+            var dataTable = $('#table-lote').DataTable({
+                rowReorder: {
+                    selector: 'td:nth-child(2)'
+                },
                 processing: true,
+                responsive: true,
                 serverSide: true,
                 autoWidth: false,
                 pageLength: 5,
@@ -120,11 +124,20 @@
                         _token: $('#token').val(),
                     },
                     beforeSend: function() {
+                        if ($("#ds_lote").val() == "") {
+                            $('#ds_lote').attr('title', 'Descrição é obrigatório!')
+                                .tooltip('show');
+                            return false;
+                        }
                         $("#loading").removeClass('hidden');
                     },
                     success: function(result) {
                         $("#loading").addClass('hidden');
-                        alert(result.success);
+                        if (result.errors) {
+                            alert(result.errors);
+                        } else {
+                            alert(result.success);
+                        }
                         location.reload();
                     }
                 });

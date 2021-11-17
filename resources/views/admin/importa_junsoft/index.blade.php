@@ -58,7 +58,7 @@
                     },
                     success: function(result) {
                         $("#loading").addClass('hidden');
-                        alert(result.msg)
+                        alert(result.msg);
                     }
                 });
             });

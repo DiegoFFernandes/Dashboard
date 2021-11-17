@@ -40,7 +40,6 @@ class MovimentoVeiculo extends Model
 
         ]);
     }
-
     public function storeDataSaida($input)
     {
         $id =  MovimentoVeiculo::orderBy('id', 'desc')
@@ -55,12 +54,10 @@ class MovimentoVeiculo extends Model
             return 0;
         }
     }
-
     public function qtdMovimento($movimento, $dtInicio)
     {
         return MovimentoVeiculo::whereBetween($movimento, [$dtInicio, date('Y-m-d H:m:s')])->count();
     }
-
     public function movimentoAll()
     {
         return MovimentoVeiculo::select(

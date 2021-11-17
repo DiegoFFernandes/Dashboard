@@ -23,7 +23,6 @@ class LoteEntradaEstoque extends Model
     public $timestamps = true;
     public $table = 'lote_entrada_estoques';
     protected $connection;
-
     
     public function lotesAll()
     {
@@ -41,4 +40,9 @@ class LoteEntradaEstoque extends Model
     public function findLote($id){
         return LoteEntradaEstoque::findOrFail($id);
     }
-}
+
+    public function updateData($id){
+        LoteEntradaEstoque::where('id', $id)->update(['status' => 'F']);
+        return response()->json(['success' => 'Lote finalizado com sucesso!']);
+    }
+}   

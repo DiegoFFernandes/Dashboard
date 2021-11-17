@@ -252,7 +252,7 @@
                         <li class="active"><a href="{{ route('importa.index') }}"><i
                                     class="fa fa-archive"></i>Importa Item Junsoft</a>
                         </li>
-                        <li class="active"><a href="{{ route('estoque.index', 1) }}"><i
+                        <li class="active"><a href="{{ route('estoque.index') }}"><i
                                     class="fa fa-archive"></i>Criar Lote Entrada</a>
                         </li>
                     </ul>

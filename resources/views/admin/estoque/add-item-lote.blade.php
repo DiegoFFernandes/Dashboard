@@ -143,7 +143,8 @@
                         <div class="tab-pane" id="finalizar">
                             <div class="box">
                                 <div class="box-body">
-                                    <button type="button" class="btn btn-success center-block">Finalizar Lote</button>
+                                    <button type="button" id="finalizar-lote" data-id="{{ $lote->id }}"
+                                        class="btn btn-success center-block">Finalizar Lote</button>
                                 </div>
                             </div>
                         </div>
@@ -156,8 +157,9 @@
 @section('scripts')
     @includeIf('admin.master.datatables')
     <script type="text/javascript">
+        var pesoitem;
+        let token = $("meta[name='csrf-token']").attr("content");
         $(document).ready(function() {
-            var pesoitem;
             $("#cd_barras").inputmask({
                 mask: ['A9999999', '9999999999999']
             });
@@ -197,8 +199,10 @@
                     var peso = str.replace('1Q', '');
                     peso_ = peso.toString().replace(",", ".")
                     peso = parseFloat(peso);
-                    if (peso <= (pesoitem - (pesoitem * 10 / 100)) || peso >= (pesoitem + (pesoitem * 10 / 100))) {
-                        $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!').tooltip('show');
+                    if (peso <= (pesoitem - (pesoitem * 10 / 100)) || peso >= (pesoitem + (pesoitem * 10 /
+                            100))) {
+                        $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!')
+                            .tooltip('show');
                         return false;
                     }
                     $("#peso").val(peso_);
@@ -239,7 +243,25 @@
                     }
                 });
             });
-
+            $("#finalizar-lote").on('click', function() {
+                let id_lote = $(this).data();
+                $.ajax({
+                    method: "POST",
+                    url: "{{ route('estoque.finish-lote') }}",
+                    data: {
+                        id: id_lote['id'],
+                        _token: token,
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(result) {
+                        $("#loading").addClass('hidden');
+                        alert(result.success);
+                        window.location.replace("{{route('estoque.index')}}");
+                    }
+                });
+            });
         });
         $("#table-add-item").DataTable({
             responsive: true,
@@ -248,8 +270,7 @@
             ],
         });
         $("#table-add-item").on('click', '.delete', function() {
-            let rowId = $(this).data();
-            let token = $("meta[name='csrf-token']").attr("content");
+            let rowId = $(this).data();            
             if (confirm('Deseja excluir o item: ' + rowId['id'] + '')) {
                 $.ajax({
                     method: "DELETE",

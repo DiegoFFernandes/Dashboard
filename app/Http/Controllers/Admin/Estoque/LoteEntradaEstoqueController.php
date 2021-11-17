@@ -19,7 +19,7 @@ class LoteEntradaEstoqueController extends Controller
         LoteEntradaEstoque $lote,
     ) {
         $this->empresa  = $empresa;
-        $this->resposta = $request;
+        $this->request = $request;
         $this->lote = $lote;
 
         $this->middleware(function ($request, $next) {
@@ -31,7 +31,7 @@ class LoteEntradaEstoqueController extends Controller
     {
         $title_page   = 'Criar Lote de Entrada';
         $user_auth    = $this->user;
-        $uri          = $this->resposta->route()->uri();
+        $uri          = $this->request->route()->uri();
 
         return view('admin.estoque.index', compact(
             'title_page',
@@ -44,8 +44,14 @@ class LoteEntradaEstoqueController extends Controller
         $lotes = $this->lote->lotesAll();
         return DataTables::of($lotes)
             ->addColumn('Actions', function ($lotes) {
-                return ' <a href="' . route('add-item-lote.index', Crypt::encryptString($lotes->id)) . '" id="add-itens" class="btn btn-default btn-sm btn-edit">Add Itens</a>
-                        <button type="button" data-id="' . $lotes->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
+                if ($lotes->status == 'F') {
+                    return '<buttom class="btn btn-info btn-sm btn-edit">Ver itens</button>';
+                        
+                }else{
+                    return '<a href="' . route('add-item-lote.index', Crypt::encryptString($lotes->id)) . '" id="add-itens" class="btn btn-default btn-sm btn-edit">Add Itens</a>
+                    <button type="button" data-id="' . $lotes->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
+              
+                }
             })
             ->rawColumns(['Actions'])
             ->setRowClass(function ($lotes) {
@@ -62,9 +68,13 @@ class LoteEntradaEstoqueController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        $this->lote->storeData($this->resposta);
+        $this->lote->storeData($this->request);
 
         return response()->json(['success' => 'Lote Criado com sucesso!']);
+    }
+    public function finishLote()
+    {
+        return $this->lote->updateData($this->request->id);
     }
     public function _validator(Request $request)
     {

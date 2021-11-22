@@ -96,7 +96,7 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="table-itens">
-                            <table id="table-add-item" class="table">
+                            <table id="table-add-item" class="table" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Cód. Item</th>
@@ -126,6 +126,7 @@
                                     <tr>
                                         <th>Cód. Item</th>
                                         <th>Descrição</th>
+                                        <th>Quantidade</th>
                                         <th>Soma Peso</th>
                                     </tr>
                                 </thead>
@@ -133,11 +134,21 @@
                                     @foreach ($itemgroup as $i)
                                         <tr>
                                             <td>{{ $i->cd_produto }}</td>
-                                            <td>{{ $i->ds_item }}</td>
+                                            <td>{{ $i->ds_item }}</td>   
+                                            <td>{{ $i->qtditem }}</td>                                          
                                             <td>{{ number_format($i->peso, 2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>                                        
+                                        <th></th>
+                                        <th style="text-align: center">Total peso</th>
+                                        <th>{{$pesototal = $itemgroup->sum(function($i){
+                                            return $i->peso;
+                                        })}}</th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                         <div class="tab-pane" id="finalizar">
@@ -156,7 +167,7 @@
 @endsection
 @section('scripts')
     @includeIf('admin.master.datatables')
-    <script type="text/javascript">
+    <script type="text/javascript">        
         var pesoitem;
         let token = $("meta[name='csrf-token']").attr("content");
         $(document).ready(function() {
@@ -250,6 +261,7 @@
                     url: "{{ route('estoque.finish-lote') }}",
                     data: {
                         id: id_lote['id'],
+                        peso: {{$pesototal}},
                         _token: token,
                     },
                     beforeSend: function() {
@@ -258,7 +270,7 @@
                     success: function(result) {
                         $("#loading").addClass('hidden');
                         alert(result.success);
-                        window.location.replace("{{route('estoque.index')}}");
+                        window.location.replace("{{ route('estoque.index') }}");
                     }
                 });
             });
@@ -270,7 +282,7 @@
             ],
         });
         $("#table-add-item").on('click', '.delete', function() {
-            let rowId = $(this).data();            
+            let rowId = $(this).data();
             if (confirm('Deseja excluir o item: ' + rowId['id'] + '')) {
                 $.ajax({
                     method: "DELETE",

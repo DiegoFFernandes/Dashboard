@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Estoque;
 
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
+use App\Models\ItemLoteEntradaEstoque;
 use App\Models\LoteEntradaEstoque;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +18,12 @@ class LoteEntradaEstoqueController extends Controller
         Request $request,
         Empresa $empresa,
         LoteEntradaEstoque $lote,
+        ItemLoteEntradaEstoque $itemlote,
     ) {
         $this->empresa  = $empresa;
         $this->request = $request;
         $this->lote = $lote;
+        $this->itemlote = $itemlote;
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -32,7 +35,7 @@ class LoteEntradaEstoqueController extends Controller
         $title_page   = 'Criar Lote de Entrada';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
-
+        $this->itemlote->countData(1);
         return view('admin.estoque.index', compact(
             'title_page',
             'user_auth',
@@ -45,12 +48,11 @@ class LoteEntradaEstoqueController extends Controller
         return DataTables::of($lotes)
             ->addColumn('Actions', function ($lotes) {
                 if ($lotes->status == 'F') {
-                    return '<buttom class="btn btn-info btn-sm btn-edit">Ver itens</button>';
+                    return '<a href="' . route('item-lote-fechado', Crypt::encryptString($lotes->id)) . '" id="ver-itens" class="btn btn-info btn-sm">Ver Itens</a>';
                         
                 }else{
-                    return '<a href="' . route('add-item-lote.index', Crypt::encryptString($lotes->id)) . '" id="add-itens" class="btn btn-default btn-sm btn-edit">Add Itens</a>
-                    <button type="button" data-id="' . $lotes->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
-              
+                    return '<a href="' . route('add-item-lote.index', Crypt::encryptString($lotes->id)) . '" id="add-itens" class="btn btn-default btn-sm">Add Itens</a>
+                    <button type="button" data-idlote="' . $lotes->id . '" class="btn btn-danger btn-sm delete">Excluir</button>';              
                 }
             })
             ->rawColumns(['Actions'])
@@ -72,9 +74,13 @@ class LoteEntradaEstoqueController extends Controller
 
         return response()->json(['success' => 'Lote Criado com sucesso!']);
     }
+    public function delete(){
+        return $this->lote->deleteData($this->request->idlote);
+    }
     public function finishLote()
     {
-        return $this->lote->updateData($this->request->id);
+        $qtd_item = $this->itemlote->countData($this->request->id);
+        return $this->lote->updateData($this->request, $qtd_item);
     }
     public function _validator(Request $request)
     {

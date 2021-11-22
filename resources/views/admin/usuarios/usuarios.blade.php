@@ -4,7 +4,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">Adicionar</h3>
@@ -105,7 +105,7 @@
                 </div>
                 <!-- /.box -->
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">Usuarios Cadastrados</h3>
@@ -120,7 +120,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" id="table-users" style="width: 100%">
                             <thead>
                                 <tr>
                                     <th style="width: 10px">Id</th>
@@ -158,4 +158,15 @@
         </div>
     </section>
     <!-- /.content -->
+@endsection
+@section('scripts')
+    @includeIf('admin.master.datatables')
+    <script type="text/javascript">
+    $('#table-users').DataTable({
+        responsive: true,
+            "order": [
+                [1, "asc"]
+            ],        
+    });
+    </script>
 @endsection

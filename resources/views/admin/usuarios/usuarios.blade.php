@@ -163,6 +163,9 @@
     @includeIf('admin.master.datatables')
     <script type="text/javascript">
     $('#table-users').DataTable({
+        language: {
+                url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+            },
         responsive: true,
             "order": [
                 [1, "asc"]

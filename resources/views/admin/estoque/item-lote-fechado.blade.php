@@ -69,7 +69,10 @@
                                 <tfoot>
                                     <tr>                                        
                                         <th></th>
-                                        <th style="text-align: center">Total peso</th>
+                                        <th style="text-align: center">Total</th>
+                                        <th>{{$itemgroup->sum(function($i){
+                                            return $i->qtditem;
+                                        })}}</th>
                                         <th>{{$itemgroup->sum(function($i){
                                             return $i->peso;
                                         })}}</th>
@@ -87,6 +90,9 @@
     @includeIf('admin.master.datatables')
     <script type="text/javascript">        
         $("#table-item").DataTable({
+            language: {
+                url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+            },
             responsive: true,
             "order": [
                 [3, "desc"]

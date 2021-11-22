@@ -42,7 +42,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="cd_barras">Cód. Barras Prod.</label>
-                                <input type="text" class="form-control" id="cd_barras" placeholder="Cód. Barras">
+                                <input type="text" class="form-control pula" id="cd_barras" placeholder="Cód. Barras">
                             </div>
                         </div>
                         <div class="col-md-3 hidden-xs">
@@ -60,7 +60,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="cd_barras_peso">Cód. Barras Peso</label>
-                                <input type="text" class="form-control" id="cd_barras_peso" placeholder="Cód. Peso">
+                                <input type="text" class="form-control pula" id="cd_barras_peso" placeholder="Cód. Peso">
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -143,7 +143,10 @@
                                 <tfoot>
                                     <tr>                                        
                                         <th></th>
-                                        <th style="text-align: center">Total peso</th>
+                                        <th style="text-align: center">Total</th>
+                                        <th>{{$itemgroup->sum(function($i){
+                                            return $i->qtditem;
+                                        })}}</th>
                                         <th>{{$pesototal = $itemgroup->sum(function($i){
                                             return $i->peso;
                                         })}}</th>
@@ -193,7 +196,7 @@
                             } else {
                                 $("#ds_produto").val(result.ds_item);
                                 $("#cd_item").val(result.cd_item);
-                                pesoitem = parseFloat(result.ps_liquido);
+                                pesoitem = parseFloat(result.ps_liquido);                                
                             }
                         }
                     });
@@ -276,6 +279,9 @@
             });
         });
         $("#table-add-item").DataTable({
+            language: {
+                url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+            },
             responsive: true,
             "order": [
                 [3, "desc"]
@@ -302,5 +308,19 @@
                 });
             }
         })
+
+        $(document).ready(function(){               
+                $('.pula').keypress(function(e){                    
+                   var tecla = (e.keyCode?e.keyCode:e.which);                   
+                   if(tecla == 13){                       
+                       campo =  $('.pula');                       
+                       indice = campo.index(this);                       
+                      if(campo[indice+1] != null){                         
+                         proximo = campo[indice + 1];                        
+                         proximo.focus();
+                      }
+                   }                    
+                })
+             })
     </script>
 @endsection

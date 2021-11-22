@@ -61,8 +61,11 @@
     @includeIf('admin.master.datatables')
     <script type="text/javascript">
         $(document).ready(function() {
-            let token = $("meta[name='csrf-token']").attr("content");              
+            let token = $("meta[name='csrf-token']").attr("content");
             $('#table-lote').DataTable({
+                language: {
+                    url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                },
                 rowReorder: {
                     selector: 'td:nth-child(2)'
                 },
@@ -141,28 +144,28 @@
                     }
                 });
             });
-            $('#table-lote').on('click', '.delete', function(){
+            $('#table-lote').on('click', '.delete', function() {
                 let id_lote = $(this).data();
                 $.ajax({
                     method: 'DELETE',
-                    url: '{{route("estoque.delete-lote")}}',
-                    data:{
+                    url: '{{ route('estoque.delete-lote') }}',
+                    data: {
                         idlote: id_lote['idlote'],
                         _token: token,
                     },
-                    beforeSend: function(){
+                    beforeSend: function() {
                         $('#loading').removeClass('hidden');
                     },
-                    success: function(result){
+                    success: function(result) {
                         $('#loading').addClass('hidden');
-                        if(result.error){
+                        if (result.error) {
                             alert(result.error);
                             return false;
-                        }else{
+                        } else {
                             alert(result.success);
                             location.reload();
-                        }  
-                                              
+                        }
+
                     }
                 });
             });

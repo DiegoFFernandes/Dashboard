@@ -20,15 +20,9 @@ class LoginController extends Controller
 
     public function dashboard()
     {
-        if (Auth::check() === true) {
+        if (Auth::check() === true) {            
             $user_auth = Auth::user();
-            $uri       = $this->resposta->route()->uri();
-
-            // $roles = json_decode($user_auth->getRoleNames());            
-            // if (in_array("portaria", $roles)) { 
-            //     echo "Tem portaria";
-            // }
-
+            $uri       = $this->resposta->route()->uri();            
             return view('admin.index', compact('user_auth', 'uri'));
         }
 
@@ -51,9 +45,9 @@ class LoginController extends Controller
             'email'    => $request->email,
             'password' => $request->password,
         ];
-
+        
         if (Auth::attempt($credencials)) {
-
+           $this->authenticated($request->password);
             return redirect()->route('admin.dashborad');
         }
         return redirect()->back()->withInput()->withErrors(['Os dados informados são invalidos!']);
@@ -63,5 +57,10 @@ class LoginController extends Controller
     {
         Auth::logout();
         return redirect()->route('admin.dashborad');
+    }
+
+    protected function authenticated($password){
+        Auth::logoutOtherDevices($password);
+        return redirect()->intended();
     }
 }

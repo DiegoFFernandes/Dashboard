@@ -18,12 +18,13 @@
                         </div>
                         <div class="form-group">
                             <label for="confirmNewPassword">Confirmar Senha</label>
-                            <input type="password" class="form-control" id="confirmNewPassword" placeholder="Confirmar senha">
+                            <input type="password" class="form-control" id="confirmNewPassword"
+                                placeholder="Confirmar senha">
                         </div>
                     </div>
                     <div class="box-footer">
                         <button class="btn btn-primary pull-right">Alterar</button>
-                      </div>
+                    </div>
                     </form>
                 </div>
                 <!-- /.box -->
@@ -34,12 +35,16 @@
     <!-- /.content -->
 @endsection
 @section('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-           $("#newPassword").keyup(){
-            console.log('newPassword');
-           });
-            
+    <script type="text/javascript">        
+        $(document).ready(function() {            
+            $("#confirmNewPassword").keyup(function() {                
+                let newPassword = $("#newPassword").val();
+                let confirmNewPassword = $("#confirmNewPassword").val();
+                if (newPassword != confirmNewPassword) {
+                    alert("senhas iguais")
+                }
+            });
+
         });
     </script>
 @endsection

@@ -213,7 +213,7 @@
                     var peso = str.replace('1Q', '');
                     peso_ = peso.toString().replace(",", ".")
                     peso = parseFloat(peso);
-                    if (peso <= (pesoitem - (pesoitem * 10 / 100)) || peso >= (pesoitem + (pesoitem * 10 /
+                    if (peso <= (pesoitem - (pesoitem * 60 / 100)) || peso >= (pesoitem + (pesoitem * 60 /
                             100))) {
                         $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!')
                             .tooltip('show');

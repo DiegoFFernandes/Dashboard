@@ -111,7 +111,11 @@
                                         <tr>
                                             <td>{{ $i->cd_produto }}</td>
                                             <td>{{ $i->ds_item }}</td>
-                                            <td>{{ number_format($i->peso, 2) }}</td>
+                                            @if ($i->peso < $i->ps_liquido)
+                                                <td class="bg-red color-palette">{{ number_format($i->peso, 2) }}</td>
+                                            @else
+                                                <td class="bg-green color-palette">{{ number_format($i->peso, 2) }}</td>
+                                            @endif
                                             <td>{{ \Carbon\Carbon::parse($i->created_at)->format('d/m/Y H:i:s') }}</td>
                                             <td><button class="delete fa fa-trash-o" aria-hidden="true"
                                                     data-id="{{ $i->id }}"></button></td>
@@ -134,22 +138,24 @@
                                     @foreach ($itemgroup as $i)
                                         <tr>
                                             <td>{{ $i->cd_produto }}</td>
-                                            <td>{{ $i->ds_item }}</td>   
-                                            <td>{{ $i->qtditem }}</td>                                          
+                                            <td>{{ $i->ds_item }}</td>
+                                            <td>{{ $i->qtditem }}</td>
                                             <td>{{ number_format($i->peso, 2) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
-                                    <tr>                                        
+                                    <tr>
                                         <th></th>
                                         <th style="text-align: center">Total</th>
-                                        <th>{{$itemgroup->sum(function($i){
+                                        <th>{{ $itemgroup->sum(function ($i) {
                                             return $i->qtditem;
-                                        })}}</th>
-                                        <th>{{$pesototal = $itemgroup->sum(function($i){
+                                        }) }}
+                                        </th>
+                                        <th>{{ $pesototal = $itemgroup->sum(function ($i) {
                                             return $i->peso;
-                                        })}}</th>
+                                        }) }}
+                                        </th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -170,7 +176,7 @@
 @endsection
 @section('scripts')
     @includeIf('admin.master.datatables')
-    <script type="text/javascript">        
+    <script type="text/javascript">
         var pesoitem;
         let token = $("meta[name='csrf-token']").attr("content");
         $(document).ready(function() {
@@ -196,7 +202,7 @@
                             } else {
                                 $("#ds_produto").val(result.ds_item);
                                 $("#cd_item").val(result.cd_item);
-                                pesoitem = parseFloat(result.ps_liquido);                                
+                                pesoitem = parseFloat(result.ps_liquido);
                             }
                         }
                     });
@@ -209,17 +215,24 @@
                 }
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 var str = $("#cd_barras_peso").val();
-                if (keycode == '9' || keycode == '13' || event.type == "focusout") {
+                if (keycode == '9' || keycode == '13') {
                     var peso = str.replace('1Q', '');
                     peso_ = peso.toString().replace(",", ".")
                     peso = parseFloat(peso);
-                    if (peso <= (pesoitem - (pesoitem * 60 / 100)) || peso >= (pesoitem + (pesoitem * 60 /
+                    if (peso <= (pesoitem - (pesoitem * 10 / 100)) || peso >= (pesoitem + (pesoitem * 10 /
                             100))) {
-                        $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!')
-                            .tooltip('show');
-                        return false;
+                        // $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!')
+                        //     .tooltip('show');
+                        if (confirm(
+                                'Peso está fora dos parâmetros para esse item! Deseja lançar mesmo assim?'
+                            )) {
+                            $("#peso").val(peso_);
+                        } else {
+                            return false;
+                        }
+
                     }
-                    $("#peso").val(peso_);
+
                 }
             });
             $("#submit-add-item").on('click', function() {
@@ -264,7 +277,7 @@
                     url: "{{ route('estoque.finish-lote') }}",
                     data: {
                         id: id_lote['id'],
-                        peso: {{$pesototal}},
+                        peso: {{ $pesototal }},
                         _token: token,
                     },
                     beforeSend: function() {
@@ -309,18 +322,18 @@
             }
         })
 
-        $(document).ready(function(){               
-                $('.pula').keypress(function(e){                    
-                   var tecla = (e.keyCode?e.keyCode:e.which);                   
-                   if(tecla == 13){                       
-                       campo =  $('.pula');                       
-                       indice = campo.index(this);                       
-                      if(campo[indice+1] != null){                         
-                         proximo = campo[indice + 1];                        
-                         proximo.focus();
-                      }
-                   }                    
-                })
-             })
+        $(document).ready(function() {
+            $('.pula').keypress(function(e) {
+                var tecla = (e.keyCode ? e.keyCode : e.which);
+                if (tecla == 13) {
+                    campo = $('.pula');
+                    indice = campo.index(this);
+                    if (campo[indice + 1] != null) {
+                        proximo = campo[indice + 1];
+                        proximo.focus();
+                    }
+                }
+            })
+        })
     </script>
 @endsection

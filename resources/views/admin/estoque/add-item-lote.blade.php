@@ -202,7 +202,8 @@
                             } else {
                                 $("#ds_produto").val(result.ds_item);
                                 $("#cd_item").val(result.cd_item);
-                                pesoitem = parseFloat(result.ps_liquido);
+                                //Essa variavel alimenta a condição #cd_barras_peso
+                                pesoitem = parseFloat(result.ps_liquido); 
                             }
                         }
                     });
@@ -218,7 +219,7 @@
                 if (keycode == '9' || keycode == '13') {
                     var peso = str.replace('1Q', '');
                     peso_ = peso.toString().replace(",", ".")
-                    peso = parseFloat(peso);
+                    peso = parseFloat(peso);                    
                     if (peso <= (pesoitem - (pesoitem * 10 / 100)) || peso >= (pesoitem + (pesoitem * 10 /
                             100))) {
                         // $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!')
@@ -227,12 +228,10 @@
                                 'Peso está fora dos parâmetros para esse item! Deseja lançar mesmo assim?'
                             )) {
                             $("#peso").val(peso_);
-                        } else {
-                            return false;
+                            return true;
                         }
-
                     }
-
+                    $("#peso").val(peso_);
                 }
             });
             $("#submit-add-item").on('click', function() {

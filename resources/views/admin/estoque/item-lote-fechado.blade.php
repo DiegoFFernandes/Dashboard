@@ -99,7 +99,7 @@
             },
             responsive: true,
             "order": [
-                [3, "desc"]
+                [2, "asc"]
             ],
         });        
     </script>

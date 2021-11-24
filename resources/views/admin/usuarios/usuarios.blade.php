@@ -127,7 +127,8 @@
                                     <th>Nome</th>
                                     <th>Email</th>
                                     <th>Empresa</th>
-                                    <th>Editar</th>
+                                    <th>Status</th>
+                                    <th>Editar</th>                                    
                                     <th>Excluir</th>
                                 </tr>
                             </thead>
@@ -138,6 +139,13 @@
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->empresa }}</td>
+                                        <td>
+                                            @if(Cache::has('user-is-online-' . $user->id))
+                                                <span class="text-success bg-success">Online</span>
+                                            @else
+                                                <span class="text-secondary bg-gray">Offline</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <a href="{{ route('admin.usuarios.edit', ['id' => $user->id]) }}"
                                                 class="fa fa-pencil"></a>

@@ -240,7 +240,7 @@
                     </ul>
                 </li>
             @endrole
-            @role('admin')
+            @role('admin|producao')
                 <li class="treeview" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-industry"></i> <span>Estoque</span>

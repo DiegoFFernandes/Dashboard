@@ -109,4 +109,9 @@ class UserController extends Controller
             ]
         );
     }
+    public function profileUser(){
+        $uri       = $this->resposta->route()->uri();
+        $user_auth = $this->user;
+        return view('admin.usuarios.user-profile', compact('uri', 'user_auth'));
+    }
 }

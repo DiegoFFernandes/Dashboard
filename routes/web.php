@@ -63,6 +63,9 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
         Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
         Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
 
+        /**Rota Perfil usuario*/
+        Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
+
         /*Rotas funções*/
         Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');
         Route::get('funcao/editar/{id}', [RoleController::class, 'edit'])->name('admin.usuarios.role.edit');
@@ -196,7 +199,7 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
         //Route::get('teste', [CobrancaController::class, 'testeChart'])->name('cobranca.teste');    
     });
 });
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin|producao'])->group(function () {
     Route::prefix('importa-item-junsoft')->group(function () {
         Route::get('index', [ImportaItemJunsoftController::class, 'index'])->name('importa.index');
         Route::post('id-marca-ajax', [ImportaItemJunsoftController::class, 'AjaxImportaItem'])->name('importa-item.index');

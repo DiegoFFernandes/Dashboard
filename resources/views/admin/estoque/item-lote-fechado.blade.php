@@ -30,7 +30,11 @@
                                         <tr>
                                             <td>{{ $i->cd_produto }}</td>
                                             <td>{{ $i->ds_item }}</td>
-                                            <td>{{ number_format($i->peso, 2) }}</td>
+                                            @if ($i->peso < $i->ps_liquido)
+                                                <td class="bg-red color-palette">{{ number_format($i->peso, 2) }}</td>
+                                            @else
+                                                <td class="bg-green color-palette">{{ number_format($i->peso, 2) }}</td>
+                                            @endif
                                             <td>{{ \Carbon\Carbon::parse($i->created_at)->format('d/m/Y H:i:s') }}</td>                                            
                                         </tr>
                                     @endforeach

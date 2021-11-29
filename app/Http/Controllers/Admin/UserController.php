@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $uri       = $this->resposta->route()->uri();
         $user_auth = $this->user;
-        $users     = User::where('id','<>', 1)->get();
+        $users     = User::where('id', '<>', 1)->get();
         $empresas  = $this->empresa->empresa();
 
         return view('admin.usuarios.usuarios', compact('users', 'user_auth', 'empresas', 'uri'));
@@ -109,9 +109,21 @@ class UserController extends Controller
             ]
         );
     }
-    public function profileUser(){
+    public function profileUser()
+    {
         $uri       = $this->resposta->route()->uri();
         $user_auth = $this->user;
         return view('admin.usuarios.user-profile', compact('uri', 'user_auth'));
+    }
+    public function updateProfileUser(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|same:confirm_password',
+            'confirm_password' => 'required',
+        ]);
+
+        User::find($this->user->id)->update(['password' => Hash::make($request->password)]);
+
+        return response()->json(['success' => 'Perfil atualizado com sucesso! Você será redirecionado a home para entrar novamente.']);
     }
 }

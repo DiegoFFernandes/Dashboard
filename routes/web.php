@@ -48,13 +48,14 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
         /* Routas Etapas */
         Route::get('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas');
         Route::post('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas.do');
+        Route::get('troca-servico', [ProducaoEtapaController::class, 'trocaServico'])->name('producao.troca-servico');
 
         /*Rotas Quantide lote e atrasos*/
         Route::get('lote-pcp', [LotePcpController::class, 'index'])->name('admin.lote.pcp');
         Route::get('lote-pcp/{nr_lote}/pneus-lote', [PneusLotePcpController::class, 'index'])->name('admin.lote.pneu.pcp');
     });
 
-    Route::middleware(['auth', 'role:admin'])->prefix('usuarios')->group(function () {
+    Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.usuarios');
         Route::get('listar', [UserController::class, 'index'])->name('admin.usuarios.listar');
         Route::get('editar/{id}', [UserController::class, 'edit'])->name('admin.usuarios.edit');
@@ -65,6 +66,7 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
 
         /**Rota Perfil usuario*/
         Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
+        Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
 
         /*Rotas funções*/
         Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');

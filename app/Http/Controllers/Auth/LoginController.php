@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Admin\PortariaController;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Http\Controllers\Controller;
 use App\Models\MovimentoVeiculo;
-use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Cookie;
 
 class LoginController extends Controller
 {
+
     public function __construct(Request $request, MovimentoVeiculo $movimento)
     {
         $this->resposta = $request;
@@ -20,9 +21,9 @@ class LoginController extends Controller
 
     public function dashboard()
     {
-        if (Auth::check() === true) {            
+        if (Auth::check() === true) {
             $user_auth = Auth::user();
-            $uri       = $this->resposta->route()->uri();            
+            $uri       = $this->resposta->route()->uri();
             return view('admin.index', compact('user_auth', 'uri'));
         }
 
@@ -46,8 +47,8 @@ class LoginController extends Controller
             'password' => $request->password,
         ];
         
-        if (Auth::attempt($credencials)) {
-           $this->authenticated($request->password);
+        if (Auth::attempt($credencials, $request->has('remember'))) {
+            $this->authenticated($request->password);            
             return redirect()->route('admin.dashborad');
         }
         return redirect()->back()->withInput()->withErrors(['Os dados informados são invalidos!']);
@@ -59,8 +60,10 @@ class LoginController extends Controller
         return redirect()->route('admin.dashborad');
     }
 
-    protected function authenticated($password){
+    protected function authenticated($password)
+    {
         Auth::logoutOtherDevices($password);
         return redirect()->intended();
     }
+    
 }

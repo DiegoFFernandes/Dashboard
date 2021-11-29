@@ -35,12 +35,15 @@
                             <a href="{{ route('admin.lote.pcp') }}"><i class="fa fa-circle-o"></i>Lote PCP</a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.producao.acompanha.ordem') }}"><i
-                                    class="fa fa-circle-o"></i>Acompanhar
-                                Ordem</a>
+                            <a href="{{ route('admin.producao.acompanha.ordem') }}">
+                                <i class="fa fa-circle-o"></i>Acompanhar Ordem</a>
                         </li>
                         <li>
-                        <li><a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
+                        <li>
+                            <a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
+                        </li>
+                        <li>
+                            <a href="{{route('producao.troca-servico')}}"><i class="fa fa-circle-o"></i>Troca de Serviço</a>
                         </li>
                         <li class="treeview">
                             <a href="#"><i class="fa fa-circle-o"></i> Produtividade

@@ -18,16 +18,16 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <div class="table-responsive">
-                            <table class="table no-margin">
+                        <div class="table-responsive" >
+                            <table class="table no-margin" id="table-troca-servico" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th>Ordem </th>
-                                        <th>Pessoa</th>
-                                        <th>Etapa</th>
-                                        <th>Operador</th>
+                                        <th>Ordem</th>
                                         <th>Banda Antiga</th>
                                         <th>Banda Nova</th>
+                                        <th>Etapa</th>
+                                        <th>Operador</th>
+                                        <th>Pessoa</th>
                                         <th>Alterado em</th>
                                     </tr>
                                 </thead>
@@ -35,11 +35,11 @@
                                     @foreach ($troca as $t)
                                         <tr>
                                             <td>{{ $t->ORDEM }}</td>
-                                            <td>{{ $t->PESSOA }}</td>
-                                            <td>{{ $t->DSETAPA }}</td>
-                                            <td>{{ $t->OPERADOR }}</td>
                                             <td>{{ $t->DSANTIGA }}</td>
                                             <td>{{ $t->DSNOVA }}</td>
+                                            <td>{{ $t->DSETAPA }}</td>
+                                            <td>{{ $t->OPERADOR }}</td>
+                                            <td>{{ $t->PESSOA }}</td>
                                             <td>{{ $t->DTALTERACAO }}</td>
                                         </tr>
                                     @endforeach
@@ -57,4 +57,17 @@
             </div>
         </div>
     </section>
+@endsection
+@section('scripts')
+    @includeIf('admin.master.datatables')
+    <script>
+        $(document).ready(function() {
+            $("#table-troca-servico").DataTable({
+                language: {
+                    url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                },
+                responsive: true,
+            });
+        });
+    </script>
 @endsection

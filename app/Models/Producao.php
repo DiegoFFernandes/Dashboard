@@ -22,7 +22,7 @@ class Producao extends Model
         $query = "SELECT
                     R.O_IDORDEMPRODUCAORECAP ORDEM, R.CD_PESSOA||' - '|| R.NM_PESSOA PESSOA, R.DSETAPA, R.IDEXECUTOR||' - '||R.NMEXECUTOR OPERADOR,
                     R.DTALTERACAO, R.IDANTIGA, R.DSANTIGA, R.IDNOVA, R.DSNOVA
-                    FROM RETORNA_TROCADESENHO($data,CURRENT_DATE)R
+                    FROM RETORNA_TROCADESENHO(3,'$data')R
                     WHERE R.IDANTIGA <> R.IDNOVA";
         return DB::connection($banco)->select($query);;
     }

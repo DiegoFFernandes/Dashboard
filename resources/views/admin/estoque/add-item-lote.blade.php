@@ -10,12 +10,16 @@
                         <h3 class="box-title">{{ $title_page }}</h3>
                     </div>
                     <div class="box-body">
+                        <div class="alert alert-success hidden">
+                            <p><i class="icon fa fa-check"></i></p>
+                        </div>
                         @includeIf('admin.master.messages')
                         <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
                         <div class="col-md-2 col-xs-6">
                             <div class="form-group">
                                 <label for="lote">Cód. Lote</label>
-                                <input type="email" class="form-control" id="id_lote" value="{{ $lote->id }}" disabled>
+                                <input type="email" class="form-control" id="id_lote" value="{{ $lote->id }}"
+                                    disabled>
                             </div>
                         </div>
                         <div class="col-md-3 hidden-xs">
@@ -203,7 +207,7 @@
                                 $("#ds_produto").val(result.ds_item);
                                 $("#cd_item").val(result.cd_item);
                                 //Essa variavel alimenta a condição #cd_barras_peso
-                                pesoitem = parseFloat(result.ps_liquido); 
+                                pesoitem = parseFloat(result.ps_liquido);
                             }
                         }
                     });
@@ -219,7 +223,7 @@
                 if (keycode == '9' || keycode == '13') {
                     var peso = str.replace('1Q', '');
                     peso_ = peso.toString().replace(",", ".")
-                    peso = parseFloat(peso);                    
+                    peso = parseFloat(peso);
                     if (peso <= (pesoitem - (pesoitem * 10 / 100)) || peso >= (pesoitem + (pesoitem * 10 /
                             100))) {
                         // $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!')
@@ -261,11 +265,16 @@
                     success: function(result) {
                         $("#loading").addClass('hidden');
                         if (result.errors) {
-                            alert(result.errors);
+                            alert(result.errors +" Peso ou produtos está fora dos parâmetros!");
                         } else {
-                            alert(result.success);
+                            //alert(result.success);
+                            $(".alert").removeClass('hidden');
+                            $(".alert p").text(result.success);
+                            window.setTimeout(function() {
+                                $(".alert").alert('close');
+                                location.reload()
+                            }, 1000);
                         }
-                        location.reload()
                     }
                 });
             });
@@ -322,6 +331,7 @@
         })
 
         $(document).ready(function() {
+            $('#cd_barras').focus();
             $('.pula').keypress(function(e) {
                 var tecla = (e.keyCode ? e.keyCode : e.which);
                 if (tecla == 13) {

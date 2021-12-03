@@ -591,7 +591,7 @@ class ProducaoEtapaController extends Controller
         {
                 $uri       = $this->resposta->route()->uri();
                 $user_auth = $this->user;
-                $data = date('m-d-Y');
+                $data = date('m-d-Y', strtotime('0 day'));
                 $troca = $this->producao->trocaServico($data);                
                 return view('admin.producao.troca-servico', compact('uri', 'user_auth', 'troca'));
         }

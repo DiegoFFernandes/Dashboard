@@ -194,13 +194,16 @@
                     </a>
                     <ul class="treeview-menu" style="display: none;">
                         @can('ver-comercial-norte')
-                            <li class="active"><a href="{{ route('comercial.ivo-norte') }}"><i
+                            <li><a href="{{ route('comercial.ivo-norte') }}"><i
                                         class="fa fa-arrow-up"></i>Ivo Recap - Norte</a>
                             </li>
                         @endcan
                         @can('ver-comercial-sul')
-                            <li class="active"><a href="{{ route('comercial.ivo-sul') }}"><i
+                            <li><a href="{{ route('comercial.ivo-sul') }}"><i
                                         class="fa fa-arrow-down"></i>Ivo Recap - Sul</a>
+                            </li>
+                            <li><a href="{{ route('comercial.cancela-nota') }}"><i
+                                class="fa fa-ban"></i>Cancelar Nota</a>
                             </li>
                         @endcan
                     </ul>
@@ -216,12 +219,12 @@
                     </a>
                     <ul class="treeview-menu" style="display: none;">
                         @can('ver-diretoria-norte')
-                            <li class="active"><a href="{{ route('diretoria.ivo-norte') }}"><i
+                            <li><a href="{{ route('diretoria.ivo-norte') }}"><i
                                         class="fa fa-arrow-up"></i>Ivo Recap - Norte</a>
                             </li>
                         @endcan
                         @can('ver-diretoria-sul')
-                            <li class="active"><a href="{{ route('diretoria.ivo-sul') }}"><i
+                            <li><a href="{{ route('diretoria.ivo-sul') }}"><i
                                         class="fa fa-arrow-down"></i>Ivo Recap - Sul</a>
                             </li>
                         @endcan

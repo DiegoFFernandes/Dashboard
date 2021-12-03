@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\Cobranca\CobrancaController;
+use App\Http\Controllers\Admin\Comercial\CancelarNotaController;
 use App\Http\Controllers\Admin\Comercial\ComercialController;
 use App\Http\Controllers\Admin\Email\EmailController;
 use App\Http\Controllers\Admin\EmpresaController;
@@ -156,6 +157,10 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
             Route::get('ivorecap-sul', [ComercialController::class, 'ivoComercialSul'])->name('comercial.ivo-sul');
+            Route::get('cancelar-nota', [CancelarNotaController::class, 'cancelarNota'])->name('comercial.cancela-nota');
+            Route::post('cancelar-nota-do', [CancelarNotaController::class, 'getCancelarNota'])->name('comercial.cancela-nota-do');
+            Route::get('search-cliente', [CancelarNotaController::class, 'SearchCliente'])->name('comercial.search-cliente');
+            
         });
     });
 });

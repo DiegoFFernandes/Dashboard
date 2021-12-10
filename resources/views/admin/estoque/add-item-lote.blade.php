@@ -10,7 +10,7 @@
                         <h3 class="box-title">{{ $title_page }}</h3>
                     </div>
                     <div class="box-body">
-                        <div class="alert alert-success hidden">
+                        <div class="alert alert-success alert-fixed hidden">
                             <p><i class="icon fa fa-check"></i></p>
                         </div>
                         @includeIf('admin.master.messages')
@@ -267,9 +267,12 @@
                         if (result.errors) {
                             alert(result.errors +" Peso ou produtos está fora dos parâmetros!");
                         } else {
-                            //alert(result.success);
-                            $(".alert").removeClass('hidden');
-                            $(".alert p").text(result.success);
+                            //alert(result.success);                            
+                            setTimeout(function(){
+                                $(".alert").removeClass('hidden');
+                                $(".alert p").text(result.success);
+                            }, 400);
+                            
                             window.setTimeout(function() {
                                 $(".alert").alert('close');
                                 location.reload()

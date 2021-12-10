@@ -21,7 +21,7 @@ class Motivo extends Model
 
     public function motivoAll()
     {
-        $query = "select m.cd_motivo||' - '||cast(m.ds_motivo as varchar(100) character set utf8) ds_motivo, m.tp_motivo, m.dt_registro
+        $query = "select m.cd_motivo, cast(m.ds_motivo as varchar(100) character set utf8) ds_motivo, m.tp_motivo, m.dt_registro
                     from motivo m
                     where m.tp_motivo='C'";
         return DB::connection($this->setConnet())->select($query);

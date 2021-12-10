@@ -230,3 +230,13 @@ iframe {
 .ms-dlgContent {
     z-index: 99999999999 !important;
 }
+
+.alert-fixed {
+    position: fixed;
+    top: 109px;
+    right: 15px;
+    width: 250px;
+    z-index: 9999;
+    border-radius: 0px;
+    transition: 1s ease-in;
+}

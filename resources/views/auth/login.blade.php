@@ -18,7 +18,7 @@
 <body class="text-center">
     <div class="container-fluid">
         <div class="row padding">
-            <form class="form-signin" action="{{route('admin.login.do')}}" method="post">
+            <form class="form-signin" action="{{route('admin.login.do')}}" method="post" autocomplete="on">
                 @csrf
                 <img class="mb-4" src="{{ Asset('img/logo-ivorecap.png') }}" alt="" width="120" height="100">
                 <h1 class="h3 mb-3 font-weight-normal">Entrar</h1>

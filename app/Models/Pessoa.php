@@ -29,7 +29,7 @@ class Pessoa extends Model
     }
     public function FindPessoaJunsoftAll($search)
     {
-        $query = "select first 10 p.cd_pessoa||' - '||cast(p.nm_pessoa as varchar(100) character set utf8) nm_pessoa, p.nr_cnpjcpf
+        $query = "select first 10 p.cd_pessoa, cast(p.nm_pessoa as varchar(100) character set utf8) nm_pessoa, p.nr_cnpjcpf
                     from pessoa p
                     where p.st_ativa = 'S'
                         --and p.cd_tipopessoa in (1,3)

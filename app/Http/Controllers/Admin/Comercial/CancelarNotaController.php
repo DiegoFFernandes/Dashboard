@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Comercial;
 
 use App\Http\Controllers\Controller;
+//use App\Jobs\CancelaNotaMail;
 use App\Mail\CancelaNotaMail;
 use App\Models\CancelarNota;
 use App\Models\Empresa;
@@ -98,7 +99,7 @@ class CancelarNotaController extends Controller
         $request->motivo = 'Faturamento parcial';
         $request->observacao = 'Teste de observação';
 
-        return new CancelaNotaMail($request, Auth::user());
+        //return new CancelaNotaMail($request);
         //return Mail::send(new CancelaNotaMail($request));
     }
 }

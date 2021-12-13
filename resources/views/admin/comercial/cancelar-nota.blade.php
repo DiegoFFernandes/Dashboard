@@ -19,6 +19,8 @@
                                 <select name="cd_empresa" id="cd_empresa" class="form-control" style="width: 100%;">
                                     <option value="3">SUPER RODAS RECAPAGENS</option>
                                     <option value="1">AM MORENO PNEUS LTDA</option>
+                                    <option value="2">PEDIDO 2</option>
+                                    <option value="12">PEDIDO 12</option>
                                 </select>
                             </div>
                         </div>

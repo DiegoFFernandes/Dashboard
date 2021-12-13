@@ -25,7 +25,7 @@ class CancelaNotaMail extends Mailable
      */
     public function __construct($request, User $user)
     {
-        $this->request = $request;
+        $this->request = $request;        
         $this->user = Auth::user();
     }
 
@@ -37,9 +37,10 @@ class CancelaNotaMail extends Mailable
     public function build()
     {
         $request = $this->request;
-        $user = $this->user;
+        $user = Auth::user();
         $this->subject("Pedido de Cancelamento");
-        $this->to("rafael.duarte@ivorecap.com.br", "Rafael Duarte")->cc("ti.campina@ivorecap.com.br");
-        return $this->markdown("admin.comercial.envio-email", compact('request'));
+        $this->to(env('EMAIL_TO'), "Diego Ferreira")->cc(env('EMAIL_CC'));
+        //$this->to("rafael.duarte@ivorecap.com.br", "Rafael Duarte");
+        return $this->markdown("admin.comercial.envio-email", compact('request','user'));
     }
 }

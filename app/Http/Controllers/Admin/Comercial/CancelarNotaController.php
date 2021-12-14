@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Comercial;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\CancelaNotaMail as JobsCancelaNotaMail;
 //use App\Jobs\CancelaNotaMail;
 use App\Mail\CancelaNotaMail;
 use App\Models\CancelarNota;
@@ -51,8 +52,8 @@ class CancelarNotaController extends Controller
     public function getCancelarNota(){        
         $this->request['cd_requerente'] = Auth::user()->id;   
         $this->_validate($this->request);       
-        $store = $this->nota->store($this->request);  
-        Mail::send(new CancelaNotaMail($this->request, Auth::user()));
+        $store = $this->nota->store($this->request);          
+        JobsCancelaNotaMail::dispatch($this->request->all(), $this->user)->delay(now()->addSecond(1));
               
         if($store == 1){
             return response()->json(['success' => 'Pedido de cancelamento realizado com sucesso!']);
@@ -88,7 +89,8 @@ class CancelarNotaController extends Controller
         );
     }
 
-    public function envioEmail(){
+    public function envioEmail(){        
+        
         $request = new stdClass();
         $request->cd_empresa = 3;
         $request->name = "Diego Ferreira";
@@ -99,7 +101,8 @@ class CancelarNotaController extends Controller
         $request->motivo = 'Faturamento parcial';
         $request->observacao = 'Teste de observação';
 
-        //return new CancelaNotaMail($request);
-        //return Mail::send(new CancelaNotaMail($request));
+        //return new CancelaNotaMail($request, Auth::user());
+        //return Mail::send(new CancelaNotaMail($request, Auth::user()));
+        JobsCancelaNotaMail::dispatch($request, $this->user)->delay(now()->addSecond(5));
     }
 }

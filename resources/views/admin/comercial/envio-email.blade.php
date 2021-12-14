@@ -8,13 +8,13 @@
 
 ### Dados para cancelamento:
 
-* Empresa: {{$request->cd_empresa}}
-    * Lançamento: {{$request->nr_lancamento }} 
-    * Nota: {{$request->nr_nota }}  
-    * Cliente: {{$request->nm_pessoa }}
-    * Cnpj/Cpf: {{$request->nr_cnpjcpf }}
-    * Motivo: {{$request->motivo }}
-    * Obervação: {{$request->observacao }}
+* Empresa: {{$request['cd_empresa']}}
+    * Lançamento: {{$request['nr_lancamento']}} 
+    * Nota: {{$request['nr_nota']}}  
+    * Cliente: {{$request['nm_pessoa']}}
+    * Cnpj/Cpf: {{$request['nr_cnpjcpf']}}
+    * Motivo: {{$request['motivo']}}
+    * Obervação: {{$request['observacao']}}
 
 @endcomponent
 

@@ -43,7 +43,8 @@
                             <a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
                         </li>
                         <li>
-                            <a href="{{route('producao.troca-servico')}}"><i class="fa fa-circle-o"></i>Troca de Serviço</a>
+                            <a href="{{ route('producao.troca-servico') }}"><i class="fa fa-circle-o"></i>Troca de
+                                Serviço</a>
                         </li>
                         <li class="treeview">
                             <a href="#"><i class="fa fa-circle-o"></i> Produtividade
@@ -194,16 +195,26 @@
                     </a>
                     <ul class="treeview-menu" style="display: none;">
                         @can('ver-comercial-norte')
-                            <li><a href="{{ route('comercial.ivo-norte') }}"><i
-                                        class="fa fa-arrow-up"></i>Ivo Recap - Norte</a>
+                            <li><a href="{{ route('comercial.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
+                                    Norte</a>
                             </li>
                         @endcan
                         @can('ver-comercial-sul')
-                            <li><a href="{{ route('comercial.ivo-sul') }}"><i
-                                        class="fa fa-arrow-down"></i>Ivo Recap - Sul</a>
+                            <li><a href="{{ route('comercial.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo Recap -
+                                    Sul</a>
                             </li>
-                            <li><a href="{{ route('comercial.cancela-nota') }}"><i
-                                class="fa fa-ban"></i>Cancelar Nota</a>
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-circle-o"></i> Movimentos
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="{{ route('comercial.cancela-nota') }}"><i class="fa fa-ban"></i>Cancelar Nota</a></li>
+                                    @role('controladoria|admin')
+                                    <li><a href="{{route('comercial.list-nota-all')}}"><i class="fa fa-list"></i>Notas a cancelar</a></li>
+                                    @endrole
+                                </ul>
                             </li>
                         @endcan
                     </ul>
@@ -219,13 +230,13 @@
                     </a>
                     <ul class="treeview-menu" style="display: none;">
                         @can('ver-diretoria-norte')
-                            <li><a href="{{ route('diretoria.ivo-norte') }}"><i
-                                        class="fa fa-arrow-up"></i>Ivo Recap - Norte</a>
+                            <li><a href="{{ route('diretoria.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
+                                    Norte</a>
                             </li>
                         @endcan
                         @can('ver-diretoria-sul')
-                            <li><a href="{{ route('diretoria.ivo-sul') }}"><i
-                                        class="fa fa-arrow-down"></i>Ivo Recap - Sul</a>
+                            <li><a href="{{ route('diretoria.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo Recap -
+                                    Sul</a>
                             </li>
                         @endcan
                     </ul>

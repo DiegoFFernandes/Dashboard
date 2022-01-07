@@ -113,6 +113,7 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
         Route::get('relatorio/movimento', [PortariaController::class, 'movimentos'])->name('portaria.movimentos');
         Route::get('get-movimento', [PortariaController::class, 'getMovimento'])->name('get.portaria.movimentos');
     });
+    /*Rotas cadastro motorista veiculos */
     Route::prefix('veiculo')->group(function () {
         Route::get('listar', [VeiculoController::class, 'index'])->name('listar.motorista.veiculos');
         Route::get('get-motorista-veiculos', [VeiculoController::class, 'getMotoristaVeiculos'])->name('buscar.motorista.veiculo');
@@ -158,11 +159,19 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
             Route::get('ivorecap-sul', [ComercialController::class, 'ivoComercialSul'])->name('comercial.ivo-sul');
             
+            /* Cancelar nota - usuario */
             Route::get('cancelar-nota', [CancelarNotaController::class, 'cancelarNota'])->name('comercial.cancela-nota');
             Route::post('cancelar-nota-do', [CancelarNotaController::class, 'getCancelarNota'])->name('comercial.cancela-nota-do');            
             Route::get('search-nota', [CancelarNotaController::class, 'SearchNota'])->name('comercial.search-nota');
-            Route::get('envio-email', [CancelarNotaController::class, 'envioEmail'])->name('comercial.envio-email');
+            Route::get('envio-email', [CancelarNotaController::class, 'envioEmail'])->name('comercial.envio-email');          
+
         
+        });
+
+        Route::middleware(['auth', 'role:admin|controladoria'])->group(function () {
+            /* Lista de notas a cancelar - Role Controladoria*/
+            Route::get('lista-notas-cancelar', [CancelarNotaController::class, 'listAll'])->name('comercial.list-nota-all');
+            Route::get('get-lista-notas-cancelar', [CancelarNotaController::class, 'getListAll'])->name('comercial.get-list-nota-all');  
         });
     });
 });

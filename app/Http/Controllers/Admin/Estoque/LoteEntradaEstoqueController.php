@@ -87,7 +87,9 @@ class LoteEntradaEstoqueController extends Controller
         return Validator::make(
             $request->all(),
             ['ds_lote'  => 'required'],
-            ['ds_lote.required' => 'Descrição deve ser preenchida']
+            ['ds_lote.required' => 'Descrição deve ser preenchida'],
+            ['tp_lote' => 'required'],
+            ['tp_lote.required' => 'Tipo lote deve ser preenchido'],
         );
     }
 }

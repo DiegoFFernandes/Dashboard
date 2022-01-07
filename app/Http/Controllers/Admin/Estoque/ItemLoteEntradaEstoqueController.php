@@ -31,12 +31,12 @@ class ItemLoteEntradaEstoqueController extends Controller
         });
     }
     public function index($id)
-    {
-        $title_page   = 'Adicionar item Lote de Entrada';
+    {        
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
         $lote = $this->lote->findLote(Crypt::decryptString($id));
         $itemlote = $this->itemlote->list($lote->id);
+        $title_page   = 'Adicionar item Lote de '.$lote->tp_lote;        
         $itemgroup = $this->itemlote->listGroup($lote->id);        
         return view('admin.estoque.add-item-lote', compact(
             'title_page',

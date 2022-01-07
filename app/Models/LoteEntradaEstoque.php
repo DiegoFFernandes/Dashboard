@@ -12,7 +12,8 @@ class LoteEntradaEstoque extends Model
     protected $fillable = [
         'descricao',
         'cd_usuario',
-        'status'
+        'status',
+        'tp_lote'
     ];
     
     public $timestamps = true;
@@ -29,7 +30,8 @@ class LoteEntradaEstoque extends Model
         LoteEntradaEstoque::create([
             'descricao' => $input['ds_lote'],
             'cd_usuario' => $input['cd_usuario'],
-            'status' => $input['status']
+            'status' => $input['status'],
+            'tp_lote' => $input['tp_lote']
         ]);
     }
     public function findLote($id)

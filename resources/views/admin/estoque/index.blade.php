@@ -12,11 +12,17 @@
                     <div class="box-body">
                         <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
                         <div class="form-group">
-                            <label for="ds_lote" class="col-sm-2 control-label">Descrição</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="ds_lote"
-                                    placeholder="Descrição para o Lote: Banda/Consertos...">
-                            </div>
+                            <label for="tp_lote" class="control-label">Tipo Lote</label>
+                            <select class="form-control" id="tp_lote">
+                                <option value="entrada">Entrada</option>
+                                <option value="emprestimo">Empréstimo</option>
+                                <option value="inventario">Inventario</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ds_lote" class="control-label">Descrição</label>
+                            <input type="text" class="form-control" id="ds_lote"
+                                placeholder="Descrição para o Lote: Banda/Consertos...">
                         </div>
                     </div>
                     <!-- /.box-body -->
@@ -124,10 +130,16 @@
                     url: "{{ route('estoque.cria-lote') }}",
                     method: 'POST',
                     data: {
+                        tp_lote: $('#tp_lote').val(),
                         ds_lote: $("#ds_lote").val(),
                         _token: $('#token').val(),
                     },
                     beforeSend: function() {
+                        if ($("#tp_lote").val() == "") {
+                            $('#tp_lote').attr('title', 'Tipo lote é obrigatório!')
+                                .tooltip('show');
+                            return false;
+                        }
                         if ($("#ds_lote").val() == "") {
                             $('#ds_lote').attr('title', 'Descrição é obrigatório!')
                                 .tooltip('show');

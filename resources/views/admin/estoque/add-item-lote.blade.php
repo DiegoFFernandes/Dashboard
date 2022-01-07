@@ -106,7 +106,8 @@
                                         <th>Cód. Item</th>
                                         <th>Descrição</th>
                                         <th>Peso</th>
-                                        <th>Entrada em</th>
+                                        <th>Úsuario</th>
+                                        <th>Entrada em</th>                                        
                                         <th>Deletar</th>
                                     </tr>
                                 </thead>
@@ -120,6 +121,7 @@
                                             @else
                                                 <td class="bg-green color-palette">{{ number_format($i->peso, 2) }}</td>
                                             @endif
+                                            <td>{{ $i->name }}</td>
                                             <td>{{ \Carbon\Carbon::parse($i->created_at)->format('d/m/Y H:i:s') }}</td>
                                             <td><button class="delete fa fa-trash-o" aria-hidden="true"
                                                     data-id="{{ $i->id }}"></button></td>

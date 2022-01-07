@@ -18,8 +18,9 @@ class ItemLoteEntradaEstoque extends Model
     public function list($id)
     {
         return ItemLoteEntradaEstoque::select('item_lote_entrada_estoques.id', 'item_lote_entrada_estoques.cd_produto', 'itens.ds_item', 
-        'item_lote_entrada_estoques.peso', 'itens.ps_liquido' ,'item_lote_entrada_estoques.created_at')
+        'item_lote_entrada_estoques.peso', 'itens.ps_liquido', 'users.name', 'item_lote_entrada_estoques.created_at')
         ->join('itens', 'itens.cd_item', 'item_lote_entrada_estoques.cd_produto')
+        ->join('users', 'users.id', 'item_lote_entrada_estoques.cd_usuario')
         ->where('cd_lote', $id)->get();
     }
     public function listGroup($id){

@@ -50,6 +50,7 @@
                                     <th>Qtda Items</th>
                                     <th>Peso Liquido</th>
                                     <th>Status</th>
+                                    <th>Tipo Lote</th>
                                     <th>Usúario</th>
                                     <th>Criado em</th>
                                     <th>Ações</th>
@@ -105,6 +106,10 @@
                     {
                         data: 'status',
                         name: 'status',
+                    },
+                    {
+                        data: 'tp_lote',
+                        name: 'tp_lote',
                     },
                     {
                         data: 'cd_usuario',

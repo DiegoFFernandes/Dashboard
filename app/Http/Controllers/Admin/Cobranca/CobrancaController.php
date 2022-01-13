@@ -44,8 +44,8 @@ class CobrancaController extends Controller
         $chartClienteNovos = $this->CarregaVariavel($clientesNovos);
         $chart = $this->CarregaVariavel($meses);
         $agenda = $this->agenda->AgendaOperadorMes($operadores);
-        $clientesNovosDia = $this->agenda->ClientesNovos3Mes($operadores);
-        $qtdClientesNovosMes = $this->pessoa->QtdClientesNovosMes($dti, $dtf);  
+        $clientesNovosDia = $this->agenda->ClientesNovos3Mes($operadores);        
+        $qtdClientesNovosMes = $this->pessoa->QtdClientesNovosMes($dti, $dtf);
         $qtdClientesFormaPagamento  = $this->pessoa->QtdClientesFormaPagamento($dti, $dtf);   
 
         $title_page   = 'Agenda';
@@ -121,9 +121,10 @@ class CobrancaController extends Controller
         $title_page   = 'Agenda';
         $user_auth    = $this->user;
         $exploder = explode('/', $this->resposta->route()->uri());
+        $detalhesOperador = $this->agenda->DetalheCadastroClienteOperador($dt, $cdusuario); 
         $uri       = ucfirst($exploder[1]);
 
-        return view('admin.cobranca.detalhe-clientes-novos', compact('title_page', 'user_auth', 'uri'));
+        return view('admin.cobranca.detalhe-clientes-novos', compact('title_page', 'user_auth', 'uri', 'detalhesOperador'));
     }
     public function ClientesNovosMes(Request $request)
     {

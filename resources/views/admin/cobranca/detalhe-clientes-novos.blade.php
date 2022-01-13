@@ -8,19 +8,25 @@
                 <div class="box box-info">
                     <div class="box-header">
                         <h3 class="box-title">Detalhe Clientes Novos</h3>
-                        <div class="box-tools">
-                            <ul class="pagination pagination-sm no-margin pull-right">
-                                <li><a href="#">«</a></li>
-                                <li><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">»</a></li>
-                            </ul>
-                        </div>
                     </div>
                     <div class="box-body">
-                        <div class="col-md-6">
-                            {!! $chartest->container() !!}
+                        <div class="col-md-12">
+                            <table class="table table-responsive">
+                                <thead>
+                                    <th>Cd. Pessoa</th>
+                                    <th>Nome</th>
+                                    <th>CNPJ</th>
+                                </thead>
+                                <tbody>
+                                    @foreach ( $detalhesOperador as $d)
+                                    <tr>
+                                        <td>{{$d->CD_PESSOA}}</td>
+                                        <td>{{$d->NM_PESSOA}}</td>
+                                        <td>{{$d->NR_CNPJCPF}}</td>
+                                    </tr>
+                                    @endforeach                                    
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -32,6 +38,6 @@
 
 @section('scripts')
     @includeIf('admin.master.datatables')
-    <script src="{{ asset('js/scripts.js') }}"></script>    
-    {!! $chartest->script() !!}    
+    <script src="{{ asset('js/scripts.js') }}"></script>
+
 @endsection

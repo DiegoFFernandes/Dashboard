@@ -154,6 +154,7 @@ class AgendaPessoa extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
+    //Clientes novos diario 
     public function ClientesNovos3Mes($operadores){
         foreach ($operadores as $o) {
             $query = "with recursive dt as (
@@ -166,7 +167,7 @@ class AgendaPessoa extends Model
             select dt.dt, ap.cd_usuariocad, DECODE(POSITION(' ',u.nm_usuario),0,u.nm_usuario, SUBSTRING(u.nm_usuario FROM 1 FOR POSITION(' ', u.nm_usuario))) nm_usuario, count(ap.dt_cadastro) as qtd
             from dt
             left join (select * from pessoa ap where ap.cd_usuariocad = '$o->CD_USUARIO'
-            and ap.dt_cadastro between '$this->p_dia' and current_timestamp) ap on ((cast(ap.dt_cadastro as date)) = dt.dt)
+            and ap.dt_cadastro between '$this->p_dia' and current_timestamp and ap.cd_tipopessoa = 1) ap on ((cast(ap.dt_cadastro as date)) = dt.dt)
             left join usuario u on (u.cd_usuario = ap.cd_usuariocad)
             --inner join usuario u on (u.cd_usuario = ap.cd_usuario)
             group by dt.dt, ap.cd_usuariocad, u.nm_usuario";
@@ -185,6 +186,7 @@ class AgendaPessoa extends Model
         where p.dt_cadastro between '$dti' and '$dtf'
         and p.cd_usuariocad not in ('ti02', 'ti04')
         and u.cd_emprpadrao = '3'
+        and p.cd_tipopessoa =  1
         group by p.cd_usuariocad, u.nm_usuario";
 
         return DB::connection($this->setConnet())->select($query);
@@ -199,5 +201,16 @@ class AgendaPessoa extends Model
         group by ap.cd_usuario, u.nm_usuario";
 
        return DB::connection($this->setConnet())->select($query);       
+    }
+    //Detalhe de clientes novos por operador
+    public function DetalheCadastroClienteOperador($dt, $operador){
+        $query = "select p.cd_pessoa, p.nm_pessoa, p.nr_cnpjcpf
+                  from pessoa p
+                  where p.cd_usuariocad = '$operador'
+                    and p.dt_cadastro between '$dt' and '$dt'
+                    and p.cd_tipopessoa = 1";
+
+        return DB::connection($this->setConnet())->select($query);
+        
     }
 }

@@ -13,31 +13,35 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    {{isset($title_page) ? $title_page : 'Dashboard'}}
-                    @if(isset($uri))
-                    <small>{{$uri}}</small>
+                    {{ isset($title_page) ? $title_page : 'Dashboard' }}
+                    @if (isset($uri))
+                        <small>{{ $uri }}</small>
                     @else
-                    <small>Painel de Controle</small>
+                        <small>Painel de Controle</small>
                     @endif
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
                     <li class="active">
-                        @if(isset($uriAtual))
-                        {{$uriAtual}}
+                        @if (isset($uriAtual))
+                            {{ $uriAtual }}
                         @else Dashboard
                         @endif
                     </li>
                 </ol>
             </section>
             @yield('content')
+            {{-- Icon loading --}}
+            <div class="hidden" id="loading">
+                <img id="loading-image" class="mb-4" src="{{ Asset('img/loader.gif') }}" alt="Loading...">
+            </div>
         </div>
         <!-- /.content-wrapper -->
         @includeIf('admin.master.footer')
-    </div>   
+    </div>
 
     <!-- ./wrapper -->
-    @includeIf('admin.master.scripts')   
+    @includeIf('admin.master.scripts')
 
     @yield('scripts')
 

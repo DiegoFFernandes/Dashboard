@@ -5,7 +5,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MENU DE NAVEGAÇÃO</li>
-            <li class="treeview" style="height: auto;">
+            <li class="treeview {{request()->segment(1) == 'admin' ? 'active' : ''}}" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     <span class="pull-right-container">
@@ -13,13 +13,13 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li class="active"><a href="{{ route('admin.dashborad') }}"><i
+                    <li class="{{request()->routeIs('admin.dashborad') ? 'active' : ''}}"><a href="{{ route('admin.dashborad') }}"><i
                                 class="fa fa-home"></i>Inicio</a>
                     </li>
                 </ul>
             </li>
             @role('admin|producao')
-                <li class="treeview" style="height: auto;">
+                <li class="treeview {{request()->segment(1) == 'producao' ? 'active' : ''}}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-th"></i> <span>Produção</span>
                         <span class="pull-right-container">
@@ -66,6 +66,9 @@
                                             class="fa fa-circle-o"></i>Quadrante
                                         4</a></li>
                             </ul>
+                        </li>
+                        <li class="{{request()->routeIs('gqc-pneus-faturados-marca') ? 'active' : ''}}">
+                            <a href="{{ route('gqc-pneus-faturados-marca') }}"><i class="fa fa-circle-o"></i>GQC Bridgestone</a>
                         </li>
                     </ul>
                 </li>
@@ -243,7 +246,7 @@
                 </li>
             @endcanany
             @role('cobranca|admin')
-                <li class="treeview" style="height: auto;">
+                <li class="treeview {{request()->segment(1) == 'cobranca' ? 'active' : ''}}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-credit-card"></i> <span>Cobranca</span>
                         <span class="pull-right-container">
@@ -251,9 +254,11 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        <li class="active"><a href="{{ route('cobranca.index') }}"><i
+                        <li class="{{request()->routeIs('cobranca.index') ? 'active' : ''}}"><a href="{{ route('cobranca.index') }}"><i
                                     class="fa fa-address-book-o"></i>Agenda</a>
                         </li>
+                        <li class="{{request()->routeIs('search-envio') ? 'active' : ''}}"><a href="{{route('search-envio')}}"><i class="fa fa-search"></i>Consulta Envio Nfe/Boleto</a>
+                </li>
                     </ul>
                 </li>
             @endrole

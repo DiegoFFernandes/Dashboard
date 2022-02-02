@@ -9,6 +9,10 @@ $.widget.bridge('uibutton', $.ui.button);
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 
+<!-- date-range-picker -->
+<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+
 {{-- Mascaras de input --}}
 <script src="{{asset('adminlte/bower_components/inputmask/dist/inputmask/inputmask.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/inputmask/dist/inputmask/inputmask.extensions.js')}}"></script>

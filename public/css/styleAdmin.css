@@ -240,3 +240,11 @@ iframe {
     border-radius: 0px;
     transition: 1s ease-in;
 }
+
+.pl-0 {
+    padding-left: 0 !important;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #dee2e6!important;
+}

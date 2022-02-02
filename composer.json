@@ -14,6 +14,7 @@
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "spatie/laravel-permission": "^4.0",
+        "yajra/laravel-datatables-buttons": "^4.13",
         "yajra/laravel-datatables-oracle": "^9.18"
     },
     "require-dev": {
@@ -30,7 +31,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

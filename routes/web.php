@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\Pessoa\PessoaController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
+use App\Http\Controllers\Admin\Producao\GqcBridgestoneController;
 use App\Http\Controllers\Admin\ProducaoEtapaController;
 use App\Http\Controllers\admin\ProdutividadeController;
 use App\Http\Controllers\Admin\Produto\ImportaItemJunsoftController;
@@ -44,47 +45,34 @@ Route::get('/admin', [LoginController::class, 'dashboard'])->name('admin.dashbor
 
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 
-Route::middleware(['auth', 'role:admin|producao'])->group(function () {
-    Route::prefix('producao')->group(function () {
-        /* Routas Etapas */
-        Route::get('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas');
-        Route::post('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas.do');
-        Route::get('troca-servico', [ProducaoEtapaController::class, 'trocaServico'])->name('producao.troca-servico');
+Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('admin.usuarios');
+    Route::get('listar', [UserController::class, 'index'])->name('admin.usuarios.listar');
+    Route::get('editar/{id}', [UserController::class, 'edit'])->name('admin.usuarios.edit');
+    Route::get('delete/{id}', [UserController::class, 'delete'])->name('admin.usuarios.delete');
+    Route::get('cadastrar', [UserController::class, 'index'])->name('admin.usuarios.create');
+    Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
+    Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
 
-        /*Rotas Quantide lote e atrasos*/
-        Route::get('lote-pcp', [LotePcpController::class, 'index'])->name('admin.lote.pcp');
-        Route::get('lote-pcp/{nr_lote}/pneus-lote', [PneusLotePcpController::class, 'index'])->name('admin.lote.pneu.pcp');
-    });
+    /**Rota Perfil usuario*/
+    Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
+    Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
 
-    Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('admin.usuarios');
-        Route::get('listar', [UserController::class, 'index'])->name('admin.usuarios.listar');
-        Route::get('editar/{id}', [UserController::class, 'edit'])->name('admin.usuarios.edit');
-        Route::get('delete/{id}', [UserController::class, 'delete'])->name('admin.usuarios.delete');
-        Route::get('cadastrar', [UserController::class, 'index'])->name('admin.usuarios.create');
-        Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
-        Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
+    /*Rotas funções*/
+    Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');
+    Route::get('funcao/editar/{id}', [RoleController::class, 'edit'])->name('admin.usuarios.role.edit');
+    Route::post('funcao/editar', [RoleController::class, 'update'])->name('admin.usuarios.role.edit.do');
+    Route::get('funcao/novo', [RoleController::class, 'create'])->name('admin.usuarios.role.create');
+    Route::post('funcao/novo', [RoleController::class, 'save'])->name('admin.usuarios.role.create.do');
+    Route::get('funcao/delete/{id}', [RoleController::class, 'delete'])->name('admin.usuarios.role.delete');
 
-        /**Rota Perfil usuario*/
-        Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
-        Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
-
-        /*Rotas funções*/
-        Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');
-        Route::get('funcao/editar/{id}', [RoleController::class, 'edit'])->name('admin.usuarios.role.edit');
-        Route::post('funcao/editar', [RoleController::class, 'update'])->name('admin.usuarios.role.edit.do');
-        Route::get('funcao/novo', [RoleController::class, 'create'])->name('admin.usuarios.role.create');
-        Route::post('funcao/novo', [RoleController::class, 'save'])->name('admin.usuarios.role.create.do');
-        Route::get('funcao/delete/{id}', [RoleController::class, 'delete'])->name('admin.usuarios.role.delete');
-
-        /*Rotas permission*/
-        Route::get('permissao', [PermissionController::class, 'index'])->name('admin.usuarios.permission');
-        Route::get('permissao/editar/{id}', [PermissionController::class, 'edit'])->name('admin.usuarios.permission.edit');
-        Route::post('permissao/editar', [PermissionController::class, 'update'])->name('admin.usuarios.permission.edit.do');
-        Route::get('permissao/novo', [PermissionController::class, 'create'])->name('admin.usuarios.permission.create');
-        Route::post('permissao/novo', [PermissionController::class, 'save'])->name('admin.usuarios.permission.create.do');
-        Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
-    });
+    /*Rotas permission*/
+    Route::get('permissao', [PermissionController::class, 'index'])->name('admin.usuarios.permission');
+    Route::get('permissao/editar/{id}', [PermissionController::class, 'edit'])->name('admin.usuarios.permission.edit');
+    Route::post('permissao/editar', [PermissionController::class, 'update'])->name('admin.usuarios.permission.edit.do');
+    Route::get('permissao/novo', [PermissionController::class, 'create'])->name('admin.usuarios.permission.create');
+    Route::post('permissao/novo', [PermissionController::class, 'save'])->name('admin.usuarios.permission.create.do');
+    Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
 });
 /*Rotas sem autenticação*/
 Route::prefix('producao')->group(function () {
@@ -158,20 +146,18 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
             Route::get('ivorecap-sul', [ComercialController::class, 'ivoComercialSul'])->name('comercial.ivo-sul');
-            
+
             /* Cancelar nota - usuario */
             Route::get('cancelar-nota', [CancelarNotaController::class, 'cancelarNota'])->name('comercial.cancela-nota');
-            Route::post('cancelar-nota-do', [CancelarNotaController::class, 'getCancelarNota'])->name('comercial.cancela-nota-do');            
+            Route::post('cancelar-nota-do', [CancelarNotaController::class, 'getCancelarNota'])->name('comercial.cancela-nota-do');
             Route::get('search-nota', [CancelarNotaController::class, 'SearchNota'])->name('comercial.search-nota');
-            Route::get('envio-email', [CancelarNotaController::class, 'envioEmail'])->name('comercial.envio-email');          
-
-        
+            Route::get('envio-email', [CancelarNotaController::class, 'envioEmail'])->name('comercial.envio-email');
         });
 
         Route::middleware(['auth', 'role:admin|controladoria'])->group(function () {
             /* Lista de notas a cancelar - Role Controladoria*/
             Route::get('lista-notas-cancelar', [CancelarNotaController::class, 'listAll'])->name('comercial.list-nota-all');
-            Route::get('get-lista-notas-cancelar', [CancelarNotaController::class, 'getListAll'])->name('comercial.get-list-nota-all');  
+            Route::get('get-lista-notas-cancelar', [CancelarNotaController::class, 'getListAll'])->name('comercial.get-list-nota-all');
         });
     });
 });
@@ -212,6 +198,9 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
         Route::get('clientes-novos/usuario/{cdusuario}/data/{dt}', [CobrancaController::class, 'ClientesNovos'])->name('cobranca.clientes-novos');
         Route::get('agenda/data', [CobrancaController::class, 'AgendaData'])->name('cobranca.agenda.mes');
         Route::get('clientes-novos/data', [CobrancaController::class, 'ClientesNovosMes'])->name('cobranca.clientes-novos-mes');
+        Route::get('envio-follow-up', [CobrancaController::class, 'searchEnvio'])->name('search-envio');
+        Route::get('get-search-follow', [CobrancaController::class, 'getSearchEnvio'])->name('get-search-envio');
+        Route::get('get-email-follow/{id}', [CobrancaController::class, 'getEmailEnvio'])->name('get-email-follow');
 
         Route::get('chart-data', [CobrancaController::class, 'chartLineAjax'])->name('cobranca.chart-api');
         //Route::get('teste', [CobrancaController::class, 'testeChart'])->name('cobranca.teste');    
@@ -231,10 +220,29 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
 
         Route::get('add-item-lote/{id}', [ItemLoteEntradaEstoqueController::class, 'index'])->name('add-item-lote.index');
         Route::get('get-busca-item/{cd_barras}', [ItemLoteEntradaEstoqueController::class, 'getBuscaItem'])->name('get-item-lote');
-        Route::get('get-busca-item',  function(){return;}); 
-        Route::post('add-item-lote/store', [ItemLoteEntradaEstoqueController::class, 'store'])->name('add-item-lote.store');   
-        Route::delete('delete-item-lote', [ItemLoteEntradaEstoqueController::class, 'delete'])->name('delete-item-lote'); 
+        Route::get('get-busca-item',  function () {
+            return;
+        });
+        Route::post('add-item-lote/store', [ItemLoteEntradaEstoqueController::class, 'store'])->name('add-item-lote.store');
+        Route::delete('delete-item-lote', [ItemLoteEntradaEstoqueController::class, 'delete'])->name('delete-item-lote');
 
         Route::get('item-lote-fechado/{id}', [ItemLoteEntradaEstoqueController::class, 'listItemLote'])->name('item-lote-fechado');
+    });
+    Route::prefix('producao')->group(function () {
+        /* Routas Etapas */
+        Route::get('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas');
+        Route::post('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas.do');
+        Route::get('troca-servico', [ProducaoEtapaController::class, 'trocaServico'])->name('producao.troca-servico');
+
+        /*Rotas Quantide lote e atrasos*/
+        Route::get('lote-pcp', [LotePcpController::class, 'index'])->name('admin.lote.pcp');
+        Route::get('lote-pcp/{nr_lote}/pneus-lote', [PneusLotePcpController::class, 'index'])->name('admin.lote.pneu.pcp');
+
+        /* Rotas para informações QGC Bridgestone */
+        Route::prefix('gqc-bridgestone')->group(function () {
+            Route::get('pneus-marcas', [GqcBridgestoneController::class, 'pneusFaturadosMarcas'])->name('gqc-pneus-faturados-marca');
+            Route::get('get-pneus-marcas', [GqcBridgestoneController::class, 'getPneusFaturadosMarcas'])->name('get-pneus-faturados-marca');
+            Route::get('get-buscar-pneus-marcas', [GqcBridgestoneController::class, 'getBuscarPneusMarcas'])->name('get-gqc-buscar-pneus-marca');
+        });
     });
 });

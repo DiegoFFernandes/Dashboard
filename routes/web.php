@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeiculoController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PowerBi\PowerBiEmbeddedController;
 use App\Models\LoteEntradaEstoque;
 use App\Models\MarcaModeloFrota;
 use Illuminate\Support\Facades\Artisan;
@@ -190,6 +191,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('edit/{id}/do', [EmailController::class, 'update'])->name('email.update.do');
         Route::delete('delete/{id}', [EmailController::class, 'destroy'])->name('email.delete');
     });
+    Route::prefix('powerbi')->group(function () {
+        Route::get('index', [PowerBiEmbeddedController::class, 'index'])->name('powerbi.index');
+    });
 });
 Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
     Route::prefix('cobranca')->group(function () {
@@ -203,7 +207,8 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
         Route::get('get-email-follow/{id}', [CobrancaController::class, 'getEmailEnvio'])->name('get-email-follow');
 
         Route::get('chart-data', [CobrancaController::class, 'chartLineAjax'])->name('cobranca.chart-api');
-        //Route::get('teste', [CobrancaController::class, 'testeChart'])->name('cobranca.teste');    
+        Route::get('get-qtd-clients-novos', [CobrancaController::class, 'qtdClientesNovosMes'])->name('get-qtd-clients-novos');    
+        Route::get('get-fp-clients-novos', [CobrancaController::class, 'listClientFormPgto'])->name('get-fp-clients-novos');  
     });
 });
 Route::middleware(['auth', 'role:admin|producao'])->group(function () {

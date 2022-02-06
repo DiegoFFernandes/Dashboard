@@ -8,6 +8,8 @@ use App\Models\AgendaEnvio;
 use App\Models\AgendaPessoa;
 use App\Models\Empresa;
 use App\Models\Pessoa;
+use Carbon\Carbon;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -23,7 +25,7 @@ class CobrancaController extends Controller
 
     ) {
         $this->empresa  = $empresa;
-        $this->resposta = $request;
+        $this->request = $request;
         $this->agenda = $agenda;
         $this->p_dia = '1';
         $this->atual_dia = date("d");
@@ -51,9 +53,10 @@ class CobrancaController extends Controller
         $qtdClientesNovosMes = $this->pessoa->QtdClientesNovosMes($dti, $dtf);
         $qtdClientesFormaPagamento  = $this->pessoa->QtdClientesFormaPagamento($dti, $dtf);
 
+
         $title_page   = 'Agenda';
         $user_auth    = $this->user;
-        $uri         = $this->resposta->route()->uri();
+        $uri         = $this->request->route()->uri();
 
         return view('admin.cobranca.index', compact(
             'title_page',
@@ -67,8 +70,41 @@ class CobrancaController extends Controller
             'chartClienteNovos',
             'clientesNovosDia',
             'qtdClientesNovosMes',
-            'qtdClientesFormaPagamento'
+            'qtdClientesFormaPagamento',
+            'dti', 'dtf'
         ));
+    }
+    public function listClientFormPgto()
+    {
+        $list =  $this->pessoa->listClientFormPgto($this->request['fp'], $this->request['dti'], $this->request['dtf']);
+        $html = '<table class="table table-bordered" style="font-size: 12px" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Cnpj/Cpf</th>  
+                            <th>Usúario</th> 
+                            <th>Cadastro</th>                                 
+                        </tr>
+                    </thead>
+                    <tbody>';
+        foreach ($list as $l) {
+            $html .= '<tr>';
+            $html .= '<td>' . $l->NM_PESSOA . '</td>';
+            $html .= '<td>' . $l->NR_CNPJCPF . '</td>';
+            $html .= '<td>' . $l->CD_NMUSUARIOCAD . '</td>';
+            $html .= '<td>' . Carbon::createFromFormat('Y-m-d', $l->DT_CADASTRO)->format('d/m/Y') . '</td>';
+            $html .= '</tr>';
+        }
+        $html .= '</tbody></table>';
+        return response()->json(['html' => $html]);
+    }
+    public function qtdClientesNovosMes()
+    {
+        $dt = Helper::verificaMes($this->request['mes']);
+        $qtdClientesNovosMes = $this->pessoa->QtdClientesNovosMes($dt['dti'], $dt['dtf']);
+        $qtdCliFp = $this->pessoa->QtdClientesFormaPagamento($dt['dti'], $dt['dtf']);
+
+        return array("qtd" => $qtdClientesNovosMes[0]->QTD, 'dt' => $dt, 'qtdclifp' => $qtdCliFp);
     }
     public function CarregaVariavel($meses)
     {
@@ -111,7 +147,7 @@ class CobrancaController extends Controller
     {
         $title_page   = 'Detalhes Agenda';
         $user_auth    = $this->user;
-        $exploder = explode('/', $this->resposta->route()->uri());
+        $exploder = explode('/', $this->request->route()->uri());
         $uri       = ucfirst($exploder[1]);
 
         $dt  = date('m-d-Y', strtotime($dt));
@@ -123,7 +159,7 @@ class CobrancaController extends Controller
     {
         $title_page   = 'Agenda';
         $user_auth    = $this->user;
-        $exploder = explode('/', $this->resposta->route()->uri());
+        $exploder = explode('/', $this->request->route()->uri());
         $detalhesOperador = $this->agenda->DetalheCadastroClienteOperador($dt, $cdusuario);
         $uri       = ucfirst($exploder[1]);
 
@@ -131,9 +167,9 @@ class CobrancaController extends Controller
     }
     public function ClientesNovosMes(Request $request)
     {
-        $dt = $this->VerificaData($request->dt);
-        $datai = $dt[0];
-        $dataf = $dt[1];
+        $dt = Helper::verificaMes($request->dt);
+        $datai = $dt['dti'];
+        $dataf = $dt['dtf'];
         $data = $this->agenda->ClientesNovosMes($datai, $dataf);
 
         foreach ($data as $d) {
@@ -167,9 +203,9 @@ class CobrancaController extends Controller
     }
     public function AgendaData(Request $request)
     {
-        $dt = $this->VerificaData($request->dt);
-        $datai = $dt[0];
-        $dataf = $dt[1];
+        $dt = Helper::verificaMes($request->dt);
+        $datai = $dt['dti'];
+        $dataf = $dt['dtf'];
         $data = $this->agenda->AgendaMes($datai, $dataf);
         $html = '<table id="table-agenda-mes" class="table table-striped">
                 <thead>
@@ -190,33 +226,6 @@ class CobrancaController extends Controller
         }
         $html .= '</tbody>';
         return $html;
-    }
-    private function VerificaData($dt)
-    {
-        if ($dt == 120) {
-            $datai = Config::get('constants.options.dti120dias');
-            $dataf = Config::get('constants.options.dtf120dias');
-        } elseif ($dt == 150) {
-            $datai = Config::get('constants.options.dti150dias');
-            $dataf = Config::get('constants.options.dtf150dias');
-        } elseif ($dt == 180) {
-            $datai = Config::get('constants.options.dti180dias');
-            $dataf = Config::get('constants.options.dtf180dias');
-        } elseif ($dt == 210) {
-            $datai = Config::get('constants.options.dti210dias');
-            $dataf = Config::get('constants.options.dtf210dias');
-        } elseif ($dt == 240) {
-            $datai = Config::get('constants.options.dti240dias');
-            $dataf = Config::get('constants.options.dtf240dias');
-        } elseif ($dt == 270) {
-            $datai = Config::get('constants.options.dti270dias');
-            $dataf = Config::get('constants.options.dtf270dias');
-        } elseif ($dt == 300) {
-            $datai = Config::get('constants.options.dti300dias');
-            $dataf = Config::get('constants.options.dtf300dias');
-        }
-
-        return array($datai, $dataf);
     }
     public function testeChart()
     {
@@ -241,10 +250,10 @@ class CobrancaController extends Controller
         return $chart->api();
     }
     public function searchEnvio()
-    {        
+    {
         $title_page  = 'Agenda';
         $user_auth   = $this->user;
-        $uri         = $this->resposta->route()->uri();
+        $uri         = $this->request->route()->uri();
         $contexto    = $this->envio->contextoEmail();
         // return $search = $this->envio->searchSend(7369, 201);
 
@@ -255,7 +264,7 @@ class CobrancaController extends Controller
         $search = $this->envio->searchSend($request);
 
         //return $search[0]->DS_MENSAGEM;
-        
+
         $html = '<table id="table-search" class="table table-striped" style="width:100%">
                     <thead>
                         <tr>                    
@@ -272,8 +281,8 @@ class CobrancaController extends Controller
                     <tbody>';
         foreach ($search as $s) {
             $exploder        = explode('\\', $s->BI_ANEXORELAT);
-            $anexo = is_null($s->BI_ANEXORELAT) ? 'não existe' : '<a href="file:///\\172.29.0.2/'.$exploder[2].'/'.$exploder[3].'/'.$exploder[4].'/'.$exploder[5].'" class="btn btn-primary">Anexo</a>';
-            $email = '<button class="btn btn-default ver-email" data-id="'.$s->NR_ENVIO.'" aria-hidden="true"> Ver E-mail </button>';
+            $anexo = is_null($s->BI_ANEXORELAT) ? 'não existe' : '<a href="file:///\\172.29.0.2/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '" class="btn btn-primary">Anexo</a>';
+            $email = '<button class="btn btn-default ver-email" data-id="' . $s->NR_ENVIO . '" aria-hidden="true"> Ver E-mail </button>';
             //var_dump($exploder);
             $html .= '
                     <tr>                    
@@ -284,14 +293,15 @@ class CobrancaController extends Controller
                         <td>' . $s->NM_PESSOA . '</td>
                         <td>' . $s->DT_ENVIO . '</td>
                         <td>' . $anexo . '</td>
-                        <td>' . $email. '</td>
+                        <td>' . $email . '</td>
                     </tr>';
         }
         $html .= '</tbody>
                 ';
         return $html;
     }
-    public function getEmailEnvio($nr_envio){
+    public function getEmailEnvio($nr_envio)
+    {
         $email = $this->envio->verEmail($nr_envio);
         return $email;
     }

@@ -9,15 +9,16 @@
                     <span class="info-box-icon"><i class="fa fa-plus-circle"></i></span>
                     <div class="info-box-content">
                         <div class="box-tools pull-right">
-                            <select class="form-control form-control-sm no-padding" style="height: auto;" id="">
-                                <option value="0">{{ Config::get('constants.meses.nMesHj') }}</option>
+                            <select class="form-control form-control-sm no-padding" style="height: auto;"
+                                id="option-novos-mes">
+                                <option value="0" selected>{{ Config::get('constants.meses.nMesHj') }}</option>
+                                <option value="30">{{ Config::get('constants.meses.nMes30') }}</option>
+                                <option value="60">{{ Config::get('constants.meses.nMes60') }}</option>
+                                <option value="90">{{ Config::get('constants.meses.nMes90') }}</option>
                                 <option value="120">{{ Config::get('constants.meses.nMes120') }}</option>
                                 <option value="150">{{ Config::get('constants.meses.nMes150') }}</option>
                                 <option value="180">{{ Config::get('constants.meses.nMes180') }}</option>
                                 <option value="210">{{ Config::get('constants.meses.nMes210') }}</option>
-                                <option value="240">{{ Config::get('constants.meses.nMes240') }}</option>
-                                <option value="270">{{ Config::get('constants.meses.nMes270') }}</option>
-                                <option value="300">{{ Config::get('constants.meses.nMes300') }}</option>
                             </select>
                         </div>
                         <span class="info-box-text">Clientes Novos</span>
@@ -47,18 +48,23 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body" style="display: none;">
-                        <table class="table table-sm table-borderless">
+                        <table class="table table-sm table-borderless table-fp">
                             <thead>
                                 <tr>
                                     <th>Código</th>
+                                    <th>Descrição</th>
                                     <th>Qtd</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($qtdClientesFormaPagamento as $q)
                                     <tr>
-                                        <td>{{$q->CD_FORMAPAGTO}}</td>
-                                        <td>{{$q->QTD}}</td>
+                                        <td>{{ $q->CD_FORMAPAGTO }}</td>
+                                        <td>{{ $q->DS_FORMAPAGTO }}</td>
+                                        <td data-toggle="tooltip" data-placement="bottom" title="Clique para ver detalhes">
+                                            <a class="list-fp" href="#"
+                                                data-href="?fp={{ $q->CD_FORMAPAGTO }}&dti={{$dti}}&dtf={{$dtf}}">{{ $q->QTD }}</a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -69,6 +75,23 @@
                 <!-- /.box -->
             </div>
             <!-- /.info-box -->
+            <div class="col-md-5">
+                <div class="box box-success box-list-client">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Lista de Clientes</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div id="table-list-client-fp">
+                            <p>Expanda <b>Clientes Novos Forma pagamento</b>, e escolha um código para exibir os Clientes!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -346,6 +369,83 @@
 
                 });
             }
+        });
+        $('.list-fp').click(function() {
+            let data = $(this).data('href');                      
+            $.ajax({
+                method: 'GET',
+                url: '{{ route('get-fp-clients-novos') }}',
+                data: data,
+                success: function(result) {
+                    $('.box-list-client').removeClass('hidden')
+                    $('#table-list-client-fp').empty();
+                    $('#table-list-client-fp').append(result.html)
+                    $('#table-list-client-fp > table').DataTable({
+                        "scrollY": "200px",
+                        "scrollCollapse": true,
+                        "paging": false,
+                        "columnDefs": [{
+                            "width": "32%",
+                            "targets": 0
+                        }],
+                        language: {
+                            url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                        }
+                    });
+                }
+            })
+        });
+        $('#option-novos-mes').change(function() {
+            let mes_cli_novo = $(this).val();
+            let url = "{{ route('get-qtd-clients-novos') }}?mes=" + mes_cli_novo;
+            var html = "";
+            $.ajax({
+                method: 'GET',
+                url: url,
+                success: function(result) {                    
+                    $(".info-box-number").text(result['qtd']);
+                    $(".progress-description").text(result['dt'].nmes);
+                    $(".table-fp > tbody").empty();
+                    $.each(result['qtdclifp'], function(key, value) {
+                        html += "<tr>" +
+                            "<td>" + value.CD_FORMAPAGTO + "</td>" +
+                            "<td>" + value.DS_FORMAPAGTO + "</td>" +
+                            "<td data-toggle='tooltip' data-placement='bottom' title='Clique para ver detalhes'><a class='list-fp' href='#' data-href='?fp=" +
+                            value
+                            .CD_FORMAPAGTO + "&dti=" + result['dt'].dti + "&dtf=" + result['dt']
+                            .dtf + "'>" + value.QTD + "</a></td>" +
+                            "</tr>";
+                    });
+                    $(".table-fp > tbody").append(html);
+                    $('.list-fp').click(function() {
+                        let data = $(this).data('href');
+                        $.ajax({
+                            method: 'GET',
+                            url: '{{ route('get-fp-clients-novos') }}',
+                            data: data,                                                        
+                            success: function(result) {                                
+                                //$('.box-list-client').removeClass('hidden')
+                                $('#table-list-client-fp').empty();
+                                $('#table-list-client-fp').append(result.html)
+                                $('#table-list-client-fp > table').DataTable({
+                                    "scrollY": "200px",
+                                    "scrollCollapse": true,
+                                    "paging": false,
+                                    "columnDefs": [{
+                                        "width": "32%",
+                                        "targets": 0
+                                    }],
+                                    language: {
+                                        url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                                    }
+                                });                                
+                            }
+                        })
+                    });
+                }
+
+            });
+
         });
     </script>
 

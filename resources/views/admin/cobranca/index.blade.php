@@ -63,7 +63,7 @@
                                         <td>{{ $q->DS_FORMAPAGTO }}</td>
                                         <td data-toggle="tooltip" data-placement="bottom" title="Clique para ver detalhes">
                                             <a class="list-fp" href="#"
-                                                data-href="?fp={{ $q->CD_FORMAPAGTO }}&dti={{$dti}}&dtf={{$dtf}}">{{ $q->QTD }}</a>
+                                                data-href="fp={{ $q->CD_FORMAPAGTO }}&dti={{$dti}}&dtf={{$dtf}}">{{ $q->QTD }}</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -389,7 +389,7 @@
                             "targets": 0
                         }],
                         language: {
-                            url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                            url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                         }
                     });
                 }
@@ -410,7 +410,7 @@
                         html += "<tr>" +
                             "<td>" + value.CD_FORMAPAGTO + "</td>" +
                             "<td>" + value.DS_FORMAPAGTO + "</td>" +
-                            "<td data-toggle='tooltip' data-placement='bottom' title='Clique para ver detalhes'><a class='list-fp' href='#' data-href='?fp=" +
+                            "<td data-toggle='tooltip' data-placement='bottom' title='Clique para ver detalhes'><a class='list-fp' href='#' data-href='fp=" +
                             value
                             .CD_FORMAPAGTO + "&dti=" + result['dt'].dti + "&dtf=" + result['dt']
                             .dtf + "'>" + value.QTD + "</a></td>" +
@@ -436,7 +436,7 @@
                                         "targets": 0
                                     }],
                                     language: {
-                                        url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                                     }
                                 });                                
                             }

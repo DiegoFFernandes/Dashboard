@@ -29,10 +29,17 @@ class PowerbiHelper
         $data = http_build_query([
             'grant_type'    => 'password',
             'resource'      => 'https://analysis.windows.net/powerbi/api', //URL não muda
+<<<<<<< HEAD
             'client_id'     => env('POWERBI_CLIENTE_ID'), //Id do Aplicativo
             'client_secret' => env('POWERBI_CLIENT_SECRET'), // Certificados e segredos > Segredos do Cliente
             'username'      => env('POWERBI_USERNAME'), // Usuario e senha com permissão a acessar o relatório
             'password'      => env('POWERBI_PASSWORD'), // Password do usuario acima
+=======
+            'client_id'     => '', //Id do Aplicativo
+            'client_secret' => '', // Certificados e segredos > Segredos do Cliente
+            'username'      => '', // Usuario e senha com permissão a acessar o relatório
+            'password'      => '', // Password do usuario acima
+>>>>>>> 5f9ab63982715d1922c5256fb48913f2a21d40d9
         ], '', '&');
         $header = [
             "Content-Type:application/x-www-form-urlencoded",

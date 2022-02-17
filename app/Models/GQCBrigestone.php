@@ -33,7 +33,7 @@ class GQCBrigestone extends Model
                             when 2 then 'GY'
                             when 4 then 'PI'
                             when 6 then 'CO'
-                            when 7 then 'DU'
+                            when 15 then 'DU'
                             else 'OUTROS'
                             END) SIGLA,
                         MDP.DSMEDIDAPNEU, count(*) qtd

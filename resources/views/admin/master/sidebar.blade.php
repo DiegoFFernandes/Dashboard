@@ -5,7 +5,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
             <li class="header">MENU DE NAVEGAÇÃO</li>
-            <li class="treeview {{request()->segment(1) == 'admin' ? 'active' : ''}}" style="height: auto;">
+            <li class="treeview {{ request()->segment(1) == 'admin' ? 'active' : '' }}" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                     <span class="pull-right-container">
@@ -13,13 +13,13 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li class="{{request()->routeIs('admin.dashborad') ? 'active' : ''}}"><a href="{{ route('admin.dashborad') }}"><i
-                                class="fa fa-home"></i>Inicio</a>
+                    <li class="{{ request()->routeIs('admin.dashborad') ? 'active' : '' }}"><a
+                            href="{{ route('admin.dashborad') }}"><i class="fa fa-home"></i>Inicio</a>
                     </li>
                 </ul>
             </li>
             @role('admin|producao')
-                <li class="treeview {{request()->segment(1) == 'producao' ? 'active' : ''}}" style="height: auto;">
+                <li class="treeview {{ request()->segment(1) == 'producao' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-th"></i> <span>Produção</span>
                         <span class="pull-right-container">
@@ -67,8 +67,9 @@
                                         4</a></li>
                             </ul>
                         </li>
-                        <li class="{{request()->routeIs('gqc-pneus-faturados-marca') ? 'active' : ''}}">
-                            <a href="{{ route('gqc-pneus-faturados-marca') }}"><i class="fa fa-circle-o"></i>GQC Bridgestone</a>
+                        <li class="{{ request()->routeIs('gqc-pneus-faturados-marca') ? 'active' : '' }}">
+                            <a href="{{ route('gqc-pneus-faturados-marca') }}"><i class="fa fa-circle-o"></i>GQC
+                                Bridgestone</a>
                         </li>
                     </ul>
                 </li>
@@ -189,7 +190,7 @@
                 </li>
             @endrole
             @canany(['ver-comercial-norte', 'ver-comercial-sul'])
-                <li class="treeview" style="height: auto;">
+                <li class="treeview {{ request()->segment(1) == 'comercial' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-map"></i> <span>Comercial</span>
                         <span class="pull-right-container">
@@ -198,24 +199,32 @@
                     </a>
                     <ul class="treeview-menu" style="display: none;">
                         @can('ver-comercial-norte')
-                            <li><a href="{{ route('comercial.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
+                            <li class="{{ request()->routeIs('comercial.ivo-norte') ? 'active' : '' }}"><a
+                                    href="{{ route('comercial.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
                                     Norte</a>
                             </li>
                         @endcan
                         @can('ver-comercial-sul')
-                            <li><a href="{{ route('comercial.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo Recap -
+                            <li class="{{ request()->routeIs('comercial.ivo-sul') ? 'active' : '' }}"><a
+                                    href="{{ route('comercial.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo Recap -
                                     Sul</a>
                             </li>
-                            <li class="treeview">
+                            <li class="treeview {{ request()->segment(2) == 'movimento' ? 'active' : '' }}">
                                 <a href="#"><i class="fa fa-circle-o"></i> Movimentos
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li><a href="{{ route('comercial.cancela-nota') }}"><i class="fa fa-ban"></i>Cancelar Nota</a></li>
+                                    <li class="{{ request()->routeIs('comercial.cancela-nota') ? 'active' : '' }}"><a
+                                            href="{{ route('comercial.cancela-nota') }}"><i
+                                                class="fa fa-ban"></i>Cancelar Nota</a></li>
                                     @role('controladoria|admin')
-                                    <li><a href="{{route('comercial.list-nota-all')}}"><i class="fa fa-list"></i>Notas a cancelar</a></li>
+                                        <li class="{{ request()->routeIs('comercial.list-nota-all') ? 'active' : '' }}"><a
+                                                href="{{ route('comercial.list-nota-all') }}"><i
+                                                    class="fa fa-list"></i>Notas
+                                                a
+                                                cancelar</a></li>
                                     @endrole
                                 </ul>
                             </li>
@@ -224,7 +233,7 @@
                 </li>
             @endcanany
             @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
-                <li class="treeview" style="height: auto;">
+                <li class="treeview {{ request()->segment(1) == 'diretoria' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-suitcase"></i> <span>Diretoria</span>
                         <span class="pull-right-container">
@@ -233,12 +242,14 @@
                     </a>
                     <ul class="treeview-menu" style="display: none;">
                         @can('ver-diretoria-norte')
-                            <li><a href="{{ route('diretoria.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
+                            <li class="{{ request()->routeIs('diretoria.ivo-norte') ? 'active' : '' }}"><a
+                                    href="{{ route('diretoria.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
                                     Norte</a>
                             </li>
                         @endcan
                         @can('ver-diretoria-sul')
-                            <li><a href="{{ route('diretoria.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo Recap -
+                            <li class="{{ request()->routeIs('diretoria.ivo-sul') ? 'active' : '' }}"><a
+                                    href="{{ route('diretoria.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo Recap -
                                     Sul</a>
                             </li>
                         @endcan
@@ -246,7 +257,7 @@
                 </li>
             @endcanany
             @role('cobranca|admin')
-                <li class="treeview {{request()->segment(1) == 'cobranca' ? 'active' : ''}}" style="height: auto;">
+                <li class="treeview {{ request()->segment(1) == 'cobranca' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-credit-card"></i> <span>Cobranca</span>
                         <span class="pull-right-container">
@@ -254,11 +265,13 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        <li class="{{request()->routeIs('cobranca.index') ? 'active' : ''}}"><a href="{{ route('cobranca.index') }}"><i
-                                    class="fa fa-address-book-o"></i>Agenda</a>
+                        <li class="{{ request()->routeIs('cobranca.index') ? 'active' : '' }}"><a
+                                href="{{ route('cobranca.index') }}"><i class="fa fa-address-book-o"></i>Agenda</a>
                         </li>
-                        <li class="{{request()->routeIs('search-envio') ? 'active' : ''}}"><a href="{{route('search-envio')}}"><i class="fa fa-search"></i>Consulta Envio Nfe/Boleto</a>
-                </li>
+                        <li class="{{ request()->routeIs('search-envio') ? 'active' : '' }}"><a
+                                href="{{ route('search-envio') }}"><i class="fa fa-search"></i>Consulta Envio
+                                Nfe/Boleto</a>
+                        </li>
                     </ul>
                 </li>
             @endrole
@@ -280,6 +293,11 @@
                     </ul>
                 </li>
             @endrole
+            <li class="treeview" style="height: auto;">
+                <a href="https://glpi.ivorecap.com.br" target="_blank">
+                    <i class="fa fa-question-circle"></i> <span>Suporte</span>
+                </a>
+            </li>
         </ul>
     </section>
     <!-- /.sidebar -->

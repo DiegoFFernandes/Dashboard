@@ -61,7 +61,7 @@ class AgendaEnvio extends Model
                     cast(ce.ds_contexto as varchar(200) character set utf8) ds_contexto,
                     cast(ae.ds_assunto as varchar(200) character set utf8) ds_assunto,
                     cast(ae.ds_mensagem as varchar(3200) character set utf8) ds_mensagem, 
-                    ae.dt_envio
+                    ae.ds_emailrem, ae.ds_emaildest, ae.dt_envio
         from agendaenvio ae
         inner join pessoa p on (p.cd_pessoa = ae.cd_pessoa)
         inner join contextoemail ce on (ce.nr_contexto = ae.nr_contexto)                

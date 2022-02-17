@@ -48,8 +48,8 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="nr_contexto">Tipo de Disparo</label>
-                                    <select class="form-control select2" name="nr_contexto"
-                                        id="nr_contexto" style="width: 100%;">
+                                    <select class="form-control select2" name="nr_contexto" id="nr_contexto"
+                                        style="width: 100%;">
                                         <option value="0" selected="selected">Selecione</option>
                                         @foreach ($contexto as $c)
                                             <option value="{{ $c->NR_CONTEXTO }}">{{ $c->DS_CONTEXTO }}</option>
@@ -102,10 +102,29 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title">Assunto</h4>
+                        <h4 class="modal-title">Disparo Automático</h4>
                     </div>
                     <div class="modal-body">
-                        Mensagem
+                        <p class="text-muted"><i class='fa fa-thumb-tack'></i>
+                            Essa mensagem e de um disparo automátivo, cliente deve verificar se não esta na caixa de spam,
+                            ou no lixo eletrônico, caso ele não receber!
+                        </p>
+                        <div class="form-group">
+                            <label for="assunto">Assunto:</label>
+                            <input type="text" class="form-control" id="assunto" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="from">De:</label>
+                            <input type="text" class="form-control" id="from" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="to">Para:</label>
+                            <input type="text" class="form-control" id="to" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensagem:</label>
+                            <textarea class="form-control" type="textarea" id="message" rows="7" disabled></textarea>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
@@ -115,7 +134,7 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
-       
+
     </section>
     <!-- /.content -->
 @endsection
@@ -149,7 +168,7 @@
                 let nm_pessoa = $("#nm_pessoa").val();
                 let cpf_cnpj = $("#cpf_cnpj").val();
                 let nr_contexto = $("#nr_contexto").val();
-                
+
                 $.ajax({
                     url: "{{ route('get-search-envio') }}",
                     method: "GET",
@@ -163,8 +182,8 @@
                         fim_data: fimData,
                     },
                     beforeSend: function() {
-                        $("#table-search").DataTable().destroy(); 
-                        $("#loading").removeClass('hidden');                                               
+                        $("#table-search").DataTable().destroy();
+                        $("#loading").removeClass('hidden');
                     },
                     success: function(result) {
                         $("#loading").addClass('hidden');
@@ -206,10 +225,16 @@
                     success: function(result) {
                         $("#loading").addClass('hidden');
                         $('#modal-email').modal('show');
-                        $('.modal-title').text(result[0].DS_ASSUNTO);
-                        let ds_mensagem = result[0].DS_MENSAGEM;
-                        //ds_mensagem = ds_mensagem.replace(/[#10]/g, "");
-                        $('.modal-body').html(ds_mensagem);
+                        // $('.modal-title').text();
+                        // let ds_mensagem = result[0].DS_MENSAGEM;
+                        // //ds_mensagem = ds_mensagem.replace(/[#10]/g, "");
+                        // $('.modal-body').html(ds_mensagem);
+                        $('#assunto').val(result[0].DS_ASSUNTO);
+                        $('#from').val(result[0].DS_EMAILREM);
+                        $('#to').val(result[0].DS_EMAILDEST);
+                        // $('#message').val(text().html());
+                        $('#message').val($('<div/>').html(result[0].DS_MENSAGEM).text());
+                        
                     },
 
                 });

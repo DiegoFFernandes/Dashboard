@@ -3,7 +3,7 @@
 
 @includeIf('admin.master.head')
 
-<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
+<body class="hold-transition skin-blue sidebar-mini sidebar-collapse fixed">
     <div class="wrapper">
         @includeIf('admin.master.header')
         @includeIf('admin.master.sidebar')
@@ -30,7 +30,7 @@
                     </li>
                 </ol>
             </section>
-            @yield('content')
+            @yield('content')            
             {{-- Icon loading --}}
             <div class="hidden" id="loading">
                 <img id="loading-image" class="mb-4" src="{{ Asset('img/loader.gif') }}" alt="Loading...">

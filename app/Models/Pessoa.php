@@ -36,7 +36,6 @@ class Pessoa extends Model
                         and p.nm_pessoa like '%$search%'";
         return DB::connection($this->setConnet())->select($query);
     }
-
     public function PessoasAll()
     {
         return Pessoa::select(
@@ -115,7 +114,6 @@ class Pessoa extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
-
     public function listClientFormPgto($fp, $dti, $dtf){
         $query = "select cast(p.cd_pessoa||' - '|| p.nm_pessoa as varchar(100) character set utf8) nm_pessoa, p.nr_cnpjcpf, p.cd_nmusuariocad, p.dt_cadastro
                     from enderecopessoa ep

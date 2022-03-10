@@ -90,11 +90,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            {{-- Icon loading --}}
-            <div class="hidden" id="loading">
-                <img id="loading-image" class="mb-4" src="{{ Asset('img/loader.gif') }}" alt="Loading...">
-            </div>
+            </div>            
         </div>
         <div class="modal fade" id="modal-email" style="display: none;">
             <div class="modal-dialog">

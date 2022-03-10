@@ -22,7 +22,7 @@ class GQCBrigestone extends Model
         return $this->connection = Auth::user()->conexao;
     }
 
-    public function pneusFaturadosMarca($inicio_data, $fim_data)
+    public function pneusFaturadosMarca($inicio_data, $fim_data, $cd_empresa)
     {
         $query = "SELECT map.dsmarca,
                         (CASE map.id
@@ -52,10 +52,10 @@ class GQCBrigestone extends Model
                     LEFT JOIN PEDIDO PE ON (PE.CD_EMPRESA = PLO.CD_EMPRESA 
                                         AND PE.NR_PEDIDO = PLO.NR_PEDIDO 
                                         AND PE.TP_PEDIDO = PLO.TP_PEDIDO)
-                    WHERE PN.IDEMPRESA = 3
+                    WHERE PN.IDEMPRESA = $cd_empresa
                         AND PN.STPEDIDO <> 'C'
                         AND OPR.STORDEM <> 'C' 
-                        AND PN.IDEMPRESA = 3
+                        AND PN.IDEMPRESA = $cd_empresa
                         AND OPR.DTFECHAMENTO between '$inicio_data' and '$fim_data'
                         And I.CD_SUBGRUPO IN (321)
                     GROUP BY map.dsmarca, sigla, MDP.DSMEDIDAPNEU, map.id

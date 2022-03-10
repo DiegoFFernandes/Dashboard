@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\Cobranca\CobrancaController;
+use App\Http\Controllers\Admin\Cobranca\RelatorioCobrancaController;
 use App\Http\Controllers\Admin\Comercial\CancelarNotaController;
 use App\Http\Controllers\Admin\Comercial\ComercialController;
+use App\Http\Controllers\Admin\Comercial\RegiaoComercialController;
+use App\Http\Controllers\Admin\Comercial\VendedoresController;
 use App\Http\Controllers\Admin\Email\EmailController;
 use App\Http\Controllers\Admin\EmpresaController;
 use App\Http\Controllers\Admin\Estoque\ItemLoteEntradaEstoqueController;
@@ -27,6 +30,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PowerBi\PowerBiEmbeddedController;
 use App\Models\LoteEntradaEstoque;
 use App\Models\MarcaModeloFrota;
+use App\Models\RegiaoComercial;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -74,6 +78,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () 
     Route::get('permissao/novo', [PermissionController::class, 'create'])->name('admin.usuarios.permission.create');
     Route::post('permissao/novo', [PermissionController::class, 'save'])->name('admin.usuarios.permission.create.do');
     Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
+
+    Route::get('regiao-comercial', [RegiaoComercialController::class, 'index'])->name('regiao-comercial.index');
+    Route::get('get-regiao-comercial', [RegiaoComercialController::class, 'create'])->name('get-regiao-comercial.create');
+    Route::get('get-table-regiao-usuario', [RegiaoComercialController::class, 'list'])->name('get-table-regiao-usuario');
+    Route::post('edit-regiao-usuario', [RegiaoComercialController::class, 'update'])->name('edit-regiao-usuario');
+    Route::delete('regiao-usuario-delete', [RegiaoComercialController::class, 'destroy'])->name('regiao-usuario.delete');
 });
 /*Rotas sem autenticação*/
 Route::prefix('producao')->group(function () {
@@ -147,13 +157,19 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
             Route::get('ivorecap-sul', [ComercialController::class, 'ivoComercialSul'])->name('comercial.ivo-sul');
-
             /* Cancelar nota - usuario */
             Route::get('movimento/cancelar-nota', [CancelarNotaController::class, 'cancelarNota'])->name('comercial.cancela-nota');
             Route::post('cancelar-nota-do', [CancelarNotaController::class, 'getCancelarNota'])->name('comercial.cancela-nota-do');
             Route::get('movimento/search-nota', [CancelarNotaController::class, 'SearchNota'])->name('comercial.search-nota');
             Route::get('envio-email', [CancelarNotaController::class, 'envioEmail'])->name('comercial.envio-email');
         });
+        Route::middleware(['permission:ver-rel-cobranca-sul'])->group(function () {
+            Route::get('movimento/rel-cobranca', [RelatorioCobrancaController::class, 'index'])->name('comercial.rel-cobranca-sul');
+            Route::get('movimento/get-lista-cobranca', [RelatorioCobrancaController::class, 'getListCobranca'])->name('get-list-cobranca');
+            Route::get('movimento/get-cobranca-filtro', [RelatorioCobrancaController::class, 'getListCobrancaFiltro'])->name('get-cobranca-filtro');
+            Route::get('movimento/get-cobranca-cnpj', [RelatorioCobrancaController::class, 'getListCobrancaFiltroCnpj'])->name('get-cobranca-filtro-cnpj');
+        });
+
 
         Route::middleware(['auth', 'role:admin|controladoria'])->group(function () {
             /* Lista de notas a cancelar - Role Controladoria*/

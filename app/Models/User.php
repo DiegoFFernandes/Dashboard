@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function getData()
     {
-        return static::orderBy('created_at','desc')->get();
+        return static::where('id','!=','1')->orderBy('created_at','asc')->get();
     }
 
 }

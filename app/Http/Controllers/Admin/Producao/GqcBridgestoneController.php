@@ -37,12 +37,12 @@ class GqcBridgestoneController extends Controller
     {
         $inicio_data = Config::get('constants.options.dti');
         $fim_data = Config::get('constants.options.today');
-        $data =  $this->gqc->pneusFaturadosMarca($inicio_data, $fim_data);
+        $data =  $this->gqc->pneusFaturadosMarca($inicio_data, $fim_data, $this->user->empresa);
         return DataTables::of($data)->make(true);
     }
     public function getBuscarPneusMarcas()
-    {
-        $data =  $this->gqc->pneusFaturadosMarca($this->request['inicio_data'], $this->request['fim_data']);
+    {           
+        $data =  $this->gqc->pneusFaturadosMarca($this->request['inicio_data'], $this->request['fim_data'], $this->user->empresa);
         $html = '<table id="table-gqc" class="table table-striped" style="width:100%">
                     <thead>
                         <tr>                    

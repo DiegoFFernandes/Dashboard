@@ -6,8 +6,11 @@
 <script>
 $.widget.bridge('uibutton', $.ui.button);
 </script>
-<!-- Bootstrap 3.3.7 -->
+<!-- SlimScroll -->
 <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+
+<!-- Bootstrap 3.3.7 -->
+<script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 
 <!-- date-range-picker -->
 <script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>

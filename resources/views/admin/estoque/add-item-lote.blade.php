@@ -107,7 +107,7 @@
                                         <th>Descrição</th>
                                         <th>Peso</th>
                                         <th>Úsuario</th>
-                                        <th>Entrada em</th>                                        
+                                        <th>Entrada em</th>
                                         <th>Deletar</th>
                                     </tr>
                                 </thead>
@@ -267,14 +267,15 @@
                     success: function(result) {
                         $("#loading").addClass('hidden');
                         if (result.errors) {
-                            alert(result.errors +" Peso ou produtos está fora dos parâmetros!");
+                            alert(result.errors +
+                            " Peso ou produtos está fora dos parâmetros!");
                         } else {
                             //alert(result.success);                            
-                            setTimeout(function(){
+                            setTimeout(function() {
                                 $(".alert").removeClass('hidden');
                                 $(".alert p").text(result.success);
                             }, 400);
-                            
+
                             window.setTimeout(function() {
                                 $(".alert").alert('close');
                                 location.reload()
@@ -312,6 +313,11 @@
             "order": [
                 [3, "desc"]
             ],
+            lengthMenu: [
+                [10, 25, 50, 75, -1],
+                [10, 25, 50, 75, "Todos"]
+            ],
+            pageLength: 10
         });
         $("#table-add-item").on('click', '.delete', function() {
             let rowId = $(this).data();

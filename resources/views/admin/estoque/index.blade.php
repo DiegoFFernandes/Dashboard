@@ -42,7 +42,7 @@
                     </div>
                     <div class="box-body">
                         @includeIf('admin.master.messages')
-                        <table id="table-lote" class="table table-bordered display nowrap" cellspacing="0" width="100%">
+                        <table id="table-lote" class="table nowrap" cellspacing="0" width="100%">
                             <thead>
                                 <tr class="info">
                                     <th style="width: 10px">Cód.</th>
@@ -82,7 +82,7 @@
                 autoWidth: false,
                 pageLength: 5,
                 // scrollX: true,
-                "order": [
+                order: [
                     [0, "desc"]
                 ],
                 "pageLength": 10,

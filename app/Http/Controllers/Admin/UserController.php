@@ -36,13 +36,15 @@ class UserController extends Controller
             return redirect()->route('admin.usuarios.listar')->with('warning', 'Email já existe, favor cadastrar outro!');
         }
         $empresas  = $this->empresa->empresa();
+        $empresas;
         foreach ($empresas as $empresa) {
             if ($empresa->CD_EMPRESA == $request->empresa) {
                 $request['conexao'] = $empresa->CONEXAO;
             }
-        }
+        }       
+        
         $request['password'] = Hash::make($request['password']);
-        $user                = $this->_validade($request);
+        $user                = $this->_validade($request); 
         $user                = User::create($user);
         return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário criado com sucesso!');
     }
@@ -100,6 +102,7 @@ class UserController extends Controller
                 'email'    => 'required|email',
                 'password' => 'required', 'alpha_num',
                 'empresa'  => 'required', 'integer:1,2,3,21,22',
+                'conexao' => 'max:30',
             ],
             [
                 'name.required'    => 'Por favor informe um nome.',

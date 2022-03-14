@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\Cobranca\CobrancaController;
 use App\Http\Controllers\Admin\Cobranca\RelatorioCobrancaController;
+use App\Http\Controllers\Admin\Comercial\AreaComercialController;
 use App\Http\Controllers\Admin\Comercial\CancelarNotaController;
 use App\Http\Controllers\Admin\Comercial\ComercialController;
 use App\Http\Controllers\Admin\Comercial\RegiaoComercialController;
@@ -28,9 +29,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeiculoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PowerBi\PowerBiEmbeddedController;
-use App\Models\LoteEntradaEstoque;
-use App\Models\MarcaModeloFrota;
-use App\Models\RegiaoComercial;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -78,12 +76,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () 
     Route::get('permissao/novo', [PermissionController::class, 'create'])->name('admin.usuarios.permission.create');
     Route::post('permissao/novo', [PermissionController::class, 'save'])->name('admin.usuarios.permission.create.do');
     Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
-
-    Route::get('regiao-comercial', [RegiaoComercialController::class, 'index'])->name('regiao-comercial.index');
-    Route::get('get-regiao-comercial', [RegiaoComercialController::class, 'create'])->name('get-regiao-comercial.create');
-    Route::get('get-table-regiao-usuario', [RegiaoComercialController::class, 'list'])->name('get-table-regiao-usuario');
-    Route::post('edit-regiao-usuario', [RegiaoComercialController::class, 'update'])->name('edit-regiao-usuario');
-    Route::delete('regiao-usuario-delete', [RegiaoComercialController::class, 'destroy'])->name('regiao-usuario.delete');
 });
 /*Rotas sem autenticação*/
 Route::prefix('producao')->group(function () {
@@ -170,11 +162,23 @@ Route::middleware(['auth'])->group(function () {
             Route::get('movimento/get-cobranca-cnpj', [RelatorioCobrancaController::class, 'getListCobrancaFiltroCnpj'])->name('get-cobranca-filtro-cnpj');
         });
 
-
         Route::middleware(['auth', 'role:admin|controladoria'])->group(function () {
             /* Lista de notas a cancelar - Role Controladoria*/
             Route::get('movimento/lista-notas-cancelar', [CancelarNotaController::class, 'listAll'])->name('comercial.list-nota-all');
             Route::get('get-lista-notas-cancelar', [CancelarNotaController::class, 'getListAll'])->name('comercial.get-list-nota-all');
+
+
+            Route::get('cadastro/regiao-comercial', [RegiaoComercialController::class, 'index'])->name('regiao-comercial.index');
+            Route::get('get-regiao-comercial', [RegiaoComercialController::class, 'create'])->name('get-regiao-comercial.create');
+            Route::get('get-table-regiao-usuario', [RegiaoComercialController::class, 'list'])->name('get-table-regiao-usuario');
+            Route::post('edit-regiao-usuario', [RegiaoComercialController::class, 'update'])->name('edit-regiao-usuario');
+            Route::delete('regiao-usuario-delete', [RegiaoComercialController::class, 'destroy'])->name('regiao-usuario.delete');
+
+            Route::get('cadastro/area-comercial', [AreaComercialController::class, 'index'])->name('area-comercial.index');
+            Route::get('get-area-comercial', [AreaComercialController::class, 'create'])->name('get-area-comercial.create');
+            Route::get('get-table-area-usuario', [AreaComercialController::class, 'list'])->name('get-table-area-usuario');
+            Route::post('edit-area-usuario', [AreaComercialController::class, 'update'])->name('edit-area-usuario');
+            Route::delete('area-usuario-delete', [AreaComercialController::class, 'destroy'])->name('area-usuario.delete');
         });
     });
 });
@@ -223,8 +227,8 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
         Route::get('get-email-follow/{id}', [CobrancaController::class, 'getEmailEnvio'])->name('get-email-follow');
 
         Route::get('chart-data', [CobrancaController::class, 'chartLineAjax'])->name('cobranca.chart-api');
-        Route::get('get-qtd-clients-novos', [CobrancaController::class, 'qtdClientesNovosMes'])->name('get-qtd-clients-novos');    
-        Route::get('get-fp-clients-novos', [CobrancaController::class, 'listClientFormPgto'])->name('get-fp-clients-novos');  
+        Route::get('get-qtd-clients-novos', [CobrancaController::class, 'qtdClientesNovosMes'])->name('get-qtd-clients-novos');
+        Route::get('get-fp-clients-novos', [CobrancaController::class, 'listClientFormPgto'])->name('get-fp-clients-novos');
     });
 });
 Route::middleware(['auth', 'role:admin|producao'])->group(function () {

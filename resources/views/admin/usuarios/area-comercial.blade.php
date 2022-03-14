@@ -17,11 +17,11 @@
                         <div class="col-md-12">
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label>Regiões Junsoft</label>
-                                    <select class="form-control select2" id="cd_regiaocomercial" style="width: 100%;">
+                                    <label>Area Junsoft</label>
+                                    <select class="form-control select2" id="cd_areacomercial" style="width: 100%;">
                                         <option selected="selected">Selecione</option>
-                                        @foreach ($regiao as $r)
-                                            <option value="{{ $r->CD_REGIAOCOMERCIAL }}">{{ $r->DS_REGIAOCOMERCIAL }}
+                                        @foreach ($area as $r)
+                                            <option value="{{ $r->CD_AREACOMERCIAL }}">{{ $r->DS_AREACOMERCIAL }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -52,18 +52,18 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Regiões Associadas</h3>
+                        <h3 class="box-title">Areas Associadas</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table class="table display table-sm" id="table-regiao" style="width: 100%">
+                        <table class="table display table-sm" id="table-area" style="width: 100%">
                             <thead>
                                 <tr>
                                     <th>Cód.</th>
                                     <th>Cd. Usúario</th>
                                     <th>Usúario</th>
-                                    <th>Cd. Região</th>
-                                    <th>Região</th>
+                                    <th>Cd. Area</th>
+                                    <th>Area</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
@@ -82,7 +82,7 @@
                         <button type="button" class="close btn-cancel" data-dismiss="modal" data-keyboard="false"
                             aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Editar Região</h4>
+                        <h4 class="modal-title">Editar Area</h4>
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
@@ -108,10 +108,10 @@
                             <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
                             <div class="form-group">
                                 <label>Região Junsoft</label>
-                                <select class="form-control" name="cd_regiaocomercial_modal" id="cd_regiaocomercial_modal"
+                                <select class="form-control" name="cd_areacomercial_modal" id="cd_areacomercial_modal"
                                     style="width: 100%;">
-                                    @foreach ($regiao as $r)
-                                        <option value="{{ $r->CD_REGIAOCOMERCIAL }}">{{ $r->DS_REGIAOCOMERCIAL }}
+                                    @foreach ($area as $r)
+                                        <option value="{{ $r->CD_AREACOMERCIAL }}">{{ $r->DS_AREACOMERCIAL }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -133,21 +133,21 @@
     @includeIf('admin.master.datatables')
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#cd_regiaocomercial').select2();
-            $('#cd_regiaocomercial_modal').select2();
+            $('#cd_areacomercial').select2();
+            $('#cd_areacomercial_modal').select2();
             $('#cd_usuario').select2();
             $('#cd_usuario_modal').select2();
             $('#btn-vincular').click(function() {
-                let ds_regiaocomercial = $("#cd_regiaocomercial option:selected").text()
-                let cd_regiaocomercial = $('#cd_regiaocomercial').val();
+                let ds_areacomercial = $("#cd_areacomercial option:selected").text()
+                let cd_areacomercial = $('#cd_areacomercial').val();
                 let cd_usuario = $('#cd_usuario').val();
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('get-regiao-comercial.create') }}",
+                    url: "{{ route('get-area-comercial.create') }}",
                     data: {
-                        cd_regiaocomercial: cd_regiaocomercial,
+                        cd_areacomercial: cd_areacomercial,
                         cd_usuario: cd_usuario,
-                        ds_regiaocomercial: ds_regiaocomercial
+                        ds_areacomercial: ds_areacomercial
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');
@@ -165,7 +165,7 @@
                                 //$(".alert").alert('close');
                                 $(".alert").removeClass('alert-warning');
                                 $(".alert").addClass('hidden');
-                            }, 3000);
+                            }, 2000);
                         } else {
                             //alert(result.success);                            
                             setTimeout(function() {
@@ -177,16 +177,16 @@
                             window.setTimeout(function() {
                                 //$(".alert").alert('close');
                                 $(".alert").addClass('hidden');
-                                $('#table-regiao').DataTable().ajax.reload()
-                            }, 3000);
+                                $('#table-area').DataTable().ajax.reload()
+                            }, 2000);
                         }
                     }
                 });
             });
-            var dataTable = $('#table-regiao').DataTable({
+            var dataTable = $('#table-area').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('get-table-regiao-usuario') }}',
+                ajax: '{{ route('get-table-area-usuario') }}',
                 columns: [{
                         data: 'id',
                         name: 'id'
@@ -201,13 +201,13 @@
                         name: 'name'
                     },
                     {
-                        data: 'cd_regiaocomercial',
-                        name: 'cd_regiaocomercial',
+                        data: 'cd_areacomercial',
+                        name: 'cd_areacomercial',
                         visible: false,
                     },
                     {
-                        data: 'ds_regiaocomercial',
-                        name: 'ds_regiaocomercial'
+                        data: 'ds_areacomercial',
+                        name: 'ds_areacomercial'
                     },
                     {
                         data: 'Actions',
@@ -222,34 +222,36 @@
                 responsive: true,
             });
             //dataTable e um variavel que tras a informação da tabela.
-            $('#table-regiao').on('click', '.btn-edit', function() {
+            $('#table-area').on('click', '.btn-edit', function() {
                 var rowData = dataTable.row($(this).parents('tr')).data();
                 console.log(rowData);
                 $('#id').val(rowData.id);
-                $('#cd_regiaocomercial_modal').val(rowData.cd_regiaocomercial).trigger('change');
+                $('#cd_areacomercial_modal').val(rowData.cd_areacomercial).trigger('change');
                 $('#cd_usuario_modal').val(rowData.cd_usuario).trigger('change');
                 $('.modal').modal('show');
             });
             $('.btn-update').click(function() {
                 if (!confirm("Você tem certeza que deseja atualizar?")) return;
                 let id = $('#id').val(),
-                    cd_regiaocomercial = $('#cd_regiaocomercial_modal').val(),
-                    ds_regiaocomercial = $("#cd_regiaocomercial_modal option:selected").text(),
+                    cd_areacomercial = $('#cd_areacomercial_modal').val(),
+                    ds_areacomercial = $("#cd_areacomercial_modal option:selected").text(),
                     cd_usuario = $('#cd_usuario_modal').val();
+                    console.log(cd_areacomercial)
+                
                 $.ajax({
                     type: 'POST',
-                    url: '{{ route('edit-regiao-usuario') }}',
+                    url: '{{ route('edit-area-usuario') }}',
                     data: {
                         id: id,
-                        cd_regiaocomercial: cd_regiaocomercial,
+                        cd_areacomercial: cd_areacomercial,
                         cd_usuario: cd_usuario,
-                        ds_regiaocomercial: ds_regiaocomercial,
+                        ds_areacomercial: ds_areacomercial,
                         _token: $('#token').val(),
                     },
                     beforeSend: function() {
-
+                        $("#loading").removeClass('hidden');
                     },
-                    success: function(result) {                        
+                    success: function(result) {
                         $("#loading").addClass('hidden');
                         if (result.errors) {
                             setTimeout(function() {
@@ -262,7 +264,7 @@
                                 //$(".alert").alert('close');
                                 $(".alert").removeClass('alert-warning');
                                 $(".alert").addClass('hidden');
-                            }, 3000);
+                            }, 2000);
                         } else {
                             //alert(result.success);                            
                             setTimeout(function() {
@@ -275,8 +277,8 @@
                                 //$(".alert").alert('close');
                                 $(".alert").addClass('hidden');
                                 $('.modal').modal('hide');
-                                $('#table-regiao').DataTable().ajax.reload()
-                            }, 3000);
+                                $('#table-area').DataTable().ajax.reload()
+                            }, 2000);
                         }
                     
                     }
@@ -290,7 +292,7 @@
                 console.log(deleteId);
 
                 $.ajax({
-                    url: "{{ route('regiao-usuario.delete') }}",
+                    url: "{{ route('area-usuario.delete') }}",
                     method: 'DELETE',
                     data: {
                         id: deleteId,
@@ -311,7 +313,7 @@
                             //$(".alert").alert('close');
                             $(".alert").addClass('hidden');
                             $('.modal').modal('hide');
-                            $('#table-regiao').DataTable().ajax.reload()
+                            $('#table-area').DataTable().ajax.reload()
                         }, 3000);
                     }
                 });

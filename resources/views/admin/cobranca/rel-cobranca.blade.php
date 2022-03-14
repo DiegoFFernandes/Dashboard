@@ -3,46 +3,39 @@
 @section('content')
     <!-- Main content -->
     <section class="content">
-        {{-- <div class="row">
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-aqua"><i class="fa fa-file-text-o"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Cartório</span>
-                        <span class="info-box-number">
-                            @php
-                                $total_cartorio = 0;
-                            @endphp
-                            @foreach ($clientesInadimplentes as $c)
-                                @if ($c->STATUS == 'C')
-                                    @php $total_cartorio += $c->VL_TOTAL @endphp
-                                @endif
-                            @endforeach
-                            R$ {{ number_format($total_cartorio, 2, ',', '.') }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="info-box">
                     <span class="info-box-icon bg-yellow"><i class="fa fa-archive"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Protestado</span>
-                        <span class="info-box-number">
+                        <span class="info-box-text">Soma Geral</span>
+                        <span class="info-box-number" id="soma-geral">
                             @php
-                                $total_protestado = 0;
+                                $total = 0;
                             @endphp
                             @foreach ($clientesInadimplentes as $c)
-                                @if ($c->STATUS == 'S')
-                                    @php $total_protestado += $c->VL_TOTAL @endphp
-                                @endif
+                                @php $total += $c->VL_TOTAL @endphp
                             @endforeach
-                            R$ {{ number_format($total_protestado, 2, ',', '.') }}
+                            R$ {{ number_format($total, 2, ',', '.') }}
                         </span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="info-box">
+                    <span class="info-box-icon bg-aqua"><i class="fa fa-file-text-o"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Maior divida</span>
+                        <span class="info-box-number" id="maior-divida">
+                            R$ {{ number_format($clientesInadimplentes[0]->VL_TOTAL, 2, ',', '.') }}
+                        </span>
+                        <span class="progress-description" id="maior-pessoa">
+                            {{ $clientesInadimplentes[0]->NM_PESSOA }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {{-- <div class="col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box">
                     <span class="info-box-icon bg-aqua"><i class="fa fa-building"></i></span>
                     <div class="info-box-content">
@@ -79,8 +72,8 @@
                         </span>
                     </div>
                 </div>
-            </div>
-        </div> --}}
+            </div> --}}
+        </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="box box-info">
@@ -93,8 +86,9 @@
                                 <label for="cd_empresa">Empresa</label>
                                 <select class="form-control" name="cd_empresa" id="cd_empresa" style="width: 100%;">
                                     <option value="0">Selecione uma empresa</option>
-                                    <option value="1">1 - AM MORENO PNEUS</option>
-                                    <option value="3">3 - SUPER RODAS RECAPAGENS</option>
+                                    @foreach ($empresa as $e)
+                                        <option value="{{ $e->CD_EMPRESA }}">{{ $e->NM_EMPRESA }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -111,6 +105,8 @@
                                     </select>
                                 </div>
                             </div>
+                        @endrole
+                        @role('admin|diretoria')
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="cd_area">Área</label>
@@ -132,7 +128,7 @@
             <div class="col-md-8">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h3 class="box-title title-relatorio">Relatório: 3 - SUPER RODAS RECAPAGENS
+                        <h3 class="box-title title-relatorio">Relatório Inadimplentes
                         </h3>
                     </div>
                     <div class="box-body">
@@ -246,7 +242,9 @@
                         $(".list-cobranca").append(result['html']);
                         $("#loading").addClass('hidden');
                         $(".title-relatorio").text('Relatório: ' + ds_empresa);
-
+                        $("#maior-divida").text('R$ ' + result['divida'][0]);
+                        $("#maior-pessoa").text(result['divida'][1]);
+                        $("#soma-geral").text(result['total'])
                         InitDatatable();
                     }
                 })
@@ -288,6 +286,8 @@
                     }
                 });
             });
+
+
 
             function InitDatatable() {
                 $('#table-rel-cobranca').DataTable({

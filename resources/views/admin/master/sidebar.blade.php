@@ -99,10 +99,6 @@
                                 href="{{ route('admin.usuarios.permission') }}">
                                 <i class="fa fa-lock"></i>Permissões</a>
                         </li>
-                        <li class="{{ $uri == 'usuario/regiao-comercial' ? 'active' : '' }}"><a
-                            href="{{ route('regiao-comercial.index') }}">
-                            <i class="fa fa-lock"></i>Região Comercial</a>
-                    </li>
                     </ul>
                 </li>
             @endrole
@@ -202,40 +198,65 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        @can('ver-comercial-norte')
-                            <li class="{{ request()->routeIs('comercial.ivo-norte') ? 'active' : '' }}"><a
-                                    href="{{ route('comercial.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
-                                    Norte</a>
-                            </li>
-                        @endcan
-                        @can('ver-comercial-sul')
-                            <li class="{{ request()->routeIs('comercial.ivo-sul') ? 'active' : '' }}"><a
-                                    href="{{ route('comercial.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo Recap -
-                                    Sul</a>
-                            </li>
-                            <li class="treeview {{ request()->segment(2) == 'movimento' ? 'active' : '' }}">
-                                <a href="#"><i class="fa fa-circle-o"></i> Movimentos
+                        @role('admin')
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-circle-o"></i><span>Cadastros</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li class="{{ request()->routeIs('comercial.cancela-nota') ? 'active' : '' }}"><a
-                                            href="{{ route('comercial.cancela-nota') }}"><i
-                                                class="fa fa-ban"></i>Cancelar Nota</a></li>
-                                    @role('controladoria|admin')
-                                        <li class="{{ request()->routeIs('comercial.list-nota-all') ? 'active' : '' }}"><a
-                                                href="{{ route('comercial.list-nota-all') }}"><i
-                                                    class="fa fa-list"></i>Notas a cancelar</a></li>
-                                    @endrole
+                                    <li class="{{ $uri == 'usuario/regiao-comercial' ? 'active' : '' }}"><a
+                                            href="{{ route('regiao-comercial.index') }}">
+                                            <i class="fa fa-lock"></i>Região Comercial</a>
+                                    </li>
+                                    <li class="{{ $uri == 'usuario/area-comercial' ? 'active' : '' }}"><a
+                                            href="{{ route('area-comercial.index') }}">
+                                            <i class="fa fa-lock"></i>Area Comercial</a>
+                                    </li>
                                 </ul>
                             </li>
-                        @endcan
-                        @can('ver-rel-cobranca-sul')
-                            <li class="{{ request()->routeIs('comercial.rel-cobranca-sul') ? 'active' : '' }}"><a
-                                    href="{{ route('comercial.rel-cobranca-sul') }}"><i class="fa fa-ban"></i>Relatório
-                                    de cobranca</a></li>
-                        @endcan
+                        @endrole
+                        <li class="treeview {{ request()->segment(2) == 'movimento' ? 'active' : '' }}">
+                            <a href="#"><i class="fa fa-circle-o"></i> Movimentos
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                @can('ver-comercial-norte')
+                                    <li class="{{ request()->routeIs('comercial.ivo-norte') ? 'active' : '' }}"><a
+                                            href="{{ route('comercial.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo
+                                            Recap -
+                                            Norte</a>
+                                    </li>
+                                @endcan
+                                @can('ver-comercial-sul')
+                                    <li class="{{ request()->routeIs('comercial.ivo-sul') ? 'active' : '' }}"><a
+                                            href="{{ route('comercial.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo
+                                            Recap -
+                                            Sul</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('comercial.cancela-nota') ? 'active' : '' }}">
+                                        <a href="{{ route('comercial.cancela-nota') }}"><i
+                                                class="fa fa-ban"></i>Cancelar Nota</a>
+                                    </li>
+                                    @role('controladoria|admin')
+                                        <li class="{{ request()->routeIs('comercial.list-nota-all') ? 'active' : '' }}">
+                                            <a href="{{ route('comercial.list-nota-all') }}">
+                                                <i class="fa fa-list"></i>Notas a cancelar
+                                            </a>
+                                        </li>
+                                    @endrole
+                                @endcan
+                                @can('ver-rel-cobranca-sul')
+                                    <li class="{{ request()->routeIs('comercial.rel-cobranca-sul') ? 'active' : '' }}"><a
+                                            href="{{ route('comercial.rel-cobranca-sul') }}"><i
+                                                class="fa fa-ban"></i>Relatório
+                                            de cobranca</a></li>
+                                @endcan
+                            </ul>
+                        </li>
                     </ul>
                 </li>
             @endcanany

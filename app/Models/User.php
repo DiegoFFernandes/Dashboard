@@ -46,9 +46,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getData()
+    // public function getData()
+    // {
+    //     return static::where('id','!=','1')->orderBy('name','asc')->get();
+    // }
+    
+    public function getData($cd_empresa)
     {
-        return static::where('id','!=','1')->orderBy('created_at','asc')->get();
+        return static::where('id','!=','1')
+        ->whereIn('empresa', $cd_empresa)
+        ->orderBy('name','asc')->get();
     }
+
+    
+    
 
 }

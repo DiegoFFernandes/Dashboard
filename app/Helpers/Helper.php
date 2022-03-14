@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Config;
 
 class Helper
 {
-
     public static function verificaMes($dt)
     {
         if ($dt == 0) {
@@ -59,4 +58,5 @@ class Helper
 
         return array("dti" => $datai, "dtf" => $dataf, 'nmes' => $nmes);
     }
+    
 }

@@ -37,6 +37,17 @@ class RegiaoComercial extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
+    public function regiaoArea($cd_areacomercial){
+        
+        $query = "select rc.cd_regiaocomercial, 
+        cast(rc.ds_regiaocomercial as varchar(40) character set utf8) ds_regiaocomercial, 
+        ac.cd_areacomercial, cast(ac.ds_areacomercial as varchar(40) character set utf8) ds_areacomercial
+        from regiaocomercial rc
+        inner join areacomercial ac on (ac.cd_areacomercial = rc.cd_areacomercial)
+        where ac.cd_areacomercial = $cd_areacomercial
+        order by ds_regiaocomercial";
+        return DB::connection($this->setConnet())->select($query);
+    }
     public function storeData($input)
     {
         $this->connection = 'mysql';
@@ -55,11 +66,12 @@ class RegiaoComercial extends Model
         $this->connection = 'mysql';
         return RegiaoComercial::where('cd_usuario', $input['cd_usuario'])->where('cd_regiaocomercial', $input['cd_regiaocomercial'])->exists();
     }
-    public function showUserRegiao()
+    public function showUserRegiao($cd_empresa)
     {
         $this->connection = 'mysql';
         return RegiaoComercial::select('regiao_comercial.id', 'users.id as cd_usuario', 'users.name', 'regiao_comercial.cd_regiaocomercial', 'regiao_comercial.ds_regiaocomercial')
             ->join('users', 'users.id', 'regiao_comercial.cd_usuario')
+            ->whereIn('users.empresa', $cd_empresa)
             ->orderBy('users.name')
             ->get();
     }
@@ -81,5 +93,8 @@ class RegiaoComercial extends Model
                 'updated_at' => now(),
             ]);
         return response()->json(['success' => 'Região atualizada para usúario!']);
+    }
+    public function destroyData($id){
+        return RegiaoComercial::find($id)->delete();
     }
 }

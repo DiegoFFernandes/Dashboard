@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Comercial;
 
 use App\Http\Controllers\Controller;
+use App\Models\Empresa;
 use App\Models\RegiaoComercial;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,12 +15,14 @@ class RegiaoComercialController extends Controller
     public function __construct(
         Request $request,
         RegiaoComercial $regiao,
+        Empresa $empresa,
         User $user
 
     ) {
         $this->request = $request;
         $this->regiao = $regiao;
         $this->user = $user;
+        $this->empresa = $empresa;
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -33,8 +36,12 @@ class RegiaoComercialController extends Controller
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
         $regiao = $this->regiao->regiaoAll();
-        $user =  $this->user->getData();
-        $list_regiao = $this->regiao->showUserRegiao();
+        $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
+        foreach($empresa as $e){
+            $array[] = $e->CD_EMPRESA;
+        }          
+        $user =  $this->user->getData($array);
+        $list_regiao = $this->regiao->showUserRegiao($array);
         return view('admin.usuarios.regiao-comercial', compact(
             'title_page',
             'user_auth',
@@ -75,7 +82,11 @@ class RegiaoComercialController extends Controller
     }
     public function list()
     {
-        $data = $this->regiao->showUserRegiao();
+        $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
+        foreach($empresa as $e){
+            $array[] = $e->CD_EMPRESA;
+        }
+        $data = $this->regiao->showUserRegiao($array);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
                 return '
@@ -87,10 +98,14 @@ class RegiaoComercialController extends Controller
     }
     public function update(){
         $this->request['cd_cadusuario'] = $this->user->id;
-        $this->_validate($this->request);
+        $input = $this->_validate($this->request);
+        if ($this->regiao->verifyIfExists($input)) {
+            return response()->json(['errors' => 'Região já está vinculada com esse usúario!']);
+        };
         return $this->regiao->updateData($this->request);
     }
     public function destroy(){
-        return true;
+        $this->regiao->destroyData($this->request->id);
+        return response()->json(['success' => 'Excluido com sucesso!']);
     }
 }

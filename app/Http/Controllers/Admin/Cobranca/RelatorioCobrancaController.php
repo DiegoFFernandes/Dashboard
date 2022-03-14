@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Cobranca;
 use App\Http\Controllers\Controller;
 use App\Models\AreaComercial;
 use App\Models\Cobranca;
+use App\Models\Empresa;
 use App\Models\RegiaoComercial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,12 +19,14 @@ class RelatorioCobrancaController extends Controller
         RegiaoComercial $regiao,
         AreaComercial $area,
         Cobranca $cobranca,
+        Empresa $empresa
 
     ) {
         $this->request = $request;
         $this->regiao = $regiao;
         $this->area = $area;
         $this->cobranca = $cobranca;
+        $this->empresa = $empresa;
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -35,16 +38,24 @@ class RelatorioCobrancaController extends Controller
         $title_page   = 'Titulos em Atraso';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
-        $regiao = $this->regiao->regiaoAll();
-        $area = $this->area->areaAll();
-        $cd_empresa = [3, 2];
+        $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
+        $cd_empresa = $this->setEmpresa($this->user->empresa);
         $cd_area = "";
-        $cd_empresa = implode(",", $cd_empresa);
-        if ($this->user->hasRole('gerencia|admin')) {
+        if ($this->user->hasRole('admin|diretoria')) {
             $cd_area = "";
+            $cd_regiao = "";
+            $regiao = $this->regiao->regiaoAll();
+            $area = $this->area->areaAll();
+        } elseif ($this->user->hasRole('gerencia')) {
+            $find = $this->area->findAreaUser($this->user->id);
+            $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
+            $area = "";
+            $cd_area = $find[0]->cd_areacomercial;
             $cd_regiao = "";
         } else {
             $regiaoUsuario = $this->regiao->regiaoPorUsuario($this->user->id);
+            $regiao = "";
+            $area = "";
             foreach ($regiaoUsuario as $r) {
                 $cd_regiao[] = $r->cd_regiaocomercial;
             }
@@ -58,7 +69,15 @@ class RelatorioCobrancaController extends Controller
         $clientesInadimplentes = $this->cobranca->clientesInadiplentes($cd_empresa, $cd_regiao, $cd_area);
         //return $this->calc($clientesInadimplentes, "N");
 
-        return view('admin.cobranca.rel-cobranca', compact('title_page', 'user_auth', 'uri', 'regiao', 'area', 'clientesInadimplentes'));
+        return view('admin.cobranca.rel-cobranca', compact(
+            'empresa',
+            'title_page',
+            'user_auth',
+            'uri',
+            'regiao',
+            'area',
+            'clientesInadimplentes'
+        ));
     }
     public function getListCobranca()
     {
@@ -67,9 +86,10 @@ class RelatorioCobrancaController extends Controller
     }
     public function getListCobrancaFiltro()
     {
-        $cd_empresa = $this->request->cd_empresa;
+        $cd_empresa = intval($this->request->cd_empresa);
         $cd_empresa = $this->setEmpresa($cd_empresa);
         $cd_regiao = $this->request->cd_regiao;
+
         if ($this->user->hasRole('gerencia|admin')) {
             if ($this->request->cd_area != "") {
                 $cd_area = implode(",", $this->request->cd_area);
@@ -122,12 +142,20 @@ class RelatorioCobrancaController extends Controller
                     </tr>';
         }
         $html .= '</tbody>';
-        // $cartorio = $this->calc($clientesInadimplentes, "C");
-        // $protestado = $this->calc($clientesInadimplentes, "S");
-        // $juridico = $this->calc($clientesInadimplentes, "J");
-        // $total = $this->calc($clientesInadimplentes, "");
+        if (empty($clientesInadimplentes)) {
+            $array = [0, ''];
+        } else {
+            $array = [
+                number_format($clientesInadimplentes[0]->VL_TOTAL,  "2", ",", "."),
+                $clientesInadimplentes[0]->NM_PESSOA
+            ];
+        }
+        $total = $this->calc($clientesInadimplentes);
+
         return response()->json([
-            'html' => $html
+            'html' => $html,
+            'divida' => $array,
+            'total' => $total
         ]);
     }
     public function getListCobrancaFiltroCnpj()
@@ -180,20 +208,24 @@ class RelatorioCobrancaController extends Controller
     {
         if ($cd_empresa == 1 || $cd_empresa == 12) {
             $cd_empresa = [1, 12];
-            $cd_empresa = implode(",", $cd_empresa);
         } elseif ($cd_empresa == 3 || $cd_empresa == 2) {
             $cd_empresa = [3, 2];
-            $cd_empresa = implode(",", $cd_empresa);
+        } elseif ($cd_empresa == 21 || $cd_empresa == 22) {
+            $cd_empresa = [21, 22];
+        } elseif ($cd_empresa == 4 || $cd_empresa == 42) {
+            $cd_empresa = [4, 42];
+        } elseif ($cd_empresa == 101 || $cd_empresa == 102) {
+            $cd_empresa = [101, 102];
         }
+        // verificar empresas irmão com Paranavai
+        $cd_empresa = implode(",", $cd_empresa);
         return $cd_empresa;
     }
-    public function calc($clientes, $type)
+    public function calc($clientes)
     {
         $total = 0;
         foreach ($clientes as $c) {
-            if ($c->STATUS === $type) {
-                $total += $c->VL_TOTAL;
-            }
+            $total += $c->VL_TOTAL;
         }
         $total_ = number_format($total, 2, ',', '.');
         return "R$ " . $total_;

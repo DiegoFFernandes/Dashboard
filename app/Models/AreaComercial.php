@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AreaComercial extends Model
@@ -31,7 +32,11 @@ class AreaComercial extends Model
     {
         $query = "select ac.cd_areacomercial, cast(ac.ds_areacomercial as varchar(40) character set utf8) ds_areacomercial
         from areacomercial ac";
-        return DB::connection($this->setConnet())->select($query);
+        $key = "area_comercial";
+
+        return Cache::remember($key, now()->addMinutes(60), function () use($query){
+            return DB::connection($this->setConnet())->select($query);
+        });        
     }
     public function showUserArea($cd_empresa)
     {

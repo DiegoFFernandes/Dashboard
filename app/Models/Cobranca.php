@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class Cobranca extends Model
@@ -70,14 +71,19 @@ class Cobranca extends Model
             AND P.CD_TIPOPESSOA = (SELECT O_CD_TIPOPESSOA FROM RETORNA_TIPOPESSOA_RESTRITA(1, 'TI02', P.CD_TIPOPESSOA))
             AND P.CD_TIPOPESSOA <> COALESCE(PFN.CD_TIPOPESSOA,'-1')
             AND AC.CD_AREACOMERCIAL NOT IN (11,12)            
-            ".(($cd_area != "") ? "AND AC.CD_AREACOMERCIAL IN ($cd_area)" : "" )."
-            ".(($cd_regiao != "") ? "AND RGC.CD_REGIAOCOMERCIAL IN ($cd_regiao)" : "" )."
+            " . (($cd_area != "") ? "AND AC.CD_AREACOMERCIAL IN ($cd_area)" : "") . "
+            " . (($cd_regiao != "") ? "AND RGC.CD_REGIAOCOMERCIAL IN ($cd_regiao)" : "") . "
             GROUP BY CONTAS.CD_EMPRESA, P.NR_CNPJCPF, AC.ds_areacomercial, NM_PESSOA, NM_PESSOAEMP, DS_REGIAOQ
             ORDER BY VL_TOTAL DESC";
 
-        return DB::connection($this->setConnet())->select($query);
+        $key = 'inadimplentes_' . $cd_empresa . $cd_area . $cd_regiao;
+        
+        return Cache::remember($key, now()->addMinutes(15), function () use ($query) {
+             return DB::connection($this->setConnet())->select($query);
+        });
     }
-    public function clientesInadiplentesCnpj($cnpj, $cd_empresa){
+    public function clientesInadiplentesCnpj($cnpj, $cd_empresa)
+    {
         $query = "
         SELECT DISTINCT P.NR_CNPJCPF,  AC.ds_areacomercial Area,
         CONTAS.CD_EMPRESA,
@@ -145,8 +151,12 @@ class Cobranca extends Model
         AND P.CD_TIPOPESSOA <> COALESCE(PFN.CD_TIPOPESSOA,'-1')
         AND AC.CD_AREACOMERCIAL NOT IN (11,12)
         AND P.NR_CNPJCPF = '$cnpj'
-        ORDER BY  CONTAS.CD_EMPRESA ,  C.NM_PESSOA, P.NM_PESSOA, CONTAS.DT_VENCIMENTO";
+        ORDER BY  CONTAS.CD_EMPRESA ,  C.NM_PESSOA, P.NM_PESSOA, CONTAS.DT_VENCIMENTO";        
 
-        return DB::connection($this->setConnet())->select($query);
+        $key = 'inadimplentescnpj_' . $cd_empresa . $cnpj;
+        
+        return Cache::remember($key, now()->addMinutes(15), function () use ($query) {
+             return DB::connection($this->setConnet())->select($query);
+        });
     }
 }

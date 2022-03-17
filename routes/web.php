@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\AcompanhaOrdemController;
+use App\Http\Controllers\Admin\Producao\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\Cobranca\CobrancaController;
 use App\Http\Controllers\Admin\Cobranca\RelatorioCobrancaController;
 use App\Http\Controllers\Admin\Comercial\AreaComercialController;
@@ -80,9 +80,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () 
 /*Rotas sem autenticação*/
 Route::prefix('producao')->group(function () {
     /*Rotas de acompanhamento de ordem */
-    Route::get('acompanha-ordem', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem');
-    Route::get('acompanha-ordem/{codigo_barras}', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem.barras');
-    Route::post('acompanha-ordem', [AcompanhaOrdemController::class, 'statusOrdem'])->name('admin.producao.acompanha.ordem.do');
+    Route::get('acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem');
+    Route::get('acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo{codigo_barras}', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem.barras');
+    Route::post('acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo', [AcompanhaOrdemController::class, 'statusOrdem'])->name('admin.producao.acompanha.ordem.do');
 
     /*Produtividade Executores*/
     Route::get('produtividade-executores/quadrante-1', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante1');

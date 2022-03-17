@@ -10,6 +10,7 @@ use App\Models\RegiaoComercial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Redis;
 use Yajra\DataTables\Facades\DataTables;
 
 class RelatorioCobrancaController extends Controller

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class RegiaoComercial extends Model
@@ -35,7 +36,9 @@ class RegiaoComercial extends Model
         inner join areacomercial ac on (ac.cd_areacomercial = rc.cd_areacomercial)
         order by ds_regiaocomercial";
 
-        return DB::connection($this->setConnet())->select($query);
+        return Cache::remember('regiao_comercial', now()->addMinutes(60), function() use ($query){
+            return DB::connection($this->setConnet())->select($query);
+        });
     }
     public function regiaoArea($cd_areacomercial){
         
@@ -45,8 +48,11 @@ class RegiaoComercial extends Model
         from regiaocomercial rc
         inner join areacomercial ac on (ac.cd_areacomercial = rc.cd_areacomercial)
         where ac.cd_areacomercial = $cd_areacomercial
-        order by ds_regiaocomercial";
-        return DB::connection($this->setConnet())->select($query);
+        order by ds_regiaocomercial";        
+        return Cache::remember('regiao_comercial', now()->addMinutes(60), function() use ($query){
+            return DB::connection($this->setConnet())->select($query);
+        });
+        
     }
     public function storeData($input)
     {

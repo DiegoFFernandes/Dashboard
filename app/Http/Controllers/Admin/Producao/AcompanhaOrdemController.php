@@ -54,22 +54,22 @@ class AcompanhaOrdemController extends Controller
 
     /*Com a informação do usuario, consulta no banco e pega o ID do itempedidopneu*/
     $iditempedidopneu = $this->acompanha->IdOrdemProducao($nr_ordem);
+    //var_dump($iditempedidopneu[0]->IDITEMPEDIDOPNEU);
     /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
-    if ($nr_ordem >= 9999999999 || $iditempedidopneu === []) {
+    if (empty($iditempedidopneu[0]->IDITEMPEDIDOPNEU)) {
       $sem_info = 0;
       return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem'));
-    }
-
+    }    
     /*Consulta no Banco através do IDPEDIDOPNEU buscando os setores que a ordem passou RRC016*/
     $status_etapas = $this->acompanha->BuscaSetores($iditempedidopneu[0]->IDITEMPEDIDOPNEU);
-
+    
     /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
     if ($status_etapas === []) {
       $sem_info = $status_etapas;
       return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem'));
     }
     /* Consulta informações da ORDEM */
-    $info_pneu = $this->acompanha->showDataPneus($nr_ordem);
+    $info_pneu = $this->acompanha->showDataPneus($nr_ordem);    
     return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'status_etapas', 'info_pneu'));
   }
 

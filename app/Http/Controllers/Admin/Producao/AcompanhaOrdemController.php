@@ -28,10 +28,11 @@ class AcompanhaOrdemController extends Controller
 
   public function index(Request $request)
   {
-    $uri           = $this->request->route()->uri();
-    $user_auth          = $this->user;    
-    $codigo_barras = $request->codigo_barras;      
-   
+    $exploder  = explode('/', $this->request->route()->uri());
+    $uri = $exploder[0]."/".$exploder[1];    
+    $user_auth = $this->user;
+    $codigo_barras = $request->codigo_barras;
+
     return view('admin.producao.acompanha-ordem', compact(
       'user_auth',
       'uri',
@@ -67,7 +68,7 @@ class AcompanhaOrdemController extends Controller
       $sem_info = $status_etapas;
       return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem'));
     }
-    /* Consulta informações da ORDEM */    
+    /* Consulta informações da ORDEM */
     $info_pneu = $this->acompanha->showDataPneus($nr_ordem);
     return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'status_etapas', 'info_pneu'));
   }

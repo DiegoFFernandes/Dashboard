@@ -76,7 +76,7 @@ class Cobranca extends Model
             GROUP BY CONTAS.CD_EMPRESA, P.NR_CNPJCPF, AC.ds_areacomercial, NM_PESSOA, NM_PESSOAEMP, DS_REGIAOQ
             ORDER BY VL_TOTAL DESC";
 
-        $key = 'inadimplentes_' . $cd_empresa . $cd_area . $cd_regiao;
+        $key = 'inadimplentess_' . $cd_empresa . $cd_area . $cd_regiao;
         
         return Cache::remember($key, now()->addMinutes(15), function () use ($query) {
              return DB::connection($this->setConnet())->select($query);

@@ -63,9 +63,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Entrada</th>
-                                        <th>Saida</th>
                                         <th>Usuario</th>
+                                        <th>Entrada</th>
+                                        <th>Saida</th>                                        
                                         <th>Detalhes</th>
                                         <th>Retrabalho</th>
                                     </tr>

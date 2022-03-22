@@ -48,6 +48,11 @@ Route::get('/admin', [LoginController::class, 'dashboard'])->name('admin.dashbor
 
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 
+Route::middleware(['auth'])->group(function () {
+    /**Rota Perfil usuario*/
+    Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
+    Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
+});
 Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('admin.usuarios');
     Route::get('listar', [UserController::class, 'index'])->name('admin.usuarios.listar');
@@ -57,9 +62,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () 
     Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
     Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
 
-    /**Rota Perfil usuario*/
-    Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
-    Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
 
     /*Rotas funções*/
     Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');

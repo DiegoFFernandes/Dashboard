@@ -6,6 +6,7 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-md-6 mb-3">
+                @includeIf('admin.master.messages')
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">Qual ordem deseja pesquisar?</h3>
@@ -19,7 +20,7 @@
                                 (<a href="http://zxing.appspot.com/scan?ret=https://producao.ivorecap.com.br/producao/acompanha-ordem/{CODE}"
                                     data-toggle="tooltip" data-placement="top" title="Exclusivo Celular">Leitor</a>):
                                 <input type="number" class="form-control" name="nr_ordem"
-                                    value="{{ isset($codigo_barras) ? $codigo_barras : '' }}" placeholder="123456"
+                                    value="{{isset($codigo_barras) ? $codigo_barras : old('nr_ordem')}}" placeholder="123456"
                                     required />                                
                             </div>
                             

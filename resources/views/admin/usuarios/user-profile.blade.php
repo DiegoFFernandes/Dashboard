@@ -10,8 +10,8 @@
                         <h3 class="box-title">Usúario</h3>
                     </div>
                     <div class="box-body box-profile">
-                        <h3 class="profile-username text-center">Diego Ferreira</h3>
-                        <p class="text-muted text-center">ti.campina@ivorecap.com.br</p>
+                        <h3 class="profile-username text-center">{{$user_auth->name}}</h3>
+                        <p class="text-muted text-center">{{$user_auth->email}}</p>
                         <div class="form-group">
                             <label for="newPassword">Alterar Senha</label>
                             <input type="password" class="form-control" id="newPassword" placeholder="Alterar senha">

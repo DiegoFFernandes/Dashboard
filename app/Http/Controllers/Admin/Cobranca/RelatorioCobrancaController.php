@@ -42,13 +42,18 @@ class RelatorioCobrancaController extends Controller
         $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
         $cd_empresa = $this->setEmpresa($this->user->empresa);
         $cd_area = "";
-        if ($this->user->hasRole('admin|diretoria')) {
+        if ($this->user->hasRole('admin|gerencia')) {
             $cd_area = "";
             $cd_regiao = "";
             $regiao = $this->regiao->regiaoAll();
             $area = $this->area->areaAll();
-        } elseif ($this->user->hasRole('gerencia')) {
+        } elseif ($this->user->hasRole('coordenador')) {
+            //Criar condição caso o usuario for gerente mais não estiver associado no painel
             $find = $this->area->findAreaUser($this->user->id);
+            $test = get_object_vars($find);            
+            if (empty(get_object_vars($find))) {
+                return Redirect::route('admin.dashborad')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
+            }            
             $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
             $area = "";
             $cd_area = $find[0]->cd_areacomercial;

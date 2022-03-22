@@ -106,7 +106,7 @@
                                 </div>
                             </div>
                         @endrole
-                        @role('admin|diretoria')
+                        @role('admin|gerencia')
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="cd_area">Área</label>

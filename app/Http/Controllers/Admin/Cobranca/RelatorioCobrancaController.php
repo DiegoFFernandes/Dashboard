@@ -50,10 +50,10 @@ class RelatorioCobrancaController extends Controller
         } elseif ($this->user->hasRole('coordenador')) {
             //Criar condição caso o usuario for gerente mais não estiver associado no painel
             $find = $this->area->findAreaUser($this->user->id);
-            $test = get_object_vars($find);            
-            if (empty(get_object_vars($find))) {
+            $array = json_decode($find, true);
+            if (empty($array)) {
                 return Redirect::route('admin.dashborad')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
-            }            
+            }
             $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
             $area = "";
             $cd_area = $find[0]->cd_areacomercial;

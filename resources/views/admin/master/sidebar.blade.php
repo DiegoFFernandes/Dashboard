@@ -320,11 +320,19 @@
                         </li>
                     </ul>
                 </li>
-            @endrole
+            @endrole            
             <li class="treeview" style="height: auto;">
-                <a href="https://glpi.ivorecap.com.br" target="_blank">
+                <a href="#">
                     <i class="fa fa-question-circle"></i> <span>Suporte</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
                 </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class=""><a
+                            href="https://glpi.ivorecap.com.br" target="_blank"><i class="fa fa-ticket" aria-hidden="true"></i>GLPI</a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </section>

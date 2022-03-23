@@ -32,6 +32,8 @@ $dti300dias = date('m-d-Y', strtotime('-10 month', strtotime(str_replace('-', '/
 $dtf300dias = date('m-t-Y', strtotime('-10 month', strtotime(str_replace('-', '/', $data_ini))));
 $dti330dias = date('m-d-Y', strtotime('-11 month', strtotime(str_replace('-', '/', $data_ini))));
 $dtf330dias = date('m-t-Y', strtotime('-11 month', strtotime(str_replace('-', '/', $data_ini))));
+$dti360dias = date('m-d-Y', strtotime('-12 month', strtotime(str_replace('-', '/', $data_ini))));
+$dtf360dias = date('m-t-Y', strtotime('-12 month', strtotime(str_replace('-', '/', $data_ini))));
 
 
 //Nome dos 5 ultimos meses da data atual
@@ -47,6 +49,7 @@ $nMes240 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $d
 $nMes270 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti270dias)))));
 $nMes300 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti300dias)))));
 $nMes330 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti330dias)))));
+$nMes360 = utf8_encode(ucfirst(strftime('%B', strtotime(str_replace('-', '/', $dti360dias)))));
 
 return [
     'options' => [
@@ -75,6 +78,8 @@ return [
         'dtf300dias' => $dtf300dias,
         'dti330dias' => $dti330dias,
         'dtf330dias' => $dtf330dias,
+        'dti360dias' => $dti360dias,
+        'dtf360dias' => $dtf360dias,
     ],
     'meses' => [
         'nMesHj' => $nMesHj,
@@ -88,6 +93,7 @@ return [
         'nMes240' => $nMes240,
         'nMes270' => $nMes270,
         'nMes300' => $nMes300,
-        'nMes330' => $nMes330,     
+        'nMes330' => $nMes330,   
+        'nMes360' => $nMes360,   
     ]
 ];

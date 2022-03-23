@@ -26,7 +26,7 @@ class Producao extends Model
                     WHERE R.IDANTIGA <> R.IDNOVA";
         return DB::connection($this->setConnet())->select($query);
     }
-    public function recapMounth()
+    public function recapMounth($dt_inicial, $dt_final)
     {
         $key = 'recapmensal_';
         $query = "SELECT
@@ -53,7 +53,7 @@ class Producao extends Model
           AND OPR.STORDEM = 'F'
           AND IPP.STCANCELADO = 'N'
           AND IPP.STGARANTIA = 'N'
-          AND OPR.DTFECHAMENTO between '01.03.2021' and '31.03.2022'
+          AND OPR.DTFECHAMENTO between '$dt_inicial' and '$dt_final'
           --AND CAST(OPR.DTFECHAMENTO AS TIMESTAMP) BETWEEN :MONTH_BEGIN(-4) AND :MONTH_END(0)
             AND PP.IDEMPRESA IN (3,1,4)
         GROUP BY ANO, MES_NUM

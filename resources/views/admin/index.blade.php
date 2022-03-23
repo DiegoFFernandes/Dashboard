@@ -8,11 +8,11 @@
             <div class="col-md-12">
                 @includeIf('admin.master.messages')
             </div>
-            @role('admin')
+            @role('admin|diretoria|gerencia')
             <div class="col-md-12">
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Demonstrativo de Recape Mensal</h3>
+                        <h3 class="box-title">Demonstrativo de Recape Mensal - Sul</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

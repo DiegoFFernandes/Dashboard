@@ -92,7 +92,7 @@
                                 </select>
                             </div>
                         </div>
-                        @role('admin|gerencia|diretoria')
+                        @role('admin|gerencia|coordenador')
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="cd_regiao">Região</label>

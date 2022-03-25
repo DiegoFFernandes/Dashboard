@@ -11,6 +11,7 @@ use App\Models\Vendedores;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Contracts\Role;
@@ -124,10 +125,11 @@ class LoginController extends Controller
         return redirect()->back()->withInput()->withErrors(['Os dados informados são invalidos!']);
     }
     public function logout()
-    {
-        Auth::logout();
+    {        
         Session::flush();
-        return redirect()->route('admin.dashborad');
+        Cache::flush();
+        Auth::logout();        
+        return redirect()->route('login');
     }
     protected function authenticated($password)
     {

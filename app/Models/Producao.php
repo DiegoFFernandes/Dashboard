@@ -28,7 +28,7 @@ class Producao extends Model
     }
     public function recapMounth($dt_inicial, $dt_final)
     {
-        $key = 'recapmensal_'.Auth::user()->id;
+        $key = 'recapmensal_'. Auth::user()->id;
         $query = "SELECT
         CASE EXTRACT(MONTH FROM OPR.DTFECHAMENTO)
             WHEN 1 THEN 'Jan'

@@ -32,7 +32,7 @@ class AreaComercial extends Model
     {
         $query = "select ac.cd_areacomercial, cast(ac.ds_areacomercial as varchar(40) character set utf8) ds_areacomercial
         from areacomercial ac";
-        $key = "area_comercial";
+        $key = "area_comercial". Auth::user()->id;
 
         return Cache::remember($key, now()->addMinutes(60), function () use($query){
             return DB::connection($this->setConnet())->select($query);

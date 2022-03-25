@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Producao\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\Cobranca\CobrancaController;
+use App\Http\Controllers\Admin\Cobranca\InadimplenciaController;
 use App\Http\Controllers\Admin\Cobranca\RelatorioCobrancaController;
 use App\Http\Controllers\Admin\Comercial\AreaComercialController;
 use App\Http\Controllers\Admin\Comercial\CancelarNotaController;
@@ -215,6 +216,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::prefix('powerbi')->group(function () {
         Route::get('index', [PowerBiEmbeddedController::class, 'index'])->name('powerbi.index');
+    });
+    Route::prefix('inadimplencia')->group(function () {
+        Route::get('index', [InadimplenciaController::class, 'index'])->name('inadimplencia.index');
     });
 });
 Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {

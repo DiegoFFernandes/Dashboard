@@ -48,8 +48,9 @@ class RegiaoComercial extends Model
         from regiaocomercial rc
         inner join areacomercial ac on (ac.cd_areacomercial = rc.cd_areacomercial)
         where ac.cd_areacomercial = $cd_areacomercial
-        order by ds_regiaocomercial";        
-        return Cache::remember('regiao_comercial', now()->addMinutes(60), function() use ($query){
+        order by ds_regiaocomercial";      
+        $key = "regiao_comercial_". Auth::user()->id; 
+        return Cache::remember($key, now()->addMinutes(60), function() use ($query){
             return DB::connection($this->setConnet())->select($query);
         });
         

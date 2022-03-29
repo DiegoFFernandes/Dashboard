@@ -17,7 +17,7 @@ class Producao extends Model
         return $this->connection = Auth::user()->conexao;
     }
 
-    public function TrocaServico($data)
+    public function TrocaServico($data, $empresa)
     {
         $query = "SELECT
                     R.O_IDORDEMPRODUCAORECAP ORDEM, R.CD_PESSOA||' - '|| R.NM_PESSOA PESSOA, R.DSETAPA, R.IDEXECUTOR||' - '||R.NMEXECUTOR OPERADOR,
@@ -55,7 +55,7 @@ class Producao extends Model
           AND IPP.STGARANTIA = 'N'
           AND OPR.DTFECHAMENTO between '$dt_inicial' and '$dt_final'
           --AND CAST(OPR.DTFECHAMENTO AS TIMESTAMP) BETWEEN :MONTH_BEGIN(-4) AND :MONTH_END(0)
-            AND PP.IDEMPRESA IN (3,1,4)
+            AND PP.IDEMPRESA IN (3,1,4,101,10,103,104,304,105)
         GROUP BY ANO, MES_NUM
         ORDER BY ANO, MES_NUM";
 

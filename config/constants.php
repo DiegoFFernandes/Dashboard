@@ -9,9 +9,10 @@ $data_ini = date('m-d-Y', $data_inicio);
 $data_fim = date('m-d-Y', $data_fim);
 $today = date('m-d-Y');
 
-//Data 6 dias da data atual
-$dt6days = date('m-d-Y', strtotime('-6 days', strtotime(str_replace('-', '/', $today))));
-$dt60days = date('m-d-Y', strtotime('-60 days', strtotime(str_replace('-', '/', $today))));
+//Data 6 / 60 / 120 dias da data atual
+$dt6days = date('Y-m-d', strtotime('-6 days', strtotime(str_replace('-', '/', $today))));
+$dt60days = date('Y-m-d', strtotime('-60 days', strtotime(str_replace('-', '/', $today))));
+$dt120days = date('Y-m-d', strtotime('-120 days', strtotime(str_replace('-', '/', $today))));
 
 
 //Data dos ultimos 6 meses inicio e de termino a partir da data atual
@@ -69,6 +70,7 @@ return [
         'dtf60dias' => $dtf60dias,
         'dti90dias' => $dti90dias,
         'dtf90dias' => $dtf90dias,
+        'dt120days' => $dt120days,
         'dti120dias' => $dti120dias,
         'dtf120dias' => $dtf120dias,
         'dti150dias' => $dti150dias,

@@ -152,11 +152,14 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
             Route::get('ivorecap-sul', [ComercialController::class, 'ivoComercialSul'])->name('comercial.ivo-sul');
-            /* Cancelar nota - usuario */
-            Route::get('movimento/cancelar-nota', [CancelarNotaController::class, 'cancelarNota'])->name('comercial.cancela-nota');
-            Route::post('cancelar-nota-do', [CancelarNotaController::class, 'getCancelarNota'])->name('comercial.cancela-nota-do');
-            Route::get('movimento/search-nota', [CancelarNotaController::class, 'SearchNota'])->name('comercial.search-nota');
-            Route::get('envio-email', [CancelarNotaController::class, 'envioEmail'])->name('comercial.envio-email');
+
+            Route::middleware(['permission:ver-cancela-nota'])->group(function () {
+                /* Cancelar nota - usuario */
+                Route::get('movimento/cancelar-nota', [CancelarNotaController::class, 'cancelarNota'])->name('comercial.cancela-nota');
+                Route::post('cancelar-nota-do', [CancelarNotaController::class, 'getCancelarNota'])->name('comercial.cancela-nota-do');
+                Route::get('movimento/search-nota', [CancelarNotaController::class, 'SearchNota'])->name('comercial.search-nota');
+                Route::get('envio-email', [CancelarNotaController::class, 'envioEmail'])->name('comercial.envio-email');
+            });
         });
         Route::middleware(['permission:ver-rel-cobranca-sul'])->group(function () {
             Route::get('movimento/rel-cobranca', [RelatorioCobrancaController::class, 'index'])->name('comercial.rel-cobranca-sul');

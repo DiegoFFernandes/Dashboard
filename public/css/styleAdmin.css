@@ -81,7 +81,7 @@
 
 /*Widgtes Etapas*/
 
-.small-box {
+.small-box-info {
     background: rgb(255, 255, 255);
     border-radius: 2px;
     position: relative;
@@ -92,7 +92,19 @@
     text-align: center;
 }
 
-.small-box:hover {
+.small-box-info>.inner {
+    padding: 10px;
+}
+
+.small-box-info h3 {
+    font-size: 38px;
+    font-weight: normal;
+    margin: 0 0 10px 0;
+    white-space: nowrap;
+    padding: 0;
+}
+
+.small-box-info:hover {
     background: #e01c28;
 }
 

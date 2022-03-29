@@ -42,7 +42,6 @@ class CancelarNotaController extends Controller
     }
     public function cancelarNota()
     {
-
         $title_page   = 'Cancelar Nota';
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
@@ -76,9 +75,9 @@ class CancelarNotaController extends Controller
     }
     public function SearchNota()
     {
-        //$data = [];
-        if ($this->request) {
-            $data =  $this->nota->SearchNota($this->request->nr_nota, $this->request->cd_empresa);
+        $data = $this->nota->SearchNota($this->request->nr_nota, $this->request->cd_empresa, $this->request->nr_serie);
+        if($data == []){
+            return response()->json(['error' => 'Não existe esse número de nota ou serie errada!']);        
         }
         return response()->json($data);
     }

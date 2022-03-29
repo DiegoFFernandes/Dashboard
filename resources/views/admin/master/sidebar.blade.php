@@ -237,10 +237,12 @@
                                             Recap -
                                             Sul</a>
                                     </li>
+                                    @can('ver-cancela-nota')
                                     <li class="{{ request()->routeIs('comercial.cancela-nota') ? 'active' : '' }}">
                                         <a href="{{ route('comercial.cancela-nota') }}"><i
                                                 class="fa fa-ban"></i>Cancelar Nota</a>
                                     </li>
+                                    @endcan
                                     @role('controladoria|admin')
                                         <li class="{{ request()->routeIs('comercial.list-nota-all') ? 'active' : '' }}">
                                             <a href="{{ route('comercial.list-nota-all') }}">

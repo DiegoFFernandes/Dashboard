@@ -11,20 +11,35 @@
                         <h3 class="box-title">Deseja cancelar uma nota?</h3>
                     </div>
                     <div class="box-body">
+                        <div class="alert alert-warning alert-fixed hidden">
+                            <p><i class="icon fa fa-check"></i></p>
+                        </div>
                         @includeIf('admin.master.messages')
                         <input type="text" class="hidden" id="nr_lancamento" name="nr_lancamento">
-                        <div class="col-md-7">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="cd_empresa">Empresa</label>
                                 <select name="cd_empresa" id="cd_empresa" class="form-control" style="width: 100%;">
                                     <option value="3">SUPER RODAS RECAPAGENS</option>
                                     <option value="1">AM MORENO PNEUS LTDA</option>
-                                    <option value="2">PEDIDO 2</option>
-                                    <option value="12">PEDIDO 12</option>
+                                    <option value="2">SUPER RODAS L9</option>
+                                    <option value="12">AM MORENO L9</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="id">Série Nota</label>
+                                <select name="nr_serie" id="nr_serie" class="form-control" style="width: 100%;">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="10">10</option>
+                                    <option value="F">F</option>
+                                    <option value="M">M</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
                             <div class="form-group">
                                 <label for="id">Numero Nota</label>
                                 <div class="input-group">
@@ -61,8 +76,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Observação</label>
-                                <textarea class="form-control" rows="3" placeholder="Deseja comentar mais algo?"
-                                    id="observacao"></textarea>
+                                <textarea class="form-control" rows="3" placeholder="Deseja comentar mais algo?" id="observacao"></textarea>
                             </div>
                         </div>
                     </div>
@@ -82,7 +96,7 @@
                             <thead>
                                 <tr>
                                     <th>Emp</th>
-                                    <th>Nota</th>                                    
+                                    <th>Nota</th>
                                     <th>Pessoa</th>
                                     <th>Motivo</th>
                                     <th>Criado em:</th>
@@ -92,7 +106,7 @@
                                 @foreach ($listNotasCancelar as $l)
                                     <tr>
                                         <td>{{ $l->cd_empresa }}</td>
-                                        <td>{{ $l->nr_nota }}</td>                                        
+                                        <td>{{ $l->nr_nota }}</td>
                                         <td>{{ $l->nm_pessoa }}</td>
                                         <td>{{ $l->motivo }}</td>
                                         <td>{{ $l->created_at }}</td>
@@ -124,10 +138,14 @@
             $('#btn-search-nota').click(function() {
                 let cd_empresa = $('#cd_empresa').val();
                 let nr_nota = $('#id_nota').val();
+                let nr_serie = $('#nr_serie').val();
                 if (nr_nota == "") {
                     $('#id_nota').attr('title', 'Nota e obrigatório!').tooltip('show');
                     return false;
-                }
+                } else if (nr_serie == "") {
+                    $('#nr_serie').attr('title', 'Série e obrigatório!').tooltip('show');
+                    return false;
+                };
 
                 $.ajax({
                     url: '{{ route('comercial.search-nota') }}',
@@ -135,12 +153,22 @@
                     data: {
                         cd_empresa: cd_empresa,
                         nr_nota: nr_nota,
+                        nr_serie: nr_serie,
                     },
                     success: function(result) {
-                        $('#nr_lancamento').val(result[0].NR_LANCAMENTO);
-                        $('#nm_pessoa').val(result[0].NM_PESSOA);
-                        $('#nr_cnpjcpf').val(result[0].NR_CNPJCPF);
-                        $('#submit-cancela').removeClass('hidden');
+                        if (result.error) {
+                            $(".alert").removeClass('hidden');
+                            $(".alert p").text(result.error);
+                            window.setTimeout(function() {
+                                $(".alert").alert('close');
+                            }, 3000);
+                            $('#submit-cancela').addClass('hidden');
+                        } else {
+                            $('#nr_lancamento').val(result[0].NR_LANCAMENTO);
+                            $('#nm_pessoa').val(result[0].NM_PESSOA);
+                            $('#nr_cnpjcpf').val(result[0].NR_CNPJCPF);
+                            $('#submit-cancela').removeClass('hidden');
+                        }
                     }
                 });
             });

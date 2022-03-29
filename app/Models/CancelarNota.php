@@ -30,12 +30,12 @@ class CancelarNota extends Model
         return $this->connection = Auth::user()->conexao;
     }
     
-    public function SearchNota($nr_nota, $cd_empresa)
+    public function SearchNota($nr_nota, $cd_empresa, $cd_serie)
     {
-        $query = "select first 1 n.cd_empresa, n.nr_lancamento, n.cd_pessoa, p.nm_pessoa, p.nr_cnpjcpf, n.nr_notafiscal
+        $query = "select first 1 n.cd_empresa, n.nr_lancamento, n.cd_pessoa, p.nm_pessoa, p.nr_cnpjcpf, n.nr_notafiscal, n.cd_serie
         from nota n
         inner join pessoa p on (p.cd_pessoa = n.cd_pessoa)
-        where n.nr_notafiscal = $nr_nota and n.cd_empresa = $cd_empresa";
+        where n.nr_notafiscal = $nr_nota and n.cd_empresa = $cd_empresa and n.cd_serie = '$cd_serie'";
         return DB::connection($this->setConnet())->select($query);
     }
 

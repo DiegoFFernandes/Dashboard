@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Cobranca\BloqueioPedidosController;
 use App\Http\Controllers\Admin\Producao\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\Cobranca\CobrancaController;
 use App\Http\Controllers\Admin\Cobranca\InadimplenciaController;
@@ -152,7 +153,6 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
             Route::get('ivorecap-sul', [ComercialController::class, 'ivoComercialSul'])->name('comercial.ivo-sul');
-
             Route::middleware(['permission:ver-cancela-nota'])->group(function () {
                 /* Cancelar nota - usuario */
                 Route::get('movimento/cancelar-nota', [CancelarNotaController::class, 'cancelarNota'])->name('comercial.cancela-nota');
@@ -166,6 +166,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('movimento/get-lista-cobranca', [RelatorioCobrancaController::class, 'getListCobranca'])->name('get-list-cobranca');
             Route::get('movimento/get-cobranca-filtro', [RelatorioCobrancaController::class, 'getListCobrancaFiltro'])->name('get-cobranca-filtro');
             Route::get('movimento/get-cobranca-cnpj', [RelatorioCobrancaController::class, 'getListCobrancaFiltroCnpj'])->name('get-cobranca-filtro-cnpj');
+
+            // Bloqueio de Pedidos
+            Route::get('movimento/bloqueio-pedidos', [BloqueioPedidosController::class, 'index'])->name('bloqueio-pedidos');
+            Route::get('movimento/get-bloqueio-pedidos', [BloqueioPedidosController::class, 'getBloqueioPedido'])->name('get-bloqueio-pedidos');
         });
 
         Route::middleware(['auth', 'role:admin|controladoria'])->group(function () {
@@ -222,6 +226,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
     Route::prefix('inadimplencia')->group(function () {
         Route::get('index', [InadimplenciaController::class, 'index'])->name('inadimplencia.index');
+        Route::get('get-table-vencer', [InadimplenciaController::class, 'getVencer'])->name('inadimplencia.get-vencer');
+        Route::get('get-table-details-area-vencer/{id}', [InadimplenciaController::class, 'getDetailsArea'])->name('get-details-vencer');
+        Route::get('get-table-details-regiao-vencer/{id}', [InadimplenciaController::class, 'getDetailsRegiao'])->name('get-details-area-vencer');
     });
 });
 Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {

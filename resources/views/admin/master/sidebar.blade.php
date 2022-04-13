@@ -238,10 +238,10 @@
                                             Sul</a>
                                     </li>
                                     @can('ver-cancela-nota')
-                                    <li class="{{ request()->routeIs('comercial.cancela-nota') ? 'active' : '' }}">
-                                        <a href="{{ route('comercial.cancela-nota') }}"><i
-                                                class="fa fa-ban"></i>Cancelar Nota</a>
-                                    </li>
+                                        <li class="{{ request()->routeIs('comercial.cancela-nota') ? 'active' : '' }}">
+                                            <a href="{{ route('comercial.cancela-nota') }}"><i
+                                                    class="fa fa-ban"></i>Cancelar Nota</a>
+                                        </li>
                                     @endcan
                                     @role('controladoria|admin')
                                         <li class="{{ request()->routeIs('comercial.list-nota-all') ? 'active' : '' }}">
@@ -256,6 +256,9 @@
                                             href="{{ route('comercial.rel-cobranca-sul') }}"><i
                                                 class="fa fa-ban"></i>Relatório
                                             de cobranca</a></li>
+                                    <li class="{{ request()->routeIs('bloqueio-pedidos') ? 'active' : '' }}"><a
+                                            href="{{ route('bloqueio-pedidos') }}"><i
+                                                class="fa fa-hand-paper-o"></i>Pedidos Bloqueados</a></li>
                                 @endcan
                             </ul>
                         </li>
@@ -322,7 +325,7 @@
                         </li>
                     </ul>
                 </li>
-            @endrole            
+            @endrole
             <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-question-circle"></i> <span>Suporte</span>
@@ -331,8 +334,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li class=""><a
-                            href="https://glpi.ivorecap.com.br" target="_blank"><i class="fa fa-ticket" aria-hidden="true"></i>GLPI</a>
+                    <li class=""><a href="https://glpi.ivorecap.com.br" target="_blank"><i
+                                class="fa fa-ticket" aria-hidden="true"></i>GLPI</a>
                     </li>
                 </ul>
             </li>

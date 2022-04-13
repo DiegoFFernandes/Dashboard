@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{asset('adminlte/bower_components/datatables.net/css/datatables.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/bower_components/datatables.net/css/responsive.dataTables.min.css')}}">
     <link rel="stylesheet" href="{{asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css"> --}}
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap.min.css">

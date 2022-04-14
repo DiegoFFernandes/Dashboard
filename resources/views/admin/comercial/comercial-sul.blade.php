@@ -24,13 +24,13 @@
 @section('scripts')
     <script type="text/javascript" defer>
         if ($(window).width() < 960) {
-            var _0xb26a = [
-                "https://app.powerbi.com/view?r=eyJrIjoiYmIzNWYzOWItZWVlNC00YjdlLTliZTEtNzMxNTM3YTI4YTRiIiwidCI6IjcyMmY4Y2UzLTlkMDItNDEyZS1hMjFmLWZmYTU1ZDM3ZWNkMyJ9"
-            ];
-            $('#iframe-mobile').html(_0xb26a);
+            let div = '<div class="iframe-embed-wrapper iframe-embed-responsive-16by9">'
+                +'<iframe src="https://app.powerbi.com/view?r=eyJrIjoiYmIzNWYzOWItZWVlNC00YjdlLTliZTEtNzMxNTM3YTI4YTRiIiwidCI6IjcyMmY4Y2UzLTlkMDItNDEyZS1hMjFmLWZmYTU1ZDM3ZWNkMyJ9" frameborder="0">'
+                +'</iframe>'
+                +'</div>';
+            $('#iframe-mobile').html(div);
         } else {
-            let div =
-                '<div id="htmlTest" class="iframe-embed-wrapper iframe-embed-responsive-16by9"></div>';
+            let div = '<div id="htmlTest" class="iframe-embed-wrapper iframe-embed-responsive-16by9"></div>';
             $('#iframe-mobile').html(div);
         }
 

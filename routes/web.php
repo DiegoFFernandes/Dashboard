@@ -197,7 +197,7 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware(['auth', 'permission:ver-diretoria-norte'])->group(function () {
             Route::get('ivorecap-norte', [ComercialController::class, 'ivoDiretoriaNorte'])->name('diretoria.ivo-norte');
         });
-        Route::middleware(['auth', 'permission:ver-comercial-sul'])->group(function () {
+        Route::middleware(['auth', 'permission:ver-diretoria-sul'])->group(function () {
             Route::get('ivorecap-sul', [ComercialController::class, 'ivoDiretoriaSul'])->name('diretoria.ivo-sul');
         });
     });

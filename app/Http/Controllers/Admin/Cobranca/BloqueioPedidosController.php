@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Admin\Cobranca;
 
 use App\Http\Controllers\Controller;
+use App\Models\AcompanhamentoPneu;
+use App\Models\AreaComercial;
 use App\Models\BloqueioPedido;
 use App\Models\RegiaoComercial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Yajra\DataTables\DataTables as DataTablesDataTables;
 use Yajra\DataTables\Facades\DataTables;
 
 class BloqueioPedidosController extends Controller
@@ -16,10 +19,14 @@ class BloqueioPedidosController extends Controller
         Request $request,
         BloqueioPedido $bloqueio,
         RegiaoComercial $regiao,
+        AreaComercial $area,
+        AcompanhamentoPneu $acompanha,
     ) {
         $this->request = $request;
         $this->bloqueio = $bloqueio;
         $this->regiao = $regiao;
+        $this->area = $area;
+        $this->acompanha = $acompanha;
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -32,7 +39,14 @@ class BloqueioPedidosController extends Controller
         $title_page   = 'Pedidos Bloqueados';
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
-        if (!$this->user->hasRole('admin|gerencia|coordenador')) {
+        if ($this->user->hasRole('coordenador')) {
+            //Criar condição caso o usuario for gerente mais não estiver associado no painel
+            $find = $this->area->findAreaUser($this->user->id);
+            $array = json_decode($find, true);
+            if (empty($array)) {
+                return Redirect::route('admin.dashborad')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
+            }
+        } elseif(!$this->user->hasRole('admin|gerencia')) {
             $regiaoUsuario = $this->regiao->regiaoPorUsuario($this->user->id);
             foreach ($regiaoUsuario as $r) {
                 $cd_regiao[] = $r->cd_regiaocomercial;
@@ -47,16 +61,26 @@ class BloqueioPedidosController extends Controller
     }
     public function getBloqueioPedido()
     {
-        if ($this->user->hasRole('admin|gerencia|coordenador')) {
+        if ($this->user->hasRole('admin|gerencia')) {
             $cd_regiao = "";
+        } elseif ($this->user->hasRole('coordenador')) {
+            //Criar condição caso o usuario for gerente mais não estiver associado no painel
+            $find = $this->area->findAreaUser($this->user->id);
+            $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
+            foreach ($regiao as $r) {
+                $cd_regiao[] = $r->CD_REGIAOCOMERCIAL;
+            }
+            //serialize a informação vinda do banco e faz o implode dos valores separados por (;)
+            $cd_regiao = implode(",", $cd_regiao);
         } else {
             $regiaoUsuario = $this->regiao->regiaoPorUsuario($this->user->id);
             foreach ($regiaoUsuario as $r) {
                 $cd_regiao[] = $r->cd_regiaocomercial;
-            }            
+            }
             //serialize a informação vinda do banco e faz o implode dos valores separados por (;)
             $cd_regiao = implode(",", $cd_regiao);
         }
+
         $bloqueio = $this->bloqueio->BloqueioPedido($cd_regiao);
 
         return DataTables::of($bloqueio)
@@ -66,7 +90,83 @@ class BloqueioPedidosController extends Controller
                     . $b->MOTIVO . '%20poderiam%20verificar?" id="ver-itens" class="btn btn-success btn-sm">
                 Avisar Whats</a>';
             })
+            ->addColumn('status_cliente', ' ')
+            ->addColumn('status_scpc', ' ')
+            ->addColumn('status_pedido', ' ')
+            ->editColumn('status_cliente', function ($row) {
+                return $row->ST_ATIVA && BloqueioPedido::STATUS_CLIENTE[$row->ST_ATIVA] ? BloqueioPedido::STATUS_CLIENTE[$row->ST_ATIVA] : 'none';
+            })
+            ->editColumn('status_scpc', function ($row) {
+                return $row->ST_SCPC && BloqueioPedido::STATUS_SCPC[$row->ST_SCPC] ? BloqueioPedido::STATUS_SCPC[$row->ST_SCPC] : 'none';
+            })
+            ->editColumn('status_pedido', function ($row) {
+                return $row->STPEDIDO && BloqueioPedido::STATUS_PEDIDO[$row->STPEDIDO] ? BloqueioPedido::STATUS_PEDIDO[$row->STPEDIDO] : 'none';
+            })
             ->make();
     }
-    
+    public function getPedidoAcompanhar()
+    {
+        if ($this->user->hasRole('admin|gerencia')) {
+            $cd_regiao = "";
+        } elseif ($this->user->hasRole('coordenador')) {
+            //Criar condição caso o usuario for gerente mais não estiver associado no painel
+            $find = $this->area->findAreaUser($this->user->id);
+            $array = json_decode($find, true);
+            if (empty($array)) {
+                return Redirect::route('admin.dashborad')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
+            }
+            $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
+            foreach ($regiao as $r) {
+                $cd_regiao[] = $r->CD_REGIAOCOMERCIAL;
+            }
+            //serialize a informação vinda do banco e faz o implode dos valores separados por (;)
+            $cd_regiao = implode(",", $cd_regiao);
+        } else {
+            $regiaoUsuario = $this->regiao->regiaoPorUsuario($this->user->id);
+            foreach ($regiaoUsuario as $r) {
+                $cd_regiao[] = $r->cd_regiaocomercial;
+            }
+            //serialize a informação vinda do banco e faz o implode dos valores separados por (;)
+            $cd_regiao = implode(",", $cd_regiao);
+        }
+
+        $pedidos = $this->acompanha->ListPedidoPneu($cd_regiao);
+        return DataTables::of($pedidos)
+            ->addColumn('details_url', function ($p) {
+                return route('get-item-pedido-acompanhar', $p->ID);
+            })
+            ->setRowClass(function ($p) {
+                if ($p->STPEDIDO == 'ATENDIDO   ') {
+                    return 'bg-green';
+                } elseif ($p->STPEDIDO == 'EM PRODUCAO') {
+                    return 'bg-yellow';
+                } elseif ($p->STPEDIDO == 'BLOQUEADO  ') {
+                    return 'bg-red';
+                }
+            })
+            ->make();
+    }
+    public function getItemPedidoAcompanhar($pedido)
+    {
+        $itempedidos = $this->acompanha->ItemPedidoPneu($pedido);
+        return DataTables::of($itempedidos)
+            ->addColumn('details_item_pedido_url', function ($i) {
+                return route('get-detalhe-item-pedido', $i->ID);
+            })
+            ->make();
+    }
+    public function getDetalheItemPedidoAcompanhar($nrordem)
+    {
+        $detalhe_ordem = $this->acompanha->BuscaSetores($nrordem);
+        return DataTables::of($detalhe_ordem)
+            ->addColumn('entrada', function ($d) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $d->O_DT_ENTRADA)
+                    ->format('d/m/Y') . ' ' . $d->O_HR_ENTRADA;
+            })
+            ->addColumn('saida', function ($d) {
+                return \Carbon\Carbon::createFromFormat('Y-m-d', $d->O_DT_SAIDA)
+                    ->format('d/m/Y') . ' ' . $d->O_HR_SAIDA;
+            })
+            ->make();
+    }
 }

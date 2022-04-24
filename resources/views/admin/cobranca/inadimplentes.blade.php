@@ -218,7 +218,7 @@
                 </thead>
             </table>
         @endverbatim
-                    </script>
+    </script>
     <script id="details-regiao-template" type="text/x-handlebars-template">
         @verbatim
             <div class="label label-success">{{ DS_REGIAOCOMERCIAL }}</div>

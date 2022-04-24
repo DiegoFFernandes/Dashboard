@@ -256,9 +256,11 @@
                                             href="{{ route('comercial.rel-cobranca-sul') }}"><i
                                                 class="fa fa-ban"></i>Relatório
                                             de cobranca</a></li>
-                                    <li class="{{ request()->routeIs('bloqueio-pedidos') ? 'active' : '' }}"><a
-                                            href="{{ route('bloqueio-pedidos') }}"><i
-                                                class="fa fa-hand-paper-o"></i>Pedidos Bloqueados</a></li>
+                                @endcan
+                                @can('ver-pedidos-coletados-acompanhamento')
+                                    <li class="{{ request()->routeIs('acompanha-pedidos') ? 'active' : '' }}"><a
+                                            href="{{ route('bloqueio-pedidos') }}"><i class="fa fa-hand-paper-o"></i>Pedidos
+                                            Bloqueados</a></li>
                                 @endcan
                             </ul>
                         </li>

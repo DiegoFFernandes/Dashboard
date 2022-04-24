@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AcompanhamentoPneu extends Model
@@ -20,9 +21,9 @@ class AcompanhamentoPneu extends Model
 
     public function setConnet()
     {
-        if(Auth::user() == null){
+        if (Auth::user() == null) {
             return $this->connection = 'firebird_campina';
-          };        
+        };
         return $this->connection = Auth::user()->conexao;
     }
     public function IdOrdemProducao($consulta)
@@ -35,7 +36,7 @@ class AcompanhamentoPneu extends Model
         $query = "SELECT CAST(O_DS_ETAPA AS VARCHAR(20) character SET UTF8) as O_DS_ETAPA,
         O_HR_ENTRADA, O_HR_SAIDA, O_NM_USUARIO, 
         CAST(O_DS_COMPLEMENTOETAPA AS VARCHAR(100) character SET UTF8) as O_DS_COMPLEMENTOETAPA, 
-        O_DT_ENTRADA, O_DT_SAIDA, O_ST_RETRABALHO 
+        O_DT_ENTRADA, O_DT_SAIDA, (case O_ST_RETRABALHO WHEN 'N' THEN 'NAO' ELSE 'SIM' END) O_ST_RETRABALHO
         FROM RETORNA_ACOMPANHAMENTOPNEU ($nr_ordem) R
         ORDER BY CAST(R.O_DT_ENTRADA||' '||R.O_HR_ENTRADA AS DOM_TIMESTAMP)";
 
@@ -64,14 +65,18 @@ class AcompanhamentoPneu extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
-    public function ListPedidoPneu(){
-        $query = "SELECT PP.IDEMPRESA CD_EMPRESA, PP.ID, PPM.idpedidomovel, (PP.IDPESSOA||' - '||PC.NM_PESSOA) PESSOA, EP.cd_regiaocomercial,
+    public function ListPedidoPneu($cd_regiao)
+    {
+        $query = "SELECT PP.IDEMPRESA CD_EMPRESA, PP.ID, PPM.idpedidomovel, 
+        cast(PP.IDPESSOA||' - '||PC.NM_PESSOA as varchar(80) character set utf8) PESSOA, 
+        EP.cd_regiaocomercial,
         PP.DTEMISSAO, PP.DTENTREGA DTENTREGAPED,
         (CASE PP.stpedido
             WHEN 'A' THEN 'ATENDIDO'
             WHEN 'C' THEN 'CANCELADO'
             WHEN 'T' THEN 'EM PRODUCAO'
             WHEN 'N' THEN 'AGUARDANDO'
+            WHEN 'B' THEN 'BLOQUEADO'
             ELSE PP.stpedido
         END) STPEDIDO
         FROM PEDIDOPNEU PP
@@ -79,12 +84,18 @@ class AcompanhamentoPneu extends Model
         LEFT JOIN ENDERECOPESSOA EP ON (EP.cd_pessoa = PC.cd_pessoa)
         LEFT JOIN PEDIDOPNEUMOVEL PPM ON(PPM.ID = PP.ID)
         WHERE PP.IDEMPRESA = 3
-        AND PP.dtemissao between current_date-30 and current_date
-        AND EP.cd_regiaocomercial IN (2) /* informar o numero da região comercial */
+        AND PP.dtemissao between current_date-30 and current_date        
+        " . (($cd_regiao != "") ? "AND EP.cd_regiaocomercial IN ($cd_regiao)" : "") . " 
         ORDER BY PP.IDEMPRESA";
+
+        $key = "PedidoAll_" . Auth::user()->id;
+        return Cache::remember($key, now()->addMinutes(15), function () use ($query) {
+            return DB::connection($this->setConnet())->select($query);
+        });
     }
-    public function ItemPedidoPneu(){
-        $query = "SELECT PP.IDEMPRESA CD_EMPRESA, PP.ID PEDIDO, PPM.idpedidomovel, OPR.id NRORDEM ,(PP.IDPESSOA||' - '||PC.NM_PESSOA) PESSOA, SP.dsservico,
+    public function ItemPedidoPneu($pedido)
+    {
+        $query = "SELECT PP.IDEMPRESA CD_EMPRESA, PP.ID PEDIDO, PPM.idpedidomovel, OPR.id NRORDEM, IPP.id, IPP.nrsequencia, (PP.IDPESSOA||' - '||PC.NM_PESSOA) PESSOA, SP.dsservico,
         MAC.DSMARCA, MOP.DSMODELO, P.NRDOT, P.NRSERIE, DP.DSDESENHO, IPP.VLUNITARIO,
         IPP.ID IDITEMPEDPNEU, PP.IDVENDEDOR, PP.DTEMISSAO
         FROM PEDIDOPNEU PP
@@ -100,7 +111,8 @@ class AcompanhamentoPneu extends Model
         LEFT JOIN PEDIDOPNEUMOVEL PPM ON(PPM.ID = PP.ID)
         LEFT JOIN ITEMPEDIDOPNEUBORRACHEIRO IPPB ON(IPPB.IDITEMPEDIDOPNEU = IPP.ID)
         LEFT JOIN PESSOA PV ON (PV.CD_PESSOA = IPPB.IDBORRACHEIRO)
-        WHERE PP.ID = 49493 /**informar o numero do pedido aqui */
+        WHERE PP.ID = $pedido /**informar o numero do pedido aqui */
         ORDER BY PP.IDEMPRESA, IPP.ID";
+        return DB::connection($this->setConnet())->select($query);
     }
 }

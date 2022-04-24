@@ -96,7 +96,7 @@ class RelatorioCobrancaController extends Controller
         $cd_empresa = $this->setEmpresa($cd_empresa);
         $cd_regiao = $this->request->cd_regiao;
 
-        if ($this->user->hasRole('coordenador|admin')) {
+        if ($this->user->hasRole('gerencia|coordenador|admin')) {
             if ($this->request->cd_area != "") {
                 $cd_area = implode(",", $this->request->cd_area);
             } else {

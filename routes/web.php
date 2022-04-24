@@ -166,10 +166,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('movimento/get-lista-cobranca', [RelatorioCobrancaController::class, 'getListCobranca'])->name('get-list-cobranca');
             Route::get('movimento/get-cobranca-filtro', [RelatorioCobrancaController::class, 'getListCobrancaFiltro'])->name('get-cobranca-filtro');
             Route::get('movimento/get-cobranca-cnpj', [RelatorioCobrancaController::class, 'getListCobrancaFiltroCnpj'])->name('get-cobranca-filtro-cnpj');
-
+        });
+        Route::middleware(['permission:ver-pedidos-coletados-acompanhamento'])->group(function () {
             // Bloqueio de Pedidos
-            Route::get('movimento/bloqueio-pedidos', [BloqueioPedidosController::class, 'index'])->name('bloqueio-pedidos');
+            Route::get('movimento/acompanha-pedidos', [BloqueioPedidosController::class, 'index'])->name('bloqueio-pedidos');
             Route::get('movimento/get-bloqueio-pedidos', [BloqueioPedidosController::class, 'getBloqueioPedido'])->name('get-bloqueio-pedidos');
+            Route::get('movimento/get-pedidos', [BloqueioPedidosController::class, 'getPedidoAcompanhar'])->name('get-pedido-acompanhar');
+            Route::get('movimento/get-item-pedidos/{id}', [BloqueioPedidosController::class, 'getItemPedidoAcompanhar'])->name('get-item-pedido-acompanhar');
+            Route::get('movimento/get-detalhe-item-pedidos/{id}', [BloqueioPedidosController::class, 'getDetalheItemPedidoAcompanhar'])->name('get-detalhe-item-pedido');
         });
 
         Route::middleware(['auth', 'role:admin|controladoria'])->group(function () {

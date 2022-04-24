@@ -100,7 +100,7 @@
         var details_item_pedido = Handlebars.compile($("#details-item-pedido").html());
         $('#bloqueio-pedidos').DataTable({
             language: {
-                url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
             },
             processing: false,
             serverSide: false,
@@ -168,7 +168,7 @@
             table.destroy();
             table = $('#pedido-acompanhar').DataTable({
                 language: {
-                    url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                 },
                 processing: false,
                 serverSide: false,
@@ -245,7 +245,7 @@
             function initTable(tableId, data) {
                 table_item_pedido = $('#' + tableId).DataTable({
                     language: {
-                        url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
                     "searching": false,
                     "paging": false,
@@ -304,7 +304,7 @@
             function initTableItemPedido(tableId, data) {
                 $('#' + tableId).DataTable({
                     language: {
-                        url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
                     "searching": false,
                     "paging": false,

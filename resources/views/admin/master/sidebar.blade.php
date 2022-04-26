@@ -259,8 +259,9 @@
                                 @endcan
                                 @can('ver-pedidos-coletados-acompanhamento')
                                     <li class="{{ request()->routeIs('acompanha-pedidos') ? 'active' : '' }}"><a
-                                            href="{{ route('bloqueio-pedidos') }}"><i class="fa fa-hand-paper-o"></i>Pedidos
-                                            Bloqueados</a></li>
+                                            href="{{ route('bloqueio-pedidos') }}"><i class="fa fa-hand-paper-o"></i>
+                                            Acompanhamento Pedidos
+                                        </a></li>
                                 @endcan
                             </ul>
                         </li>

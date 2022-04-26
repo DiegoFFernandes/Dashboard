@@ -164,10 +164,15 @@
             }
         });
 
+        $('#bloqueio').click(function(){
+            //Rever essa rotina atualiza caso o usuario voltar para aba bloqueio
+            location.reload();
+        });
         $('#acompanhamento').click(function() {
-            var table = $('#pedido-acompanhar').DataTable();
-            table.destroy();
-            table = $('#pedido-acompanhar').DataTable({
+            $('#title-page').text('Acompanhameto Pedido');
+            $('#pedido-acompanhar').DataTable().destroy();
+            // $('#pedido-acompanhar tbody').empty();
+            var table = $('#pedido-acompanhar').DataTable({
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                 },
@@ -175,6 +180,7 @@
                 processing: false,
                 serverSide: false,
                 pageLength: 25,
+                retrieve: true,
                 scrollX: true,
                 ajax: "{{ route('get-pedido-acompanhar') }}",
                 columns: [{
@@ -193,7 +199,7 @@
                     {
                         data: 'ID',
                         name: 'ID',
-                        visible: false
+                        visible: true
                     },
                     {
                         data: 'IDPEDIDOMOVEL',
@@ -225,9 +231,9 @@
                 "order": [5, 'desc']
             });
             $('#pedido-acompanhar tbody').on('click', 'td.details-control', function() {
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
-                var tableId = 'pedido-' + row.data().ID;
+                var tr = $(this).closest('tr');                
+                var row = table.row(tr);                
+                var tableId = 'pedido-' + row.data().ID;               
                 if (row.child.isShown()) {
                     // This row is already open - close it
                     row.child.hide();
@@ -244,7 +250,7 @@
                 }
             });
 
-            function initTable(tableId, data) {
+            function initTable(tableId, data) {                
                 table_item_pedido = $('#' + tableId).DataTable({
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",

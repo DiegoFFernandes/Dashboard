@@ -83,7 +83,7 @@ class AcompanhamentoPneu extends Model
         INNER JOIN PESSOA PC ON (PC.CD_PESSOA = PP.IDPESSOA)
         LEFT JOIN ENDERECOPESSOA EP ON (EP.cd_pessoa = PC.cd_pessoa)
         LEFT JOIN PEDIDOPNEUMOVEL PPM ON(PPM.ID = PP.ID)
-        WHERE PP.IDEMPRESA = 3
+        WHERE PP.IDEMPRESA in (3,4,1,101,102,103,104,304)
         AND PP.dtemissao between current_date-30 and current_date        
         " . (($cd_regiao != "") ? "AND EP.cd_regiaocomercial IN ($cd_regiao)" : "") . " 
         ORDER BY PP.IDEMPRESA";

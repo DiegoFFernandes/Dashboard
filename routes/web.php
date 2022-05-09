@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\Email\EmailController;
 use App\Http\Controllers\Admin\EmpresaController;
 use App\Http\Controllers\Admin\Estoque\ItemLoteEntradaEstoqueController;
 use App\Http\Controllers\Admin\Estoque\LoteEntradaEstoqueController;
+use App\Http\Controllers\Admin\Financeiro\FinanceiroController;
 use App\Http\Controllers\Admin\LotePcpController;
 use App\Http\Controllers\Admin\MarcaModeloFrotaController;
 use App\Http\Controllers\Admin\MarcaVeiculoController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\Pessoa\PessoaController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
+use App\Http\Controllers\Admin\Producao\ApiNewAgeController;
 use App\Http\Controllers\Admin\Producao\GqcBridgestoneController;
 use App\Http\Controllers\Admin\ProducaoEtapaController;
 use App\Http\Controllers\admin\ProdutividadeController;
@@ -288,6 +290,11 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
             Route::get('pneus-marcas', [GqcBridgestoneController::class, 'pneusFaturadosMarcas'])->name('gqc-pneus-faturados-marca');
             Route::get('get-pneus-marcas', [GqcBridgestoneController::class, 'getPneusFaturadosMarcas'])->name('get-pneus-faturados-marca');
             Route::get('get-buscar-pneus-marcas', [GqcBridgestoneController::class, 'getBuscarPneusMarcas'])->name('get-gqc-buscar-pneus-marca');
+        });
+
+        /* Rotas para informações QGC Bridgestone */
+        Route::prefix('api-new-age')->group(function () {
+            Route::get('web', [ApiNewAgeController::class, 'index'])->name('api-new-age-web');
         });
     });
 });

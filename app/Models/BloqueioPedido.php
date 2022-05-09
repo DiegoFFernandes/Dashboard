@@ -42,13 +42,13 @@ class BloqueioPedido extends Model
     {
         $query = "SELECT (CASE PP.STPEDIDO WHEN 'B' THEN 'BLOQUEADO' WHEN 'N' THEN 'LIBERADO' ELSE 'VERIFICAR' END) STPEDIDO,
             PP.idempresa, PP.DTEMISSAO DATA, PP.ID AS PEDIDO, PP.IDPEDIDOMOVEL AS MOBILE,
-            cast(PP.IDPESSOA||' - '||PE.NM_PESSOA as varchar(60) character set utf8) CLIENTE,
+            cast(PP.IDPESSOA||' - '||PE.NM_PESSOA as varchar(200) character set utf8) CLIENTE,
             --PP.TP_BLOQUEIO AS MOTIVO,
             (CASE PP.TP_BLOQUEIO WHEN 'F' then 'FINANCEIRO' WHEN 'C' then 'COMERCIAL' ELSE 'LIBERADO' END) MOTIVO,
             EP.cd_regiaocomercial,
             (CASE PE.ST_ATIVA WHEN 'S' THEN 'SIM' WHEN 'N' THEN 'NAO' END) ST_ATIVA,
             (CASE PE.ST_SCPC WHEN 'S' THEN 'SIM' WHEN 'N' THEN 'NAO' END) ST_SCPC,
-            cast( PP.IDVENDEDOR||' - '||PV.NM_PESSOA as varchar(60) character set utf8) VENDEDOR,
+            cast( PP.IDVENDEDOR||' - '||PV.NM_PESSOA as varchar(200) character set utf8) VENDEDOR,
             AC.cd_areacomercial
             --cast(PP.DSBLOQUEIO as varchar(5000) character set utf8) DSBLOQUEIO
         FROM PEDIDOPNEU PP

@@ -53,6 +53,7 @@ class LoginController extends Controller
                 $qtd[] = $r->QTDE;
                 $meta[] = 10000;
             }
+            // return $mes;
             $chart = $this->loadChart($mes, $qtd, $meta);
             return view('admin.index', compact(
                 'user_auth',

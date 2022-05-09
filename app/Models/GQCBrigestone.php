@@ -57,7 +57,7 @@ class GQCBrigestone extends Model
                         AND OPR.STORDEM <> 'C' 
                         AND PN.IDEMPRESA = $cd_empresa
                         AND OPR.DTFECHAMENTO between '$inicio_data' and '$fim_data'
-                        And I.CD_SUBGRUPO IN (321)
+                        And I.CD_SUBGRUPO IN (321,308,322)
                     GROUP BY map.dsmarca, sigla, MDP.DSMEDIDAPNEU, map.id
                     ORDER BY sigla";
         return DB::connection($this->setConnet())->select($query);

@@ -329,6 +329,21 @@
                     </ul>
                 </li>
             @endrole
+            @role('admin|financeiro')
+            <li class="treeview {{ request()->segment(1) == 'financeiro' ? 'active' : '' }}" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-money"></i> <span>Financeiro</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class="{{ request()->routeIs('cobranca.index') ? 'active' : '' }}"><a
+                            href="{{ route('financeiro.index') }}"><i class="fa fa-file-excel-o"></i>Conciliação Empresas</a>
+                    </li>                    
+                </ul>
+            </li>
+            @endrole
             <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-question-circle"></i> <span>Suporte</span>

@@ -179,6 +179,8 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Artisaninweb\SoapWrapper\ServiceProvider::class, 
 
     ],
 
@@ -234,6 +236,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Firebird' => Firebird\FirebirdServiceProvider::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'SoapWrapper' => Artisaninweb\SoapWrapper\Facade\SoapWrapper::class,
 
     ],
 

@@ -48,56 +48,59 @@ class Inadimplencia extends Model
 
         $query = "select x.cd_areacomercial, cast(x.ds_areacomercial as varchar(50) character set utf8) ds_areacomercial,
         sum(x.vencido120) vencido120, sum(x.vencido60) vencido60 , sum(x.avencer) avencer
-        from (
-        SELECT ac.cd_areacomercial, AC.ds_areacomercial, 0 vencido120, C.VL_SALDO vencido60, 0 avencer
-        FROM CONTAS C
-        INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = C.CD_TIPOCONTA)
-        INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
-        LEFT JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA AND EP.CD_ENDERECO = 1)
-        INNER JOIN regiaocomercial RC ON (RC.cd_regiaocomercial = EP.cd_regiaocomercial)
-        LEFT JOIN AREACOMERCIAL AC ON (AC.cd_areacomercial = RC.cd_areacomercial)
-        LEFT JOIN CREDITO CD ON (CD.CD_PESSOA = P.CD_PESSOA
-        AND CD.CD_EMPRESA = C.CD_EMPRESA)
-        WHERE C.ST_CONTAS IN ('T','P')
-        AND C.ST_INCOBRAVEL = 'N'
-        AND C.DT_VENCIMENTO between current_date-60 and current_date-6
-        and C.CD_COBRADOR IS NULL
-        AND (TC.TP_TIPOCONTA IN ('CR','HR','CT') OR (TC.CD_TIPOCONTA in (10,17,28,29)))
-        
-        union all
-        
-        SELECT ac.cd_areacomercial, AC.ds_areacomercial, 0 vencido120, 0 vencido60, C.VL_SALDO avencer
-        FROM CONTAS C
-        INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = C.CD_TIPOCONTA)
-        INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
-        LEFT JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA AND EP.CD_ENDERECO = 1)
-        INNER JOIN regiaocomercial RC ON (RC.cd_regiaocomercial = EP.cd_regiaocomercial)
-        LEFT JOIN AREACOMERCIAL AC ON (AC.cd_areacomercial = RC.cd_areacomercial)
-        LEFT JOIN CREDITO CD ON (CD.CD_PESSOA = P.CD_PESSOA
-        AND CD.CD_EMPRESA = C.CD_EMPRESA)
-        WHERE C.ST_CONTAS IN ('T','P')
-        AND C.ST_INCOBRAVEL = 'N'
-        AND C.DT_VENCIMENTO >= current_date-5
-        and C.CD_COBRADOR IS NULL
-        AND (TC.TP_TIPOCONTA IN ('CR','HR','CT') OR (TC.CD_TIPOCONTA in (10,17,28,29)))
-        
-        union all
-        
-        SELECT ac.cd_areacomercial, AC.ds_areacomercial, C.VL_SALDO vencido120, 0 vencido60, 0 avencer
-        FROM CONTAS C
-        INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = C.CD_TIPOCONTA)
-        INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
-        LEFT JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA AND EP.CD_ENDERECO = 1)
-        INNER JOIN regiaocomercial RC ON (RC.cd_regiaocomercial = EP.cd_regiaocomercial)
-        LEFT JOIN AREACOMERCIAL AC ON (AC.cd_areacomercial = RC.cd_areacomercial)
-        LEFT JOIN CREDITO CD ON (CD.CD_PESSOA = P.CD_PESSOA
-        AND CD.CD_EMPRESA = C.CD_EMPRESA)
-        WHERE C.ST_CONTAS IN ('T','P')
-        AND C.ST_INCOBRAVEL = 'N'
-        AND C.DT_VENCIMENTO <= current_date-61
-        and C.CD_COBRADOR IS NULL
-        AND (TC.TP_TIPOCONTA IN ('CR','HR','CT') OR (TC.CD_TIPOCONTA in (10,17,28,29)))
-        ) x
+                from (
+                SELECT ac.cd_areacomercial, AC.ds_areacomercial, 0 vencido120, C.VL_SALDO vencido60, 0 avencer
+                FROM CONTAS C
+                INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = C.CD_TIPOCONTA)
+                INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
+                LEFT JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA AND EP.CD_ENDERECO = 1)
+                INNER JOIN regiaocomercial RC ON (RC.cd_regiaocomercial = EP.cd_regiaocomercial)
+                LEFT JOIN AREACOMERCIAL AC ON (AC.cd_areacomercial = RC.cd_areacomercial)
+                LEFT JOIN CREDITO CD ON (CD.CD_PESSOA = P.CD_PESSOA
+                AND CD.CD_EMPRESA = C.CD_EMPRESA)
+                WHERE C.ST_CONTAS IN ('T','P')
+                AND C.ST_INCOBRAVEL = 'N'
+                AND C.DT_VENCIMENTO between current_date-119 and current_date-6
+                and C.CD_COBRADOR IS NULL
+                AND C.cd_empresa IN (2,3)
+                AND (TC.TP_TIPOCONTA IN ('CR','HR','CT') OR (TC.CD_TIPOCONTA in (10,17,28,29)))
+                
+                union all
+                
+                SELECT ac.cd_areacomercial, AC.ds_areacomercial, 0 vencido120, 0 vencido60, C.VL_SALDO avencer
+                FROM CONTAS C
+                INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = C.CD_TIPOCONTA)
+                INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
+                LEFT JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA AND EP.CD_ENDERECO = 1)
+                INNER JOIN regiaocomercial RC ON (RC.cd_regiaocomercial = EP.cd_regiaocomercial)
+                LEFT JOIN AREACOMERCIAL AC ON (AC.cd_areacomercial = RC.cd_areacomercial)
+                LEFT JOIN CREDITO CD ON (CD.CD_PESSOA = P.CD_PESSOA
+                AND CD.CD_EMPRESA = C.CD_EMPRESA)
+                WHERE C.ST_CONTAS IN ('T','P')
+                AND C.ST_INCOBRAVEL = 'N'
+                AND C.DT_VENCIMENTO >= current_date-5
+                and C.CD_COBRADOR IS NULL
+                AND C.cd_empresa IN (2,3)
+                AND (TC.TP_TIPOCONTA IN ('CR','HR','CT') OR (TC.CD_TIPOCONTA in (10,17,28,29)))
+                
+                union all
+                
+                SELECT ac.cd_areacomercial, AC.ds_areacomercial, C.VL_SALDO vencido120, 0 vencido60, 0 avencer
+                FROM CONTAS C
+                INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = C.CD_TIPOCONTA)
+                INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
+                LEFT JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA AND EP.CD_ENDERECO = 1)
+                INNER JOIN regiaocomercial RC ON (RC.cd_regiaocomercial = EP.cd_regiaocomercial)
+                LEFT JOIN AREACOMERCIAL AC ON (AC.cd_areacomercial = RC.cd_areacomercial)
+                LEFT JOIN CREDITO CD ON (CD.CD_PESSOA = P.CD_PESSOA
+                AND CD.CD_EMPRESA = C.CD_EMPRESA)
+                WHERE C.ST_CONTAS IN ('T','P')
+                AND C.ST_INCOBRAVEL = 'N'
+                AND C.DT_VENCIMENTO <= current_date-120
+                and C.CD_COBRADOR IS NULL
+                AND C.cd_empresa IN (2,3)
+                AND (TC.TP_TIPOCONTA IN ('CR','HR','CT') OR (TC.CD_TIPOCONTA in (10,17,28,29)))
+                ) x
         where x.cd_areacomercial is not null
         group by x.cd_areacomercial, x.ds_areacomercial";
 

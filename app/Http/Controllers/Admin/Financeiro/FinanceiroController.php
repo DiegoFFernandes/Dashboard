@@ -41,8 +41,8 @@ class FinanceiroController extends Controller
     {
         $cd_empresa = $this->request->cd_empresa;
         $dt_ini = $this->request->dt_inicio;
-        $dt_fim = $this->request->dt_fim;
-
+        $dt_fim = $this->request->dt_fim;      
+        
         return Excel::download(new ConciliacaoFinanceiraExport(
             $cd_empresa,
             $dt_ini,

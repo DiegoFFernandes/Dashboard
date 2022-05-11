@@ -96,10 +96,10 @@
                 <div class="small-box-info bg-aqua">
                     <div class="inner">
                         <dt>Vencidos até 60 Dias</dt>
-                        <h4>{{ number_format($vvtotal, 2, ',', '.') }}</h4>
+                        <h4>{{ number_format($vvencer60, 2, ',', '.') }}</h4>
 
                         <div class="small-box-small col-md-6 col-sm-6 bg-aqua-active">
-                            <small>Mais de 60 dias</small>
+                            <small>Mais de 120 dias</small>
                             <h5>{{ number_format($vvencer120, 2, ',', '.') }}</h5>
                         </div>
                         <div class="small-box-small col-md-6 col-sm-6 bg-aqua-active">

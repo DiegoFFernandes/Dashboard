@@ -52,6 +52,7 @@ class InadimplenciaController extends Controller
             'title_page',
             'user_auth',
             'uri',
+            'vvencer60',
             'vvencer120',
             'vvtotal',
             'porcent120',

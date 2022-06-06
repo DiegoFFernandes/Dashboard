@@ -10,8 +10,15 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ConciliacaoFinanceiraExport implements FromCollection, WithHeadings, WithTitle, WithColumnFormatting
+class ConciliacaoFinanceiraExport implements
+    FromCollection,
+    WithHeadings,
+    WithTitle,
+    WithColumnFormatting,
+    WithStyles
 {
     private $cd_empresa, $dt_ini, $dt_fim;
 
@@ -21,46 +28,52 @@ class ConciliacaoFinanceiraExport implements FromCollection, WithHeadings, WithT
         $this->dt_ini = $dt_ini;
         $this->dt_fim = $dt_fim;
     }
-    public function headings():array{
+    public function headings(): array
+    {
         return [
-                'EMPRESA',
-                'NR LANC',
-                'NR PROCESSO',
-                'DT LANCAMENTO',
-                'HISTORICO',
-                'COMPLEMENTO',
-                'NR DOCUMENTO',
-                'PARCELA',
-                'VALOR',
-                'TIPO DOC',
-                'CONTA DEBITO',
-                'CONTA CREDITO',
-                'TIPO',
-                'CNPJ/CPF DEB',
-                'CNPJ/CPF CRE',
-                'PLANO_DEB',
-                'PLANO_CRE',
-                'QUESTOR DEB',
-                'QUESTOR CRE'
+            'EMPRESA',
+            'NR LANC',
+            'NR PROCESSO',
+            'DT LANCAMENTO',
+            'HISTORICO',
+            'COMPLEMENTO',
+            'NR DOCUMENTO',
+            'PARCELA',
+            'VALOR',
+            'TIPO DOC',
+            'CONTA DEBITO',
+            'CONTA CREDITO',
+            'TIPO',
+            'CNPJ/CPF DEB',
+            'CNPJ/CPF CRE',
+            'PLANO_DEB',
+            'PLANO_CRE',
+            'QUESTOR DEB',
+            'QUESTOR CRE'
         ];
     }
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
-        //return Financeiro::all();
         return collect(Financeiro::Conciliacao($this->cd_empresa, $this->dt_ini, $this->dt_fim));
     }
     public function title(): string
     {
-        return $this->dt_ini.' - '.$this->dt_fim;
+        return $this->dt_ini . ' - ' . $this->dt_fim;
     }
-        
+
     public function columnFormats(): array
     {
         return [
-            'D' => NumberFormat::FORMAT_DATE_DDMMYYYY,            
+            'D' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+        ];
+    }
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            1 => ['font' => ['bold' => true]]
         ];
     }
 }

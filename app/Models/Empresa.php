@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class Empresa extends Model
 {
     use HasFactory;
-    protected $table = 'EMPRESA';
+    protected $table = 'empresas_grupo';
     protected $connection;
 
     public function __construct()

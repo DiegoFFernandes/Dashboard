@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Yajra\DataTables\Facades\DataTables;
 
+use function PHPUnit\Framework\isNull;
+
 class InadimplenciaController extends Controller
 {
     public function __construct(
@@ -18,6 +20,12 @@ class InadimplenciaController extends Controller
     ) {
         $this->request = $request;
         $this->inadimplencia = $inadimplencia;
+
+        if (isset($this->request->rede)) {
+            $this->banco = $this->request->rede;
+        } else {
+            $this->banco = 0;
+        }
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -33,18 +41,20 @@ class InadimplenciaController extends Controller
         $vv = $this->vl_saldo($this->inadimplencia->dividaAll(0));
 
         $vvencer = $vv['avencer'];
-        $vvencer60 = $vv['vvencer60'];
-        $vvencer120 = $vv['vvencer120'];
-        $vvtotal = $vvencer60 + $vvencer120;
+        $atevvencer60 = $vv['atevencido60'];
+        $atevvencer120 = $vv['atevencido120'];
+        $maisvencido120 = $vv['maisvencido120'];
+
+        $vvtotal = $atevvencer60 + $atevvencer120 + $maisvencido120;
         // $vvencer = $this->dividaMes($this->inadimplencia->dividaAll(0));        
         // $tvvencer = $this->inadimplencia->dividaAll(60);
         // $vvencer60  = $this->dividaMes($tvvencer);
         // $vvencer120 = $this->dividaMes($this->inadimplencia->dividaAll(120));
         // $vvtotal = $vvencer120 + $vvencer60;
-        $porcent120 = $vvencer120 / $vvtotal * 100;
-        $vchequedesc = $this->cheque($this->inadimplencia->chequeAll('desc'), 0);
-        $vchequepre = $this->cheque($this->inadimplencia->chequeAll('pre'), 5);
-        $dpdescontada = $this->cheque($this->inadimplencia->dpDescontadas(), 9);
+        $porcent120 = ($atevvencer120 + $maisvencido120) / $vvtotal * 100;
+        $vchequedesc = $this->cheque($this->inadimplencia->chequeAll('desc', 0), 0);
+        $vchequepre = $this->cheque($this->inadimplencia->chequeAll('pre', 0), 5);
+        $dpdescontada = $this->cheque($this->inadimplencia->dpDescontadas(0), 9);
         // $dt60 = Config::get('constants.options.dt60days');
         // $dt120 = Config::get('constants.options.dt120days');
 
@@ -52,8 +62,9 @@ class InadimplenciaController extends Controller
             'title_page',
             'user_auth',
             'uri',
-            'vvencer60',
-            'vvencer120',
+            'atevvencer60',
+            'atevvencer120',
+            'maisvencido120',
             'vvtotal',
             'porcent120',
             'vvencer',
@@ -61,26 +72,28 @@ class InadimplenciaController extends Controller
             'vchequedesc',
             'dpdescontada',
             'vv'
-
         ));
     }
     public function vl_saldo($prazos)
     {
         $vvencer = 0;
-        $vvencer60 = 0;
-        $vvencer120 = 0;
+        $atevencido60 = 0;
+        $atevencido120 = 0;
+        $maisvencido120 = 0;
+
         foreach ($prazos as $p) {
             $vvencer += $p->AVENCER;
-            $vvencer60 += $p->VENCIDO60;
-            $vvencer120 += $p->VENCIDO120;
+            $atevencido60 += $p->ATEVENCIDO60;
+            $atevencido120 += $p->ATEVENCIDO120;
+            $maisvencido120 += $p->MAISVENCIDO120;
         }
         return array(
             "avencer" => $vvencer,
-            "vvencer60" => $vvencer60,
-            "vvencer120" => $vvencer120
+            "atevencido60" => $atevencido60,
+            "atevencido120" => $atevencido120,
+            "maisvencido120" => $maisvencido120
         );
     }
-
     public function cheque($chequeAll, $tipo_conta)
     {
         $valor = 0;
@@ -102,35 +115,37 @@ class InadimplenciaController extends Controller
         return $valor;
     }
     public function getVencer()
-    {
-        $vv = $this->inadimplencia->dividaAll(0);
+    {                            
+        $vv = $this->inadimplencia->dividaAll($this->banco);
+        $banco = $this->banco;
         return DataTables::of($vv)
-            ->addColumn('details_url', function ($v) {
-                return route('get-details-vencer', $v->CD_AREACOMERCIAL);
+            ->addColumn('details_url', function ($v) use ($banco) {
+                return route('get-details-vencer', [$v->CD_AREACOMERCIAL, 'rede' => $banco]);
             })
             ->addColumn('porcent', function ($v) {
-                return number_format((($v->VENCIDO120 + $v->VENCIDO60) * 100) / ($v->VENCIDO120 + $v->VENCIDO60 + $v->AVENCER), 2, ',', '.');
+                return number_format((($v->ATEVENCIDO60 + $v->ATEVENCIDO120 + $v->MAISVENCIDO120) * 100) / ($v->ATEVENCIDO60 + $v->ATEVENCIDO120 + $v->MAISVENCIDO120 + $v->AVENCER), 2, ',', '.');
             })
             ->make(true);
     }
     public function getDetailsArea($id)
-    {
-        $details = $this->inadimplencia->DetailsArea($id);
+    {               
+        $details = $this->inadimplencia->DetailsArea($id, $this->banco);
+        $banco = $this->banco;
         return Datatables::of($details)
-            ->addColumn('details_area_url', function ($v) {
-                return route('get-details-area-vencer', $v->CD_REGIAOCOMERCIAL);
+            ->addColumn('details_area_url', function ($v) use ($banco) {
+                return route('get-details-area-vencer', [$v->CD_REGIAOCOMERCIAL, 'rede' => $banco]);
             })
             ->addColumn('porcent', function ($v) {
-                return number_format((($v->VENCIDO120 + $v->VENCIDO60) * 100) / ($v->VENCIDO120 + $v->VENCIDO60 + $v->AVENCER), 2, ',', '.');
+                return number_format((($v->ATEVENCIDO60 + $v->ATEVENCIDO120 + $v->MAISVENCIDO120) * 100) / ($v->ATEVENCIDO60 + $v->ATEVENCIDO120 + $v->MAISVENCIDO120 + $v->AVENCER), 2, ',', '.');
             })
             ->make(true);
     }
     public function getDetailsRegiao($id)
-    {
-        $details = $this->inadimplencia->DetailRegiao($id);
+    {        
+        $details = $this->inadimplencia->DetailRegiao($id, $this->banco);        
         return Datatables::of($details)
             ->addColumn('porcent', function ($v) {
-                return number_format((($v->VENCIDO120 + $v->VENCIDO60) * 100) / ($v->VENCIDO120 + $v->VENCIDO60 + $v->AVENCER), 2, ',', '.');
+                return number_format((($v->ATEVENCIDO60 + $v->ATEVENCIDO120 + $v->MAISVENCIDO120) * 100) / ($v->ATEVENCIDO60 + $v->ATEVENCIDO120 + $v->MAISVENCIDO120 + $v->AVENCER), 2, ',', '.');
             })
             ->make(true);
     }

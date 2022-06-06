@@ -17,11 +17,11 @@
                         <form class="form-horizontal">
                             <div class="col-md-2 col-sm-6">
                                 <div class="form-group">
-                                    <label for="inputEmail3" class="col-sm-2 control-label">Rede</label>
+                                    <label for="rede" class="col-sm-2 control-label">Rede</label>
                                     <div class="col-sm-10">
-                                        <select class="form-control input-sm select2" style="width: 100%;">
-                                            <option selected="selected">Sul</option>
-                                            <option>Norte</option>
+                                        <select class="form-control input-sm select2" id="rede" style="width: 100%;">
+                                            <option selected="selected" value="firebird_campina">Sul</option>
+                                            <option value="firebird_paranavai">Norte</option>
                                         </select>
                                     </div>
                                 </div>
@@ -76,7 +76,8 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-block btn-warning btn-flat">Atualizar</button>
+                                    <button type="button" class="btn btn-block btn-warning btn-flat"
+                                        id="btn-update">Atualizar</button>
                                 </div>
                             </div>
 
@@ -84,25 +85,37 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
-                <div class="small-box-info bg-green">
-                    <div class="inner" style="padding-top: 15%">
-                        <dt>Á vencer</dt>
-                        <h4>{{ number_format($vvencer, 2, ',', '.') }}</h4>
+            <div class="col-md-3">
+                <div class="small-box-info bg-green-active">
+                    <div class="item-box">
+                        <div class="bg-green">
+                            <dt>Á vencer (Total)</dt>
+                            <h4>{{ number_format($vvencer, 2, ',', '.') }}</h4>
+                        </div>
+                    </div>
+                    <div class="item-box">
+                        <div class="bg-green">
+                            <dt>Vencidos (Total)</dt>
+                            <h4>{{ number_format($vvtotal, 2, ',', '.') }}</h4>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="small-box-info bg-aqua">
                     <div class="inner">
                         <dt>Vencidos até 60 Dias</dt>
-                        <h4>{{ number_format($vvencer60, 2, ',', '.') }}</h4>
+                        <h4>{{ number_format($atevvencer60, 2, ',', '.') }}</h4>
 
-                        <div class="small-box-small col-md-6 col-sm-6 bg-aqua-active">
-                            <small>Mais de 120 dias</small>
-                            <h5>{{ number_format($vvencer120, 2, ',', '.') }}</h5>
+                        <div class="small-box-small col-md-4 col-sm-4 bg-aqua-active">
+                            <small>Até 120 dias</small>
+                            <h5>{{ number_format($atevvencer120, 2, ',', '.') }}</h5>
                         </div>
-                        <div class="small-box-small col-md-6 col-sm-6 bg-aqua-active">
+                        <div class="small-box-small col-md-4 col-sm-4 bg-aqua-active">
+                            <small>Mais de 120 dias</small>
+                            <h5>{{ number_format($maisvencido120, 2, ',', '.') }}</h5>
+                        </div>
+                        <div class="small-box-small col-md-4 col-sm-4 bg-aqua-active">
                             <small>% Vencidos</small>
                             <h5>{{ number_format($porcent120, 2, ',', '.') }}</h5>
                         </div>
@@ -134,21 +147,27 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            {{-- <div class="col-md-2">
                 <div class="small-box-info bg-gray">
                     <div class="inner" style="padding-top: 15%">
                         <dt>Juridico</dt>
                         <h3>1.000,00</h3>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="small-box bg-gray">
                     <div class="inner">
                         <p>Total Carteira</p>
                         <h4>{{ number_format($vvtotal + $vvencer, 2, ',', '.') }}</h4>
+                    </div>
+                </div>
+                <div class="small-box bg-gray">
+                    <div class="inner">
+                        <p>(-) Juridico</p>
+                        <h4>Verificar</h4>
                     </div>
                 </div>
                 <div class="small-box bg-gray">
@@ -170,7 +189,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <div class="box box-info">
                     <div class="box-header">
                         <h4 class="box-title">Inadimplência</h4>
@@ -182,8 +201,9 @@
                                     <tr>
                                         <th></th>
                                         <th>Area Comercial</th>
-                                        <th>Vencido +60</th>
-                                        <th>Vencido até 60</th>
+                                        <th>Vencidos até 60</th>
+                                        <th>Vencidos 60 até 120</th>
+                                        <th>Vencidos + 120</th>
                                         <th>%</th>
                                         <th>Á Vencer</th>
                                     </tr>
@@ -210,19 +230,20 @@
                         <th></th>
                         <th>id</th>
                         <th>Região Comercial</th>
-                        <th>Vencido +60</th>
-                        <th>Vencido até 60</th>
+                        <th>Vencidos até 60</th>
+                        <th>Vencidos até 120</th>
+                        <th>Vencidos + 120</th>
                         <th>%</th>
-                        <th>Á vencer</th>
+                        <th>Á Vencer</th>
                     </tr>
                 </thead>
             </table>
         @endverbatim
-    </script>
+                                </script>
     <script id="details-regiao-template" type="text/x-handlebars-template">
         @verbatim
             <div class="label label-success">{{ DS_REGIAOCOMERCIAL }}</div>
-            <table class="table details-regiao-table" id="regiao-{{ CD_REGIAOCOMERCIAL }}" style="width:100%">
+            <table class="table details-regiao-table" id="regiao-{{ CD_REGIAOCOMERCIAL }}" style="width:100%; font-size: 12px;">
                 <thead>
                     <tr>
                         <th>Emp</th>
@@ -230,68 +251,25 @@
                         <th>Documento</th>
                         <th>Cód Reg.</th>
                         <th>Ds Reg.</th>
-                        <th>Vencido +60</th>
-                        <th>Vencido até 60</th>
+                        <th>Vencidos até 60</th>
+                        <th>Vencidos até 120</th>
+                        <th>Vencidos + 120</th>
                         <th>%</th>
                         <th>Á vencer</th>
                     </tr>
                 </thead>
             </table>
         @endverbatim
-                    </script>
+                                                </script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.select2').select2();
             var template = Handlebars.compile($("#details-template").html());
             var template_detais_regiao = Handlebars.compile($("#details-regiao-template").html());
             var table_regiao;
+            var table;
             var formt_number = $.fn.dataTable.render.number('.', ',', 2, '');
-            var table = $('#vvencer').DataTable({
-                language: {
-                    url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
-                },
-                processing: false,
-                serverSide: false,
-                pageLength: 25,
-                scrollX: true,
-                ajax: "{{ route('inadimplencia.get-vencer') }}",
-                columns: [{
-                        "className": 'details-control',
-                        "orderable": false,
-                        "searchable": false,
-                        "data": 'null',
-                        "defaultContent": '<i class="fa fa-plus-circle"></i>',
-                        "width": "1%"
-                    },
-                    {
-                        data: 'DS_AREACOMERCIAL',
-                        name: 'DS_AREACOMERCIAL',
-                        "width": "25%"
-                    },
-                    {
-                        data: 'VENCIDO120',
-                        name: 'VENCIDO120',
-                        render: formt_number
-                    },
-                    {
-                        data: 'VENCIDO60',
-                        name: 'VENCIDO60',
-                        render: formt_number
-                    },
-                    {
-                        data: 'porcent',
-                        name: 'porcent'
-                    },
-                    {
-                        data: 'AVENCER',
-                        name: 'AVENCER',
-                        render: formt_number
-                    }
-                ],
-                order: [
-                    [1, 'asc']
-                ]
-            });
+            initTableAll(0);
             $('#vvencer tbody').on('click', 'td.details-control', function() {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
@@ -310,6 +288,13 @@
                     $(this).find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
                     tr.next().find('td').addClass('no-padding bg-gray');
                 }
+            });
+
+            $('#btn-update').click(function() {
+                rede = $('#rede').val();                
+                $("#vvencer").DataTable().clear().destroy();
+                // $("#vvencer").remove();
+                initTableAll(rede);
             });
 
             function initTable(tableId, data) {
@@ -343,13 +328,18 @@
                             "width": "25%"
                         },
                         {
-                            data: 'VENCIDO120',
-                            name: 'VENCIDO120',
+                            data: 'ATEVENCIDO60',
+                            name: 'ATEVENCIDO60',
                             render: formt_number
                         },
                         {
-                            data: 'VENCIDO60',
-                            name: 'VENCIDO60',
+                            data: 'ATEVENCIDO120',
+                            name: 'ATEVENCIDO120',
+                            render: formt_number
+                        },
+                        {
+                            data: 'MAISVENCIDO120',
+                            name: 'MAISVENCIDO120',
                             render: formt_number
                         },
                         {
@@ -421,13 +411,18 @@
                             visible: false
                         },
                         {
-                            data: 'VENCIDO120',
-                            name: 'VENCIDO120',
+                            data: 'ATEVENCIDO60',
+                            name: 'ATEVENCIDO60',
                             render: formt_number
                         },
                         {
-                            data: 'VENCIDO60',
-                            name: 'VENCIDO60',
+                            data: 'ATEVENCIDO120',
+                            name: 'ATEVENCIDO120',
+                            render: formt_number
+                        },
+                        {
+                            data: 'MAISVENCIDO120',
+                            name: 'MAISVENCIDO120',
                             render: formt_number
                         },
                         {
@@ -442,6 +437,68 @@
                     ]
                 });
             }
+
+            function initTableAll(rede) {                
+                table = $('#vvencer').DataTable({
+                    // language: {
+                    //     url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    // },
+                    processing: false,
+                    serverSide: false,
+                    pageLength: 25,
+                    scrollX: true,
+                    ajax: {
+                        url: "{{ route('inadimplencia.get-vencer') }}",
+                        type: 'GET',
+                        data: {
+                            rede: rede,
+                        }
+                    },
+                    columns: [{
+                            "className": 'details-control',
+                            "orderable": false,
+                            "searchable": false,
+                            "data": 'null',
+                            "defaultContent": '<i class="fa fa-plus-circle"></i>',
+                            "width": "1%"
+                        },
+                        {
+                            data: 'DS_AREACOMERCIAL',
+                            name: 'DS_AREACOMERCIAL',
+                            "width": "25%"
+                        },
+                        {
+                            data: 'ATEVENCIDO60',
+                            name: 'ATEVENCIDO60',
+                            render: formt_number
+                        },
+                        {
+                            data: 'ATEVENCIDO120',
+                            name: 'ATEVENCIDO120',
+                            render: formt_number
+                        },
+                        {
+                            data: 'MAISVENCIDO120',
+                            name: 'MAISVENCIDO120',
+                            render: formt_number
+                        },
+                        {
+                            data: 'porcent',
+                            name: 'porcent'
+                        },
+                        {
+                            data: 'AVENCER',
+                            name: 'AVENCER',
+                            render: formt_number
+                        }
+                    ],
+                    order: [
+                        [1, 'asc']
+                    ]
+                });
+            }
+
+
         });
     </script>
 @endsection

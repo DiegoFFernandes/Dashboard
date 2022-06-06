@@ -81,6 +81,10 @@
 
 /*Widgtes Etapas*/
 
+.item-box {
+    padding: 6px;
+}
+
 .small-box-info {
     background: rgb(255, 255, 255);
     border-radius: 2px;
@@ -111,10 +115,10 @@
 .small-box-small {
     display: block;
     /* min-height: 90px; */
-    width: 49%;
+    /* width: 49%; */
     box-shadow: 0 1px 1px rgb(0 0 0 / 10%);
     border-radius: 2px;
-    margin: 1px;
+    /* margin: 1px; */
 }
 
 

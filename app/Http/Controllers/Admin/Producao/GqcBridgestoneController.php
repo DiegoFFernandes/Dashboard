@@ -25,7 +25,6 @@ class GqcBridgestoneController extends Controller
     }
     public function pneusFaturadosMarcas()
     {
-
         $title_page   = 'Pneus faturados por Marca';
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();

@@ -77,6 +77,7 @@ class AcompanhamentoPneu extends Model
             WHEN 'T' THEN 'EM PRODUCAO'
             WHEN 'N' THEN 'AGUARDANDO'
             WHEN 'B' THEN 'BLOQUEADO'
+            WHEN 'P' THEN 'PRODUCAO PARCIAL'
             ELSE PP.stpedido
         END) STPEDIDO
         FROM PEDIDOPNEU PP
@@ -88,6 +89,7 @@ class AcompanhamentoPneu extends Model
         " . (($cd_regiao != "") ? "AND EP.cd_regiaocomercial IN ($cd_regiao)" : "") . " 
         ORDER BY PP.IDEMPRESA";
 
+        //return DB::connection($this->setConnet())->select($query);
         $key = "PedidoAll_" . Auth::user()->id;
         return Cache::remember($key, now()->addMinutes(15), function () use ($query) {
             return DB::connection($this->setConnet())->select($query);
@@ -112,6 +114,9 @@ class AcompanhamentoPneu extends Model
         LEFT JOIN ITEMPEDIDOPNEUBORRACHEIRO IPPB ON(IPPB.IDITEMPEDIDOPNEU = IPP.ID)
         LEFT JOIN PESSOA PV ON (PV.CD_PESSOA = IPPB.IDBORRACHEIRO)
         WHERE PP.ID = $pedido /**informar o numero do pedido aqui */
+        GROUP BY PP.IDEMPRESA, PP.ID, PPM.idpedidomovel, OPR.id, IPP.id, IPP.nrsequencia, PESSOA, SP.dsservico,
+        MAC.DSMARCA, MOP.DSMODELO, P.NRDOT, P.NRSERIE, DP.DSDESENHO, IPP.VLUNITARIO,
+        IPP.ID, PP.IDVENDEDOR, PP.DTEMISSAO 
         ORDER BY PP.IDEMPRESA, IPP.ID";
         return DB::connection($this->setConnet())->select($query);
     }

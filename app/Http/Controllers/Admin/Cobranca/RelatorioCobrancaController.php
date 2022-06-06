@@ -202,13 +202,8 @@ class RelatorioCobrancaController extends Controller
                         <td>' . $c->VL_TOTAL . '</td>
                     </tr>';
         }
-        //return $html;
-        return response()->json([
-            'html' => $html,
-            'cd_empresa' => $cd_empresa,
-            'nm_pessoa' => $cobranca[0]->NM_PESSOA,
-
-        ]);
+        return $html;
+        
     }
     public function setEmpresa($cd_empresa)
     {

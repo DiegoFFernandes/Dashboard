@@ -30,6 +30,7 @@ class Item extends Model
                     and i.tp_item = 'I'
                     and i.cd_grupo = 1
                     and i.cd_subgrupo = '101'
+                    and i.st_ativo = 'S'
                     --and i.cd_item = 1002289";
         $itens = DB::connection($this->setConnet())->select($query);
 
@@ -55,7 +56,7 @@ class Item extends Model
                     ]
                 );
             } catch (\Illuminate\Database\QueryException $ex) {
-                return 0;
+                return $ex;
             }
         }
         return 1;

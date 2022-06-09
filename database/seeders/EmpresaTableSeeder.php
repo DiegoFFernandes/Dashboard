@@ -32,10 +32,10 @@ class EmpresaTableSeeder extends Seeder
             ['cd_empresa' => 202, 'ds_local' => 'DOURADOS', 'cd_loja' => 9, 'cd_grupo' => 102, 'regiao' => 'NORTE', 'conexao' => 'firebird_paranavai'],
             ['cd_empresa' => 203, 'ds_local' => 'APUCARANA', 'cd_loja' => 9, 'cd_grupo' => 103, 'regiao' => 'NORTE', 'conexao' => 'firebird_paranavai'],
             ['cd_empresa' => 204, 'ds_local' => 'ASSIS', 'cd_loja' => 9, 'cd_grupo' => 104, 'regiao' => 'NORTE', 'conexao' => 'firebird_paranavai'],
-            ['cd_empresa' => 1001, 'ds_local' => 'TRUCK CEASA', 'cd_loja' => 1, 'cd_grupo' => 1001, 'regiao' => 'TRUCK', 'firebird_campina'],
-            ['cd_empresa' => 1002, 'ds_local' => 'TRUCK AREIA BRANCA', 'cd_loja' => 1, 'cd_grupo' => 1002, 'regiao' => 'TRUCK', 'firebird_campina'],
-            ['cd_empresa' => 1003, 'ds_local' => 'TRUCK P. GROSSA', 'cd_loja' => 1, 'cd_grupo' => 1003, 'regiao' => 'TRUCK', 'firebird_campina'],
-            ['cd_empresa' => 1005, 'ds_local' => 'TRUCK GUARAPUAVA', 'cd_loja' => 1, 'cd_grupo' => 1005, 'regiao' => 'TRUCK', 'firebird_campina'],
+            ['cd_empresa' => 1001, 'ds_local' => 'TRUCK CEASA', 'cd_loja' => 1, 'cd_grupo' => 1001, 'regiao' => 'TRUCK', 'conexao' => 'firebird_campina'],
+            ['cd_empresa' => 1002, 'ds_local' => 'TRUCK AREIA BRANCA', 'cd_loja' => 1, 'cd_grupo' => 1002, 'regiao' => 'TRUCK', 'conexao' => 'firebird_campina'],
+            ['cd_empresa' => 1003, 'ds_local' => 'TRUCK P. GROSSA', 'cd_loja' => 1, 'cd_grupo' => 1003, 'regiao' => 'TRUCK', 'conexao' => 'firebird_campina'],
+            ['cd_empresa' => 1005, 'ds_local' => 'TRUCK GUARAPUAVA', 'cd_loja' => 1, 'cd_grupo' => 1005, 'regiao' => 'TRUCK', 'conexao' => 'firebird_campina'],
         ];
 
         foreach ($empresa as $e) {

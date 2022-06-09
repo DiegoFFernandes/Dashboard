@@ -4,19 +4,28 @@ namespace App\Http\Controllers\Admin\Producao;
 
 use App\Http\Controllers\Controller;
 use App\Models\ApiNewAge;
+use App\Models\Empresa;
+use App\Models\LogApiNewAge;
 use Carbon\Carbon;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Config;
 
 class ApiNewAgeController extends Controller
 {
     protected $soapWrapper;
 
-    public function __construct(ApiNewAge $api, Request $request)
-    {
+    public function __construct(
+        ApiNewAge $api,
+        Request $request,
+        Empresa $empresa,
+        LogApiNewAge $logNewAge
+    ) {
         $this->request = $request;
+        $this->empresa = $empresa;
         $this->apiNewAge = $api;
+        $this->logNewAge = $logNewAge;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -26,38 +35,76 @@ class ApiNewAgeController extends Controller
     public function index()
     {
         $title_page   = 'Exportação Automatica';
+        $ultima_transmissao = $this->apiNewAge->UltimaTransmissao();
+        if(count($ultima_transmissao) == 0 ){
+            $transmissao = Config::get('constants.options.dt1_h_m_days'); 
+        }else{
+            $transmissao = $ultima_transmissao[0]->ULTIMA_TRASNMISSAO;
+        }       
+        $dt_inicial = $transmissao;
+        $dt_final = Config::get('constants.options.today');
+        $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final); 
+
+        $pneus = $this->apiNewAge->pneusEnviar();
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
-        $pneus = $this->apiNewAge->pneusBGW();
-        return view('admin.producao.garantia-bgw', compact('pneus', 'title_page', 'user_auth', 'uri'));
+        $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
+
+        return view('admin.producao.garantia-bgw', compact(
+            'pneus',
+            'title_page',
+            'user_auth',
+            'uri',
+            'empresas'
+        ));
+    }
+    public function searchPneusJunsoft($empresa, $dt_inicial, $dt_final)
+    {
+        $pneusJunsoft =  $this->apiNewAge->pneusBGW($empresa, $dt_inicial, $dt_final);
+        foreach ($pneusJunsoft as $p) {
+            $p->ORD_HOREMI = $this->InsertHora($p->ORD_HOREMI);
+            $p->MEDIDA = $this->RemovePCasa($p->MEDIDA);
+            $p->COD_I_MED = $this->RemovePCasa($p->COD_I_MED);
+        }
+        return $this->apiNewAge->store($pneusJunsoft);        
+    }
+
+    public function ImportPneus()
+    {
+        $empresa = $this->request['empresa'];
+        $dt_inicial = $this->request['inicio_data'];
+        $dt_final = $this->request['fim_data'];
+        return $this->searchPneusJunsoft($empresa, $dt_inicial, $dt_final);        
     }
 
     public function RemoveSpecialChar($str)
     {
         return preg_replace('/[0-9\@\.\;\&]+/', '', $str);
     }
-    public function InsertHora($hora){
+    public function InsertHora($hora)
+    {
         return empty($hora) ? "07:16:32" : $hora;
     }
-    public function RemovePCasa($str){
-        return preg_replace('/PCASA /', '', $str); 
+    public function RemovePCasa($str)
+    {
+        return preg_replace('/PCASA /', '', $str);
     }
-    
+
     public function callXmlProcess()
     {
-        $pneus = $this->apiNewAge->pneusBGW();
-        $qtd_reg = count($pneus); 
+        $pneus = $this->apiNewAge->pneusEnviar();
+        $qtd_reg = count($pneus);
 
         foreach ($pneus as $p) {
             $ordens[] = "&lt;REGISTRO ORD_NUMERO=\"$p->ORD_NUMERO\"&gt;
-            &lt;ORD_CODBTS&gt;39193&lt;/ORD_CODBTS&gt;
+            &lt;ORD_CODBTS&gt;" . env('COD_I_EMP_SUL') . "&lt;/ORD_CODBTS&gt;
             &lt;ORD_NUMERO&gt;$p->ORD_NUMERO&lt;/ORD_NUMERO&gt;
             &lt;ORD_DATEMI&gt;" . Carbon::createFromFormat('Y-m-d', $p->ORD_DATEMI)->format('d/m/Y') . "&lt;/ORD_DATEMI&gt;
-            &lt;ORD_HOREMI&gt;".$this->InsertHora($p->ORD_HOREMI)."&lt;/ORD_HOREMI&gt;
+            &lt;ORD_HOREMI&gt;" . $this->InsertHora($p->ORD_HOREMI) . "&lt;/ORD_HOREMI&gt;
             &lt;NUM_NF&gt;$p->NUM_NF&lt;/NUM_NF&gt;
             &lt;DATA_NF&gt;" . Carbon::createFromFormat('Y-m-d', $p->DATA_NF)->format('d/m/Y') . "&lt;/DATA_NF&gt;
             &lt;CLI_CPF&gt;$p->CLI_CPF&lt;/CLI_CPF&gt;
-            &lt;CLI_NOME&gt; " . $this->RemoveSpecialChar($p->CLI_NOME) . ";&lt;/CLI_NOME&gt;
+            &lt;CLI_NOME&gt; " . $this->RemoveSpecialChar($p->CLI_NOME) . "&lt;/CLI_NOME&gt;
             &lt;CLI_CEP&gt;$p->CLI_CEP&lt;/CLI_CEP&gt;
             &lt;CLI_TLOGRA&gt;&lt;/CLI_TLOGRA&gt;
             &lt;CLI_LOGRAD&gt;$p->CLI_LOGRAD&lt;/CLI_LOGRAD&gt;
@@ -73,16 +120,16 @@ class ApiNewAgeController extends Controller
             &lt;CLI_TEL1&gt;$p->CLI_TEL1&lt;/CLI_TEL1&gt;
             &lt;FAX&gt;&lt;/FAX&gt;
             &lt;POS_TIPO&gt;TP&lt;/POS_TIPO&gt;
-            &lt;MEDIDA&gt;".$this->RemovePCasa($p->MEDIDA)."&lt;/MEDIDA&gt;
+            &lt;MEDIDA&gt;" . $this->RemovePCasa($p->MEDIDA) . "&lt;/MEDIDA&gt;
             &lt;CONSTRUCAO&gt;RADIAL&lt;/CONSTRUCAO&gt;
             &lt;BANDA&gt;$p->BANDA&lt;/BANDA&gt;
             &lt;MATRICULA&gt;$p->MATRICULA&lt;/MATRICULA&gt;
-            &lt;NUM_FOGO&gt;$p->NUM_FOGO&lt;/NUM_FOGO&gt;
+            &lt;NUM_FOGO&gt;$p->FOGO&lt;/NUM_FOGO&gt;
             &lt;DOT&gt;$p->DOT&lt;/DOT&gt;
             &lt;MARCA&gt;$p->MARCA&lt;/MARCA&gt;
             &lt;MODELO&gt;$p->MODELO&lt;/MODELO&gt;
             &lt;CICLOVIDA&gt;$p->CICLOVIDA&lt;/CICLOVIDA&gt;
-            &lt;TIPO_GAR&gt;$p->COD_I_TPGAR&lt;/TIPO_GAR&gt;
+            &lt;TIPO_GAR&gt;BGW&lt;/TIPO_GAR&gt;
             &lt;EXAME_INI&gt;1I&lt;/EXAME_INI&gt;
             &lt;EXAME_NDI&gt;&lt;/EXAME_NDI&gt;
             &lt;EXAME_FIM&gt;F1&lt;/EXAME_FIM&gt;
@@ -94,19 +141,18 @@ class ApiNewAgeController extends Controller
             &lt;QUADRANTE&gt;0&lt;/QUADRANTE&gt;
             &lt;COD_I_CICLO&gt;$p->COD_I_CICLO&lt;/COD_I_CICLO&gt;
             &lt;COD_I_CONS&gt;RADIAL&lt;/COD_I_CONS&gt;
-            &lt;COD_I_EMP&gt;26844&lt;/COD_I_EMP&gt;
+            &lt;COD_I_EMP&gt;" . env('COD_I_EMP_SUL') . "&lt;/COD_I_EMP&gt;
             &lt;COD_I_MARCA&gt;$p->COD_I_MARCA&lt;/COD_I_MARCA&gt;
             &lt;COD_I_MOD&gt;$p->MODELO&lt;/COD_I_MOD&gt;
-            &lt;COD_I_MED&gt;".$this->RemovePCasa($p->COD_I_MED)."&lt;/COD_I_MED&gt;
+            &lt;COD_I_MED&gt;" . $this->RemovePCasa($p->COD_I_MED) . "&lt;/COD_I_MED&gt;
             &lt;COD_I_BANDA&gt;$p->COD_I_BANDA&lt;/COD_I_BANDA&gt;
-            &lt;COD_I_TPGAR&gt;$p->COD_I_TPGAR&lt;/COD_I_TPGAR&gt;
+            &lt;COD_I_TPGAR&gt;BGW&lt;/COD_I_TPGAR&gt;
             &lt;COD_I_EX_I&gt;1I&lt;/COD_I_EX_I&gt;
             &lt;COD_I_EX_NDI&gt;NDI&lt;/COD_I_EX_NDI&gt;
             &lt;COD_I_EX_F&gt;1F&lt;/COD_I_EX_F&gt;
         &lt;/REGISTRO&gt;";
         }
 
-        // return $ordens;
         if (empty($ordens)) {
             return "<div class='align-center'><h3>Não possui Pneus a processar!</h3></div>";
         }
@@ -132,9 +178,9 @@ class ApiNewAgeController extends Controller
                                                     &lt;/REGISTROS&gt;                                                    
                                                 &lt;/REGISTROS_GARANTIAS&gt;                                                
                                             </xml1>      
-                                            <CostumerId>".env('CUSTUMERID_NEWAGE_SUL')."</CostumerId>
-                                            <strUsername>".env('USERNAME_NEWAGE_SUL')."</strUsername>
-                                            <strPassword>".env('PASSWORD_NEWAGE_SUL')."</strPassword>  
+                                            <CostumerId>" . env('CUSTUMERID_NEWAGE_SUL') . "</CostumerId>
+                                            <strUsername>" . env('USERNAME_NEWAGE_SUL') . "</strUsername>
+                                            <strPassword>" . env('PASSWORD_NEWAGE_SUL') . "</strPassword>  
                                         </callXmlProcess>  
                                     </soap:Body></soap:Envelope>",
             CURLOPT_HTTPHEADER => array(
@@ -144,10 +190,10 @@ class ApiNewAgeController extends Controller
         ));
 
         $response = curl_exec($curl);
-        
-        $saveOrdens = $this->apiNewAge->store($pneus);
 
-        if(empty($response)){            
+
+
+        if (empty($response)) {
             return "<div class='align-center'><h3>Houve algum erro ao processar, pode ser caracter especial do cadastro do cliente ou algo do genero!</h3></div>";
         }
         $err = curl_error($curl);
@@ -156,12 +202,14 @@ class ApiNewAgeController extends Controller
         if ($err) {
             return "<div class='align-center'><h3>Error #:" . $err . "</h3></div>";
         } else {
-            $this->apiNewAge->store($pneus);
+            // $this->apiNewAge->store($pneus);
             $response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $response);
             $xml = new \SimpleXMLElement($response);
             $array = json_decode(json_encode((array)$xml), TRUE);
             $array = $array['soapBody']['callXmlProcessResponse']['callXmlProcessResult'];
             $array = simplexml_load_string($array);
+            $pneusLog = $array->REGISTROS->REGISTRO;
+            $this->logNewAge->storeUpdateLog($pneusLog);
             // dd($array);
             $html = '<table id="table-log" class="table table-hover" style="width:100%">
                     <thead">
@@ -175,7 +223,7 @@ class ApiNewAgeController extends Controller
                     </thead>
                     <tbody">';
 
-            foreach ($array->REGISTROS->REGISTRO as $a) {
+            foreach ($pneusLog as $a) {
                 $html .= '
                     <tr>
                         <td>' . $a->CODIGO_EMP . '</td>
@@ -189,8 +237,6 @@ class ApiNewAgeController extends Controller
             return $html;
         }
     }
-
-
 
     public function executeComando()
     {

@@ -12,13 +12,12 @@ class ApiNewAge extends Model
     use HasFactory;
 
     protected $connection;
-    protected $table = "pneus_ouro_bgw";    
+    protected $table = "pneus_ouro_bgw";
 
     public function __construct()
     {
-        $this->connection = 'Sempre setar o banco firebird com SetConnet';
+        $this->connection = 'mysql';
     }
-
     public function setConnet()
     {
         if (Auth::user() == null) {
@@ -26,11 +25,27 @@ class ApiNewAge extends Model
         };
         return $this->connection = Auth::user()->conexao;
     }
+    public function pneusEnviar(){
+        $this->connection = 'mysql';
 
-    public function pneusBGW()
+        return ApiNewAge::select([DB::raw("pneus_ouro_bgw.id, pneus_ouro_bgw.ORD_CODBTS, pneus_ouro_bgw.CD_EMP, pneus_ouro_bgw.ORD_NUMERO,
+        pneus_ouro_bgw.ORD_DATEMI, pneus_ouro_bgw.ORD_HOREMI, pneus_ouro_bgw.NUM_NF, pneus_ouro_bgw.DATA_NF,
+        pneus_ouro_bgw.CLI_CPF, pneus_ouro_bgw.CLI_NOME, pneus_ouro_bgw.CLI_CEP, pneus_ouro_bgw.CLI_LOGRAD, pneus_ouro_bgw.CLI_NUMERO,
+        pneus_ouro_bgw.CLI_COMPL, pneus_ouro_bgw.CLI_BAIRRO, pneus_ouro_bgw.CLI_CIDADE, pneus_ouro_bgw.CLI_UF,
+        pneus_ouro_bgw.CLI_EMAIL, pneus_ouro_bgw.CLI_TEL1, pneus_ouro_bgw.MEDIDA, pneus_ouro_bgw.BANDA, pneus_ouro_bgw.DESENHOPNEU,
+        pneus_ouro_bgw.MATRICULA, pneus_ouro_bgw.FOGO, pneus_ouro_bgw.DOT, pneus_ouro_bgw.MARCA, pneus_ouro_bgw.MODELO, pneus_ouro_bgw.CICLOVIDA,
+        pneus_ouro_bgw.CHV_COLETA, pneus_ouro_bgw.PRECO, pneus_ouro_bgw.COD_I_CICLO, pneus_ouro_bgw.COD_I_MARCA, pneus_ouro_bgw.COD_I_MED,
+        pneus_ouro_bgw.COD_I_BANDA, coalesce(log_api_new_ages.EXPORTADO, 'N') EXPORTADO")])
+        ->leftjoin('log_api_new_ages', 'log_api_new_ages.ordem', 'pneus_ouro_bgw.ORD_NUMERO')
+        ->where('log_api_new_ages.exportado', '<>' , 'S')
+        ->orWhereNull('log_api_new_ages.exportado')
+        ->get();
+    }
+
+    public function pneusBGW($empresa, $dt_inicial, $dt_final)
     {
-        $query = "SELECT DISTINCT 39193 ORD_CODBTS, PN.idempresa CD_EMP, OPR.ID ORD_NUMERO, PN.dtemissao ORD_DATEMI, PN.hremissao ORD_HOREMI, NF.nr_notaservico NUM_NF,
-        n.dt_emissao DATA_NF, PC.nr_cnpjcpf CLI_CPF,
+        $query = "SELECT DISTINCT 39193 ORD_CODBTS, PN.idempresa CD_EMP, OPR.ID ORD_NUMERO, PN.dtemissao ORD_DATEMI, 
+        PN.hremissao ORD_HOREMI, NF.nr_notaservico NUM_NF, n.dt_emissao DATA_NF, N.dt_registro EMISSAONF, PC.nr_cnpjcpf CLI_CPF,
         cast(PC.nm_pessoa as varchar(100) character SET UTF8)  CLI_NOME,
         ep.nr_cep CLI_CEP,
         cast(ep.ds_endereco as varchar(100) character SET UTF8)  CLI_LOGRAD,
@@ -39,7 +54,7 @@ class ApiNewAge extends Model
         cast(ep.ds_bairro as varchar(100) character SET UTF8) CLI_BAIRRO, 
         mu.ds_municipio CLI_CIDADE, mu.sg_estado CLI_UF, 
         pc.ds_email CLI_EMAIL,
-        ep.nr_fone CLI_TEL1, MDP.dsmedidapneu MEDIDA, SPA.iditem BANDA, p.nrserie MATRICULA, 
+        ep.nr_fone CLI_TEL1, MDP.dsmedidapneu MEDIDA, SPA.iditem BANDA, DP.dsdesenho||' '|| bp.nrlargura DESENHOPNEU, p.nrserie MATRICULA, 
         coalesce(CASE P.NRFOGO WHEN '' THEN 0 END, 0) NUM_FOGO,
         P.NRDOT DOT, MAP.dsmarca MARCA,  MP.DSMODELO MODELO,
         OPR.qt_reformas CICLOVIDA, PN.id CHV_COLETA, II.VL_UNITARIO PRECO,
@@ -106,16 +121,15 @@ class ApiNewAge extends Model
           AND N.ST_NOTA = 'V' 
         AND PN.STPEDIDO <> 'C' AND OPR.STORDEM <> 'C' 
          AND COALESCE(OPR.STORDEM, 'A') NOT IN ('C', 'T') 
-          AND PN.IDEMPRESA = 3
-          AND N.DT_EMISSAO >= '06/01/2022'
-          AND N.DT_EMISSAO <= '06/01/2022'
+         AND PN.IDEMPRESA = $empresa
+         AND N.DT_REGISTRO between '$dt_inicial' and '$dt_final'        
          AND EF.STEXAMEFINAL = 'A' AND EF.ST_ETAPA = 'F' 
          AND MAP.id IN (11,1,6,531,2,3,4)
          and OPR.idgarantiapneu = 4
-        --AND OPR.id in (212376)
+        --AND OPR.id in (213773) $empresa, $dt_inicial, $dt_final
         ORDER BY  PC.NM_PESSOA, OPR.ID||'/'||IPP.NRSEQUENCIA";
 
-        return DB::connection('firebird_campina')->select($query);
+        return DB::connection($this->setConnet())->select($query);
     }
 
     public function store($pneus)
@@ -134,7 +148,7 @@ class ApiNewAge extends Model
                         'ORD_DATEMI' => $p->ORD_DATEMI,
                         'ORD_HOREMI' => $p->ORD_HOREMI,
                         'NUM_NF' => $p->NUM_NF,
-                        'DATA_NF' => $p->DATA_NF,
+                        'DATA_NF' => $p->DATA_NF,                        
                         'CLI_CPF' => $p->CLI_CPF,
                         'CLI_NOME' => $p->CLI_NOME,
                         'CLI_CEP' => $p->CLI_CEP,
@@ -148,16 +162,17 @@ class ApiNewAge extends Model
                         'CLI_TEL1' => $p->CLI_TEL1,
                         'MEDIDA' => $p->MEDIDA,
                         'BANDA' => $p->BANDA,
+                        'DESENHOPNEU' => $p->DESENHOPNEU,
                         'MATRICULA' => $p->MATRICULA,
                         'FOGO' => $p->NUM_FOGO,
                         'DOT' => $p->DOT,
                         'MARCA' => $p->MARCA,
                         'MODELO' => $p->MODELO,
-                        'CICLOVIDA' => $p->CICLOVIDA,                        
+                        'CICLOVIDA' => $p->CICLOVIDA,
                         'CHV_COLETA' => $p->CHV_COLETA,
                         'PRECO' => $p->PRECO,
                         'COD_I_CICLO' => $p->COD_I_CICLO,
-                        'COD_I_MARCA' => $p->COD_I_MARCA,                        
+                        'COD_I_MARCA' => $p->COD_I_MARCA,
                         'COD_I_MED' => $p->COD_I_MED,
                         'COD_I_BANDA' => $p->COD_I_BANDA,                        
 
@@ -171,4 +186,18 @@ class ApiNewAge extends Model
         }
         return 1;
     }
+    public function UltimaTransmissao()
+    {
+        $this->connection = 'mysql';
+        try {
+            $transmissao = ApiNewAge::select(DB::raw("date_format(DATA_NF, '%m-%d-%Y') ULTIMA_TRASNMISSAO"))
+                ->orderBy('DATA_NF', 'DESC')
+                ->take('1')
+                ->get();
+        } catch (\Throwable $th) {
+            return false;
+        }
+        return $transmissao;
+    }
+    
 }

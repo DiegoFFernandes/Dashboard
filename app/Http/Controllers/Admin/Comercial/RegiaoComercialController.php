@@ -39,7 +39,7 @@ class RegiaoComercialController extends Controller
         $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
         foreach($empresa as $e){
             $array[] = $e->CD_EMPRESA;
-        }          
+        }    
         $user =  $this->user->getData($array);
         $list_regiao = $this->regiao->showUserRegiao($array);
         return view('admin.usuarios.regiao-comercial', compact(

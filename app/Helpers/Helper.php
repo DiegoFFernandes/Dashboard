@@ -58,5 +58,8 @@ class Helper
 
         return array("dti" => $datai, "dtf" => $dataf, 'nmes' => $nmes);
     }
+    public static function VerifyRegion($local){
+       return $local == 'firebird_campina' ? 'SUL' : 'NORTE';  
+    }
     
 }

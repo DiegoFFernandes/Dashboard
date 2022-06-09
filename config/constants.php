@@ -9,6 +9,7 @@ $data_ini = date('m-d-Y', $data_inicio);
 $data_fim = date('m-d-Y', $data_fim);
 $today = date('m-d-Y');
 
+$dt1days = date('m-d-Y H:m', strtotime('-1 days', strtotime(str_replace('-', '/', $today))));
 //Data 6 / 60 / 120 dias da data atual
 $dt6days = date('Y-m-d', strtotime('-6 days', strtotime(str_replace('-', '/', $today))));
 $dt60days = date('Y-m-d', strtotime('-60 days', strtotime(str_replace('-', '/', $today))));
@@ -62,6 +63,7 @@ return [
         'today' => $today,
         'dti' => $data_ini,
         'dtf' => $data_fim,
+        'dt1_h_m_days' => $dt1days,
         'dt6days' => $dt6days,
         'dt60days' => $dt60days,
         'dti30dias' => $dti30dias,

@@ -25,35 +25,39 @@ class UserController extends Controller
         $uri       = $this->resposta->route()->uri();
         $user_auth = $this->user;
         $users     = User::where('id', '<>', 1)->get();
-        $empresas  = $this->empresa->empresa();
+        // $empresas  = $this->empresa->empresa();
+        $empresas  = $this->empresa->EmpresaAll();
 
         return view('admin.usuarios.usuarios', compact('users', 'user_auth', 'empresas', 'uri'));
     }
     public function create(Request $request)
-    {
+    {        
         $data = User::where('email', $request->email)->exists();
         if ($data) {
             return redirect()->route('admin.usuarios.listar')->with('warning', 'Email já existe, favor cadastrar outro!');
         }
-        $empresas  = $this->empresa->empresa();
-        $empresas;
+        $empresas  = $this->empresa->EmpresaAll();
+        // $empresas  = $this->empresa->empresa();
+        
         foreach ($empresas as $empresa) {
             if ($empresa->CD_EMPRESA == $request->empresa) {
                 $request['conexao'] = $empresa->CONEXAO;
             }
-        }       
-        
+        }     
+       
         $request['password'] = Hash::make($request['password']);
-        $user                = $this->_validade($request); 
+        $user                = $this->_validade($request);         
         $user                = User::create($user);
+        
         return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário criado com sucesso!');
     }
+
     public function edit(Request $request)
     {
         $uri      = $this->resposta->route()->uri();
         $users    = User::all();
         $user_id  = User::findOrFail($request->id);
-        $empresas = $this->empresa->empresa();
+        $empresas = $this->empresa->EmpresaAll();
 
         return view('admin.usuarios.usuarios', compact('user_id', 'users', 'empresas', 'uri'));
     }
@@ -72,7 +76,7 @@ class UserController extends Controller
             $data['password'] = Hash::make($request->password);
         }
 
-        $empresas  = $this->empresa->empresa();
+        $empresas  = $this->empresa->EmpresaAll();
         foreach ($empresas as $empresa) {
             if ($empresa->CD_EMPRESA == $request->empresa) {
                 $data['conexao'] = $empresa->CONEXAO;
@@ -89,8 +93,16 @@ class UserController extends Controller
     }
     public function delete($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        $user = User::findOrFail($id);  
+        try {
+            $user = User::findOrFail($id);  
+            $user->delete();
+            return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário deletado com sucesso!');
+        } catch (\Throwable $th) {            
+            return redirect()->route('admin.usuarios.listar')->with('warning', 'Usúario não pode ser excluido, está associados a outras tabelas do banco de dados!');
+        }      
+        
+        return $user;
         return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário deletado com sucesso!');
     }
     public function _validade(Request $request)

@@ -19,7 +19,8 @@ class CreateEmpresasGrupoTable extends Migration
             $table->string('ds_local', 40);
             $table->bigInteger('cd_loja');
             $table->bigInteger('cd_grupo');
-            $table->bigInteger('regiao');
+            $table->string('regiao', 60);
+            $table->string('conexao', 45);
             $table->timestamps();
         });
     }

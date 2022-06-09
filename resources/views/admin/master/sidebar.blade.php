@@ -66,10 +66,24 @@
                                             class="fa fa-circle-o"></i>Quadrante
                                         4</a></li>
                             </ul>
-                        </li>
-                        <li class="{{ request()->routeIs('gqc-pneus-faturados-marca') ? 'active' : '' }}">
-                            <a href="{{ route('gqc-pneus-faturados-marca') }}"><i class="fa fa-circle-o"></i>GQC
-                                Bridgestone</a>
+                        </li>                        
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-circle-o"></i> Bridgestone
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ request()->routeIs('gqc-pneus-faturados-marca') ? 'active' : '' }}">
+                                    <a href="{{ route('gqc-pneus-faturados-marca') }}"><i class="fa fa-circle-o"></i>GQC
+                                        Brigdestone</a>
+                                </li>
+                                <li class="{{request()->routeIs('api-new-age.index') ? 'active' : '' }}">
+                                    <a href="{{ route('api-new-age.index') }}">
+                                        <i class="fa fa-circle-o"></i>Garantia Ouro
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
@@ -189,7 +203,8 @@
                     </ul>
                 </li>
             @endrole
-            @canany(['ver-comercial-norte', 'ver-comercial-sul', 'ver-rel-cobranca-sul', 'ver-pedidos-coletados-acompanhamento'])
+            @canany(['ver-comercial-norte', 'ver-comercial-sul', 'ver-rel-cobranca-sul',
+                'ver-pedidos-coletados-acompanhamento'])
                 <li class="treeview {{ request()->segment(1) == 'comercial' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-map"></i> <span>Comercial</span>
@@ -330,19 +345,20 @@
                 </li>
             @endrole
             @role('admin|financeiro')
-            <li class="treeview {{ request()->segment(1) == 'financeiro' ? 'active' : '' }}" style="height: auto;">
-                <a href="#">
-                    <i class="fa fa-money"></i> <span>Financeiro</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu" style="display: none;">
-                    <li class="{{ request()->routeIs('cobranca.index') ? 'active' : '' }}"><a
-                            href="{{ route('financeiro.index') }}"><i class="fa fa-file-excel-o"></i>Conciliação Empresas</a>
-                    </li>                    
-                </ul>
-            </li>
+                <li class="treeview {{ request()->segment(1) == 'financeiro' ? 'active' : '' }}" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-money"></i> <span>Financeiro</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="{{ request()->routeIs('cobranca.index') ? 'active' : '' }}"><a
+                                href="{{ route('financeiro.index') }}"><i class="fa fa-file-excel-o"></i>Conciliação
+                                Empresas</a>
+                        </li>
+                    </ul>
+                </li>
             @endrole
             <li class="treeview" style="height: auto;">
                 <a href="#">

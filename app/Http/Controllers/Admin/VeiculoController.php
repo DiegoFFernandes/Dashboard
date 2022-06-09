@@ -44,7 +44,7 @@ class VeiculoController extends Controller
     $title_page   = 'Lista de Motoristas/Veiculos';
     $user_auth    = $this->user;
     $uri         = $this->resposta->route()->uri();
-    $empresas     = $this->empresa->empresa();
+    $empresas     = $this->empresa->EmpresaAll();
     $pessoas      = $this->pessoas->PessoasAll();
     $marcas       = $this->marcas->MarcaModeloDsAll();
     $tipoveiculos = $this->tipoveiculos->TipoVeiculoAll();

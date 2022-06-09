@@ -16,35 +16,7 @@
                         action="{{ isset($user_id) ? route('admin.usuarios.update') : route('admin.usuarios.create') }}">
                         @csrf
                         <div class="box-body">
-                            @if ($errors->all())
-                                @foreach ($errors->all() as $error)
-                                    <!-- alert -->
-                                    <div class="alert alert-warning alert-dismissible">
-                                        <button type="button" class="close" data-dismiss="alert"
-                                            aria-hidden="true">&times;</button>
-                                        <i class="icon fa fa-check"></i>{{ $error }}
-                                    </div>
-                                    <!-- /alert -->
-                                @endforeach
-                            @endif
-                            @if (session('warning'))
-                                <!-- alert -->
-                                <div class="alert alert-warning alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert"
-                                        aria-hidden="true">&times;</button>
-                                    <i class="icon fa fa-check"></i>{{ session('warning') }}
-                                </div>
-                                <!-- /alert -->
-                            @endif
-                            @if (session('status'))
-                                <!-- alert -->
-                                <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert"
-                                        aria-hidden="true">&times;</button>
-                                    <i class="icon fa fa-check"></i>{{ session('status') }}
-                                </div>
-                                <!-- /alert -->
-                            @endif
+                            @includeIf('admin.master.messages')
                             <div class="form-group">
                                 @if (isset($user_id->name))
                                     <input type="hidden" name="id" value="{{ $user_id->id }}">
@@ -65,30 +37,36 @@
                                     value="{{ isset($user_id->password) ? $user_id->password : '' }}">
                             </div>
                             <!-- select -->
-                            <div class="form-group">
-                                <label>Empresa Principal</label>
-                                <select class="form-control" name="empresa">
-                                    @if (isset($user_id))
-                                        @foreach ($empresas as $empresa)
-                                            @if ($user_id->empresa == $empresa->CD_EMPRESA)
+                            <div class="col-md-12 pl-0">
+                                <div class="form-group">
+                                    <label>Empresa Principal</label>
+                                    <select class="form-control" name="empresa">
+                                        {{-- Condição para editar usuario --}}
+                                        @if (isset($user_id))
+                                            @foreach ($empresas as $empresa)
+                                                @if ($user_id->empresa == $empresa->CD_EMPRESA)
+                                                    <option value="{{ $empresa->CD_EMPRESA }}">
+                                                        {{ $empresa->NM_EMPRESA }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                            @foreach ($empresas as $empresa)
+                                                @if ($user_id->empresa != $empresa->CD_EMPRESA)
+                                                    <option value="{{ $empresa->CD_EMPRESA }}">
+                                                        {{ $empresa->NM_EMPRESA }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        {{-- fim condição editar usuario --}}
+                                        @else
+                                            @foreach ($empresas as $empresa)
                                                 <option value="{{ $empresa->CD_EMPRESA }}">{{ $empresa->NM_EMPRESA }}
                                                 </option>
-                                            @endif
-                                        @endforeach
-                                        @foreach ($empresas as $empresa)
-                                            @if ($user_id->empresa != $empresa->CD_EMPRESA)
-                                                <option value="{{ $empresa->CD_EMPRESA }}">{{ $empresa->NM_EMPRESA }}
-                                                </option>
-                                            @endif
-                                        @endforeach
-                                    @else
-                                        @foreach ($empresas as $empresa)
-                                            <option value="{{ $empresa->CD_EMPRESA }}">{{ $empresa->NM_EMPRESA }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>                            
                         </div>
                         <!-- /.box-body -->
 
@@ -110,10 +88,10 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Usuarios Cadastrados</h3>
                         <div class="box-tools pull-right">
-                            <a href="{{route('admin.usuarios.role')}}" class="btn btn-default">
+                            <a href="{{ route('admin.usuarios.role') }}" class="btn btn-default">
                                 Atrelar Função
                             </a>
-                            <a href="{{route('admin.usuarios.permission')}}" class="btn btn-default">
+                            <a href="{{ route('admin.usuarios.permission') }}" class="btn btn-default">
                                 Atrelar Permissão
                             </a>
                         </div>
@@ -128,7 +106,7 @@
                                     <th>Email</th>
                                     <th>Empresa</th>
                                     <th>Status</th>
-                                    <th>Editar</th>                                    
+                                    <th>Editar</th>
                                     <th>Excluir</th>
                                 </tr>
                             </thead>
@@ -140,7 +118,7 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->empresa }}</td>
                                         <td>
-                                            @if(Cache::has('user-is-online-' . $user->id))
+                                            @if (Cache::has('user-is-online-' . $user->id))
                                                 <span class="text-success bg-success">Online</span>
                                             @else
                                                 <span class="text-secondary bg-gray">Offline</span>
@@ -170,14 +148,14 @@
 @section('scripts')
     @includeIf('admin.master.datatables')
     <script type="text/javascript">
-    $('#table-users').DataTable({
-        language: {
+        $('#table-users').DataTable({
+            language: {
                 url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
             },
-        responsive: true,
+            responsive: true,
             "order": [
                 [1, "asc"]
-            ],        
-    });
+            ],
+        });
     </script>
 @endsection

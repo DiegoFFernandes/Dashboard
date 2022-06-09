@@ -35,7 +35,7 @@ class EmailController extends Controller
         $title_page   = 'Lista de Emails';
         $user_auth    = $this->user;
         $uri          = $this->resposta->route()->uri();
-        $empresas     = $this->empresa->empresa();
+        $empresas     = $this->empresa->EmpresaAll();
         $emails       = $this->email->EmailAll();
 
         return view(

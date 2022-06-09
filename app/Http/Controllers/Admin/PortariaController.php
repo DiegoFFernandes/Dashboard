@@ -59,7 +59,7 @@ class PortariaController extends Controller
         }
 
         $motorista  = $this->motorista->listPlaca($request->placa);
-        $empresas   = $this->empresa->empresa();
+        $empresas   = $this->empresa->EmpresaAll();
         $pessoas    = $this->pessoa->PessoasAll();
         $linhas     = $this->linha->linhaAll();
 

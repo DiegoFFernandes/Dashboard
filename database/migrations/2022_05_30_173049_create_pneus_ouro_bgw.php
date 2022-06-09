@@ -46,7 +46,7 @@ class CreatePneusOuroBgw extends Migration
             $table->string('COD_I_CICLO', 2);
             $table->string('COD_I_MARCA', 2);
             $table->string('COD_I_MED', 60);
-            $table->string('COD_I_BANDA', 60)->nullable();            
+            $table->string('COD_I_BANDA', 60)->nullable();  
             $table->timestamps();
         });
     }

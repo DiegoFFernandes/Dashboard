@@ -45,6 +45,7 @@ class EmpresaTableSeeder extends Seeder
             'cd_loja' => $e['cd_loja'],
             'cd_grupo' => $e['cd_grupo'],
             'regiao' => $e['regiao'],
+            'conexao' => $e['conexao'],
             'created_at' => now(),
             'updated_at' => now(),
         ]);

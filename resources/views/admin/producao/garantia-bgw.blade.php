@@ -48,53 +48,66 @@
                 @includeIf('admin.master.messages')
                 <div class="nav-tabs-custom" style="cursor: move;">
                     <ul class="nav nav-tabs pull-right ui-sortable-handle">
-                        <li class="pull-left active"><a href="#pneus-bgw" data-toggle="tab" aria-expanded="true">Pneus</a>
+                        <li class="pull-left active"><a href="#pneus-bgw" data-toggle="tab" aria-expanded="true">Aguardando
+                                Envio</a>
                         </li>
-                        <li class="pull-left"><a href="#logs-bgw" data-toggle="tab" aria-expanded="false">Logs</a>
+                        <li class="pull-left"><a href="#pneus-bgw-enviados" data-toggle="tab"
+                                aria-expanded="false">Enviados</a>
+                        </li>
+                        <li class="pull-left"><a href="#logs-bgw" data-toggle="tab" aria-expanded="false">Logs
+                                Transmissão</a>
                         </li>
                         <li class="header"><i class="fa fa-inbox"></i> Pneus Ouro - BGW</li>
                     </ul>
                     <div class="tab-content no-padding">
                         <div class="tab-pane active" id="pneus-bgw">
-                            <table class="table table-striped table-bordered compact" id="table-bgw" style="width:100%">
+                            <table class="table table-striped table-bordered compact" id="table-bgw"
+                                style="width:100%; font-size: 12px;">
                                 <thead>
                                     <tr>
                                         <th>Ordem</th>
                                         <th>Cliente</th>
+                                        <th>Nota</th>
                                         <th>Medida</th>
                                         <th>Serie</th>
                                         <th>Fogo</th>
                                         <th>Dot</th>
                                         <th>Desenho</th>
                                         <th>Marca</th>
+                                        <th>Modelo</th>
                                         <th>Ciclo</th>
                                         <th>Preço</th>
-                                        <th>Exportado</th>
+                                        <th>Exp.</th>
                                     </tr>
                                 </thead>
-                                <tbody class="">
-                                    @foreach ($pneus as $p)
-                                        <tr>
-                                            <td>{{ $p->ORD_NUMERO }}</td>
-                                            <td>{{ $p->CLI_NOME }}</td>
-                                            <td>{{ $p->MEDIDA }}</td>
-                                            <td>{{ $p->MATRICULA }}</td>
-                                            <td>{{ $p->FOGO }}</td>
-                                            <td>{{ $p->DOT }}</td>
-                                            <td>{{ $p->DESENHOPNEU }}</td>
-                                            <td>{{ $p->MARCA }}</td>
-                                            <td>{{ $p->COD_I_CICLO }}</td>
-                                            <td>{{ $p->PRECO }}</td>
-                                            <td>{{ $p->EXPORTADO }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
                             </table>
                             <div class="mx-auto">
                                 <button class="btn btn-block btn-success" id="pross-pneus">Processar Pneus</button>
                             </div>
                         </div>
                         <div class="tab-pane log-bgw" id="logs-bgw">
+                        </div>
+                        <div class="tab-pane" id="pneus-bgw-enviados">
+                            <table class="table table-striped table-bordered compact" id="table-bgw-enviados"
+                                style="width:100%; font-size: 12px;">
+                                <thead>
+                                    <tr>
+                                        <th>Ordem</th>
+                                        <th>Cliente</th>
+                                        <th>Nota</th>
+                                        <th>Medida</th>
+                                        <th>Serie</th>
+                                        <th>Fogo</th>
+                                        <th>Dot</th>
+                                        <th>Desenho</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                        <th>Ciclo</th>
+                                        <th>Preço</th>
+                                        <th>Exp.</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -155,9 +168,9 @@
                 });
 
 
-            })
+            });
             $('#empresas').select2();
-            $('#table-bgw').DataTable({});
+            initTable('table-bgw', 'N')
             $('#pross-pneus').click(function() {
                 $.ajax({
                     url: '{{ route('NewAgecallXmlProcess') }}',
@@ -187,7 +200,92 @@
                     }
 
                 });
-            });            
+            });
+            $('.nav-tabs a[href="#pneus-bgw-enviados"]').on('click', function() {
+                $('#table-bgw-enviados').DataTable().destroy();
+                initTable('table-bgw-enviados', 'S');
+            });
+            $('.nav-tabs a[href="#pneus-bgw"]').on('click', function() {
+                $('#table-bgw').DataTable().ajax.reload();
+            });
+
+            function initTable(tableId, data) {
+                $('#' + tableId).DataTable({
+                    responsive: true,
+                    language: {
+                        url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    },
+                    // processing: true,
+                    //serverSide: true,
+                    autoWidth: false,
+                    "pageLength": 25,
+                    ajax: {
+                        url: "{{ route('get-pneus-bandag') }}",
+                        data: {
+                            'exportado': data
+                        }
+                    },
+                    columns: [{
+
+                            data: 'ORD_NUMERO',
+                            name: 'ord_numero'
+                        },
+                        {
+                            data: 'CLI_NOME',
+                            name: 'cli_nome'
+                        },
+                        {
+                            data: 'NUM_NF',
+                            name: 'num_nf'
+                        },
+                        {
+                            data: 'MEDIDA',
+                            name: 'medida'
+                        },
+                        {
+                            data: 'MATRICULA',
+                            name: 'matricula'
+                        },
+                        {
+                            data: 'FOGO',
+                            name: 'fogo'
+                        },
+                        {
+                            data: 'DOT',
+                            name: 'dot'
+                        },
+                        {
+                            data: 'DESENHOPNEU',
+                            name: 'desenhopneu'
+                        },
+                        {
+                            data: 'MARCA',
+                            name: 'marca'
+                        },
+                        {
+                            data: 'MODELO',
+                            name: 'modelo'
+                        },
+                        {
+                            data: 'COD_I_CICLO',
+                            name: 'cod_i_ciclo'
+                        },
+                        {
+                            data: 'PRECO',
+                            name: 'preco'
+                        },
+                        {
+                            data: 'EXPORTADO',
+                            name: 'exportado'
+                        },
+                    ],
+                    columnDefs: [{
+                        width: '20%',
+                        targets: 1
+                    }],
+                });
+            };
+
         });
     </script>
 @endsection

@@ -25,8 +25,8 @@ class ApiNewAge extends Model
         };
         return $this->connection = Auth::user()->conexao;
     }
-    public function pneusEnviar(){
-        $this->connection = 'mysql';
+    public function pneusEnviar($exportado, $empresa){
+        $this->connection = 'mysql';       
 
         return ApiNewAge::select([DB::raw("pneus_ouro_bgw.id, pneus_ouro_bgw.ORD_CODBTS, pneus_ouro_bgw.CD_EMP, pneus_ouro_bgw.ORD_NUMERO,
         pneus_ouro_bgw.ORD_DATEMI, pneus_ouro_bgw.ORD_HOREMI, pneus_ouro_bgw.NUM_NF, pneus_ouro_bgw.DATA_NF,
@@ -37,15 +37,20 @@ class ApiNewAge extends Model
         pneus_ouro_bgw.CHV_COLETA, pneus_ouro_bgw.PRECO, pneus_ouro_bgw.COD_I_CICLO, pneus_ouro_bgw.COD_I_MARCA, pneus_ouro_bgw.COD_I_MED,
         pneus_ouro_bgw.COD_I_BANDA, coalesce(log_api_new_ages.EXPORTADO, 'N') EXPORTADO")])
         ->leftjoin('log_api_new_ages', 'log_api_new_ages.ordem', 'pneus_ouro_bgw.ORD_NUMERO')
-        ->where('log_api_new_ages.exportado', '<>' , 'S')
-        ->orWhereNull('log_api_new_ages.exportado')
+        ->where('CD_EMP', '=', $empresa)
+        ->where('log_api_new_ages.exportado', '=' , ''.$exportado.'')
+        ->when($exportado == 'N', function($q) {          
+            return $q->orWhereNull('log_api_new_ages.exportado');            
+        })         
         ->get();
+
+        
     }
 
     public function pneusBGW($empresa, $dt_inicial, $dt_final)
     {
         $query = "SELECT DISTINCT 39193 ORD_CODBTS, PN.idempresa CD_EMP, OPR.ID ORD_NUMERO, PN.dtemissao ORD_DATEMI, 
-        PN.hremissao ORD_HOREMI, NF.nr_notaservico NUM_NF, n.dt_emissao DATA_NF, N.dt_registro EMISSAONF, PC.nr_cnpjcpf CLI_CPF,
+        PN.hremissao ORD_HOREMI, n.nr_notafiscal NUM_NF, n.dt_emissao DATA_NF, N.dt_registro EMISSAONF, PC.nr_cnpjcpf CLI_CPF,
         cast(PC.nm_pessoa as varchar(100) character SET UTF8)  CLI_NOME,
         ep.nr_cep CLI_CEP,
         cast(ep.ds_endereco as varchar(100) character SET UTF8)  CLI_LOGRAD,
@@ -93,7 +98,7 @@ class ApiNewAge extends Model
         LEFT JOIN MEDIDAPNEU MDP ON (MDP.ID = P.IDMEDIDAPNEU) 
         INNER JOIN BANDAPNEU BP ON (BP.id = SP.idbandapneu)
         inner JOIN DESENHOPNEU DP ON (DP.id = BP.iddesenhopneu)
-        INNER JOIN PEDIDOPNEU PN ON (PN.ID = IPP.IDPEDIDOPNEU)
+        INNER JOIN PEDIDOPNEU PN ON (PN.ID = IPP.IDPEDIDOPNEU AND N.cd_empresa = PN.IDEMPRESA)
         INNER JOIN PESSOA PC ON (PC.CD_PESSOA = N.cd_pessoa)
         LEFT JOIN PLUGORDRECAPPEDIDO PLO ON (PLO.IDORDEMPRODUCAORECAP = OPR.ID) 
         LEFT JOIN PEDIDO PE ON (PE.CD_EMPRESA = PLO.CD_EMPRESA 
@@ -117,11 +122,11 @@ class ApiNewAge extends Model
                           AND NF.NR_LANCAMENTO = N.NR_LANCAMENTO 
                           AND NF.CD_SERIE = N.CD_SERIE 
                           AND NF.TP_NOTA = N.TP_NOTA)
-        WHERE N.CD_EMPRESA = 3
+        WHERE N.CD_EMPRESA = $empresa
           AND N.ST_NOTA = 'V' 
         AND PN.STPEDIDO <> 'C' AND OPR.STORDEM <> 'C' 
          AND COALESCE(OPR.STORDEM, 'A') NOT IN ('C', 'T') 
-         AND PN.IDEMPRESA = $empresa
+         --AND PN.IDEMPRESA = $empresa
          AND N.DT_REGISTRO between '$dt_inicial' and '$dt_final'        
          AND EF.STEXAMEFINAL = 'A' AND EF.ST_ETAPA = 'F' 
          AND MAP.id IN (11,1,6,531,2,3,4)

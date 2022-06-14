@@ -11,6 +11,7 @@ use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Yajra\DataTables\Facades\DataTables;
 
 class ApiNewAgeController extends Controller
 {
@@ -36,27 +37,30 @@ class ApiNewAgeController extends Controller
     {
         $title_page   = 'Exportação Automatica';
         $ultima_transmissao = $this->apiNewAge->UltimaTransmissao();
-        if(count($ultima_transmissao) == 0 ){
-            $transmissao = Config::get('constants.options.dt1_h_m_days'); 
-        }else{
+        if (count($ultima_transmissao) == 0) {
+            $transmissao = Config::get('constants.options.dt1_h_m_days');
+        } else {
             $transmissao = $ultima_transmissao[0]->ULTIMA_TRASNMISSAO;
-        }       
+        }
         $dt_inicial = $transmissao;
         $dt_final = Config::get('constants.options.today');
-        $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final); 
-
-        $pneus = $this->apiNewAge->pneusEnviar();
+        $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
+        
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
         $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
 
         return view('admin.producao.garantia-bgw', compact(
-            'pneus',
             'title_page',
             'user_auth',
             'uri',
             'empresas'
         ));
+    }
+    public function GetPneusEnviarBandag()
+    {                
+        $data = $this->apiNewAge->pneusEnviar($this->request->exportado, $this->user->empresa);
+        return DataTables::of($data)->make(true);
     }
     public function searchPneusJunsoft($empresa, $dt_inicial, $dt_final)
     {
@@ -66,7 +70,7 @@ class ApiNewAgeController extends Controller
             $p->MEDIDA = $this->RemovePCasa($p->MEDIDA);
             $p->COD_I_MED = $this->RemovePCasa($p->COD_I_MED);
         }
-        return $this->apiNewAge->store($pneusJunsoft);        
+        return $this->apiNewAge->store($pneusJunsoft);
     }
 
     public function ImportPneus()
@@ -74,7 +78,7 @@ class ApiNewAgeController extends Controller
         $empresa = $this->request['empresa'];
         $dt_inicial = $this->request['inicio_data'];
         $dt_final = $this->request['fim_data'];
-        return $this->searchPneusJunsoft($empresa, $dt_inicial, $dt_final);        
+        return $this->searchPneusJunsoft($empresa, $dt_inicial, $dt_final);
     }
 
     public function RemoveSpecialChar($str)
@@ -92,7 +96,7 @@ class ApiNewAgeController extends Controller
 
     public function callXmlProcess()
     {
-        $pneus = $this->apiNewAge->pneusEnviar();
+        $pneus = $this->apiNewAge->pneusEnviar('N', $this->user->empresa);
         $qtd_reg = count($pneus);
 
         foreach ($pneus as $p) {
@@ -154,7 +158,7 @@ class ApiNewAgeController extends Controller
         }
 
         if (empty($ordens)) {
-            return "<div class='align-center'><h3>Não possui Pneus a processar!</h3></div>";
+            return "<div align='center'><h3>Não possui Pneus a processar!</h3></div>";
         }
 
         $curl = curl_init();

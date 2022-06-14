@@ -295,6 +295,7 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
         /* Rotas para informações QGC Bridgestone */
         Route::prefix('api-new-age')->group(function () {
             Route::get('index', [ApiNewAgeController::class, 'index'])->name('api-new-age.index');
+            Route::get('get-pneus-bandag', [ApiNewAgeController::class, 'GetPneusEnviarBandag'])->name('get-pneus-bandag');
             Route::get('callXmlProcess', [ApiNewAgeController::class, 'callXmlProcess'])->name('NewAgecallXmlProcess');
             Route::get('comando', [ApiNewAgeController::class, 'executeComando'])->name('api-new-age-comando');
             Route::get('importar-pneus-junsoft', [ApiNewAgeController::class, 'ImportPneus'])->name('api-new-age-import-pneus');

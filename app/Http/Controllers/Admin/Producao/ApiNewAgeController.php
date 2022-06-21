@@ -45,7 +45,7 @@ class ApiNewAgeController extends Controller
         $dt_inicial = $transmissao;
         $dt_final = Config::get('constants.options.today');
         $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
-        
+
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
         $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
@@ -58,9 +58,14 @@ class ApiNewAgeController extends Controller
         ));
     }
     public function GetPneusEnviarBandag()
-    {                
+    {
         $data = $this->apiNewAge->pneusEnviar($this->request->exportado, $this->user->empresa);
-        return DataTables::of($data)->make(true);
+        return DataTables::of($data)
+            ->addColumn('Actions', function ($data) {
+                return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-id="' . $data->id . '">Editar</button>';
+            })
+            ->rawColumns(['Actions'])
+            ->make(true);
     }
     public function searchPneusJunsoft($empresa, $dt_inicial, $dt_final)
     {
@@ -195,8 +200,6 @@ class ApiNewAgeController extends Controller
 
         $response = curl_exec($curl);
 
-
-
         if (empty($response)) {
             return "<div class='align-center'><h3>Houve algum erro ao processar, pode ser caracter especial do cadastro do cliente ou algo do genero!</h3></div>";
         }
@@ -226,7 +229,16 @@ class ApiNewAgeController extends Controller
                         </tr>
                     </thead>
                     <tbody">';
+            // foreach ($pneusLog as $a) {
+                
+            //    if (substr($a->OCORRENCIA, 129, 8) == 'superior'){
+            //      echo 'Verdadeiro'.'</br>';
+            //    }else{
+            //     echo 'false';
+            //    }
+            // }
 
+            // die();
             foreach ($pneusLog as $a) {
                 $html .= '
                     <tr>

@@ -14,11 +14,27 @@ class LogApiNewAge extends Model
     {
         $this->connection = 'mysql';
         foreach ($pneusLog as $p) {
-            LogApiNewAge::updateOrInsert(
-                [
+            if (substr($p->OCORRENCIA, 129, 8) == 'superior') {
+                LogApiNewAge::updateOrInsert(
+                    [
                     'ordem' => $p->NUMERO_OS,
                 ],
-                [
+                    [
+                    'cd_empresa' => $p->CODIGO_EMP,
+                    'ordem' => $p->NUMERO_OS,
+                    'pedido' => $p->CHAVE_COL,
+                    'ocorrencia' => $p->OCORRENCIA,
+                    'exportado' => 'C',
+                    "created_at"    =>  \Carbon\Carbon::now(),
+                    "updated_at"    => \Carbon\Carbon::now()
+                ]
+                );
+            }else{
+                LogApiNewAge::updateOrInsert(
+                    [
+                    'ordem' => $p->NUMERO_OS,
+                ],
+                    [
                     'cd_empresa' => $p->CODIGO_EMP,
                     'ordem' => $p->NUMERO_OS,
                     'pedido' => $p->CHAVE_COL,
@@ -27,7 +43,8 @@ class LogApiNewAge extends Model
                     "created_at"    =>  \Carbon\Carbon::now(),
                     "updated_at"    => \Carbon\Carbon::now()
                 ]
-            );
+                );
+            }
         }
         return;
     }

@@ -78,6 +78,7 @@
                                         <th>Ciclo</th>
                                         <th>Preço</th>
                                         <th>Exp.</th>
+                                        <th>Ações</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -113,6 +114,48 @@
                 </div>
             </div>
             <!-- /.row -->
+            <!-- Edit Modal -->
+            <div class="modal" id="Editar">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Editar Informações Pneus</h4>
+                            <button type="button" class="close modelClose" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="alert alert-dismissible hidden" id="alert">
+                                <button type="button" class="close" data-dismiss="alert"
+                                    aria-hidden="true">×</button>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="id_marca">Marca</label>
+                                        <select class="form-control" name="cd_marca" id="id_marca">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Modelo</label>
+                                        <select data-width="100%" class="form-control" name="cd_modelo" id="id_modelo">
+
+                                        </select>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" id="SubmitEdit">Atualizar</button>
+                            <button type="button" class="btn btn-danger modelClose" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </section>
     <!-- /.content -->
 @endsection
@@ -278,6 +321,13 @@
                             data: 'EXPORTADO',
                             name: 'exportado'
                         },
+                        {
+                            data: 'Actions',
+                            name: 'Actions',
+                            orderable: false,
+                            serachable: false,
+                            sClass: 'text-center'
+                        },
                     ],
                     columnDefs: [{
                         width: '20%',
@@ -285,6 +335,32 @@
                     }],
                 });
             };
+
+            var id;
+            $('body').on('click', '#getEdit', function(e) {
+                e.preventDefault();
+                $('.alert-danger').html('');
+                $('.alert-danger').addClass('hidden');
+                id = $(this).data('id');
+                $('#Editar').modal('show');
+                // $.ajax({
+                //     url: "edit/" + id + "",
+                //     method: 'GET',
+                //     data: {
+                //         id: id,
+                //     },
+                //     beforeSend: function() {
+                //         $("#loading").removeClass('hidden');
+                //     },
+                //     success: function(result) {
+                //         $('#EditarModeloVeiculo').show();
+                //         $('#id_marca').val(result.cd_marca)
+                //         $('#id_modelo').val(result.cd_modelo)
+                //         $('#id_frota').val(result.cd_frota)
+                //         $("#loading").addClass('hidden');
+                //     }
+                // });
+            });
 
         });
     </script>

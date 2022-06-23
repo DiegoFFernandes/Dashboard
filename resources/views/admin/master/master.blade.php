@@ -25,12 +25,16 @@
                     <li class="active">
                         @if (isset($uriAtual))
                             {{ $uriAtual }}
-                        @else Dashboard
+                        @else
+                            Dashboard
                         @endif
                     </li>
                 </ol>
             </section>
-            @yield('content')            
+            @yield('content')
+            <div class="alert alert-success alert-fixed hidden">
+                <p><i class="icon fa fa-check"></i></p>
+            </div>
             {{-- Icon loading --}}
             <div class="hidden" id="loading">
                 <img id="loading-image" class="mb-4" src="{{ Asset('img/loader.gif') }}" alt="Loading...">

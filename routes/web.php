@@ -299,6 +299,7 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
             Route::get('callXmlProcess', [ApiNewAgeController::class, 'callXmlProcess'])->name('NewAgecallXmlProcess');
             Route::get('comando', [ApiNewAgeController::class, 'executeComando'])->name('api-new-age-comando');
             Route::get('importar-pneus-junsoft', [ApiNewAgeController::class, 'ImportPneus'])->name('api-new-age-import-pneus');
+            Route::get('editar-ordem', [ApiNewAgeController::class, 'EditOrdens'])->name('api-new-age-edit-pneus');
         });
     });
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ApiNewAge;
 use App\Models\Empresa;
 use App\Models\LogApiNewAge;
+use App\Models\ModeloPneu;
 use Carbon\Carbon;
 use Helper;
 use Illuminate\Http\Request;
@@ -21,12 +22,14 @@ class ApiNewAgeController extends Controller
         ApiNewAge $api,
         Request $request,
         Empresa $empresa,
-        LogApiNewAge $logNewAge
+        LogApiNewAge $logNewAge,
+        ModeloPneu $modelo
     ) {
         $this->request = $request;
         $this->empresa = $empresa;
         $this->apiNewAge = $api;
         $this->logNewAge = $logNewAge;
+        $this->modelopneu = $modelo;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -36,6 +39,7 @@ class ApiNewAgeController extends Controller
     public function index()
     {
         $title_page   = 'Exportação Automatica';
+        $modelo = $this->modelopneu->list();
         $ultima_transmissao = $this->apiNewAge->UltimaTransmissao();
         if (count($ultima_transmissao) == 0) {
             $transmissao = Config::get('constants.options.dt1_h_m_days');
@@ -54,7 +58,8 @@ class ApiNewAgeController extends Controller
             'title_page',
             'user_auth',
             'uri',
-            'empresas'
+            'empresas',
+            'modelo'
         ));
     }
     public function GetPneusEnviarBandag()
@@ -62,7 +67,7 @@ class ApiNewAgeController extends Controller
         $data = $this->apiNewAge->pneusEnviar($this->request->exportado, $this->user->empresa);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
-                return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-id="' . $data->id . '">Editar</button>';
+                return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-modelo="' . $data->MODELO . '" data-id="' . $data->id . '">Editar</button>';
             })
             ->rawColumns(['Actions'])
             ->make(true);
@@ -77,7 +82,6 @@ class ApiNewAgeController extends Controller
         }
         return $this->apiNewAge->store($pneusJunsoft);
     }
-
     public function ImportPneus()
     {
         $empresa = $this->request['empresa'];
@@ -85,7 +89,6 @@ class ApiNewAgeController extends Controller
         $dt_final = $this->request['fim_data'];
         return $this->searchPneusJunsoft($empresa, $dt_inicial, $dt_final);
     }
-
     public function RemoveSpecialChar($str)
     {
         return preg_replace('/[0-9\@\.\;\&]+/', '', $str);
@@ -98,7 +101,6 @@ class ApiNewAgeController extends Controller
     {
         return preg_replace('/PCASA /', '', $str);
     }
-
     public function callXmlProcess()
     {
         $pneus = $this->apiNewAge->pneusEnviar('N', $this->user->empresa);
@@ -118,7 +120,7 @@ class ApiNewAgeController extends Controller
             &lt;CLI_TLOGRA&gt;&lt;/CLI_TLOGRA&gt;
             &lt;CLI_LOGRAD&gt;$p->CLI_LOGRAD&lt;/CLI_LOGRAD&gt;
             &lt;CLI_NUMERO&gt;$p->CLI_NUMERO&lt;/CLI_NUMERO&gt;
-            &lt;CLI_COMPL&gt;$p->CLI_COMPL&lt;/CLI_COMPL&gt;
+            &lt;CLI_COMPL&gt;" . $this->RemoveSpecialChar($p->CLI_COMPL) . "&lt;/CLI_COMPL&gt;
             &lt;CLI_BAIRRO&gt;$p->CLI_BAIRRO&lt;/CLI_BAIRRO&gt;
             &lt;CLI_CIDADE&gt;$p->CLI_CIDADE&lt;/CLI_CIDADE&gt;
             &lt;CLI_UF&gt;$p->CLI_UF&lt;/CLI_UF&gt;
@@ -230,7 +232,7 @@ class ApiNewAgeController extends Controller
                     </thead>
                     <tbody">';
             // foreach ($pneusLog as $a) {
-                
+
             //    if (substr($a->OCORRENCIA, 129, 8) == 'superior'){
             //      echo 'Verdadeiro'.'</br>';
             //    }else{
@@ -253,7 +255,6 @@ class ApiNewAgeController extends Controller
             return $html;
         }
     }
-
     public function executeComando()
     {
         $stream_context_opts = [
@@ -281,5 +282,15 @@ class ApiNewAgeController extends Controller
         $response = $soap->executarComando($params);
         //dd($soap->__getLastRequest());
         dd($response);
+    }
+    public function EditOrdens(){
+        $pneuOrdem = ApiNewAge::findOrFail($this->request->id);
+        $pneuOrdem->MODELO = $this->request->modelo;
+        $update = $pneuOrdem->save();
+        if ($update == 1) {
+            return response()->json(['success' => 'Ordem atualizada com sucesso!']);
+        }
+        return response()->json(['errors' => 'Houve algum erro!']);
+
     }
 }

@@ -46,7 +46,6 @@ class ApiNewAge extends Model
 
         
     }
-
     public function pneusBGW($empresa, $dt_inicial, $dt_final)
     {
         $query = "SELECT DISTINCT 39193 ORD_CODBTS, PN.idempresa CD_EMP, OPR.ID ORD_NUMERO, PN.dtemissao ORD_DATEMI, 
@@ -136,7 +135,6 @@ class ApiNewAge extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
-
     public function store($pneus)
     {
         $this->connection = 'mysql';
@@ -190,7 +188,7 @@ class ApiNewAge extends Model
             return $th;
         }
         return 1;
-    }
+    }    
     public function UltimaTransmissao()
     {
         $this->connection = 'mysql';

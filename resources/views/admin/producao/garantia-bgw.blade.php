@@ -4,7 +4,7 @@
     <!-- Main content -->
     <section class="content">
         <!-- Small boxes (Stat box) -->
-        <div class="row">
+        <div class="row">           
             <div class="col-md-12">
                 <div class="box box-info collapsed-box">
                     <div class="box-header with-border">
@@ -124,28 +124,25 @@
                             <button type="button" class="close modelClose" data-dismiss="modal">&times;</button>
                         </div>
                         <!-- Modal body -->
-                        <div class="modal-body">
-                            <div class="alert alert-dismissible hidden" id="alert">
-                                <button type="button" class="close" data-dismiss="alert"
-                                    aria-hidden="true">×</button>
-                            </div>
+                        <div class="modal-body">                            
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="id_marca">Marca</label>
-                                        <select class="form-control" name="cd_marca" id="id_marca">
-
-                                        </select>
+                                        <label>Modelo Atual</label>
+                                        <input type="text" id="modelo-atual" class="form-control" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Modelo</label>
-                                        <select data-width="100%" class="form-control" name="cd_modelo" id="id_modelo">
-
+                                        <label>Modelo Novo</label>
+                                        <select data-width="100%" class="form-control" id="modelo_novo">
+                                            <option value="0">Selecione modelo para atualizar</option>
+                                            @foreach ($modelo as $m)
+                                                <option value="{{ $m->cd_modelobandag }}">{{ $m->dsmodelo }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
                         <!-- Modal footer -->
@@ -206,12 +203,13 @@
                     },
                     success: function(result) {
                         $("#loading").addClass('hidden');
-                        location.reload(true);
+                        $('#table-bgw').DataTable().ajax.reload();
                     }
                 });
 
 
             });
+            $('#modelo_novo').select2();
             $('#empresas').select2();
             initTable('table-bgw', 'N')
             $('#pross-pneus').click(function() {
@@ -336,32 +334,50 @@
                 });
             };
 
-            var id;
+            var id, modelo_novo;
             $('body').on('click', '#getEdit', function(e) {
                 e.preventDefault();
                 $('.alert-danger').html('');
                 $('.alert-danger').addClass('hidden');
-                id = $(this).data('id');
-                $('#Editar').modal('show');
-                // $.ajax({
-                //     url: "edit/" + id + "",
-                //     method: 'GET',
-                //     data: {
-                //         id: id,
-                //     },
-                //     beforeSend: function() {
-                //         $("#loading").removeClass('hidden');
-                //     },
-                //     success: function(result) {
-                //         $('#EditarModeloVeiculo').show();
-                //         $('#id_marca').val(result.cd_marca)
-                //         $('#id_modelo').val(result.cd_modelo)
-                //         $('#id_frota').val(result.cd_frota)
-                //         $("#loading").addClass('hidden');
-                //     }
-                // });
+                id = $(this).data('id');               
+                $('#modelo-atual').val($(this).data('modelo'));                
+                $('#Editar').modal('show');                
             });
-
+            $('#SubmitEdit').on('click', function(){
+                modelo_novo = $('#modelo_novo').val();                
+                if(confirm('Deseja realmente atualizar?')){
+                    $.ajax({
+                    url: "{{route('api-new-age-edit-pneus')}}",
+                    method: 'GET',
+                    data: {
+                        id: id,
+                        modelo: modelo_novo,
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(result) {
+                        $('#Editar').modal('hide')
+                        $("#loading").addClass('hidden');
+                        if(result.errors){
+                            alert(result.errors);
+                        }else{
+                            // alert(result.success);
+                            setTimeout(function() {
+                                $(".alert").removeClass('hidden');
+                                $(".alert p").text(result.success);
+                            }, 400);
+                            window.setTimeout(function() {
+                                $(".alert").alert('close');
+                                $('#table-bgw').DataTable().ajax.reload();
+                            }, 2000);
+                        }
+                    }
+                });
+                }else{
+                   return false;
+                }
+            });
         });
     </script>
 @endsection

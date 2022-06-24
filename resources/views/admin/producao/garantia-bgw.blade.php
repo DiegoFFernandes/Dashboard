@@ -126,19 +126,36 @@
                         <!-- Modal body -->
                         <div class="modal-body">                            
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Modelo Atual</label>
                                         <input type="text" id="modelo-atual" class="form-control" disabled>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Modelo Novo</label>
                                         <select data-width="100%" class="form-control" id="modelo_novo">
                                             <option value="0">Selecione modelo para atualizar</option>
                                             @foreach ($modelo as $m)
                                                 <option value="{{ $m->cd_modelobandag }}">{{ $m->dsmodelo }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Medida Atual</label>
+                                        <input type="text" id="medida-atual" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Medida Nova</label>
+                                        <select data-width="100%" class="form-control" id="medida_novo">
+                                            <option value="0">Selecione medida para atualizar</option>
+                                            @foreach ($medida as $m)
+                                                <option value="{{ $m->cd_medidabandag }}">{{ $m->dsmedida }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -206,9 +223,8 @@
                         $('#table-bgw').DataTable().ajax.reload();
                     }
                 });
-
-
             });
+            $('#medida_novo').select2();
             $('#modelo_novo').select2();
             $('#empresas').select2();
             initTable('table-bgw', 'N')
@@ -340,11 +356,13 @@
                 $('.alert-danger').html('');
                 $('.alert-danger').addClass('hidden');
                 id = $(this).data('id');               
-                $('#modelo-atual').val($(this).data('modelo'));                
+                $('#modelo-atual').val($(this).data('modelo'));
+                $('#medida-atual').val($(this).data('medida'));                
                 $('#Editar').modal('show');                
             });
             $('#SubmitEdit').on('click', function(){
-                modelo_novo = $('#modelo_novo').val();                
+                modelo_novo = $('#modelo_novo').val();  
+                medida_novo = $('#medida_novo').val();              
                 if(confirm('Deseja realmente atualizar?')){
                     $.ajax({
                     url: "{{route('api-new-age-edit-pneus')}}",
@@ -352,6 +370,7 @@
                     data: {
                         id: id,
                         modelo: modelo_novo,
+                        medida: medida_novo,
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');

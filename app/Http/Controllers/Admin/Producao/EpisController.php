@@ -25,7 +25,8 @@ class EpisController extends Controller
     }
     public function index()
     {
-        // $executor = $this->executor->searchExecutorEtapaJunsoft();
+        return $executor = $this->executor->searchExecutorEtapaJunsoft();
         // $this->executor->StoreExecutorEtapa($executor);
+        return true;
     }
 }

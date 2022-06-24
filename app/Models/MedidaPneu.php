@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ModeloPneu extends Model
+class MedidaPneu extends Model
 {
-    use HasFactory;   
+    use HasFactory;
 
     public function list(){
-       return ModeloPneu::all();
-    }
+        return MedidaPneu::all();
+     }
 }

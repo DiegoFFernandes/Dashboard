@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ApiNewAge;
 use App\Models\Empresa;
 use App\Models\LogApiNewAge;
+use App\Models\MedidaPneu;
 use App\Models\ModeloPneu;
 use Carbon\Carbon;
 use Helper;
@@ -23,13 +24,16 @@ class ApiNewAgeController extends Controller
         Request $request,
         Empresa $empresa,
         LogApiNewAge $logNewAge,
-        ModeloPneu $modelo
+        ModeloPneu $modelo,
+        MedidaPneu $medida
     ) {
         $this->request = $request;
         $this->empresa = $empresa;
         $this->apiNewAge = $api;
         $this->logNewAge = $logNewAge;
         $this->modelopneu = $modelo;
+        $this->medida = $medida;
+
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -40,6 +44,7 @@ class ApiNewAgeController extends Controller
     {
         $title_page   = 'Exportação Automatica';
         $modelo = $this->modelopneu->list();
+        $medida = $this->medida->list();
         $ultima_transmissao = $this->apiNewAge->UltimaTransmissao();
         if (count($ultima_transmissao) == 0) {
             $transmissao = Config::get('constants.options.dt1_h_m_days');
@@ -59,7 +64,7 @@ class ApiNewAgeController extends Controller
             'user_auth',
             'uri',
             'empresas',
-            'modelo'
+            'modelo', 'medida'
         ));
     }
     public function GetPneusEnviarBandag()
@@ -67,7 +72,7 @@ class ApiNewAgeController extends Controller
         $data = $this->apiNewAge->pneusEnviar($this->request->exportado, $this->user->empresa);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
-                return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-modelo="' . $data->MODELO . '" data-id="' . $data->id . '">Editar</button>';
+                return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-modelo="' . $data->MODELO . '" data-id="' . $data->id . '" data-medida="'.$data->COD_I_MED.'">Editar</button>';
             })
             ->rawColumns(['Actions'])
             ->make(true);
@@ -285,8 +290,15 @@ class ApiNewAgeController extends Controller
     }
     public function EditOrdens(){
         $pneuOrdem = ApiNewAge::findOrFail($this->request->id);
-        $pneuOrdem->MODELO = $this->request->modelo;
+        if($this->request->modelo != 0){
+            $pneuOrdem->MODELO = $this->request->modelo;
+        }
+        if($this->request->medida != 0){
+            $pneuOrdem->COD_I_MED = $this->request->medida;
+        }     
+        
         $update = $pneuOrdem->save();
+        
         if ($update == 1) {
             return response()->json(['success' => 'Ordem atualizada com sucesso!']);
         }

@@ -14,7 +14,7 @@ class LogApiNewAge extends Model
     {
         $this->connection = 'mysql';
         foreach ($pneusLog as $p) {
-            if (substr($p->OCORRENCIA, 129, 8) == 'superior') {
+            if (substr($p->OCORRENCIA, 129, 8) == 'superior' || substr($p->OCORRENCIA, 86, 8) == 'Invalido') {
                 LogApiNewAge::updateOrInsert(
                     [
                     'ordem' => $p->NUMERO_OS,

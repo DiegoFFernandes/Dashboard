@@ -53,7 +53,7 @@ class ApiNewAgeController extends Controller
         }
         $dt_inicial = $transmissao;
         $dt_final = Config::get('constants.options.today');
-        $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
+        //$saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
 
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
@@ -64,7 +64,8 @@ class ApiNewAgeController extends Controller
             'user_auth',
             'uri',
             'empresas',
-            'modelo', 'medida'
+            'modelo',
+            'medida'
         ));
     }
     public function GetPneusEnviarBandag()
@@ -72,7 +73,11 @@ class ApiNewAgeController extends Controller
         $data = $this->apiNewAge->pneusEnviar($this->request->exportado, $this->user->empresa);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
-                return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-modelo="' . $data->MODELO . '" data-id="' . $data->id . '" data-medida="'.$data->COD_I_MED.'">Editar</button>';
+                if ($data->EXPORTADO == 'N') {
+                    return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-modelo="' . $data->MODELO . '" data-id="' . $data->id . '" data-medida="' . $data->COD_I_MED . '">Editar</button>';
+                }else{
+                    return '<i class="fa fa-fw fa-check-square-o"></i>';
+                }
             })
             ->rawColumns(['Actions'])
             ->make(true);
@@ -237,14 +242,13 @@ class ApiNewAgeController extends Controller
                     </thead>
                     <tbody">';
             // foreach ($pneusLog as $a) {
-
-            //    if (substr($a->OCORRENCIA, 129, 8) == 'superior'){
+            //     // var_dump (substr($a->OCORRENCIA, 86, 8));
+            //    if (substr($a->OCORRENCIA, 129, 8) == 'superior' || substr($a->OCORRENCIA, 86, 8) == 'Invalido'){
             //      echo 'Verdadeiro'.'</br>';
             //    }else{
             //     echo 'false';
             //    }
             // }
-
             // die();
             foreach ($pneusLog as $a) {
                 $html .= '
@@ -288,21 +292,21 @@ class ApiNewAgeController extends Controller
         //dd($soap->__getLastRequest());
         dd($response);
     }
-    public function EditOrdens(){
+    public function EditOrdens()
+    {
         $pneuOrdem = ApiNewAge::findOrFail($this->request->id);
-        if($this->request->modelo != 0){
+        if ($this->request->modelo != 0) {
             $pneuOrdem->MODELO = $this->request->modelo;
         }
-        if($this->request->medida != 0){
+        if ($this->request->medida != 0) {
             $pneuOrdem->COD_I_MED = $this->request->medida;
-        }     
-        
+        }
+
         $update = $pneuOrdem->save();
-        
+
         if ($update == 1) {
             return response()->json(['success' => 'Ordem atualizada com sucesso!']);
         }
         return response()->json(['errors' => 'Houve algum erro!']);
-
     }
 }

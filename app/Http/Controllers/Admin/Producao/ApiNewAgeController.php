@@ -244,8 +244,8 @@ class ApiNewAgeController extends Controller
                     </thead>
                     <tbody">';
             // foreach ($pneusLog as $a) {
-            //     var_dump (substr($a->OCORRENCIA, 191, 1));
-            //     if (substr($a->OCORRENCIA, 129, 8) == 'superior' || substr($a->OCORRENCIA, 86, 8) == 'Invalido' || substr($a->OCORRENCIA, 191, 1) == '7') {
+            //     var_dump (substr($a->OCORRENCIA, 91, 8));
+            //     if (substr($a->OCORRENCIA, 129, 8) == 'superior' || substr($a->OCORRENCIA, 86, 8) == 'Invalido' || substr($a->OCORRENCIA, 91, 8) == 'superior') {
             //         echo 'Verdadeiro' . '</br>';
             //     } else {
             //         echo 'false';

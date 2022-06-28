@@ -53,7 +53,7 @@ class ApiNewAgeController extends Controller
         }
         $dt_inicial = $transmissao;
         $dt_final = Config::get('constants.options.today');
-        $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
+        // $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
 
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
@@ -75,10 +75,9 @@ class ApiNewAgeController extends Controller
             ->addColumn('Actions', function ($data) {
                 if ($data->EXPORTADO == 'N') {
                     return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-modelo="' . $data->MODELO . '" data-id="' . $data->id . '" data-medida="' . $data->COD_I_MED . '">Editar</button>';
-                }elseif($data->EXPORTADO == 'C'){
-                    return '<button type="button" class="btn btn-danger btn-sm" data-ordem="'.$data->ORD_NUMERO.'" id="getFalhas">Falhas Envio</button>';
-                }                
-                else{
+                } elseif ($data->EXPORTADO == 'C') {
+                    return '<button type="button" class="btn btn-danger btn-sm" data-ordem="' . $data->ORD_NUMERO . '" id="getFalhas">Falhas Envio</button>';
+                } else {
                     return '<i class="fa fa-fw fa-check-square-o"></i>';
                 }
             })
@@ -245,12 +244,12 @@ class ApiNewAgeController extends Controller
                     </thead>
                     <tbody">';
             // foreach ($pneusLog as $a) {
-            //     // var_dump (substr($a->OCORRENCIA, 86, 8));
-            //    if (substr($a->OCORRENCIA, 129, 8) == 'superior' || substr($a->OCORRENCIA, 86, 8) == 'Invalido'){
-            //      echo 'Verdadeiro'.'</br>';
-            //    }else{
-            //     echo 'false';
-            //    }
+            //     var_dump (substr($a->OCORRENCIA, 191, 1));
+            //     if (substr($a->OCORRENCIA, 129, 8) == 'superior' || substr($a->OCORRENCIA, 86, 8) == 'Invalido' || substr($a->OCORRENCIA, 191, 1) == '7') {
+            //         echo 'Verdadeiro' . '</br>';
+            //     } else {
+            //         echo 'false';
+            //     }
             // }
             // die();
             foreach ($pneusLog as $a) {
@@ -312,8 +311,9 @@ class ApiNewAgeController extends Controller
         }
         return response()->json(['errors' => 'Houve algum erro!']);
     }
-    public function Divergencia(){        
-        LogApiNewAge::where('ordem', $this->request->ordem)->firstOrFail();        
+    public function Divergencia()
+    {
+        LogApiNewAge::where('ordem', $this->request->ordem)->firstOrFail();
         $ordem = $this->logNewAge->ListOrdemDivergente($this->request->ordem);
 
         return $ordem;

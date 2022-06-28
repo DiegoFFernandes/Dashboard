@@ -53,7 +53,7 @@ class ApiNewAgeController extends Controller
         }
         $dt_inicial = $transmissao;
         $dt_final = Config::get('constants.options.today');
-        //$saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
+        $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
 
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();

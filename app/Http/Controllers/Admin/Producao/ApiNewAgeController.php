@@ -75,7 +75,10 @@ class ApiNewAgeController extends Controller
             ->addColumn('Actions', function ($data) {
                 if ($data->EXPORTADO == 'N') {
                     return '<button type="button" class="btn btn-warning btn-sm" id="getEdit" data-modelo="' . $data->MODELO . '" data-id="' . $data->id . '" data-medida="' . $data->COD_I_MED . '">Editar</button>';
-                }else{
+                }elseif($data->EXPORTADO == 'C'){
+                    return '<button type="button" class="btn btn-danger btn-sm" data-ordem="'.$data->ORD_NUMERO.'" id="getFalhas">Falhas Envio</button>';
+                }                
+                else{
                     return '<i class="fa fa-fw fa-check-square-o"></i>';
                 }
             })
@@ -308,5 +311,11 @@ class ApiNewAgeController extends Controller
             return response()->json(['success' => 'Ordem atualizada com sucesso!']);
         }
         return response()->json(['errors' => 'Houve algum erro!']);
+    }
+    public function Divergencia(){        
+        LogApiNewAge::where('ordem', $this->request->ordem)->firstOrFail();        
+        $ordem = $this->logNewAge->ListOrdemDivergente($this->request->ordem);
+
+        return $ordem;
     }
 }

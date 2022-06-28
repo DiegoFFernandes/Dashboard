@@ -48,5 +48,10 @@ class LogApiNewAge extends Model
         }
         return;
     }
+    public function ListOrdemDivergente($ordem){
+        return LogApiNewAge::
+        join('pneus_ouro_bgw', 'pneus_ouro_bgw.ORD_NUMERO', 'log_api_new_ages.ordem')
+        ->where('ordem', $ordem)->get();
+    }
 
 }

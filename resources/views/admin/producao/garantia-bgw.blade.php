@@ -4,7 +4,7 @@
     <!-- Main content -->
     <section class="content">
         <!-- Small boxes (Stat box) -->
-        <div class="row">           
+        <div class="row">
             <div class="col-md-12">
                 <div class="box box-info collapsed-box">
                     <div class="box-header with-border">
@@ -53,6 +53,9 @@
                         </li>
                         <li class="pull-left"><a href="#pneus-bgw-enviados" data-toggle="tab"
                                 aria-expanded="false">Enviados</a>
+                        </li>
+                        <li class="pull-left"><a href="#divergencias" data-toggle="tab"
+                                aria-expanded="false">Divergências</a>
                         </li>
                         <li class="pull-left"><a href="#logs-bgw" data-toggle="tab" aria-expanded="false">Logs
                                 Transmissão</a>
@@ -106,6 +109,30 @@
                                         <th>Ciclo</th>
                                         <th>Preço</th>
                                         <th>Exp.</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="divergencias">
+                            <table class="table table-striped table-bordered compact" id="table-bgw-divergencias"
+                                style="width:100%; font-size: 12px;">
+                                <thead>
+                                    <tr>
+                                        <th>Ordem</th>
+                                        <th>Cliente</th>
+                                        <th>Nota</th>
+                                        <th>Medida</th>
+                                        <th>Serie</th>
+                                        <th>Fogo</th>
+                                        <th>Dot</th>
+                                        <th>Desenho</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                        <th>Ciclo</th>
+                                        <th>Preço</th>
+                                        <th>Exp.</th>
+                                        <th>Ações</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -124,7 +151,7 @@
                             <button type="button" class="close modelClose" data-dismiss="modal">&times;</button>
                         </div>
                         <!-- Modal body -->
-                        <div class="modal-body">                            
+                        <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -166,6 +193,63 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-success" id="SubmitEdit">Atualizar</button>
                             <button type="button" class="btn btn-danger modelClose" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Edit Modal -->
+            <div class="modal" id="falhas">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Informações Pneus - Divergência</h4>
+                            <button type="button" class="close modelClose" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Empresa</label>
+                                        <input type="text" id="diver-empresa" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Ordem:</label>
+                                        <input type="text" id="diver-ordem" class="form-control" disabled>
+                                    </div>
+                                </div>                                
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Pessoa:</label>
+                                        <input type="text" id="diver-pessoa" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Nota:</label>
+                                        <input type="text" id="diver-nota" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Data Emissão:</label>
+                                        <input type="text" id="diver-emissao" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Ocorrência:</label>
+                                        <textarea class="form-control" type="textarea" id="ocorrencia" rows="7" disabled></textarea>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">                            
+                            <button type="button" class="btn btn-primary modelClose" data-dismiss="modal">Sair</button>
                         </div>
                     </div>
                 </div>
@@ -262,10 +346,13 @@
                 $('#table-bgw-enviados').DataTable().destroy();
                 initTable('table-bgw-enviados', 'S');
             });
+            $('.nav-tabs a[href="#divergencias"]').on('click', function() {
+                $('#table-bgw-divergencias').DataTable().destroy();
+                initTable('table-bgw-divergencias', 'C');
+            });
             $('.nav-tabs a[href="#pneus-bgw"]').on('click', function() {
                 $('#table-bgw').DataTable().ajax.reload();
             });
-
             function initTable(tableId, data) {
                 $('#' + tableId).DataTable({
                     responsive: true,
@@ -349,52 +436,75 @@
                     }],
                 });
             };
-
-            var id, modelo_novo;
+            var id, modelo_novo, ordem;
             $('body').on('click', '#getEdit', function(e) {
                 e.preventDefault();
                 $('.alert-danger').html('');
                 $('.alert-danger').addClass('hidden');
-                id = $(this).data('id');               
+                id = $(this).data('id');
                 $('#modelo-atual').val($(this).data('modelo'));
-                $('#medida-atual').val($(this).data('medida'));                
-                $('#Editar').modal('show');                
+                $('#medida-atual').val($(this).data('medida'));
+                $('#Editar').modal('show');
             });
-            $('#SubmitEdit').on('click', function(){
-                modelo_novo = $('#modelo_novo').val();  
-                medida_novo = $('#medida_novo').val();              
-                if(confirm('Deseja realmente atualizar?')){
-                    $.ajax({
-                    url: "{{route('api-new-age-edit-pneus')}}",
+            $('body').on('click', '#getFalhas', function(e) {
+                e.preventDefault();    
+                ordem = $(this).data('ordem');    
+                $.ajax({
+                    url: '{{route("api-new-age-divergencia-pneus")}}',
                     method: 'GET',
                     data: {
-                        id: id,
-                        modelo: modelo_novo,
-                        medida: medida_novo,
-                    },
-                    beforeSend: function() {
+                        ordem: ordem,
+                    }, 
+                    beforeSend: function(){
                         $("#loading").removeClass('hidden');
-                    },
-                    success: function(result) {
-                        $('#Editar').modal('hide')
+                    }, 
+                    success: function(result){
                         $("#loading").addClass('hidden');
-                        if(result.errors){
-                            alert(result.errors);
-                        }else{
-                            // alert(result.success);
-                            setTimeout(function() {
-                                $(".alert").removeClass('hidden');
-                                $(".alert p").text(result.success);
-                            }, 400);
-                            window.setTimeout(function() {
-                                $(".alert").alert('close');
-                                $('#table-bgw').DataTable().ajax.reload();
-                            }, 2000);
-                        }
+                        $('#diver-empresa').val(result[0]['CD_EMP']);
+                        $('#diver-ordem').val(result[0]['ordem']);
+                        $('#ocorrencia').val(result[0]['ocorrencia']);
+                        $('#diver-nota').val(result[0]['NUM_NF']);
+                        $('#diver-pessoa').val(result[0]['CLI_NOME']);
+                        $('#diver-emissao').val(result[0]['DATA_NF']);
                     }
-                });
-                }else{
-                   return false;
+                });       
+                $('#falhas').modal('show');
+            });
+            $('#SubmitEdit').on('click', function() {
+                modelo_novo = $('#modelo_novo').val();
+                medida_novo = $('#medida_novo').val();
+                if (confirm('Deseja realmente atualizar?')) {
+                    $.ajax({
+                        url: "{{ route('api-new-age-edit-pneus') }}",
+                        method: 'GET',
+                        data: {
+                            id: id,
+                            modelo: modelo_novo,
+                            medida: medida_novo,
+                        },
+                        beforeSend: function() {
+                            $("#loading").removeClass('hidden');
+                        },
+                        success: function(result) {
+                            $('#Editar').modal('hide')
+                            $("#loading").addClass('hidden');
+                            if (result.errors) {
+                                alert(result.errors);
+                            } else {
+                                // alert(result.success);
+                                setTimeout(function() {
+                                    $(".alert").removeClass('hidden');
+                                    $(".alert p").text(result.success);
+                                }, 400);
+                                window.setTimeout(function() {
+                                    $(".alert").alert('close');
+                                    $('#table-bgw').DataTable().ajax.reload();
+                                }, 2000);
+                            }
+                        }
+                    });
+                } else {
+                    return false;
                 }
             });
         });

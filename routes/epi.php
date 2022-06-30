@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\Producao\EpisController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:admin|producao'])->group(function () {
+Route::middleware(['auth', 'permission:ver-controle-epi'])->group(function () {
     Route::prefix('producao')->group(function () {
         Route::get('controle-epis', [EpisController::class, 'index'])->name('epis.index');
         Route::get('getSearchSetor', [EpisController::class, 'searchSetores'])->name('search-etapas-producao');

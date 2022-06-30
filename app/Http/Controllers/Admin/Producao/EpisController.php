@@ -44,7 +44,7 @@ class EpisController extends Controller
         $epis = $this->epis->all();
         $executor = $this->executor->searchExecutorEtapaJunsoft();
         $etapas = $this->etapas->all();
-        $this->executor->StoreExecutorEtapa($executor);
+        // $this->executor->StoreExecutorEtapa($executor);
 
         return view('admin.producao.controle-epi', compact(
             'title_page',

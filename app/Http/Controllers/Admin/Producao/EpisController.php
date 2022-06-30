@@ -11,6 +11,7 @@ use App\Models\EtapasProducaoPneu;
 use App\Models\ExecutorEtapa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class EpisController extends Controller
 {
@@ -80,5 +81,24 @@ class EpisController extends Controller
             }
         }
         return response()->json('Epis associados para o operador!');
+    }
+    public function RelatorioUsoEpi()
+    {
+        if (empty($this->request->data_ini)) {
+            $data_ini = 0;
+            $data_fim = 0;            
+        } else {
+            $data_ini = date('Y-m-d H:i', strtotime($this->request->data_ini));
+            $data_fim = date('Y-m-d H:i', strtotime($this->request->data_fim));
+        }
+        $data =  $this->epiexecutor->UsoEpi(
+            $this->request->etapa,
+            $this->request->executor,
+            $this->request->epis,
+            $this->request->uso,
+            $data_ini,
+            $data_fim,
+        );
+        return DataTables::of($data)->make(true);
     }
 }

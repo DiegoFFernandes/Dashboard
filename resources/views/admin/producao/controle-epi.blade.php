@@ -5,7 +5,7 @@
     <section class="content">
         <!-- Small boxes (Stat box) -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 @includeIf('admin.master.messages')
                 <div class="nav-tabs-custom" style="cursor: move;">
                     <ul class="nav nav-tabs pull-right ui-sortable-handle">
@@ -30,26 +30,27 @@
                         </div>
                         <div class="tab-pane" id="relatorio-epi">
                             <div class="box-body">
-                                <div class="form-group">
-                                    <label for="etapas">Etapa Produtiva:</label>    
-                                    <select class="form-control select2" id="list-epis" style="width: 100%;">    
-                                        <option value="0">Selecione uma etapa</option>
-                                        @foreach ($etapas as $e)
-                                            <option value="{{ $e->id }}">{{ $e->dsetapaempresa }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                @includeIf('admin.master.executores')
+                                @includeIf('admin.master.etapas-produtivas')
                                 <div class="form-group">
                                     <label for="list-epis">Epis:</label>
                                     <select class="form-control select2" id="list-epis" style="width: 100%;">
-                                        <option selected="selected" value="0">Selecione Epi</option>
+                                        <option selected="selected" value="0">TODOS</option>
                                         @foreach ($epis as $e)
                                             <option value="{{ $e->id }}">{{ $e->ds_epi }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="periodo">Data:</label>
+                                    <label for="uso-epis">Uso Epis:</label>
+                                    <select class="form-control multiple" id="uso-epis" style="width: 100%;">
+                                        <option selected="selected" value="0">TODOS</option>
+                                        <option value="CF">CONFORME</option>
+                                        <option value="NF">NÃO CONFORME</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="periodo">Periodo:</label>
                                     <input type="text" class="form-control pull-right" id="daterange" value=""
                                         autocomplete="off">
                                 </div>                                
@@ -58,6 +59,28 @@
                                 <button type="button" class="btn btn-primary mb-2" id="btn-search">Consultar</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 hidden" id="relatorio">
+                <div class="box box-warning">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Relatório Epis</h3>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-striped table-bordered compact" id="table-controle-epi"
+                            style="width:100%; font-size: 12px;">
+                            <thead>
+                                <tr>
+                                    <th>Sq</th>
+                                    <th>Executor</th>
+                                    <th>Epi</th>
+                                    <th>Etapa</th>
+                                    <th>Uso</th>
+                                    <th>Registro</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -71,9 +94,10 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var executor, etapa;
-            $('#executor').select2();
+            $('.executor').select2();
             $('.etapas').select2();
-            $('#list-epis').select2();            
+            $('#list-epis').select2();
+            // $('option[value=0]').text('teste');
             var inicioData = 0;
             var fimData = 0;
             $('#daterange').on('apply.daterangepicker', function(ev, picker) {
@@ -97,10 +121,19 @@
 
                 // }
             });
-            $('.nav-tabs a[href="#relatorio-epi"]').on('click', function() {
+            $('.nav-tabs a[href="#relatorio-epi"]').on('click', function() {                
+                  
+                $('#relatorio-epi .executor option[value=0]').text('TODOS').trigger('change');
+                $('#relatorio-epi .etapas option[value=0]').text('TODOS').trigger('change');
+                $('#uso-epis').select2(); 
                 $('.etapas').select2();
+                $('.executor').select2();
+                
             });
-            $(".etapas").change(function() {
+            $('.nav-tabs a[href="#operador-epi"]').on('click', function() {
+                $('#relatorio').addClass('hidden');
+            });
+            $("#operador-epi .etapas").change(function() {
                 var id_etapa = $(this).val();
                 $.ajax({
                     url: '{{ route('search-etapas-producao') }}',
@@ -126,7 +159,7 @@
                     url: '{{ route('save-epi-etapas-operador') }}',
                     method: 'GET',
                     data: {
-                        executor: $('#executor').val(),
+                        executor: $('.executor').val(),
                         etapa: $('.etapas').val(),
                         epis: epis,
                     },
@@ -145,6 +178,68 @@
                         // $('#btn-save').removeClass('hidden');
                         // $('#body-select').append(result.html);
                     }
+                });
+            });
+            $('#btn-search').click(function() {
+                $('#table-controle-epi').DataTable().destroy();
+                $('#relatorio').removeClass('hidden');
+                var etapa, epis, uso;
+                etapa = $('#relatorio-epi .etapas').val();                
+                epis = $('#list-epis').val();
+                executor = $('#relatorio-epi .executor').val();
+                uso = $('#uso-epis').val();
+                $('#table-controle-epi').DataTable({
+                    responsive: true,
+                    language: {
+                        url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    },
+                    // processing: true,
+                    //serverSide: true,
+                    autoWidth: false,
+                    "pageLength": 25,
+                    ajax: {
+                        url: "{{ route('get-uso-epis') }}",
+                        data: {
+                            'etapa': etapa, 
+                            'epis': epis, 
+                            'executor': executor,
+                            'uso': uso,
+                            'data_ini': inicioData,
+                            'data_fim': fimData
+                        }                        
+                    },
+                    columns: [{
+                        data: 'id',
+                        name: 'id'
+                    }, 
+                    {
+                        data: 'nmexecutor',
+                        name: 'nmexecutor'
+                    },
+                    {
+                        data: 'ds_epi',
+                        name: 'ds_epi'
+                    },
+                    {
+                        data: 'dsetapaempresa',
+                        name: 'dsetapaempresa'
+                    },
+                    {
+                        data: 'uso',
+                        name: 'uso'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    }], 
+                    columnDefs: [{
+                        width: '1%',
+                        targets: 0
+                    },
+                    {
+                        width: '2%',
+                        targets: 5
+                    },  ],
                 });
             });
         });

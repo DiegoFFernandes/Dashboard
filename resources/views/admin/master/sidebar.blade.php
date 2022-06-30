@@ -27,44 +27,59 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        <li>
-                            <a href="{{ route('admin.producao.etapas') }}"><i class="fa fa-circle-o"></i>Produção por
-                                Etapa</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.lote.pcp') }}"><i class="fa fa-circle-o"></i>Lote PCP</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.producao.acompanha.ordem') }}">
-                                <i class="fa fa-circle-o"></i>Acompanhar Ordem</a>
-                        </li>
-                        <li>
-                        <li>
-                            <a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('producao.troca-servico') }}"><i class="fa fa-circle-o"></i>Troca de
-                                Serviço</a>
-                        </li>
                         <li class="treeview">
-                            <a href="#"><i class="fa fa-circle-o"></i> Produtividade
+                            <a href="#"><i class="fa fa-circle-o"></i> Movimentações
                                 <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </span>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="{{ route('admin.producao.quadrante1') }}"><i
-                                            class="fa fa-circle-o"></i>Quadrante
-                                        1</a></li>
-                                <li><a href="{{ route('admin.producao.quadrante2') }}"><i
-                                            class="fa fa-circle-o"></i>Quadrante
-                                        2</a></li>
-                                <li><a href="{{ route('admin.producao.quadrante3') }}"><i
-                                            class="fa fa-circle-o"></i>Quadrante
-                                        3</a></li>
-                                <li><a href="{{ route('admin.producao.quadrante4') }}"><i
-                                            class="fa fa-circle-o"></i>Quadrante
-                                        4</a></li>
+                                <li>
+                                    <a href="{{ route('admin.producao.etapas') }}"><i class="fa fa-circle-o"></i>Produção
+                                        por
+                                        Etapa</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.lote.pcp') }}"><i class="fa fa-circle-o"></i>Lote PCP</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.producao.acompanha.ordem') }}">
+                                        <i class="fa fa-circle-o"></i>Acompanhar Ordem</a>
+                                </li>
+                                <li>
+                                <li>
+                                    <a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('producao.troca-servico') }}"><i class="fa fa-circle-o"></i>Troca de
+                                        Serviço</a>
+                                </li>
+                                <li class="treeview">
+                                    <a href="#"><i class="fa fa-circle-o"></i> Produtividade
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li><a href="{{ route('admin.producao.quadrante1') }}"><i
+                                                    class="fa fa-circle-o"></i>Quadrante
+                                                1</a></li>
+                                        <li><a href="{{ route('admin.producao.quadrante2') }}"><i
+                                                    class="fa fa-circle-o"></i>Quadrante
+                                                2</a></li>
+                                        <li><a href="{{ route('admin.producao.quadrante3') }}"><i
+                                                    class="fa fa-circle-o"></i>Quadrante
+                                                3</a></li>
+                                        <li><a href="{{ route('admin.producao.quadrante4') }}"><i
+                                                    class="fa fa-circle-o"></i>Quadrante
+                                                4</a></li>
+                                    </ul>
+                                </li>
+                                @can('ver-controle-epi')
+                                <li class="{{ request()->routeIs('epis.index') ? 'active' : '' }}">
+                                    <a href="{{ route('epis.index') }}"><i class="fa fa-circle-o"></i>Controle Epi</a>
+                                </li>
+                                @endcan
                             </ul>
                         </li>                        
                         <li class="treeview">
@@ -78,7 +93,7 @@
                                     <a href="{{ route('gqc-pneus-faturados-marca') }}"><i class="fa fa-circle-o"></i>GQC
                                         Brigdestone</a>
                                 </li>
-                                <li class="{{request()->routeIs('api-new-age.index') ? 'active' : '' }}">
+                                <li class="{{ request()->routeIs('api-new-age.index') ? 'active' : '' }}">
                                     <a href="{{ route('api-new-age.index') }}">
                                         <i class="fa fa-circle-o"></i>Garantia Ouro
                                     </a>

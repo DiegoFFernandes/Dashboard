@@ -15,8 +15,10 @@ class CreateExecutoretapasTable extends Migration
     {
         Schema::create('executoretapas', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('matricula');
             $table->string('nmexecutor', 60);
             $table->bigInteger('cd_empresa')->nullable();
+            $table->string('localizacao', 60);
             $table->string('stativo', 2);
             $table->timestamps();
         });

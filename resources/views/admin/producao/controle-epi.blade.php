@@ -6,6 +6,23 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-md-4">
+                <div class="box box-info collapsed-box">
+                    <div class="box-header with-border">
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <h4 class="box-title">Atualizar Executores</h4>
+                    </div>
+                    <div class="box-body">                        
+                        <button type="button" class="btn btn-success mb-2 pull-right" id="btn-search">Atualizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
                 @includeIf('admin.master.messages')
                 <div class="nav-tabs-custom" style="cursor: move;">
                     <ul class="nav nav-tabs pull-right ui-sortable-handle">
@@ -53,7 +70,7 @@
                                     <label for="periodo">Periodo:</label>
                                     <input type="text" class="form-control pull-right" id="daterange" value=""
                                         autocomplete="off">
-                                </div>                                
+                                </div>
                             </div>
                             <div class="box-footer">
                                 <button type="button" class="btn btn-primary mb-2" id="btn-search">Consultar</button>
@@ -121,14 +138,12 @@
 
                 // }
             });
-            $('.nav-tabs a[href="#relatorio-epi"]').on('click', function() {                
-                  
+            $('.nav-tabs a[href="#relatorio-epi"]').on('click', function() {
                 $('#relatorio-epi .executor option[value=0]').text('TODOS').trigger('change');
                 $('#relatorio-epi .etapas option[value=0]').text('TODOS').trigger('change');
-                $('#uso-epis').select2(); 
+                $('#uso-epis').select2();
                 $('.etapas').select2();
                 $('.executor').select2();
-                
             });
             $('.nav-tabs a[href="#operador-epi"]').on('click', function() {
                 $('#relatorio').addClass('hidden');
@@ -184,7 +199,7 @@
                 $('#table-controle-epi').DataTable().destroy();
                 $('#relatorio').removeClass('hidden');
                 var etapa, epis, uso;
-                etapa = $('#relatorio-epi .etapas').val();                
+                etapa = $('#relatorio-epi .etapas').val();
                 epis = $('#list-epis').val();
                 executor = $('#relatorio-epi .executor').val();
                 uso = $('#uso-epis').val();
@@ -200,46 +215,48 @@
                     ajax: {
                         url: "{{ route('get-uso-epis') }}",
                         data: {
-                            'etapa': etapa, 
-                            'epis': epis, 
+                            'etapa': etapa,
+                            'epis': epis,
                             'executor': executor,
                             'uso': uso,
                             'data_ini': inicioData,
                             'data_fim': fimData
-                        }                        
+                        }
                     },
                     columns: [{
-                        data: 'id',
-                        name: 'id'
-                    }, 
-                    {
-                        data: 'nmexecutor',
-                        name: 'nmexecutor'
-                    },
-                    {
-                        data: 'ds_epi',
-                        name: 'ds_epi'
-                    },
-                    {
-                        data: 'dsetapaempresa',
-                        name: 'dsetapaempresa'
-                    },
-                    {
-                        data: 'uso',
-                        name: 'uso'
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at'
-                    }], 
+                            data: 'id',
+                            name: 'id'
+                        },
+                        {
+                            data: 'nmexecutor',
+                            name: 'nmexecutor'
+                        },
+                        {
+                            data: 'ds_epi',
+                            name: 'ds_epi'
+                        },
+                        {
+                            data: 'dsetapaempresa',
+                            name: 'dsetapaempresa'
+                        },
+                        {
+                            data: 'uso',
+                            name: 'uso'
+                        },
+                        {
+                            data: 'created_at',
+                            name: 'created_at'
+                        }
+                    ],
                     columnDefs: [{
-                        width: '1%',
-                        targets: 0
-                    },
-                    {
-                        width: '2%',
-                        targets: 5
-                    },  ],
+                            width: '1%',
+                            targets: 0
+                        },
+                        {
+                            width: '2%',
+                            targets: 5
+                        },
+                    ],
                 });
             });
         });

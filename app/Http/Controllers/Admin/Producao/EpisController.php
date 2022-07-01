@@ -9,6 +9,7 @@ use App\Models\EpiEtapasProducao;
 use App\Models\EpisEtapasExecutores;
 use App\Models\EtapasProducaoPneu;
 use App\Models\ExecutorEtapa;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -41,9 +42,10 @@ class EpisController extends Controller
         $title_page   = 'Controle de Epis';
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
-        $epis = $this->epis->all();
-        $executor = $this->executor->searchExecutorEtapaJunsoft();
+        $epis = $this->epis->all();        
         $etapas = $this->etapas->all();
+        $empresas = $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
+        $executor = $this->executor->searchExecutorEtapaJunsoft();
         // $this->executor->StoreExecutorEtapa($executor);
 
         return view('admin.producao.controle-epi', compact(
@@ -52,7 +54,8 @@ class EpisController extends Controller
             'uri',
             'executor',
             'etapas',
-            'epis'
+            'epis', 
+            'empresas'
         ));
     }
     public function searchSetores()

@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Http\Controllers\Admin\Producao\EpisController;
+use Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EpisEtapasExecutores extends Model
@@ -26,11 +28,11 @@ class EpisEtapasExecutores extends Model
             'updated_at' => now(),
         ]);
     }
-    public function UsoEpi($etapa, $executor, $epi, $uso, $data_ini, $data_fim)
+    public function UsoEpi($etapa, $executor, $epi, $uso, $rede, $data_ini, $data_fim)
     {
         return EpisEtapasExecutores::select([DB::raw('epis_etapas_executores.id, executoretapas.nmexecutor, 
         epis.ds_epi, etapasproducaopneus.dsetapaempresa, 
-        case when epis_etapas_executores.uso = "CF" then "CONFORME" ELSE "NÃO CONFORME" end uso, epis_etapas_executores.created_at')])
+        case when epis_etapas_executores.uso = "CF" then "CONFORME" ELSE "NÃO CONFORME" end uso, executoretapas.localizacao, epis_etapas_executores.created_at')])
             ->join('epis', 'epis.id', 'epis_etapas_executores.id_epi')
             ->join('etapasproducaopneus', 'etapasproducaopneus.id', 'epis_etapas_executores.id_etapa')
             ->join('executoretapas', 'executoretapas.id', 'epis_etapas_executores.id_executor')
@@ -53,6 +55,11 @@ class EpisEtapasExecutores extends Model
                 return;
             }, function ($q) use ($uso) {
                 return $q->where('uso', $uso);
+            })
+            ->when($rede == '0', function ($q) {
+                return $q->where('executoretapas.localizacao', Helper::VerifyRegion(Auth::user()->conexao));
+            }, function ($q) use ($rede) {
+                return $q->where('executoretapas.localizacao', $rede);
             })
             ->when($data_ini == '0' , function ($q) {
                 return;

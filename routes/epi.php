@@ -9,5 +9,6 @@ Route::middleware(['auth', 'permission:ver-controle-epi'])->group(function () {
         Route::get('getSearchSetor', [EpisController::class, 'searchSetores'])->name('search-etapas-producao');
         Route::get('epi-setor-operador', [EpisController::class, 'SaveEpiSetorOperador'])->name('save-epi-etapas-operador');
         Route::get('uso-epi-setor-operador', [EpisController::class, 'RelatorioUsoEpi'])->name('get-uso-epis');
+        Route::get('get-buscar-executor', [EpisController::class, 'SearchExecutor'])->name('get-buscar-executor');
     });
 });

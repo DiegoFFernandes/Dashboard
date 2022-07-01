@@ -15,8 +15,9 @@
                         </div>
                         <h4 class="box-title">Atualizar Executores</h4>
                     </div>
-                    <div class="box-body">                        
-                        <button type="button" class="btn btn-success mb-2 pull-right" id="btn-search">Atualizar</button>
+                    <div class="box-body">
+                        <button type="button" class="btn btn-success mb-2 pull-right"
+                            id="btn-search-executores">Atualizar</button>
                     </div>
                 </div>
             </div>
@@ -67,6 +68,14 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label for="localizacao">Rede:</label>
+                                    <select class="form-control" id="localizacao" style="width: 100%;">
+                                        <option selected="selected" value="0">LOCAL</option>
+                                        <option value="SUL">SUL</option>
+                                        <option value="NORTE">NORTE</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="periodo">Periodo:</label>
                                     <input type="text" class="form-control pull-right" id="daterange" value=""
                                         autocomplete="off">
@@ -94,6 +103,7 @@
                                     <th>Epi</th>
                                     <th>Etapa</th>
                                     <th>Uso</th>
+                                    <th>Rede</th>
                                     <th>Registro</th>
                                 </tr>
                             </thead>
@@ -144,6 +154,7 @@
                 $('#uso-epis').select2();
                 $('.etapas').select2();
                 $('.executor').select2();
+                $('#localizacao').select2();
             });
             $('.nav-tabs a[href="#operador-epi"]').on('click', function() {
                 $('#relatorio').addClass('hidden');
@@ -203,6 +214,7 @@
                 epis = $('#list-epis').val();
                 executor = $('#relatorio-epi .executor').val();
                 uso = $('#uso-epis').val();
+                localizacao = $('#localizacao').val();
                 $('#table-controle-epi').DataTable({
                     responsive: true,
                     language: {
@@ -219,6 +231,7 @@
                             'epis': epis,
                             'executor': executor,
                             'uso': uso,
+                            'localizacao': localizacao,
                             'data_ini': inicioData,
                             'data_fim': fimData
                         }
@@ -244,6 +257,10 @@
                             name: 'uso'
                         },
                         {
+                            data: 'localizacao',
+                            name: 'localizacao'
+                        },
+                        {
                             data: 'created_at',
                             name: 'created_at'
                         }
@@ -254,9 +271,32 @@
                         },
                         {
                             width: '2%',
-                            targets: 5
+                            targets: [5, 6]
                         },
                     ],
+                    dom: 'Blfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
+                });
+            });
+            $('#btn-search-executores').click(function() {
+                $.ajax({
+                    method: "GET",
+                    url: "{{ route('get-buscar-executor') }}",
+                    beforeSend: function(){
+                        $('#loading').removeClass('hidden');
+                    },
+                    success: function(result) {
+                        $('#loading').addClass('hidden');
+                        setTimeout(function() {
+                            $(".alert").removeClass('hidden');
+                            $(".alert p").text(result.success);
+                        }, 400);
+                        window.setTimeout(function() {
+                            $(".alert").addClass('hidden');
+                        }, 3000);
+                    }
                 });
             });
         });

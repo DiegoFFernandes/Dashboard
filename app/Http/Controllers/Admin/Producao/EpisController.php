@@ -31,9 +31,10 @@ class EpisController extends Controller
         $this->etapas = $etapa;
         $this->epi_etapa = $epiEtapa;
         $this->epis = $epis;
-        $this->epiexecutor = $epiexecutor;
+        $this->epiexecutor = $epiexecutor;       
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
+            $this->localizacao =  Helper::VerifyRegion(Auth::user()->conexao);
             return $next($request);
         });
     }
@@ -43,10 +44,9 @@ class EpisController extends Controller
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
         $epis = $this->epis->all();        
-        $etapas = $this->etapas->all();
-        $empresas = $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
-        $executor = $this->executor->searchExecutorEtapaJunsoft();
-        // $this->executor->StoreExecutorEtapa($executor);
+        $etapas = $this->etapas->all();        
+        // $empresas = $empresas = $this->empresa->EmpresaFiscal($localizacao);
+        $executor = $this->executor->ListExecutor($this->localizacao);        
 
         return view('admin.producao.controle-epi', compact(
             'title_page',
@@ -54,8 +54,7 @@ class EpisController extends Controller
             'uri',
             'executor',
             'etapas',
-            'epis', 
-            'empresas'
+            'epis'
         ));
     }
     public function searchSetores()
@@ -86,7 +85,7 @@ class EpisController extends Controller
         return response()->json('Epis associados para o operador!');
     }
     public function RelatorioUsoEpi()
-    {
+    {        
         if (empty($this->request->data_ini)) {
             $data_ini = 0;
             $data_fim = 0;            
@@ -99,9 +98,16 @@ class EpisController extends Controller
             $this->request->executor,
             $this->request->epis,
             $this->request->uso,
+            $this->request->localizacao,
             $data_ini,
             $data_fim,
+            
         );
         return DataTables::of($data)->make(true);
+    }
+    public function SearchExecutor(){
+        $execJunsoft = $this->executor->searchExecutorEtapaJunsoft();
+        $this->executor->StoreExecutorEtapa($execJunsoft, $this->localizacao);
+        return response()->json(['success' => 'Executores rede '. $this->localizacao .' sincronizados com sucesso, atualize a página para visualizar novos!']);
     }
 }

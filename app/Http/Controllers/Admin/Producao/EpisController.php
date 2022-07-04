@@ -12,6 +12,7 @@ use App\Models\ExecutorEtapa;
 use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Yajra\DataTables\Facades\DataTables;
 
 class EpisController extends Controller
@@ -72,9 +73,16 @@ class EpisController extends Controller
     }
     public function SaveEpiSetorOperador()
     {
+
         $executor = ExecutorEtapa::findOrFail($this->request->executor);
         $etapa = EtapasProducaoPneu::findOrFail($this->request->etapa);
         $episEtapa = $this->epi_etapa->SearchEpisEtapas($this->request->etapa);
+
+        $existe = $this->epiexecutor->VerifyIfExists($executor->id, $etapa->id, date('Y-m-d'));
+        if($existe){
+            return response()->json(['error' => 'Epis já associados para o operador hoje!']); 
+        }
+
         foreach ($episEtapa as $key => $e) {
             if ($e->id_epi == isset($this->request->epis[$key])) {
                 $this->epiexecutor->store($executor->id, $etapa->id, $e->id_epi, 'CF');
@@ -82,7 +90,7 @@ class EpisController extends Controller
                 $this->epiexecutor->store($executor->id, $etapa->id, $e->id_epi, 'NF');
             }
         }
-        return response()->json('Epis associados para o operador!');
+        return response()->json(['success' => 'Epis associados para o operador!']);
     }
     public function RelatorioUsoEpi()
     {        

@@ -192,17 +192,26 @@
                     beforeSend: function() {
                         // $('#epis-etapa').remove();
                     },
-                    success: function(result) {
-                        // alert(result);
-                        setTimeout(function() {
-                            $(".alert").removeClass('hidden');
-                            $(".alert p").text(result);
-                        }, 400);
-                        window.setTimeout(function() {
-                            $(".alert").addClass('hidden');
-                        }, 2000);
-                        // $('#btn-save').removeClass('hidden');
-                        // $('#body-select').append(result.html);
+                    success: function(result) {                        
+                        if (result.error) {
+                            setTimeout(function() {
+                                $(".alert").removeClass('alert-success hidden').addClass('alert-warning');
+                                $(".alert p").text(result.error);
+                            }, 400);
+                            window.setTimeout(function() {
+                                $(".alert").addClass('hidden');
+                            }, 4000);
+                        } else {
+                            setTimeout(function() {
+                                $(".alert").removeClass('alert-warning hidden').addClass('alert-success');
+                                $(".alert p").text(result.success);
+                            }, 400);
+                            window.setTimeout(function() {
+                                $(".alert").addClass('hidden');
+                            }, 4000);
+                            // $('#btn-save').removeClass('hidden');
+                            // $('#body-select').append(result.html);
+                        }
                     }
                 });
             });
@@ -284,7 +293,7 @@
                 $.ajax({
                     method: "GET",
                     url: "{{ route('get-buscar-executor') }}",
-                    beforeSend: function(){
+                    beforeSend: function() {
                         $('#loading').removeClass('hidden');
                     },
                     success: function(result) {

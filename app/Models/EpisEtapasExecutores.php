@@ -68,4 +68,12 @@ class EpisEtapasExecutores extends Model
             })
             ->get();
     }
+    public function VerifyIfExists($id_executor, $etapa, $data){
+        return EpisEtapasExecutores::join('executoretapas', 'executoretapas.id', 'epis_etapas_executores.id_executor')
+        ->where('epis_etapas_executores.id_executor', $id_executor)
+        ->where('epis_etapas_executores.id_etapa', $etapa)
+        ->whereDate('epis_etapas_executores.created_at', $data)
+        ->where('executoretapas.localizacao','SUL')
+        ->exists();
+    }
 }

@@ -45,20 +45,18 @@ class ApiNewAgeController extends Controller
         $title_page   = 'Exportação Automatica';
         $modelo = $this->modelopneu->list();
         $medida = $this->medida->list();
-        $ultima_transmissao = $this->apiNewAge->UltimaTransmissao();
+        $ultima_transmissao = $this->apiNewAge->UltimaTransmissao($this->user->empresa);
         if (count($ultima_transmissao) == 0) {
-            $transmissao = Config::get('constants.options.dt1_h_m_days');
+            $dt_inicial = Config::get('constants.options.dt1_h_m_days');
         } else {
-            $transmissao = $ultima_transmissao[0]->ULTIMA_TRASNMISSAO;
+            $dt_inicial = $ultima_transmissao[0]->ULTIMA_TRASNMISSAO;
         }
-        $dt_inicial = $transmissao;
-        $dt_final = Config::get('constants.options.today');
+        $dt_final = date('m-d-Y H:i');
         $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);
 
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
         $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
-
         return view('admin.producao.garantia-bgw', compact(
             'title_page',
             'user_auth',
@@ -107,6 +105,7 @@ class ApiNewAgeController extends Controller
     }
     public function InsertHora($hora)
     {
+        // Hora abaixo e falsa somente porque as ordens feitas manuais não salvam hora no banco junsoft
         return empty($hora) ? "07:16:32" : $hora;
     }
     public function RemovePCasa($str)
@@ -115,12 +114,30 @@ class ApiNewAgeController extends Controller
     }
     public function callXmlProcess()
     {
+        if ($this->user->empresa == 3) {
+            $custumerid = env('CUSTUMERID_NEWAGE_SUL');
+            $username = env('USERNAME_NEWAGE_SUL');
+            $password = env('PASSWORD_NEWAGE_SUL');
+            $cod_emp =  env('COD_I_EMP_SUL');
+        } elseif ($this->user->empresa == 101) {
+            $custumerid = env('CUSTUMERID_NEWAGE_PVAI');
+            $username = env('USERNAME_NEWAGE_PVAI');
+            $password = env('PASSWORD_NEWAGE_PVAI');
+            $cod_emp =  env('COD_I_EMP_PVAI');
+        } elseif ($this->user->empresa == 104) {
+            $custumerid = env('CUSTUMERID_NEWAGE_ASSIS');
+            $username = env('USERNAME_NEWAGE_ASSIS');
+            $password = env('PASSWORD_NEWAGE_ASSIS');
+            $cod_emp =  env('COD_I_EMP_ASSIS');
+        } else {
+            return "<div align='center'><h3>Empresa não existe vinculo com a bandag, contacte setor de TI!</h3></div>";
+        }
         $pneus = $this->apiNewAge->pneusEnviar('N', $this->user->empresa);
         $qtd_reg = count($pneus);
 
         foreach ($pneus as $p) {
             $ordens[] = "&lt;REGISTRO ORD_NUMERO=\"$p->ORD_NUMERO\"&gt;
-            &lt;ORD_CODBTS&gt;" . env('COD_I_EMP_SUL') . "&lt;/ORD_CODBTS&gt;
+            &lt;ORD_CODBTS&gt;" . $cod_emp . "&lt;/ORD_CODBTS&gt;
             &lt;ORD_NUMERO&gt;$p->ORD_NUMERO&lt;/ORD_NUMERO&gt;
             &lt;ORD_DATEMI&gt;" . Carbon::createFromFormat('Y-m-d', $p->ORD_DATEMI)->format('d/m/Y') . "&lt;/ORD_DATEMI&gt;
             &lt;ORD_HOREMI&gt;" . $this->InsertHora($p->ORD_HOREMI) . "&lt;/ORD_HOREMI&gt;
@@ -164,7 +181,7 @@ class ApiNewAgeController extends Controller
             &lt;QUADRANTE&gt;0&lt;/QUADRANTE&gt;
             &lt;COD_I_CICLO&gt;$p->COD_I_CICLO&lt;/COD_I_CICLO&gt;
             &lt;COD_I_CONS&gt;RADIAL&lt;/COD_I_CONS&gt;
-            &lt;COD_I_EMP&gt;" . env('COD_I_EMP_SUL') . "&lt;/COD_I_EMP&gt;
+            &lt;COD_I_EMP&gt;" . $cod_emp . "&lt;/COD_I_EMP&gt;
             &lt;COD_I_MARCA&gt;$p->COD_I_MARCA&lt;/COD_I_MARCA&gt;
             &lt;COD_I_MOD&gt;$p->MODELO&lt;/COD_I_MOD&gt;
             &lt;COD_I_MED&gt;" . $this->RemovePCasa($p->COD_I_MED) . "&lt;/COD_I_MED&gt;
@@ -201,9 +218,9 @@ class ApiNewAgeController extends Controller
                                                     &lt;/REGISTROS&gt;                                                    
                                                 &lt;/REGISTROS_GARANTIAS&gt;                                                
                                             </xml1>      
-                                            <CostumerId>" . env('CUSTUMERID_NEWAGE_SUL') . "</CostumerId>
-                                            <strUsername>" . env('USERNAME_NEWAGE_SUL') . "</strUsername>
-                                            <strPassword>" . env('PASSWORD_NEWAGE_SUL') . "</strPassword>  
+                                            <CostumerId>" . $custumerid . "</CostumerId>
+                                            <strUsername>" . $username  . "</strUsername>
+                                            <strPassword>" . $password . "</strPassword>  
                                         </callXmlProcess>  
                                     </soap:Body></soap:Envelope>",
             CURLOPT_HTTPHEADER => array(

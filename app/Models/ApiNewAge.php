@@ -25,8 +25,9 @@ class ApiNewAge extends Model
         };
         return $this->connection = Auth::user()->conexao;
     }
-    public function pneusEnviar($exportado, $empresa){
-        $this->connection = 'mysql';       
+    public function pneusEnviar($exportado, $empresa)
+    {
+        $this->connection = 'mysql';
 
         return ApiNewAge::select([DB::raw("pneus_ouro_bgw.id, pneus_ouro_bgw.ORD_CODBTS, pneus_ouro_bgw.CD_EMP, pneus_ouro_bgw.ORD_NUMERO,
         pneus_ouro_bgw.ORD_DATEMI, pneus_ouro_bgw.ORD_HOREMI, pneus_ouro_bgw.NUM_NF, pneus_ouro_bgw.DATA_NF,
@@ -36,45 +37,52 @@ class ApiNewAge extends Model
         pneus_ouro_bgw.MATRICULA, pneus_ouro_bgw.FOGO, pneus_ouro_bgw.DOT, pneus_ouro_bgw.MARCA, pneus_ouro_bgw.MODELO, pneus_ouro_bgw.CICLOVIDA,
         pneus_ouro_bgw.CHV_COLETA, pneus_ouro_bgw.PRECO, pneus_ouro_bgw.COD_I_CICLO, pneus_ouro_bgw.COD_I_MARCA, pneus_ouro_bgw.COD_I_MED,
         pneus_ouro_bgw.COD_I_BANDA, coalesce(log_api_new_ages.EXPORTADO, 'N') EXPORTADO")])
-        ->leftjoin('log_api_new_ages', 'log_api_new_ages.ordem', 'pneus_ouro_bgw.ORD_NUMERO')
-        ->where('CD_EMP', '=', $empresa)
-        ->where('log_api_new_ages.exportado', '=' , ''.$exportado.'')
-        ->when($exportado == 'N', function($q) {          
-            return $q->orWhereNull('log_api_new_ages.exportado');            
-        })         
-        ->get();
-
-        
+            ->leftjoin('log_api_new_ages', 'log_api_new_ages.ordem', 'pneus_ouro_bgw.ORD_NUMERO')
+            ->where('pneus_ouro_bgw.CD_EMP', '=', $empresa)
+            // ->where('log_api_new_ages.exportado', '=' , ''.$exportado.'')
+            ->when($exportado == 'N', function ($q) {
+                $q->where(function ($query) {
+                    $query->where('log_api_new_ages.exportado', '=', 'N')
+                          ->orWhereNull('log_api_new_ages.exportado');
+                });
+            })
+            ->when($exportado == 'S', function ($q) {
+                $q->where('log_api_new_ages.exportado', '=' , 'S');
+            })
+            ->when($exportado == 'C', function ($q) {
+                $q->where('log_api_new_ages.exportado', '=' , 'C');
+            })
+            ->get();
     }
     public function pneusBGW($empresa, $dt_inicial, $dt_final)
     {
-        $query = "SELECT DISTINCT 39193 ORD_CODBTS, PN.idempresa CD_EMP, OPR.ID ORD_NUMERO, PN.dtemissao ORD_DATEMI, 
+        $query = "SELECT DISTINCT 39193 ORD_CODBTS, PN.idempresa CD_EMP, OPR.ID ORD_NUMERO, PN.dtemissao ORD_DATEMI,
         PN.hremissao ORD_HOREMI, n.nr_notafiscal NUM_NF, n.dt_emissao DATA_NF, N.dt_registro EMISSAONF, PC.nr_cnpjcpf CLI_CPF,
         cast(PC.nm_pessoa as varchar(100) character SET UTF8)  CLI_NOME,
         ep.nr_cep CLI_CEP,
         cast(ep.ds_endereco as varchar(100) character SET UTF8)  CLI_LOGRAD,
         ep.nr_endereco CLI_NUMERO,
-        cast(ep.ds_complemento as varchar(100) character SET UTF8) CLI_COMPL, 
-        cast(ep.ds_bairro as varchar(100) character SET UTF8) CLI_BAIRRO, 
-        mu.ds_municipio CLI_CIDADE, mu.sg_estado CLI_UF, 
+        cast(ep.ds_complemento as varchar(100) character SET UTF8) CLI_COMPL,
+        cast(ep.ds_bairro as varchar(100) character SET UTF8) CLI_BAIRRO,
+        mu.ds_municipio CLI_CIDADE, mu.sg_estado CLI_UF,
         pc.ds_email CLI_EMAIL,
-        ep.nr_fone CLI_TEL1, MDP.dsmedidapneu MEDIDA, SPA.iditem BANDA, DP.dsdesenho||' '|| bp.nrlargura DESENHOPNEU, p.nrserie MATRICULA, 
+        ep.nr_fone CLI_TEL1, MDP.dsmedidapneu MEDIDA, SPA.iditem BANDA, DP.dsdesenho||' '|| bp.nrlargura DESENHOPNEU, p.nrserie MATRICULA,
         coalesce(CASE P.NRFOGO WHEN '' THEN 0 END, 0) NUM_FOGO,
         P.NRDOT DOT, MAP.dsmarca MARCA,  MP.DSMODELO MODELO,
-        OPR.qt_reformas CICLOVIDA, PN.id CHV_COLETA, II.VL_UNITARIO PRECO,
-        (CASE OPR.qt_reformas WHEN 0 THEN 'R1' WHEN 1 THEN 'R1' WHEN 2 THEN 'R1' END) COD_I_CICLO,
+        coalesce(OPR.qt_reformas, 1) CICLOVIDA, PN.id CHV_COLETA, II.VL_UNITARIO PRECO,
+        coalesce(CASE OPR.qt_reformas WHEN 0 THEN 'R1' WHEN 1 THEN 'R1' WHEN 2 THEN 'R1' END, 'R1') COD_I_CICLO,
         (CASE map.id
-               when 11 then 'BG'
-               when 6 then 'CT'
-               when 1 then 'FS'
-               when 8 then 'FS'
-               when 2 then 'GY'
-               when 3 then 'MI'
-               when 4 then 'PI'
-               when 531 then 'DT'
-        END) COD_I_MARCA, replace(MDP.dsmedidapneu, '.', ',') COD_I_MED, 
-        (CASE OPR.qt_reformas WHEN 0 THEN 'BGW' WHEN 1 THEN 'BGW' WHEN 2 THEN 'BGW' END) COD_I_TPGAR,
-        BP.dscodigorqg COD_I_BANDA      
+        when 11 then 'BG'
+        when 6 then 'CT'
+        when 1 then 'FS'
+        when 8 then 'FS'
+        when 2 then 'GY'
+        when 3 then 'MI'
+        when 4 then 'PI'
+        when 531 then 'DT'
+        END) COD_I_MARCA, replace(MDP.dsmedidapneu, '.', ',') COD_I_MED,
+        coalesce(CASE OPR.qt_reformas WHEN 0 THEN 'BGW' WHEN 1 THEN 'BGW' WHEN 2 THEN 'BGW' END, 'BGW') COD_I_TPGAR,
+        BP.dscodigorqg COD_I_BANDA                   
         
         FROM NOTA N 
         INNER JOIN ITEMNOTA II ON (II.CD_EMPRESA = N.CD_EMPRESA 
@@ -143,6 +151,7 @@ class ApiNewAge extends Model
                 ApiNewAge::updateOrInsert(
                     [
                         'ORD_NUMERO' => $p->ORD_NUMERO,
+                        'CD_EMP' => $p->CD_EMP,
                     ],
                     [
                         'ORD_CODBTS'    => 39193,
@@ -151,7 +160,7 @@ class ApiNewAge extends Model
                         'ORD_DATEMI' => $p->ORD_DATEMI,
                         'ORD_HOREMI' => $p->ORD_HOREMI,
                         'NUM_NF' => $p->NUM_NF,
-                        'DATA_NF' => $p->DATA_NF,                        
+                        'DATA_NF' => $p->DATA_NF,
                         'CLI_CPF' => $p->CLI_CPF,
                         'CLI_NOME' => $p->CLI_NOME,
                         'CLI_CEP' => $p->CLI_CEP,
@@ -177,7 +186,7 @@ class ApiNewAge extends Model
                         'COD_I_CICLO' => $p->COD_I_CICLO,
                         'COD_I_MARCA' => $p->COD_I_MARCA,
                         'COD_I_MED' => $p->COD_I_MED,
-                        'COD_I_BANDA' => $p->COD_I_BANDA,                        
+                        'COD_I_BANDA' => $p->COD_I_BANDA,
 
                         "created_at"    =>  \Carbon\Carbon::now(), # new \Datetime()
                         "updated_at"    => \Carbon\Carbon::now(),  # new \Datetime()
@@ -188,12 +197,13 @@ class ApiNewAge extends Model
             return $th;
         }
         return 1;
-    }    
-    public function UltimaTransmissao()
+    }
+    public function UltimaTransmissao($empresa)
     {
         $this->connection = 'mysql';
         try {
-            $transmissao = ApiNewAge::select(DB::raw("date_format(DATA_NF, '%m-%d-%Y') ULTIMA_TRASNMISSAO"))
+            $transmissao = ApiNewAge::select(DB::raw("date_format(DATA_NF, '%m-%d-%Y 00:00:00') ULTIMA_TRASNMISSAO"))
+                ->where('CD_EMP', $empresa)
                 ->orderBy('DATA_NF', 'DESC')
                 ->take('1')
                 ->get();
@@ -202,5 +212,4 @@ class ApiNewAge extends Model
         }
         return $transmissao;
     }
-    
 }

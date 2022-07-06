@@ -58,6 +58,7 @@
                                 style="width:100%; font-size: 12px;">
                                 <thead>
                                     <tr>
+                                        <th>Emp</th>
                                         <th>Ordem</th>
                                         <th>Cliente</th>
                                         <th>Nota</th>
@@ -86,6 +87,7 @@
                                 style="width:100%; font-size: 12px;">
                                 <thead>
                                     <tr>
+                                        <th>Emp</th>
                                         <th>Ordem</th>
                                         <th>Cliente</th>
                                         <th>Nota</th>
@@ -109,6 +111,7 @@
                                 style="width:100%; font-size: 12px;">
                                 <thead>
                                     <tr>
+                                        <th>Emp</th>
                                         <th>Ordem</th>
                                         <th>Cliente</th>
                                         <th>Nota</th>
@@ -210,7 +213,7 @@
                                         <label>Ordem:</label>
                                         <input type="text" id="diver-ordem" class="form-control" disabled>
                                     </div>
-                                </div>                                
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Pessoa:</label>
@@ -234,11 +237,11 @@
                                         <label>Ocorrência:</label>
                                         <textarea class="form-control" type="textarea" id="ocorrencia" rows="7" disabled></textarea>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
                         <!-- Modal footer -->
-                        <div class="modal-footer">                            
+                        <div class="modal-footer">
                             <button type="button" class="btn btn-primary modelClose" data-dismiss="modal">Sair</button>
                         </div>
                     </div>
@@ -343,6 +346,7 @@
             $('.nav-tabs a[href="#pneus-bgw"]').on('click', function() {
                 $('#table-bgw').DataTable().ajax.reload();
             });
+
             function initTable(tableId, data) {
                 $('#' + tableId).DataTable({
                     responsive: true,
@@ -360,6 +364,11 @@
                         }
                     },
                     columns: [{
+
+                            data: 'CD_EMP',
+                            name: 'cd_emp'
+                        },
+                        {
 
                             data: 'ORD_NUMERO',
                             name: 'ord_numero'
@@ -422,7 +431,7 @@
                     ],
                     columnDefs: [{
                         width: '20%',
-                        targets: 1
+                        targets: 2
                     }],
                 });
             };
@@ -437,18 +446,18 @@
                 $('#Editar').modal('show');
             });
             $('body').on('click', '#getFalhas', function(e) {
-                e.preventDefault();    
-                ordem = $(this).data('ordem');    
+                e.preventDefault();
+                ordem = $(this).data('ordem');
                 $.ajax({
-                    url: '{{route("api-new-age-divergencia-pneus")}}',
+                    url: '{{ route('api-new-age-divergencia-pneus') }}',
                     method: 'GET',
                     data: {
                         ordem: ordem,
-                    }, 
-                    beforeSend: function(){
+                    },
+                    beforeSend: function() {
                         $("#loading").removeClass('hidden');
-                    }, 
-                    success: function(result){
+                    },
+                    success: function(result) {
                         $("#loading").addClass('hidden');
                         $('#diver-empresa').val(result[0]['CD_EMP']);
                         $('#diver-ordem').val(result[0]['ordem']);
@@ -457,7 +466,7 @@
                         $('#diver-pessoa').val(result[0]['CLI_NOME']);
                         $('#diver-emissao').val(result[0]['DATA_NF']);
                     }
-                });       
+                });
                 $('#falhas').modal('show');
             });
             $('#SubmitEdit').on('click', function() {

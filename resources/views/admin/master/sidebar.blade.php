@@ -18,24 +18,26 @@
                     </li>
                 </ul>
             </li>
-            @canany(['ver-controle-epi'])            
-                <li class="treeview {{ request()->segment(1) == 'producao' ? 'active' : '' }}" style="height: auto;">
-                    <a href="#">
-                        <i class="fa fa-th"></i> <span>Produção</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    
-                    <ul class="treeview-menu" style="display: none;">
-                        <li class="treeview">
-                            <a href="#"><i class="fa fa-circle-o"></i> Movimentações
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>                            
-                            <ul class="treeview-menu">
-                                @role('admin|producao')
+            <li class="treeview {{ request()->segment(1) == 'producao' ? 'active' : '' }}" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-th"></i> <span>Produção</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-circle-o"></i> Movimentações
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ request()->segment(2) == 'acompanha-ordem' ? 'active' : '' }}">
+                                <a href="{{ route('admin.producao.acompanha.ordem') }}">
+                                    <i class="fa fa-circle-o"></i>Acompanhar Ordem</a>
+                            </li>
+                            @role('admin|producao')
                                 <li>
                                     <a href="{{ route('admin.producao.etapas') }}"><i class="fa fa-circle-o"></i>Produção
                                         por
@@ -43,10 +45,6 @@
                                 </li>
                                 <li>
                                     <a href="{{ route('admin.lote.pcp') }}"><i class="fa fa-circle-o"></i>Lote PCP</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.producao.acompanha.ordem') }}">
-                                        <i class="fa fa-circle-o"></i>Acompanhar Ordem</a>
                                 </li>
                                 <li>
                                 <li>
@@ -77,16 +75,16 @@
                                                 4</a></li>
                                     </ul>
                                 </li>
-                                @endrole
-                                @can('ver-controle-epi')
+                            @endrole
+                            @can('ver-controle-epi')
                                 <li class="{{ request()->routeIs('epis.index') ? 'active' : '' }}">
                                     <a href="{{ route('epis.index') }}"><i class="fa fa-circle-o"></i>Controle Epi</a>
                                 </li>
-                                @endcan
-                            </ul>
-                            
-                        </li>
-                                              
+                            @endcan
+
+                        </ul>
+                    </li>
+                    @canany(['ver-controle-epi'])
                         <li class="treeview">
                             <a href="#"><i class="fa fa-circle-o"></i> Bridgestone
                                 <span class="pull-right-container">
@@ -105,10 +103,9 @@
                                 </li>
                             </ul>
                         </li>
-                    </ul>
-                    
-                </li>                
-            @endcanany            
+                    @endcanany
+                </ul>
+            </li>
             @role('admin')
                 <li class="treeview {{ request()->segment(1) == 'usuario' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">

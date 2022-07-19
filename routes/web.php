@@ -24,7 +24,9 @@ use App\Http\Controllers\Admin\Pessoa\PessoaController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
 use App\Http\Controllers\Admin\Producao\ApiNewAgeController;
+use App\Http\Controllers\Admin\Producao\ExecutorController;
 use App\Http\Controllers\Admin\Producao\GqcBridgestoneController;
+use App\Http\Controllers\admin\Producao\MetaOperadorController;
 use App\Http\Controllers\Admin\ProducaoEtapaController;
 use App\Http\Controllers\admin\ProdutividadeController;
 use App\Http\Controllers\Admin\Produto\ImportaItemJunsoftController;
@@ -89,6 +91,10 @@ Route::prefix('producao')->group(function () {
     Route::get('acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem');
     Route::get('acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo{codigo_barras}', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem.barras');
     Route::post('acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo', [AcompanhaOrdemController::class, 'statusOrdem'])->name('admin.producao.acompanha.ordem.do');
+
+    Route::get('search-operador', [ExecutorController::class, 'searchExecutor'])->name('search-operador');
+    Route::get('meta-operador', [MetaOperadorController::class, 'index'])->name('meta-operador');
+    
 
     /*Produtividade Executores*/
     Route::get('produtividade-executores/quadrante-1', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante1');

@@ -39,6 +39,8 @@ class FinanceiroController extends Controller
     }
     public function getConciliacao()
     {
+        ini_set('max_execution_time', 600);
+        
         $cd_empresa = $this->request->cd_empresa;
         $dt_ini = $this->request->dt_inicio;
         $dt_fim = $this->request->dt_fim;      

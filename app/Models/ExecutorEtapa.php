@@ -58,4 +58,5 @@ class ExecutorEtapa extends Model
         $this->connection = 'mysql';
         return ExecutorEtapa::where('localizacao', $local)->orderBy('nmexecutor')->get();
     }
+    
 }

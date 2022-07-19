@@ -339,8 +339,7 @@
                     }
                 });
             }
-        })
-
+        });
         $(document).ready(function() {
             $('#cd_barras').focus();
             $('.pula').keypress(function(e) {

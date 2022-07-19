@@ -17,7 +17,8 @@
                                     <option value="0" selected="selected">Selecione</option>
                                     <option value="1">AM MORENO PNEUS LTDA</option>
                                     <option value="21">EMAX RECAPAGENS EIRELI</option>
-                                    <option value="3">SUPER RODAS RECAPAGENS LTDA</option>
+                                    <option value="3">SUPER RODAS - CAMPINA</option>
+                                    <option value="4">SUPER RODAS - GUARAPUAVA</option>
                                 </select>
                             </div>
                         </div>
@@ -70,7 +71,6 @@
                 inicioData = 0;
                 fimData = 0;
             });
-
             $('#submit-seach').click(function() {
                 let cd_empresa = $("#cd_empresa").val();
                 let nm_empresa = $("#cd_empresa :selected").text();

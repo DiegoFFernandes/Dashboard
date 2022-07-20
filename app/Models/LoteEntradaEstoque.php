@@ -5,11 +5,13 @@ namespace App\Models;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class LoteEntradaEstoque extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'cd_empresa',
         'descricao',
         'cd_usuario',
         'status',
@@ -22,12 +24,12 @@ class LoteEntradaEstoque extends Model
 
     public function lotesAll()
     {
-        return LoteEntradaEstoque::all();
+        return LoteEntradaEstoque::where('cd_empresa', Auth::user()->empresa);
     }
-
     public function storeData($input)
     {
         LoteEntradaEstoque::create([
+            'cd_empresa' => Auth::user()->empresa,
             'descricao' => $input['ds_lote'],
             'cd_usuario' => $input['cd_usuario'],
             'status' => $input['status'],
@@ -38,7 +40,6 @@ class LoteEntradaEstoque extends Model
     {
         return LoteEntradaEstoque::findOrFail($id);
     }
-
     public function updateData($data, $qtd_item)
     {
         LoteEntradaEstoque::where('id', $data->id)->update(['status' => 'F', 'ps_liquido_total' => $data->peso, 'qtd_itens' => $qtd_item]);

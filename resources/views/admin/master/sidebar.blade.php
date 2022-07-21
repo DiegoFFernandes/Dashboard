@@ -357,7 +357,7 @@
                                     class="fa fa-archive"></i>Importa Item Junsoft</a>
                         </li>
                         <li class="active"><a href="{{ route('estoque.index') }}"><i
-                                    class="fa fa-archive"></i>Criar Lote Entrada</a>
+                                    class="fa fa-archive"></i>Criar Lote Estoque</a>
                         </li>
                     </ul>
                 </li>

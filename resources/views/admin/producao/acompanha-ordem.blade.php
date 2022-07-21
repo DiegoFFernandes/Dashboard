@@ -144,36 +144,35 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-6 bg-gray"
-                                    style="padding-top: 1em; background-color: #e2eaff !important">
-                                    <div class="col-lg-4 col-xs-6">
-
-                                        <div class="small-box bg-green">
-                                            <div class="inner">
-                                                <h3 class="meta-hoje"></h3>
-                                                <p>Hoje</p>
+                                <div class="col-md-6" style="padding-top: 1em;">
+                                    <div class="box box-primary">
+                                        <div class="box-body with-border">
+                                            <div class="col-lg-4 col-xs-6">
+                                                <div class="small-box bg-green">
+                                                    <div class="inner">
+                                                        <h3 class="meta-hoje"></h3>
+                                                        <p>Hoje</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-xs-6">
+                                                <div class="small-box bg-light-blue">
+                                                    <div class="inner">
+                                                        <h3 class="meta-ontem"></h3>
+                                                        <p>Ontem</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-xs-6">
+                                                <div class="small-box bg-light-blue">
+                                                    <div class="inner">
+                                                        <h3 class="meta-anteontem"></h3>
+                                                        <p>Anteontem</p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-lg-4 col-xs-6">
-                                        <div class="small-box bg-light-blue">
-                                            <div class="inner">
-                                                <h3 class="meta-ontem"></h3>
-                                                <p>Ontem</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-xs-6">
-                                        <div class="small-box bg-light-blue">
-                                            <div class="inner">
-                                                <h3 class="meta-anteontem"></h3>
-                                                <p>Anteontem</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
 
@@ -187,8 +186,8 @@
     <!-- /.content -->
 @endsection
 @section('scripts')
-    {{-- <script src="{{ asset('js/scripts.js') }}"></script> --}}
     @includeIf('admin.master.datatables')
+    <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.etapas').select2();
@@ -204,7 +203,9 @@
                     },
                     success: function(response) {
                         if (response.error) {
-                            msg(response.error, 'alert-warning');
+                            ''
+                            msg(response.error, 'alert-warning', 'fa fa-warning');
+                            return false;
                         } else {
                             $('#nm_executor').val(response.success);
                         }
@@ -216,7 +217,8 @@
                 nm_executor = $('#nm_executor').val();
                 cd_executor = $('#cd_executor').val();
                 if (nm_executor == '' || cd_executor == '' || cd_etapa == 0) {
-                    msg('Favor insira uma etapa / código de executor e clique na lupa!', 'alert-warning')
+                    msg('Favor insira uma etapa / código de executor e clique na lupa!', 'alert-warning',
+                        'fa fa-warning')
                 } else {
                     $.ajax({
                         method: 'GET',
@@ -241,17 +243,6 @@
                     });
                 }
             });
-
-            function msg(msg, classe) {
-                setTimeout(function() {
-                    $(".alert").removeClass('hidden alert-success alert-warning').addClass(classe);
-                    $(".alert p").text(msg);
-                }, 400);
-
-                window.setTimeout(function() {
-                    $(".alert").addClass('hidden');
-                }, 4000);
-            }
 
             $('#cd_executor').blur(function() {
                 if (!this.value) {

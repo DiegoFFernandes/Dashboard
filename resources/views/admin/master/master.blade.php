@@ -32,8 +32,8 @@
                 </ol>
             </section>
             @yield('content')
-            <div class="alert alert-success alert-fixed hidden">
-                <p><i class="icon fa fa-check"></i></p>
+            <div class="alert alert-success alert-fixed hidden" id="alert-msg">
+                <p></p>
             </div>
             {{-- Icon loading --}}
             <div class="hidden" id="loading">

@@ -66,6 +66,7 @@
 
 @section('scripts')
     @includeIf('admin.master.datatables')
+    <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             let token = $("meta[name='csrf-token']").attr("content");
@@ -155,11 +156,13 @@
                     success: function(result) {
                         $("#loading").addClass('hidden');
                         if (result.errors) {
-                            alert(result.errors);
+                            // alert(result.errors);
+                            msg(result.errors, 'alert-warning', 'fa fa-warning');                            
                         } else {
-                            alert(result.success);
+                            // alert(result.success);
+                            msg(result.success, 'alert-success', 'fa fa-check');
                         }
-                        location.reload();
+                        $('#table-lote').DataTable().ajax.reload();
                     }
                 });
             });
@@ -178,13 +181,13 @@
                     success: function(result) {
                         $('#loading').addClass('hidden');
                         if (result.error) {
-                            alert(result.error);
+                            // alert(result.error);
+                            msg(result.error, 'alert-warning', 'fa fa-warning');
                             return false;
                         } else {
-                            alert(result.success);
-                            location.reload();
+                            msg(result.success, 'alert-success', 'fa fa-check');
+                            $('#table-lote').DataTable().ajax.reload();
                         }
-
                     }
                 });
             });

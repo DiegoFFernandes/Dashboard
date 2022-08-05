@@ -222,7 +222,7 @@
                 }
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 var str = $("#cd_barras_peso").val();
-                if (keycode == '9' || keycode == '13') {
+                if (keycode == '9' || keycode == '13' || event.type == "focusout") {
                     var peso = str.replace('1Q', '');
                     peso_ = peso.toString().replace(",", ".")
                     peso = parseFloat(peso);

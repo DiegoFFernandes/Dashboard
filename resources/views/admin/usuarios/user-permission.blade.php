@@ -65,10 +65,17 @@
                 </form>
             </div>
             <!-- /.box -->
-
-
-
         </div>
 </section>
 <!-- /.content -->
+@endsection
+@section('scripts')
+    @includeIf('admin.master.datatables')
+    <script src="{{ asset('js/scripts.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#usuario").select2();
+
+        });
+    </script>
 @endsection

@@ -378,7 +378,8 @@
                     </ul>
                 </li>
             @endrole
-            <li class="treeview" style="height: auto;">
+            <li class="header">Links Publicos</li>
+            {{-- <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-question-circle"></i> <span>Suporte</span>
                     <span class="pull-right-container">
@@ -388,6 +389,139 @@
                 <ul class="treeview-menu" style="display: none;">
                     <li class=""><a href="https://glpi.ivorecap.com.br" target="_blank"><i
                                 class="fa fa-ticket" aria-hidden="true"></i>GLPI</a>
+                    </li>
+                </ul>
+            </li> --}}
+            <li class="treeview" style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-circle-o text-yellow"></i><span>Aquila</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-line-chart"></i> Indicadores
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
+                                <li class="treeview">
+                                    <a href="#"><i class="fa fa-circle-o"></i>Diretoria
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        @can('ver-diretoria-norte')
+                                            <li
+                                                class="">
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/Ebg3VQY5BIVMiLwGrmYzun8BmxWKCKMVXBoc_pu_7fnX2A?e=j2jucg" target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Norte</a>
+                                            </li>
+                                        @endcan
+                                        @can('ver-diretoria-sul')
+                                            <li class="">
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWK_gdmcsfpBhXJ02SifaccBIBfgTuKgEROpL70aclH_og?e=IOQYSy" target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Sul</a>
+                                            </li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                            @endcanany
+                            @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca'])
+                                <li class="treeview">
+                                    <a href="#"><i class="fa fa-circle-o"></i>Administrativo
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li class="">
+                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EZxYA4dnnMVBinAVF5zqtIABd6X5ZXV9RkOHY6oeuCSoRw?e=puzc72"
+                                                target="_blank">
+                                                <i class="fa fa-circle-o"></i>Norte</a>
+                                        </li>
+                                        <li class="">
+                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EXytz3uwropCst-EK_vBu2YB-q4j2ZYF2sOyLaNfbl_Xbg?e=xnQlBd"
+                                                target="_blank">
+                                                <i class="fa fa-circle-o"></i>Sul</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endcanany
+                            @canany(['ver-comercial-norte', 'ver-comercial-sul'])
+                                <li class="treeview">
+                                    <a href="#"><i class="fa fa-circle-o"></i>Comercial
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        @can('ver-comercial-norte')
+                                            <li class="">
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWv71bwBXHJBkU-OARyDPD0BKPh35ZsHp8Mvwrgdf6JN5g?e=p59EpC"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Norte</a>
+                                            </li>
+                                        @endcan
+                                        @can('ver-comercial-sul')
+                                            <li class="">
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EfAVFr6kqUtMs121cRy0NzIBnNvkEX2opxJ9BtAQqZUZNw?e=bEqHpU"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Sul</a>
+                                            </li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                            @endcanany
+                            @canany(['ver-producao'])
+                                <li class="treeview">
+                                    <a href="#"><i class="fa fa-circle-o"></i>Produção
+                                        <span class="pull-right-container">
+                                            <i class="fa fa-angle-left pull-right"></i>
+                                        </span>
+                                    </a>
+                                    <ul class="treeview-menu">
+                                        <li class="">
+                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EaN0co-wSzVMls0RzKbquNwBRSSgV49Hyh1YqqPhUqn3gg?e=87RB7p" target="_blank">
+                                                <i class="fa fa-circle-o"></i>Norte</a>
+                                        </li>
+                                        <li class="">
+                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/ESpx5kwIDhxEh50hlwVyDS0BXrhqnZpizouqmWPNIdfcMQ?e=0STEqc" target="_blank">
+                                                <i class="fa fa-circle-o"></i>Sul</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endcanany
+                            @canany(['ver-recursos-humanos'])
+                                <li class="">
+                                    <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EW8KQ2lTSuxLtX1k34_X9qsB8nZH28BvD6kdZ1o5PugFxw?e=0429uh" target="_blank">
+                                        <i class="fa fa-circle-o"></i>Recursos Humanos</a>
+                                </li>
+                            @endcanany
+                            @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca'])
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-circle-o"></i>Apoio
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="">
+                                        <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EZTB2rs_zzRKu9vOkTViQIYBCr_93QfkOGXZawzlXTV5ZA?e=Xf5Rr0" target="_blank">
+                                            <i class="fa fa-circle-o"></i>Norte</a>
+                                    </li>
+                                    <li class="">
+                                        <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EY1477cThWlHhpATFh1jtk4BMrhZaBsH9NzpeRhyVaiDng?e=m8A4y1" target="_blank">
+                                            <i class="fa fa-circle-o"></i>Sul</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            @endcanany
+                        </ul>
                     </li>
                 </ul>
             </li>

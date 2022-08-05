@@ -292,3 +292,7 @@ iframe {
 .fa-minus-square-o {
     color: red;
 }
+
+input[type='file'] {
+    /* display: none; */
+}

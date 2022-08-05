@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Função</label>
-                                    <select class="form-control select2" name="roles[]" multiple="multiple"
+                                    <select class="form-control" name="roles[]" multiple="multiple" id="roles"
                                         data-placeholder="Selecione uma função" style="width: 100%;">
                                         @isset($userRoles)
                                             @foreach ($userRoles as $userRole)
@@ -69,10 +69,17 @@
                     </form>
                 </div>
                 <!-- /.box -->
-
-
-
             </div>
     </section>
     <!-- /.content -->
+@endsection
+@section('scripts')
+    @includeIf('admin.master.datatables')
+    <script src="{{ asset('js/scripts.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#roles").select2();
+
+        });
+    </script>
 @endsection

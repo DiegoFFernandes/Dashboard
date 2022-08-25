@@ -77,9 +77,9 @@ class VeiculoController extends Controller
     if ($validator->fails()) {
       return response()->json(['errors' => $validator->errors()->all()]);
     }
-    
+
     if ($this->motoristaveiculos->verifyIfExists($request['cd_pessoa'], $request['placa'])) {
-      return response()->json(['alert' => 'Motorista já está associado a placa, <strong>'. $request['placa'] .' </strong>, favor verificar!']);
+      return response()->json(['alert' => 'Motorista já está associado a placa, <strong>' . $request['placa'] . ' </strong>, favor verificar!']);
     }
 
     $this->motoristaveiculos->storeData($request->all());
@@ -94,14 +94,14 @@ class VeiculoController extends Controller
 
   public function update(Request $request, $id)
   {
-    $validator = $this->_validator($request); 
-   
+    $validator = $this->_validator($request);
+
     if ($validator->fails()) {
       return response()->json(['errors' => $validator->errors()->all()]);
     }
 
     $request['cor'] = strtoupper($request->cor);
-    $request['cd_usuario'] = $this->user->id;   
+    $request['cd_usuario'] = $this->user->id;
 
 
     $this->motoristaveiculos->updateData($id, $request->all());
@@ -112,7 +112,7 @@ class VeiculoController extends Controller
   public function destroy($id)
   {
     $this->motoristaveiculos->destroyData($id);
-    return response()->json(['success' => 'Id '.$id.', excluido com sucesso!']);
+    return response()->json(['success' => 'Id ' . $id . ', excluido com sucesso!']);
   }
 
   public function _validator(Request $request)

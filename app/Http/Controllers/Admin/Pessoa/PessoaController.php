@@ -43,7 +43,13 @@ class PessoaController extends Controller
 
         return view(
             'admin.pessoa.index',
-            compact('user_auth', 'uri', 'title_page', 'empresas', 'emails')
+            compact(
+                'user_auth',
+                'uri',
+                'title_page',
+                'empresas',
+                'emails'
+            )
         );
     }
 
@@ -57,10 +63,10 @@ class PessoaController extends Controller
             <button type="button" data-id="' . $data->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
             })
             ->rawColumns(['Actions'])
-            ->make(true);        
+            ->make(true);
     }
     public function store(Request $request)
-    {      
+    {
         $request['cd_usuario'] = $this->user->id;
         $request['name'] = ucwords(strtolower($request['name']));
         $request['cpf'] = $this->limpaCaracters($request['cpf']);
@@ -68,7 +74,7 @@ class PessoaController extends Controller
         $request['cd_email'] = intval($request['cd_email']);
         $request['cd_empresa'] = intval($request['cd_empresa']);
         $validator = $this->_validator($request);
-        
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
@@ -90,7 +96,7 @@ class PessoaController extends Controller
         $request['phone'] = $this->limpaCaracters($request['phone']);
         $validator = $this->_validator($request);
 
-       if ($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
@@ -98,12 +104,13 @@ class PessoaController extends Controller
         return response()->json(['success' => 'Pessoa atualizada com sucesso!']);
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
 
-        if($this->motorista->findPessoa($id)){
+        if ($this->motorista->findPessoa($id)) {
             return response()->json(['alert' => 'Essa pessoa está associada a um motorista, não é possivel excluir!']);
         }
-        
+
         $this->pessoas->destroyData($id);
         return response()->json(['success' => 'Excluido com sucesso!']);
     }

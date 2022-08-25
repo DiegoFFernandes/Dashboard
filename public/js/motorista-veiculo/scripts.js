@@ -1,7 +1,7 @@
 $('.select2').select2()
 
 // CRUD Motorista Veiculo
-$(document).ready(function () {
+$(document).ready(function() {
     // init datatable.    
     var dataTable = $('.datatable').DataTable({
         processing: true,
@@ -9,34 +9,34 @@ $(document).ready(function () {
         autoWidth: false,
         pageLength: 5,
         // scrollX: true,
-        "order": [[0, "asc"]],
+        "order": [
+            [0, "asc"]
+        ],
         "pageLength": 10,
         ajax: 'get-motorista-veiculos',
         //ajax: "{{ route('get-articles') }}",
-        columns: [            
+        columns: [
             { data: 'cd_empresa', name: 'cd_empresa' },
             { data: 'cd_pessoa', name: 'cd_pessoa' },
             { data: 'name', name: 'name' },
             { data: 'placa', name: 'placa' },
             { data: 'cor', name: 'cor' },
-            { data: 'cd_frota', name: 'cd_frota', visible: false},
+            { data: 'cd_frota', name: 'cd_frota', visible: false },
             { data: 'dsfrota', name: 'dsfrota' },
-            { data: 'cd_marca', name: 'cd_marca', visible: false},
+            { data: 'cd_marca', name: 'cd_marca', visible: false },
             { data: 'dsmarca', name: 'dsmarca' },
-            { data: 'cd_modelo', name: 'cd_modelo', visible: false},
+            { data: 'cd_modelo', name: 'cd_modelo', visible: false },
             { data: 'dsmodelo', name: 'dsmodelo' },
             { data: 'ano', name: 'ano' },
-            { data: 'cd_tipoveiculo', name: 'cd_tipoveiculo', visible: false},
+            { data: 'cd_tipoveiculo', name: 'cd_tipoveiculo', visible: false },
             { data: 'dstipo', name: 'dstipo' },
             { data: 'ativo', name: 'ativo' },
             { data: 'Actions', name: 'Actions', orderable: false, serachable: false, sClass: 'text-center' },
-        ], 
-        
-
+        ],
     });
 
     // Cria Marca Modelo Ajax request.
-    $('#SubmitCreateMarcaModeloForm').click(function (e) {
+    $('#SubmitCreateMarcaModeloForm').click(function(e) {
         e.preventDefault();
         $.ajaxSetup({
             headers: {
@@ -53,16 +53,16 @@ $(document).ready(function () {
                 cor: $('#cor').val(),
                 cd_marcamodelofrota: $('#cd_marcamodelofrota').val(),
                 ano: $('#ano').val(),
-                cd_tipoveiculo: $('#cd_tipoveiculo').val(),                
+                cd_tipoveiculo: $('#cd_tipoveiculo').val(),
                 _token: $('#token').val(),
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#loading").removeClass('hidden');
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.errors) {
                     $('.alert').html('');
-                    $.each(result.errors, function (key, value) {
+                    $.each(result.errors, function(key, value) {
                         $('.alert').removeClass('hidden');
                         $('.alert').addClass('alert-danger');
                         $('.alert-danger').append('<strong><li>' + value + '</li></strong>');
@@ -74,8 +74,8 @@ $(document).ready(function () {
                     $('.alert').removeClass('hidden');
                     $('.alert').addClass('alert-warning');
                     $('.alert-warning').append('<strong>' + result.alert + '</strong>');
-                    $('.datatable').DataTable().ajax.reload();                    
-                    setInterval(function () {
+                    $('.datatable').DataTable().ajax.reload();
+                    setInterval(function() {
                         $('.alert').addClass('hidden');
                         $('.alert').removeClass('alert-warning');
                     }, 5000);
@@ -90,7 +90,7 @@ $(document).ready(function () {
                     $('#cd_tipoveiculo').val(0).trigger('change');
                     $('#cd_marcamodelofrota').val(0).trigger('change');
                     $("#formMotoristaVeiculo")[0].reset();
-                    setInterval(function () {
+                    setInterval(function() {
                         $('.alert').addClass('hidden');
                         $('.alert').removeClass('alert-success');
                     }, 5000);
@@ -100,11 +100,11 @@ $(document).ready(function () {
     });
 
     // Edit Marca Modelo
-    $('.modelClose').on('click', function () {
+    $('.modelClose').on('click', function() {
         $('#EditMotoristaVeiculoModal').modal('hide');
     });
     var id;
-    $('body').on('click', '#getEditMotoristaVeiculo', function (e) {
+    $('body').on('click', '#getEditMotoristaVeiculo', function(e) {
         e.preventDefault();
         $('.alert-danger').html('');
         $('.alert-danger').addClass('hidden');
@@ -116,25 +116,25 @@ $(document).ready(function () {
             data: {
                 id: id,
             },
-            beforeSend: function () {                
+            beforeSend: function() {
                 $("#loading").removeClass('hidden');
             },
-            success: function (result) {
+            success: function(result) {
                 $('#EditMotoristaVeiculoModal').show();
                 $('#id_empresa').val(result.cd_empresa);
                 $('#id_pessoa').val(result.cd_pessoa).trigger('change');
                 $('#id_placa').val(result.placa);
                 $('#id_ano').val(result.ano);
                 $('#id_cor').val(result.cor);
-                $('#id_marcamodelofrota').val(result.cd_marcamodelofrota).trigger('change');;                
+                $('#id_marcamodelofrota').val(result.cd_marcamodelofrota).trigger('change');;
                 $('#id_tipoveiculo').val(result.cd_tipoveiculo).trigger('change');
                 $("#loading").addClass('hidden');
-                }            
+            }
         });
     });
 
     // Update Marca Modelo.
-    $('#SubmitCreateMotoristaVeiculoForm').click(function (e) {
+    $('#SubmitCreateMotoristaVeiculoForm').click(function(e) {
         e.preventDefault();
         $.ajaxSetup({
             headers: {
@@ -144,22 +144,22 @@ $(document).ready(function () {
         $.ajax({
             url: "edit/" + id + "/do",
             method: 'POST',
-            data: {                
+            data: {
                 cd_empresa: $('#id_empresa').val(),
                 cd_pessoa: $('#id_pessoa').val(),
                 placa: $('#id_placa').val(),
                 ano: $('#id_ano').val(),
                 cor: $('#id_cor').val(),
-                cd_marcamodelofrota: $('#id_marcamodelofrota').val(),               
+                cd_marcamodelofrota: $('#id_marcamodelofrota').val(),
                 cd_tipoveiculo: $('#id_tipoveiculo').val(),
             },
-            beforeSend: function () {                
+            beforeSend: function() {
                 $("#loading").removeClass('hidden');
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.errors) {
                     $('.alert').html('');
-                    $.each(result.errors, function (key, value) {
+                    $.each(result.errors, function(key, value) {
                         $('.alert').removeClass('hidden');
                         $('.alert').addClass('alert-danger');
                         $('.alert-danger').append('<strong><li>' + value + '</li></strong>');
@@ -171,8 +171,8 @@ $(document).ready(function () {
                     $('.alert').removeClass('hidden');
                     $('.alert').addClass('alert-warning');
                     $('.alert-warning').append('<strong>' + result.alert + '</strong>');
-                    $('.datatable').DataTable().ajax.reload();                    
-                    setInterval(function () {
+                    $('.datatable').DataTable().ajax.reload();
+                    setInterval(function() {
                         $('.alert').addClass('hidden');
                         $('.alert').removeClass('alert-warning');
                     }, 10000);
@@ -182,8 +182,8 @@ $(document).ready(function () {
                     $('.alert').removeClass('hidden');
                     $('.alert').addClass('alert-success');
                     $('.alert-success').append('<strong>' + result.success + '</strong>');
-                    $('.datatable').DataTable().ajax.reload();                    
-                    setInterval(function () {
+                    $('.datatable').DataTable().ajax.reload();
+                    setInterval(function() {
                         $('.alert').addClass('hidden');
                         $('.alert').removeClass('alert-success');
                     }, 5000);
@@ -193,7 +193,7 @@ $(document).ready(function () {
     });
 
     //Delete Marca Modelo
-    $('.modelClose').on('click', function () {
+    $('.modelClose').on('click', function() {
         $('#DeleteMotoristaVeiculo').modal('hide');
         $('.alert-danger').html('');
         $('.alert-danger').addClass('hidden');
@@ -201,19 +201,19 @@ $(document).ready(function () {
         $('#SubmitDeleteMarcaModeloForm').removeClass('hidden');
     });
     var deleteId;
-    $('body').on('click', '#getDeleteId', function () {
+    $('body').on('click', '#getDeleteId', function() {
         deleteId = $(this).data('id');
         $("#btnCancel").text('Cancelar').removeClass('btn-success').addClass('btn-default');
-        $('#SubmitDeleteMotoristaVeiculoForm').removeClass('hidden'); 
+        $('#SubmitDeleteMotoristaVeiculoForm').removeClass('hidden');
         $('#deleteMsg').removeClass('hidden');
         $('#deleteMsg').html('');
         $('.alert').addClass('hidden');
-        $('#deleteMsg').append('<h4> Deseja  realmente excluir o item '+ deleteId +' ?</h4>');
+        $('#deleteMsg').append('<h4> Deseja  realmente excluir o item ' + deleteId + ' ?</h4>');
         console.log(deleteId);
     })
-    $('#SubmitDeleteMotoristaVeiculoForm').click(function (e) {
+    $('#SubmitDeleteMotoristaVeiculoForm').click(function(e) {
         e.preventDefault();
-        var id = deleteId;    
+        var id = deleteId;
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -225,30 +225,30 @@ $(document).ready(function () {
             data: {
                 "_token": $("[name=csrf-token]").attr("content"),
             },
-            beforeSend: function () {
-                $("#loading").removeClass('hidden');                
+            beforeSend: function() {
+                $("#loading").removeClass('hidden');
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.errors) {
-                    $("#loading").addClass('hidden');    
-                    $("#deleteMsg").addClass('hidden');                  
+                    $("#loading").addClass('hidden');
+                    $("#deleteMsg").addClass('hidden');
                     $('.alert').html('');
                     $('.alert').removeClass('hidden');
-                    $('.alert').addClass('alert-danger');                    
+                    $('.alert').addClass('alert-danger');
                     $('.alert-danger').append('<strong>' + result.errors + '</strong>');
                     $('#SubmitDeleteMotoristaVeiculoForm').addClass('hidden');
 
                 } else {
                     $("#loading").addClass('hidden');
                     $("#btnCancel").text('Sair').removeClass('btn-default').addClass('btn-success');
-                    $("#deleteMsg").addClass('hidden'); 
+                    $("#deleteMsg").addClass('hidden');
                     $('.alert').html('');
                     $('.alert').removeClass('hidden');
                     $('.alert').addClass('alert-success');
-                    $('.alert-success').append('<strong>' + result.success + '</strong>');                  
+                    $('.alert-success').append('<strong>' + result.success + '</strong>');
                     $('#SubmitDeleteMotoristaVeiculoForm').addClass('hidden');
-                    $('.datatable').DataTable().ajax.reload();                   
-                   
+                    $('.datatable').DataTable().ajax.reload();
+
                 }
             }
         });
@@ -258,9 +258,8 @@ $(document).ready(function () {
 
 
 // Mascaras input
-$(document).ready(function () {
+$(document).ready(function() {
     $("#placa").inputmask({ mask: ['AAA9999', 'AAA9A99'] });
     $("#ano").inputmask("9999");
     //$("#cor").inputmask("AAAAAAAAAAAA");
 });
-

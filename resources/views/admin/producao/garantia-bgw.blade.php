@@ -190,7 +190,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Edit Modal -->
+            <!-- Modal Falhas-->
             <div class="modal" id="falhas">
                 <div class="modal-dialog">
                     <div class="modal-content">

@@ -16,6 +16,10 @@ Route::middleware(['auth', 'permission:ver-procedimento'])->group(function () {
         Route::get('send-email', [ProcedimentoController::class, 'envioEmail'])->name('procedimento.send-email');
         Route::delete('delete', [ProcedimentoController::class, 'destroy'])->name('procedimento.delete');
     });
+    
+});
+
+Route::middleware(['auth'])->group(function () {
     Route::prefix('procedimento-aprovador')->group(function () {
         Route::get('autorizador', [ProcedimentoAprovadorController::class, 'index'])->name('procedimento.autorizador');
         Route::get('list-procedimento-para-liberar', [ProcedimentoAprovadorController::class, 'GetProcedimentoAprovador'])->name('procedimento.get-procedimento-aprovador');
@@ -25,7 +29,7 @@ Route::middleware(['auth', 'permission:ver-procedimento'])->group(function () {
      Route::prefix('procedimento-reprovados')->group(function () {
         Route::get('reprovados', [ProcedimentoAprovadorController::class, 'GetProcedimentoReprovado'])->name('procedimento.reprovados');
         Route::get('chat-reprovados', [ProcedimentoAprovadorController::class, 'chatProcedimentoReprovado'])->name('procedimento.chat');     
-        Route::post('reprovados-replica', [ProcedimentoAprovadorController::class, 'updateReplica'])->name('procedimento.replica');     
+        Route::post('reprovados-replica', [ProcedimentoAprovadorController::class, 'updateReplica'])->name('procedimento.replica');    
     
     });
 });

@@ -50,7 +50,7 @@ class ProcedimentoAprovadorController extends Controller
         $data = $this->aprovador->listData($role);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
-                return '<a class="btn btn-danger btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">Visualizar PDF</a>
+                return '<a class="btn btn-danger btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">Ver PDF</a>
                 <button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="getSave">Autorizar</button>
                 ';
             })
@@ -115,14 +115,14 @@ class ProcedimentoAprovadorController extends Controller
             $this->aprovador->updateData($data_aprovador); //Atualiza a tabela procedimento_aprovador com o status de recusado!
             $this->recusa->storeData($procedimento, $data_aprovador); //Salva na tabela procedimento_recusados o status de recusado!
             // return new ProcedimentoMail($this->request, $setor, $user);
-            Mail::send(new ProcedimentoMail($this->request, $setor, $user));            
+            // Mail::send(new ProcedimentoMail($this->request, $setor, $user));            
             return response()->json(['alert' => 'Procedimento foi recusado!']);
         } else {
-            // $procedimento->status = 'P';
-            // $procedimento->save();
-            $this->verifyIfRealeased($procedimento);
+            $procedimento->status = 'P';
+            $procedimento->save();
             $this->aprovador->updateData($data_aprovador);
-            Mail::send(new ProcedimentoMail($this->request, $setor, $user)); 
+            $this->verifyIfRealeased($procedimento);
+            Mail::send(new ProcedimentoMail($this->request, $setor, $user));
             return response()->json(['success' => 'Procedimento aprovado com sucesso!']);
         }
     }
@@ -139,14 +139,17 @@ class ProcedimentoAprovadorController extends Controller
         } elseif (in_array('A', $array)) {
             $procedimento['status'] = 'P';
             return $procedimento->save();
-        } elseif (!in_array('A', $array) || !in_array('R', $array)) {
+        } elseif (in_array('N', $array)) {
             $procedimento['status'] = 'P';
+            return $procedimento->save();
+        } elseif (!in_array('A', $array) || !in_array('R', $array) || !in_array('N', $array)) {
+            $procedimento['status'] = 'L';
             return $procedimento->save();
         }
         return false;
     }
     public function updateReplica()
-    {        
+    {
         $data = $this->request->validate([
             'id' => 'required|integer',
             'user_approver' => 'required|integer',
@@ -161,8 +164,8 @@ class ProcedimentoAprovadorController extends Controller
         $replica->id_user_approver = $data['user_approver'];
         $replica->message = $data['description'];
         $replica->type = 'C';
-        $replica->save();        
-       
+        $replica->save();
+
         Mail::send(new ProcedimentoChatMail($data));
         return redirect()->route('procedimento.index')->with('status', 'Replica feita com sucesso!');
     }

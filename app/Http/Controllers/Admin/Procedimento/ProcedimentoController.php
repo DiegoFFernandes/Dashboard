@@ -104,17 +104,15 @@ class ProcedimentoController extends Controller
         }
         //se view da tab recusados fazer muda o status para N ( reanalise ) nas tabelas abaixo
         if ($this->request->op_table === 'table-procedimento-recusados') {
-            $setor = Setor::find($this->request->setor);            
+            $setor = Setor::find($this->request->setor);
             foreach ($this->request->users as $d) {
                 $user = User::find($d);
                 // return new ProcedimentoMail($this->request, $setor, $user);
                 Mail::send(new ProcedimentoMail($this->request, $setor, $user));
             };
-
             $this->aprovador->updateIfReproved($this->request->id_procedimento);
             $this->procedimento->updateIfReproved($this->request->id_procedimento);
         }
-
         return redirect()->route('procedimento.index')->with('status', 'Atualizado com sucesso!');
     }
     public function GetProcedimento()
@@ -138,6 +136,11 @@ class ProcedimentoController extends Controller
                     <button type="button" class="btn btn-success btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-recusados">Reanalise</button>          
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
                         <button type="button" class="btn btn-warning btn-sm" data-id="' . $data->id . '" id="getViewReason">Motivo</button>                        
+                        ';
+                } elseif ($data->status == 'Liberado') {
+                    return ' 
+                        <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
+                        <button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="">Publicar</button>                        
                         ';
                 } else {
                     return '            

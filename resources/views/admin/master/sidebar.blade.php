@@ -325,36 +325,38 @@
                     </ul>
                 </li>
             @endcanany
-            @canany(['ver-procedimento'])
-                <li class="treeview {{ request()->segment(1) == 'procedimento' ? 'active' : '' }}" style="height: auto;">
-                    <a href="#">
-                        <i class="fa fa-compass"></i> <span>Qualidade</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu" style="display: none;">  
-                        <li class="treeview">
-                            <a href="#"><i class="fa fa-circle-o"></i><span>Procedimento</span>
-                                <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
+
+            <li class="treeview {{ request()->segment(1) == 'procedimento' ? 'active' : '' }}"
+                style="height: auto;">
+                <a href="#">
+                    <i class="fa fa-compass"></i> <span>Processos</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="display: none;">
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-circle-o"></i><span>Procedimento</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            @canany(['ver-procedimento'])
                                 <li class="{{ $uri == 'procedimento/index' ? 'active' : '' }}"><a
                                         href="{{ route('procedimento.index') }}">
-                                        <i class="fa fa-lock"></i>Cadastrar</a>
+                                        <i class="fa fa-lock"></i>Movimentações</a>
                                 </li>
-                                <li class="{{ $uri == 'procedimento/autorizador' ? 'active' : '' }}"><a
-                                        href="{{ route('procedimento.autorizador') }}">
-                                        <i class="fa fa-lock"></i>Liberar</a>
-                                </li>
-                            </ul>
-                        </li>                     
-                                                                         
-                    </ul>
-                </li>
-            @endcanany
+                            @endcanany
+                            <li class="{{ $uri == 'procedimento/autorizador' ? 'active' : '' }}"><a
+                                    href="{{ route('procedimento.autorizador') }}">
+                                    <i class="fa fa-lock"></i>Liberar</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
             @role('cobranca|admin')
                 <li class="treeview {{ request()->segment(1) == 'cobranca' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
@@ -408,7 +410,7 @@
                     </ul>
                 </li>
             @endrole
-            <li class="header">Links Publicos</li>            
+            <li class="header">Links Publicos</li>
             <li class="treeview" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-circle-o text-yellow"></i><span>Aquila</span>

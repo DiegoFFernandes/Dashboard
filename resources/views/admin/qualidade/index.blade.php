@@ -324,6 +324,13 @@
                 var id = $(this).data('id');
                 var table = $(this).data('table');                
                 var rowData = $('#'+ table).DataTable().row($(this).parents('tr')).data();
+                if (rowData == undefined) {
+                    var selected_row = $(this).parents('tr');
+                    if (selected_row.hasClass('child')) {
+                        selected_row = selected_row.prev();
+                    }
+                    rowData = $('#table-procedimento').DataTable().row(selected_row).data();
+                }
                 $.ajax({
                     url: "{{ route('procedimento.edit') }}",
                     method: 'GET',

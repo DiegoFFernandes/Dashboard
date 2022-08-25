@@ -13,12 +13,12 @@
                         <h3 class="box-title">Liberação de Procedimentos</h3>
                     </div>
                     <div class="box-body">
-                        <table id="table-procedimento" class="table">
+                        <table id="table-procedimento" class="table" width="100%">
                             <thead>
                                 <th>Cód.</th>
                                 <th>Setor</th>
                                 <th>Titulo</th>
-                                <th>Descrição</th>                                
+                                <th>Descrição</th>
                                 <th>Resp.</th>
                                 <th>Status</th>
                                 <th>Acões</th>
@@ -55,7 +55,7 @@
                                 <div class="form-group">
                                     <label for="user">Status</label>
                                     <select class="form-control bg-light-blue" id="status">
-                                        <option selected value="L">LIBERAR</option>                                        
+                                        <option selected value="L">LIBERAR</option>
                                         <option value="R">RECUSAR</option>
                                     </select>
                                 </div>
@@ -71,7 +71,7 @@
                                     <label for="user">Usuario Responsavel</label>
                                     <input id="user" class="form-control" type="text" readonly>
                                 </div>
-                            </div>                            
+                            </div>
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="title">Titulo</label>
@@ -120,6 +120,7 @@
                 pagingType: "simple",
                 processing: false,
                 responsive: true,
+                scrollX: true,
                 serverSide: false,
                 autoWidth: false,
                 order: [
@@ -142,7 +143,7 @@
                     {
                         data: 'description',
                         name: 'description'
-                    },                    
+                    },
                     {
                         data: 'name',
                         name: 'name'
@@ -167,6 +168,15 @@
             $('body').on('click', '#getSave', function(e) {
                 e.preventDefault();
                 var rowData = dataTable.row($(this).parents('tr')).data();
+
+                if (rowData == undefined) {
+                    var selected_row = $(this).parents('tr');
+                    if (selected_row.hasClass('child')) {
+                        selected_row = selected_row.prev();
+                    }
+                    rowData = $('#table-procedimento').DataTable().row(selected_row).data();
+                }
+
                 $("#id_procedimento").val(rowData.id_procedimento);
                 $("#setor").val(rowData.nm_setor);
                 $("#user").val(rowData.name);
@@ -176,13 +186,14 @@
                 $('#modal-aut-procedimento').modal('show');
             });
             $("#btnSave").click(function() {
-                var id = $("#id_procedimento").val();                
+                var id = $("#id_procedimento").val();
                 var id_user = $("#id_user").val();
                 var description_recusa = $('#description_recusa').val();
                 status = $("#status").val();
-                if(status == 'R' && description_recusa == ""){
-                    $('#description_recusa').attr('title', 'Para recusar um procedimento é obrigatório informar um motivo!')
-                                .tooltip('show');
+                if (status == 'R' && description_recusa == "") {
+                    $('#description_recusa').attr('title',
+                            'Para recusar um procedimento é obrigatório informar um motivo!')
+                        .tooltip('show');
                     return false;
                 }
                 $.ajax({
@@ -198,23 +209,23 @@
                     success: function(response) {
                         if (response.alert) {
                             $("#loading").addClass('hidden');
-                            $('#modal-aut-procedimento').modal('hide');                            
+                            $('#modal-aut-procedimento').modal('hide');
                             msg(response.alert, 'alert-warning', 'fa-warning');
                             dataTable.ajax.reload();
                         } else {
-                            $("#loading").addClass('hidden'); 
-                            $('#modal-aut-procedimento').modal('hide');                            
+                            $("#loading").addClass('hidden');
+                            $('#modal-aut-procedimento').modal('hide');
                             msg(response.success, 'alert-success', 'fa fa-check');
                             dataTable.ajax.reload();
                         }
                     }
                 });
             });
-            $( "#status").change(function(){
+            $("#status").change(function() {
                 status = $('#status').val();
-                if(status == 'R'){
+                if (status == 'R') {
                     $('#recusa').removeClass('hidden');
-                }else{
+                } else {
                     $('#recusa').addClass('hidden');
                 }
             });

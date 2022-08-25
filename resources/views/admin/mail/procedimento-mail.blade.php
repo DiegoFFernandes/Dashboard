@@ -14,7 +14,7 @@
     As alterações estão em uma <b>cor</b> de destaque, Você deve liberar ou reprovar novamente para seguir processo!  
 @else
     foi criado um procedimento novo para o setor de <b>{{ $setor->nm_setor }}</b>,
-    verifique os dados e clique no botão abaixo para visulizar e dar sequência!
+    verifique os dados e clique no botão abaixo para visualizar e dar sequência!
 @endif
 </p>
 @component('mail::table')
@@ -37,9 +37,15 @@
 
 @endcomponent
 
-@component('mail::button', ['url' => 'https://producao.ivorecap.com.br/procedimento-aprovador/autorizador', 'color' => 'success'])
+@if ($request['status'] == 'R' || $request['status'] == 'L')
+@component('mail::button', ['url' => 'http://producao.ivorecap.com.br/procedimento/index', 'color' => 'success'])
 Ver procedimento
 @endcomponent
+@else
+@component('mail::button', ['url' => 'https://producao.ivorecap.com.br/procedimento-aprovador/autorizador', 'color' => 'primary'])
+Ver procedimento
+@endcomponent
+@endif
 
 <p>Caso não for liberado ou recusado em 10 dias, o procedimento 
     será considerado <b>liberado</b> automaticamente!</p>

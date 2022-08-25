@@ -124,7 +124,7 @@ class ApiNewAgeController extends Controller
             $username = env('USERNAME_NEWAGE_PVAI');
             $password = env('PASSWORD_NEWAGE_PVAI');
             $cod_emp =  env('COD_I_EMP_PVAI');
-        } elseif ($this->user->empresa == 104) {
+        } elseif ($this->user->empresa == 304) {
             $custumerid = env('CUSTUMERID_NEWAGE_ASSIS');
             $username = env('USERNAME_NEWAGE_ASSIS');
             $password = env('PASSWORD_NEWAGE_ASSIS');

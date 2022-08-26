@@ -22,11 +22,13 @@ class ProcedimentoController extends Controller
     public function __construct(
         Request $request,
         Procedimento $procedimento,
-        ProcedimentoAprovador $aprovador
+        ProcedimentoAprovador $aprovador,
+        Setor $setor
     ) {
         $this->request = $request;
         $this->procedimento = $procedimento;
         $this->aprovador = $aprovador;
+        $this->setor = $setor;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -38,7 +40,7 @@ class ProcedimentoController extends Controller
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
         $users        = User::where('id', '<>', 1)->get();
-        $setors       = Setor::all();
+        $setors       = $this->setor->listData();
 
         return view('admin.qualidade.index', compact(
             'title_page',
@@ -103,7 +105,7 @@ class ProcedimentoController extends Controller
             $this->aprovador->create($this->request->id_procedimento, $u);
         }
         //se view da tab recusados fazer muda o status para N ( reanalise ) nas tabelas abaixo
-        if ($this->request->op_table === 'table-procedimento-recusados') {
+        if ($this->request->op_table === 'table-procedimento-recusados' || $this->request->op_table === 'table-procedimento-liberados') {
             $setor = Setor::find($this->request->setor);
             foreach ($this->request->users as $d) {
                 $user = User::find($d);
@@ -128,6 +130,7 @@ class ProcedimentoController extends Controller
             ->addColumn('Actions', function ($data) {
                 if ($data->status == 'Aguardando' || $data->status == 'Reanalise') {
                     return '
+                        <button type="button" class="btn btn-warning btn-sm btn-edit" id="" data-id="' . $data->id . '"" data-table="table-procedimento" data-toggle="tooltip" data-placement="top" title="Libera sem aprovadores">Liberar</button>
                         <button type="button" class="btn btn-success btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento">Editar</button>
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
                         <button type="button" class="btn btn-danger btn-sm" data-id="' . $data->id . '" id="getDeleteId">Excluir</button>';
@@ -141,6 +144,7 @@ class ProcedimentoController extends Controller
                     return ' 
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
                         <button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="">Publicar</button>                        
+                        <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados">Reanalisar</button> 
                         ';
                 } else {
                     return '            

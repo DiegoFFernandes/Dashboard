@@ -105,7 +105,7 @@
                                         <label for="arquivo">Setor designado</label>
                                         <select name="setor" id="setor" class="form-control select2" style="width: 100%">
                                             @foreach ($setors as $s)
-                                                <option value="{{ $s->id }}">{{ $s->nm_setor }}</option>
+                                                <option value="{{ $s->id }}">{{ $s->nm_setor." - ".$s->nm_area}}</option>
                                             @endforeach
 
                                         </select>
@@ -225,7 +225,7 @@
                                             placeholder="Clique/Arraste e Solte aqui" accept="application/pdf">
 
                                     </div>
-                                    <p class="help-block">Somente arquivos em PDF.</p>
+                                    <p class="help-block">Somente arquivos em PDF, caso não selecione nenhum, sistema irá manter o mesmo arquivo.</p>
                                 </div>
                                 <div class="col-md-12" align="center" style="padding-top: 24px">
                                     <div class="form-group">
@@ -324,6 +324,7 @@
                 var id = $(this).data('id');
                 var table = $(this).data('table');                
                 var rowData = $('#'+ table).DataTable().row($(this).parents('tr')).data();
+                console.log(table);
                 if (rowData == undefined) {
                     var selected_row = $(this).parents('tr');
                     if (selected_row.hasClass('child')) {

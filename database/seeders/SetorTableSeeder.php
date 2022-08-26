@@ -19,9 +19,30 @@ class SetorTableSeeder extends Seeder
             ['nm_setor' => 'Financeiro'],
             ['nm_setor' => 'Cobrança'],
             ['nm_setor' => 'Tecnologia da Informação'],
-            ['nm_setor' => 'Recursos Humanos'],
-            ['nm_setor' => 'Controladoria'],
-            ['nm_setor' => 'Compras']
+            ['nm_setor' => 'Departamento Pessoal'],
+            ['nm_setor' => 'Fiscal'],
+            ['nm_setor' => 'Compras'],
+            ['nm_setor' => 'Produção'],
+            ['nm_setor' => 'Manutenção'],
+            ['nm_setor' => 'Qualidade'],
+            ['nm_setor' => 'Almoxarifado'],
+            ['nm_setor' => 'Planejamento Operacional'],
+            ['nm_setor' => 'Júridico'],
+            ['nm_setor' => 'Crédito'],
+            ['nm_setor' => 'Recrutamento e Seleção'],
+            ['nm_setor' => 'Endo Markenting'],
+            ['nm_setor' => 'Saúde e Segurança'],
+            ['nm_setor' => 'Meio Ambiente e Auditoria'],
+            ['nm_setor' => 'Treinamento'],
+            ['nm_setor' => 'Marketing'],
+            ['nm_setor' => 'Truck Center'],
+            ['nm_setor' => 'Frotas'],
+            ['nm_setor' => 'AF'],
+            ['nm_setor' => 'Vendas'],
+            ['nm_setor' => 'Fiscal'],
+            ['nm_setor' => 'Contabilidade'],
+            ['nm_setor' => 'Controller'],           
+
         ];
 
         foreach ($setores as $s) {

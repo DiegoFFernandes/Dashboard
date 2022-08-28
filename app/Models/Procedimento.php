@@ -19,6 +19,10 @@ class Procedimento extends Model
         'status',
         'id_user_create'
     ];
+    protected $casts = [
+        'criado'  => 'date:d-m-Y',
+        
+    ];
     public function storeData($input, $file)
     {
         $procedimento = new Procedimento;
@@ -48,7 +52,8 @@ class Procedimento extends Model
                                 WHEN 'L' THEN 'Liberado' 
                                 WHEN 'R' THEN 'Reprovado'
                                 WHEN 'N' THEN 'Reanalise' 
-                                END status")
+                                END status"),
+            'procedimentos.created_at as criado'                    
         )
             ->join('setors', 'setors.id', 'procedimentos.id_setor')
             ->join('users', 'users.id', 'procedimentos.id_user_create')

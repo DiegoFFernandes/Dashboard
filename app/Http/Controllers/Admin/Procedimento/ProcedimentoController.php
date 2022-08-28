@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ProcedimentoMail;
 use App\Models\Procedimento;
 use App\Models\ProcedimentoAprovador;
+use App\Models\ProcedimentoPublish;
 use App\Models\Setor;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -78,7 +79,7 @@ class ProcedimentoController extends Controller
     }
     public function update()
     {
-        // return $this->request;        
+        // return $this->request;
         $procedimento = Procedimento::findOrFail($this->request->id_procedimento);
         $data = $this->__validate($this->request);
 
@@ -141,11 +142,16 @@ class ProcedimentoController extends Controller
                         <button type="button" class="btn btn-warning btn-sm" data-id="' . $data->id . '" id="getViewReason">Motivo</button>                        
                         ';
                 } elseif ($data->status == 'Liberado') {
-                    return ' 
+                    $html = ' 
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
-                        <button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="">Publicar</button>                        
-                        <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados">Reanalisar</button> 
+                        <button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="btnPublish">Publicar</button>   
                         ';
+                    if (0 == 1) {
+                        $html .= '<button type="button" class="btn btn-danger btn-sm" data-id="' . $data->id . '" id="btnCancelPublish">Despublicar</button>';;
+                    }
+                    $html .= ' <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados">Reanalisar</button> 
+                        ';
+                    return $html;
                 } else {
                     return '            
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>                        
@@ -164,7 +170,6 @@ class ProcedimentoController extends Controller
                 'title' => 'required|string',
                 'description' => 'required|string'
             ],
-
         );
     }
     public function __validateFile($request)
@@ -183,7 +188,6 @@ class ProcedimentoController extends Controller
     {
         $exists = Storage::disk('public')->exists($this->request->arquivo);
         if ($exists) {
-
             //get content of image
             $content = Storage::get($this->request->arquivo);
 
@@ -191,7 +195,7 @@ class ProcedimentoController extends Controller
             $mime = Storage::mimeType($this->request->arquivo);
             //prepare response with image content and response code
             $response = Response::make($content, 200);
-            //set header 
+            //set header
             $response->header("Content-Type", $mime);
             // return response
             return $response;
@@ -224,5 +228,37 @@ class ProcedimentoController extends Controller
 
         // return new ProcedimentoMail($request, Auth::user());
         // return Mail::send(new ProcedimentoMail($request, Auth::user()));
+    }
+    public function procedimentoPublish()
+    {
+        $title_page   = 'Procedimentos Publicos';
+        $user_auth    = $this->user;
+        $uri          = $this->request->route()->uri();
+
+        return view('admin.qualidade.procedimento-publicos', compact(
+            'title_page',
+            'user_auth',
+            'uri',
+        ));
+    }
+    public function storePublish(){
+       return  ProcedimentoPublish::all();
+    }
+
+    public function GetProcedimentoPublish()
+    {
+        $status = $this->request->validate([
+            'status' => 'required|in:P'
+        ]);
+
+        $data = $this->procedimento->listData($status);
+        return DataTables::of($data)
+            ->addColumn('Actions', function ($data) {
+                return '  
+            <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>                        
+                        ';
+            })
+            ->rawColumns(['Actions'])
+            ->make(true);
     }
 }

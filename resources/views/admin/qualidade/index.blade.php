@@ -323,8 +323,7 @@
                 e.preventDefault();
                 var id = $(this).data('id');
                 var table = $(this).data('table');                
-                var rowData = $('#'+ table).DataTable().row($(this).parents('tr')).data();
-                console.log(table);
+                var rowData = $('#'+ table).DataTable().row($(this).parents('tr')).data();                
                 if (rowData == undefined) {
                     var selected_row = $(this).parents('tr');
                     if (selected_row.hasClass('child')) {
@@ -456,7 +455,25 @@
                     }
                 });
                 $('#modal-recuse-procedimento').modal('show');
-            });            
+            }); 
+            $('body').on('click', '#btnPublish', function(e){
+                e.preventDefault();                            
+                var id = $(this).data('id');                
+                $.ajax({
+                    url: "{{ route('procedimento.store.publish') }}",
+                    method: 'GET',
+                    data: {
+                        id: id,                        
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(response) {
+                        $("#loading").addClass('hidden');
+                        console.log(response);
+                    }
+                });
+            });          
             //Cliques nas tabs
             $('.nav-tabs a[href="#recusados"]').on('click', function() {
                 $('#table-procedimento-recusados').DataTable().destroy();

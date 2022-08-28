@@ -348,10 +348,14 @@
                                         <i class="fa fa-lock"></i>Movimentações</a>
                                 </li>
                             @endcanany
-                            <li class="{{ $uri == 'procedimento/autorizador' ? 'active' : '' }}"><a
+                            <li class="{{ $uri == 'procedimento-aprovador/autorizador' ? 'active' : '' }}"><a
                                     href="{{ route('procedimento.autorizador') }}">
-                                    <i class="fa fa-lock"></i>Liberar</a>
+                                    <i class="fa fa-thumbs-o-up"></i>Liberar</a>
                             </li>
+                            <li class="{{ $uri == 'procedimento/publicos' ? 'active' : '' }}"><a
+                                href="{{ route('procedimento.publish') }}">
+                                <i class="fa fa-book"></i>Publicos</a>
+                        </li>
                         </ul>
                     </li>
                 </ul>

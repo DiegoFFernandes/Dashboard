@@ -11,7 +11,8 @@ class Setor extends Model
 
     public function listData()
     {
-        return Setor::join('area_administrativas', 'area_administrativas.id', 'setors.id_area_adm')
+        return Setor::select('setors.id', 'setors.nm_setor', 'area_administrativas.nm_area')
+        ->join('area_administrativas', 'area_administrativas.id', 'setors.id_area_adm')
         ->orderBy('setors.nm_setor')
         ->get();
     }

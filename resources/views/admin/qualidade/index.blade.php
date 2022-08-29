@@ -188,7 +188,7 @@
                                         <select name="setor" id="edit_setor" class="form-control select2"
                                             style="width: 100%">
                                             @foreach ($setors as $s)
-                                                <option value="{{ $s->id }}">{{ $s->nm_setor }}</option>
+                                                <option value="{{ $s->id }}">{{ $s->nm_setor . ' - ' . $s->nm_area }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -372,7 +372,7 @@
                     success: function(result) {
                         if (result.alert) {
                             $("#loading").addClass('hidden');
-                            msg(result.success, 'alert-warning', 'fa-warning');
+                            msg(result.alert, 'alert-warning', 'fa-warning');
                         } else {
                             $("#loading").addClass('hidden');
                             msg(result.success, 'alert-success', 'fa fa-check');

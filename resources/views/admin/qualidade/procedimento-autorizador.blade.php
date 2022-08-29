@@ -7,7 +7,7 @@
             <div class="col-md-4 pull-right">
                 @includeIf('admin.master.messages')
             </div>
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Liberação de Procedimentos</h3>
@@ -162,7 +162,7 @@
                 ],
                 columnDefs: [{
                     "visible": false,
-                    "targets": [2, 3]
+                    "targets": [3]
                 }]
             });
             $('body').on('click', '#getSave', function(e) {

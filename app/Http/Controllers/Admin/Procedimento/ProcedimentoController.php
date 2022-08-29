@@ -7,6 +7,7 @@ use App\Mail\ProcedimentoMail;
 use App\Models\Procedimento;
 use App\Models\ProcedimentoAprovador;
 use App\Models\ProcedimentoPublish;
+use App\Models\ProcedimentoRecusado;
 use App\Models\Setor;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,6 +45,10 @@ class ProcedimentoController extends Controller
         $uri          = $this->request->route()->uri();
         $users        = User::where('id', '<>', 1)->get();
         $setors       = $this->setor->listData();
+
+        // return ProcedimentoAprovador::where('aprovado', '<>' , 'L')
+        // ->where('')
+        // ->update(['aprovado' => 'L']);
 
         return view('admin.qualidade.index', compact(
             'title_page',
@@ -183,7 +188,8 @@ class ProcedimentoController extends Controller
             ],
             [
                 'file.required' => 'Favor informar uma arquivo PDF!',
-                'file.mimes' => 'Arquivo deve ser somente PDF, outro formato não e aceito!'
+                'file.mimes' => 'Arquivo deve ser somente PDF, outro formato não e aceito!',
+                'file.max' => 'Arquivo deve ser menor de 4MB'
             ]
         );
     }
@@ -208,14 +214,18 @@ class ProcedimentoController extends Controller
     public function destroy()
     {
         $aprovador = ProcedimentoAprovador::where('id_procedimento', $this->request->id)->get();
+        if (ProcedimentoRecusado::where('id_procedimento', $this->request->id)->exists()) {
+            return response()->json(['alert' => 'Procedimento com analise de recusa não pode ser excluido!']);
+        }
         foreach ($aprovador as $a) {
             $a->delete();
         }
         $this->procedimento->find($this->request->id)->delete();
         return response()->json(['success' => 'Procedimento Excluido com sucesso!']);
     }
-    public function destroyPublish(){
-        $procedimento = ProcedimentoPublish::where('id_procedimento', $this->request->id)->firstOrFail();  
+    public function destroyPublish()
+    {
+        $procedimento = ProcedimentoPublish::where('id_procedimento', $this->request->id)->firstOrFail();
         $procedimento->delete();
         return response()->json(['success' => 'Procedimento despublicado com sucesso!']);
     }
@@ -265,7 +275,7 @@ class ProcedimentoController extends Controller
     {
         $public = $this->request->validate([
             'public' => 'required|in:pub'
-        ]);        
+        ]);
         $data = $this->procedimento->listData($public['public']);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {

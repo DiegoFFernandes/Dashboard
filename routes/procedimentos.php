@@ -16,7 +16,8 @@ Route::middleware(['auth', 'permission:ver-procedimento'])->group(function () {
         Route::get('send-email', [ProcedimentoController::class, 'envioEmail'])->name('procedimento.send-email');
         Route::delete('delete', [ProcedimentoController::class, 'destroy'])->name('procedimento.delete');
         Route::get('store-publish', [ProcedimentoController::class, 'storePublish'])->name('procedimento.store.publish');
-    
+        Route::delete('delete-publish', [ProcedimentoController::class, 'destroyPublish'])->name('procedimento.delete-publish');
+        
     });
 });
 

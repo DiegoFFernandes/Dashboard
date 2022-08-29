@@ -105,7 +105,8 @@
                                         <label for="arquivo">Setor designado</label>
                                         <select name="setor" id="setor" class="form-control select2" style="width: 100%">
                                             @foreach ($setors as $s)
-                                                <option value="{{ $s->id }}">{{ $s->nm_setor." - ".$s->nm_area}}</option>
+                                                <option value="{{ $s->id }}">{{ $s->nm_setor . ' - ' . $s->nm_area }}
+                                                </option>
                                             @endforeach
 
                                         </select>
@@ -225,7 +226,8 @@
                                             placeholder="Clique/Arraste e Solte aqui" accept="application/pdf">
 
                                     </div>
-                                    <p class="help-block">Somente arquivos em PDF, caso não selecione nenhum, sistema irá manter o mesmo arquivo.</p>
+                                    <p class="help-block">Somente arquivos em PDF, caso não selecione nenhum, sistema
+                                        irá manter o mesmo arquivo.</p>
                                 </div>
                                 <div class="col-md-12" align="center" style="padding-top: 24px">
                                     <div class="form-group">
@@ -286,15 +288,15 @@
                             </div>
                         </div>
                         <div class="modal-footer" style="text-align: left;">
-                            <form action="{{route('procedimento.replica')}}" method="post">
+                            <form action="{{ route('procedimento.replica') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="id" id="id">
                                 <input type="hidden" name="user_approver" id="user_approver">
-                                <input type="hidden" name="user_created" id="user_created">                               
+                                <input type="hidden" name="user_created" id="user_created">
                                 <div class="form-group">
                                     <label for="arquivo">Mensagem:</label>
-                                    <textarea name="description" class="form-control description" rows="4" cols="50"
-                                            placeholder="Digite sua replica..." required></textarea>
+                                    <textarea name="description" class="form-control description" rows="4" cols="50" placeholder="Digite sua replica..."
+                                        required></textarea>
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-default btn-block">
@@ -322,8 +324,8 @@
             $('body').on('click', '#getEditProcedimento', function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
-                var table = $(this).data('table');                
-                var rowData = $('#'+ table).DataTable().row($(this).parents('tr')).data();                
+                var table = $(this).data('table');
+                var rowData = $('#' + table).DataTable().row($(this).parents('tr')).data();
                 if (rowData == undefined) {
                     var selected_row = $(this).parents('tr');
                     if (selected_row.hasClass('child')) {
@@ -335,7 +337,7 @@
                     url: "{{ route('procedimento.edit') }}",
                     method: 'GET',
                     data: {
-                        id: id,                        
+                        id: id,
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');
@@ -379,7 +381,7 @@
                     }
                 });
 
-            })
+            });
             $('body').on('click', '#getViewReason', function(e) {
                 e.preventDefault();
                 id = $(this).data('id');
@@ -455,25 +457,32 @@
                     }
                 });
                 $('#modal-recuse-procedimento').modal('show');
-            }); 
-            $('body').on('click', '#btnPublish', function(e){
-                e.preventDefault();                            
-                var id = $(this).data('id');                
+            });
+            $('body').on('click', '#btnPublish', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
                 $.ajax({
                     url: "{{ route('procedimento.store.publish') }}",
                     method: 'GET',
                     data: {
-                        id: id,                        
+                        id: id,
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');
                     },
                     success: function(response) {
                         $("#loading").addClass('hidden');
-                        console.log(response);
+                        if (response.alert) {
+                            $("#loading").addClass('hidden');
+                            msg(response.alert, 'alert-warning', 'fa-warning');
+                        } else {
+                            $("#loading").addClass('hidden');
+                            msg(response.success, 'alert-success', 'fa fa-check');
+                            $('#table-procedimento-liberados').DataTable().ajax.reload();
+                        }
                     }
                 });
-            });          
+            });
             //Cliques nas tabs
             $('.nav-tabs a[href="#recusados"]').on('click', function() {
                 $('#table-procedimento-recusados').DataTable().destroy();
@@ -486,6 +495,30 @@
             $('.nav-tabs a[href="#liberados"]').on('click', function() {
                 $('#table-procedimento-liberados').DataTable().destroy();
                 initTable('table-procedimento-liberados', 'L');
+            });
+            $('body').on('click', '#btnCancelPublish', function(e) {
+                var deleteId = $(this).data('id');
+                $.ajax({
+                    url: "{{route('procedimento.delete-publish')}}",
+                    method: 'DELETE',
+                    data: {
+                        "id": deleteId,
+                        "_token": $("[name=csrf-token]").attr("content"),
+                    },
+                    beforeSend: function() {
+                        // $("#loading").removeClass('hidden');
+                    },
+                    success: function(result) {
+                        if (result.alert) {
+                            $("#loading").addClass('hidden');
+                            msg(result.success, 'alert-warning', 'fa-warning');
+                        } else {
+                            $("#loading").addClass('hidden');
+                            msg(result.success, 'alert-success', 'fa fa-check');
+                            $('#table-procedimento-liberados').DataTable().ajax.reload();
+                        }
+                    }
+                });
             });
 
             function initTable(tableId, data) {

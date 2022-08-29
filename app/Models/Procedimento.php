@@ -53,11 +53,13 @@ class Procedimento extends Model
                                 WHEN 'R' THEN 'Reprovado'
                                 WHEN 'N' THEN 'Reanalise' 
                                 END status"),
-            'procedimentos.created_at as criado'                    
+            'procedimentos.created_at as criado', 
+            'procedimento_public.status as public'                 
         )
             ->join('setors', 'setors.id', 'procedimentos.id_setor')
             ->join('users', 'users.id', 'procedimentos.id_user_create')
-            ->whereIn('status', $status)
+            ->leftJoin('procedimento_public', 'procedimento_public.id_procedimento', 'procedimentos.id')
+            ->whereIn('procedimentos.status', $status)
             ->get();
     }
     public function updateData($input)

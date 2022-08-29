@@ -24,11 +24,13 @@ class ProcedimentoController extends Controller
         Request $request,
         Procedimento $procedimento,
         ProcedimentoAprovador $aprovador,
+        ProcedimentoPublish $publish,
         Setor $setor
     ) {
         $this->request = $request;
         $this->procedimento = $procedimento;
         $this->aprovador = $aprovador;
+        $this->publish = $publish;
         $this->setor = $setor;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -144,10 +146,11 @@ class ProcedimentoController extends Controller
                 } elseif ($data->status == 'Liberado') {
                     $html = ' 
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
-                        <button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="btnPublish">Publicar</button>   
                         ';
-                    if (0 == 1) {
+                    if ($data->public == 'P') {
                         $html .= '<button type="button" class="btn btn-danger btn-sm" data-id="' . $data->id . '" id="btnCancelPublish">Despublicar</button>';;
+                    } else {
+                        $html .= '<button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="btnPublish">Publicar</button> ';
                     }
                     $html .= ' <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados">Reanalisar</button> 
                         ';
@@ -190,7 +193,6 @@ class ProcedimentoController extends Controller
         if ($exists) {
             //get content of image
             $content = Storage::get($this->request->arquivo);
-
             //get mime type of image
             $mime = Storage::mimeType($this->request->arquivo);
             //prepare response with image content and response code
@@ -211,6 +213,11 @@ class ProcedimentoController extends Controller
         }
         $this->procedimento->find($this->request->id)->delete();
         return response()->json(['success' => 'Procedimento Excluido com sucesso!']);
+    }
+    public function destroyPublish(){
+        $procedimento = ProcedimentoPublish::where('id_procedimento', $this->request->id)->firstOrFail();  
+        $procedimento->delete();
+        return response()->json(['success' => 'Procedimento despublicado com sucesso!']);
     }
     public function envioEmail()
     {
@@ -241,10 +248,19 @@ class ProcedimentoController extends Controller
             'uri',
         ));
     }
-    public function storePublish(){
-       return  ProcedimentoPublish::all();
+    public function storePublish()
+    {
+        Procedimento::findOrFail($this->request->id);
+        $publish = new ProcedimentoPublish;
+        if (ProcedimentoPublish::where('id_procedimento', $this->request->id)->exists()) {
+            return  response()->json(["alert" => "Esse procedimento já está público!"]);
+        } else {
+            $publish->id_procedimento = $this->request->id;
+            $publish->status = 'P';
+            $publish->save();
+            return  response()->json(["success" => "Procedimento público com sucesso!"]);
+        }
     }
-
     public function GetProcedimentoPublish()
     {
         $status = $this->request->validate([

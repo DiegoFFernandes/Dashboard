@@ -263,11 +263,10 @@ class ProcedimentoController extends Controller
     }
     public function GetProcedimentoPublish()
     {
-        $status = $this->request->validate([
-            'status' => 'required|in:P'
-        ]);
-
-        $data = $this->procedimento->listData($status);
+        $public = $this->request->validate([
+            'public' => 'required|in:pub'
+        ]);        
+        $data = $this->procedimento->listData($public['public']);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
                 return '  

@@ -59,7 +59,11 @@ class Procedimento extends Model
             ->join('setors', 'setors.id', 'procedimentos.id_setor')
             ->join('users', 'users.id', 'procedimentos.id_user_create')
             ->leftJoin('procedimento_public', 'procedimento_public.id_procedimento', 'procedimentos.id')
-            ->whereIn('procedimentos.status', $status)
+            ->when($status == 'pub', function($q){
+                return $q->where('procedimento_public.status', 'P');
+            }, function($q) use ($status) {
+                return $q->whereIn('procedimentos.status', $status);
+            })            
             ->get();
     }
     public function updateData($input)

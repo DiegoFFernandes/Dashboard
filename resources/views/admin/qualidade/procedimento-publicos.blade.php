@@ -18,9 +18,9 @@
                                 <th>Cód.</th>
                                 <th>Setor</th>
                                 <th>Titulo</th>
-                                <th>Descrição</th>
-                                <th>Resp.</th>
+                                <th>Descrição</th>                                
                                 <th>Status</th>
+                                <th>Resp.</th>
                                 <th>Versão</th>
                                 <th>Acões</th>
                             </thead>
@@ -39,7 +39,7 @@
     <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var dataTable = initTable('table-procedimento', 'P');
+            var dataTable = initTable('table-procedimento', 'pub');
 
             function initTable(tableId, data) {
                 $("#" + tableId).DataTable({
@@ -58,7 +58,7 @@
                     ajax: {
                         url: "{{ route('get-procedimento.publish') }}",
                         data: {
-                            status: data
+                            public: data
                         }
                     },
                     columns: [{

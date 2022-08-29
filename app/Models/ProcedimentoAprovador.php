@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
@@ -74,5 +76,10 @@ class ProcedimentoAprovador extends Model
         return ProcedimentoAprovador::select('aprovado')
         ->where('id_procedimento', $input)
         ->groupBy('id_procedimento', 'aprovado')->get();
+    }
+    public function updateIfCreateLargerDays(){
+        return ProcedimentoAprovador::where('aprovado', '<>' , 'L')
+        ->whereDate('created_at', '<=',  Config::get('constants.options.dt10days'))
+        ->update(['aprovado' => 'L']);        
     }
 }

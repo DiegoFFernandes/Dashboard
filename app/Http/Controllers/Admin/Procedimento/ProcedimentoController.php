@@ -12,10 +12,12 @@ use App\Models\Setor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Days;
 use stdClass;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -45,11 +47,7 @@ class ProcedimentoController extends Controller
         $uri          = $this->request->route()->uri();
         $users        = User::where('id', '<>', 1)->get();
         $setors       = $this->setor->listData();
-
-        // return ProcedimentoAprovador::where('aprovado', '<>' , 'L')
-        // ->where('')
-        // ->update(['aprovado' => 'L']);
-
+        $this->aprovador->updateIfCreateLargerDays();
         return view('admin.qualidade.index', compact(
             'title_page',
             'user_auth',

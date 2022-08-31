@@ -483,6 +483,31 @@
                     }
                 });
             });
+            $('body').on('click', '#btnReleaseNotApprover', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                $.ajax({
+                    url: "{{ route('procedimento.store.noapprover') }}",
+                    method: 'GET',
+                    data: {
+                        id: id,
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(response) {
+                        $("#loading").addClass('hidden');
+                        if (response.alert) {
+                            $("#loading").addClass('hidden');
+                            msg(response.alert, 'alert-warning', 'fa-warning');
+                        } else {
+                            $("#loading").addClass('hidden');
+                            msg(response.success, 'alert-success', 'fa fa-check');
+                            $('#table-procedimento').DataTable().ajax.reload();
+                        }
+                    }
+                });
+            });
             //Cliques nas tabs
             $('.nav-tabs a[href="#recusados"]').on('click', function() {
                 $('#table-procedimento-recusados').DataTable().destroy();

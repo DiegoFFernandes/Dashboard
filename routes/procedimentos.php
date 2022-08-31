@@ -17,7 +17,7 @@ Route::middleware(['auth', 'permission:ver-procedimento'])->group(function () {
         Route::delete('delete', [ProcedimentoController::class, 'destroy'])->name('procedimento.delete');
         Route::get('store-publish', [ProcedimentoController::class, 'storePublish'])->name('procedimento.store.publish');
         Route::delete('delete-publish', [ProcedimentoController::class, 'destroyPublish'])->name('procedimento.delete-publish');
-        
+        Route::get('procedimento-sem-aprovador', [ProcedimentoController::class, 'storeNoApprover'])->name('procedimento.store.noapprover');        
     });
 });
 

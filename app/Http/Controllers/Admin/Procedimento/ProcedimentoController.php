@@ -73,6 +73,13 @@ class ProcedimentoController extends Controller
         // die();
         return redirect()->route('procedimento.index')->with('status', 'Procedimento criado com sucesso!');
     }
+    public function storeNoApprover()
+    {
+        $procedimento = Procedimento::findOrFail($this->request->id);
+        $procedimento->status = "L";
+        $procedimento->save();
+        return  response()->json(["success" => "Procedimento liberado sem aprovador!"]);
+    }
     public function edit()
     {
         ProcedimentoAprovador::where('id_procedimento', $this->request->id)->firstOrFail();
@@ -136,7 +143,7 @@ class ProcedimentoController extends Controller
             ->addColumn('Actions', function ($data) {
                 if ($data->status == 'Aguardando' || $data->status == 'Reanalise') {
                     return '
-                        <button type="button" class="btn btn-warning btn-sm btn-edit" id="" data-id="' . $data->id . '"" data-table="table-procedimento" data-toggle="tooltip" data-placement="top" title="Libera sem aprovadores">Liberar</button>
+                        <button type="button" class="btn btn-warning btn-sm" id="btnReleaseNotApprover" data-id="' . $data->id . '"" data-table="table-procedimento" data-toggle="tooltip" data-placement="top" title="Libera sem aprovadores">Liberar</button>
                         <button type="button" class="btn btn-success btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento">Editar</button>
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
                         <button type="button" class="btn btn-danger btn-sm" data-id="' . $data->id . '" id="getDeleteId">Excluir</button>';

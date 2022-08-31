@@ -353,9 +353,9 @@
                                     <i class="fa fa-thumbs-o-up"></i>Liberar</a>
                             </li>
                             <li class="{{ $uri == 'procedimento/publicos' ? 'active' : '' }}"><a
-                                href="{{ route('procedimento.publish') }}">
-                                <i class="fa fa-book"></i>Publicos</a>
-                        </li>
+                                    href="{{ route('procedimento.publish') }}">
+                                    <i class="fa fa-book"></i>Publicos</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -484,20 +484,48 @@
                                         </span>
                                     </a>
                                     <ul class="treeview-menu">
-                                        @can('ver-comercial-norte')
-                                            <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWv71bwBXHJBkU-OARyDPD0BKPh35ZsHp8Mvwrgdf6JN5g?e=p59EpC"
-                                                    target="_blank">
-                                                    <i class="fa fa-circle-o"></i>Norte</a>
+                                        @role('admin|coordenador|gerencia')
+                                            <li class="treeview">
+                                                <a href="#"><i class="fa fa-circle-o"></i>Coordenador
+                                                    <span class="pull-right-container">
+                                                        <i class="fa fa-angle-left pull-right"></i>
+                                                    </span>
+                                                </a>
+                                                <ul class="treeview-menu">
+                                                    <li class="">
+                                                        <a href="https://superrodas-my.sharepoint.com/:f:/g/personal/admin_superrodas_onmicrosoft_com/Empj1e8uWJtIkWl9se59XfoB2UGs3k-CZhpwQWbHYUEahw?e=xPKPoY" target="_blank">
+                                                            <i class="fa fa-circle-o"></i>Norte</a>
+                                                    </li>
+                                                    <li class="">
+                                                        <a href="https://superrodas-my.sharepoint.com/:f:/g/personal/admin_superrodas_onmicrosoft_com/EgmsKd6v3RNOicUa9vBU6nEBsTJM8h5Juzt5OR6DqrbLpg?e=6v3eKg" target="_blank">
+                                                            <i class="fa fa-circle-o"></i>Sul</a>
+                                                    </li>
+                                                </ul>
                                             </li>
-                                        @endcan
-                                        @can('ver-comercial-sul')
-                                            <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EfAVFr6kqUtMs121cRy0NzIBnNvkEX2opxJ9BtAQqZUZNw?e=bEqHpU"
-                                                    target="_blank">
-                                                    <i class="fa fa-circle-o"></i>Sul</a>
-                                            </li>
-                                        @endcan
+                                        @endrole
+                                        <li class="treeview">
+                                            <a href="#"><i class="fa fa-circle-o"></i>Geral
+                                                <span class="pull-right-container">
+                                                    <i class="fa fa-angle-left pull-right"></i>
+                                                </span>
+                                            </a>
+                                            <ul class="treeview-menu">
+                                                @can('ver-comercial-norte')
+                                                    <li class="">
+                                                        <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWv71bwBXHJBkU-OARyDPD0BKPh35ZsHp8Mvwrgdf6JN5g?e=p59EpC"
+                                                            target="_blank">
+                                                            <i class="fa fa-circle-o"></i>Norte</a>
+                                                    </li>
+                                                @endcan
+                                                @can('ver-comercial-sul')
+                                                    <li class="">
+                                                        <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EfAVFr6kqUtMs121cRy0NzIBnNvkEX2opxJ9BtAQqZUZNw?e=bEqHpU"
+                                                            target="_blank">
+                                                            <i class="fa fa-circle-o"></i>Sul</a>
+                                                    </li>
+                                                @endcan
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </li>
                             @endcanany

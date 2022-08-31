@@ -161,9 +161,18 @@
                     }
                 ],
                 columnDefs: [{
-                    "visible": false,
-                    "targets": [3]
-                }]
+                        width: '1%',
+                        targets: 0
+                    },
+                    {
+                        width: '25%',
+                        targets: [2]
+                    },
+                    {
+                        "visible": false,
+                        "targets": [3]
+                    }
+                ]
             });
             $('body').on('click', '#getSave', function(e) {
                 e.preventDefault();

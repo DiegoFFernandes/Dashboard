@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Days;
 use stdClass;
+use Yajra\DataTables\DataTables as DataTablesDataTables;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProcedimentoController extends Controller
@@ -165,8 +166,9 @@ class ProcedimentoController extends Controller
                     $html .= ' <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados">Reanalisar</button> 
                         ';
                     return $html;
-                } else {
-                    return '            
+                } elseif ($data->status == 'Em andamento') {
+                    return '  
+                        <button type="button" class="btn btn-warning btn-sm" data-id="' . $data->id . '"  id="btnOutstandind">Pendentes</button>            
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>                        
                         ';
                 }
@@ -290,5 +292,10 @@ class ProcedimentoController extends Controller
             })
             ->rawColumns(['Actions'])
             ->make(true);
+    }
+    public function approverOutstanding(){
+        Procedimento::findOrFail($this->request->id);
+        $data =  $this->aprovador->outStandingApprover($this->request->id);
+        return DataTables::of($data)->make(true);
     }
 }

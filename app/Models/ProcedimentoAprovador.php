@@ -18,6 +18,10 @@ class ProcedimentoAprovador extends Model
         'id_user',
         'aprovado',
     ];
+    protected $casts = [
+        'updated_at'  => 'date:d/m/Y',
+        
+    ];
 
     public function create($id_procedimento, $user)
     {
@@ -31,7 +35,7 @@ class ProcedimentoAprovador extends Model
     {
         return ProcedimentoAprovador::select(
             'procedimento_aprovadors.id_procedimento',
-            'procedimento_aprovadors.id_user',            
+            'procedimento_aprovadors.id_user',
             DB::raw("CASE procedimento_aprovadors.aprovado 
                                 WHEN 'A' THEN 'Aguardando' 
                                 WHEN 'N' THEN 'Reanalise' 
@@ -61,25 +65,42 @@ class ProcedimentoAprovador extends Model
     public function updateData($input)
     {
         $aprovador = ProcedimentoAprovador::where('id_procedimento', $input['id'])
-        ->where('id_user', $input['user'])
-        ->firstOrFail();        
-        if($input['status'] == 'R' ){
-            $aprovador->aprovado = $input['status']; 
+            ->where('id_user', $input['user'])
+            ->firstOrFail();
+        if ($input['status'] == 'R') {
+            $aprovador->aprovado = $input['status'];
         }
         $aprovador->aprovado = $input['status'];
         return $aprovador->save();
     }
-    public function updateIfReproved($input){
+    public function updateIfReproved($input)
+    {
         return ProcedimentoAprovador::where('id_procedimento', $input)->update(['aprovado' => 'N']);
     }
-    public function verifyIfReleased($input){
+    public function verifyIfReleased($input)
+    {
         return ProcedimentoAprovador::select('aprovado')
-        ->where('id_procedimento', $input)
-        ->groupBy('id_procedimento', 'aprovado')->get();
+            ->where('id_procedimento', $input)
+            ->groupBy('id_procedimento', 'aprovado')->get();
     }
-    public function updateIfCreateLargerDays(){
-        return ProcedimentoAprovador::where('aprovado', '<>' , 'L')
-        ->whereDate('created_at', '<=',  Config::get('constants.options.dt10days'))
-        ->update(['aprovado' => 'L']);        
+    public function updateIfCreateLargerDays()
+    {
+        return ProcedimentoAprovador::where('aprovado', '<>', 'L')
+            ->whereDate('created_at', '<=',  Config::get('constants.options.dt10days'))
+            ->update(['aprovado' => 'L']);
+    }
+    public function outStandingApprover($id)
+    {
+        return ProcedimentoAprovador::select(
+            'procedimento_aprovadors.id_procedimento',
+            'users.name',
+            DB::raw("CASE procedimento_aprovadors.aprovado 
+                            WHEN 'L' THEN 'LIBERADO'
+                            WHEN 'A' THEN 'AGUARDANDO'
+                            END status"),
+            'procedimento_aprovadors.updated_at'
+        )
+            ->join('users', 'users.id', 'procedimento_aprovadors.id_user')
+            ->where('id_procedimento', $id)->get();
     }
 }

@@ -17,13 +17,15 @@ Route::middleware(['auth', 'permission:ver-procedimento'])->group(function () {
         Route::delete('delete', [ProcedimentoController::class, 'destroy'])->name('procedimento.delete');
         Route::get('store-publish', [ProcedimentoController::class, 'storePublish'])->name('procedimento.store.publish');
         Route::delete('delete-publish', [ProcedimentoController::class, 'destroyPublish'])->name('procedimento.delete-publish');
-        Route::get('procedimento-sem-aprovador', [ProcedimentoController::class, 'storeNoApprover'])->name('procedimento.store.noapprover');        
+        Route::get('procedimento-sem-aprovador', [ProcedimentoController::class, 'storeNoApprover'])->name('procedimento.store.noapprover');
+        Route::get('procedimento-pendentes-aprovadores', [ProcedimentoController::class, 'approverOutstanding'])->name('procedimento.outstanding');        
+    
     });
 });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('procedimento', [ProcedimentoController::class, 'showPDF'])->name('procedimento.show-pdf');
-    
+
     Route::prefix('procedimento-aprovador')->group(function () {
         Route::get('autorizador', [ProcedimentoAprovadorController::class, 'index'])->name('procedimento.autorizador');
         Route::get('list-procedimento-para-liberar', [ProcedimentoAprovadorController::class, 'GetProcedimentoAprovador'])->name('procedimento.get-procedimento-aprovador');
@@ -39,6 +41,5 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('procedimento-publicos')->group(function () {
         Route::get('liberados', [ProcedimentoController::class, 'procedimentoPublish'])->name('procedimento.publish');
         Route::get('get-liberados', [ProcedimentoController::class, 'GetprocedimentoPublish'])->name('get-procedimento.publish');
-    
     });
 });

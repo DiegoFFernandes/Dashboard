@@ -105,7 +105,8 @@
                                         <label for="arquivo">Setor designado</label>
                                         <select name="setor" id="setor" class="form-control select2" style="width: 100%">
                                             @foreach ($setors as $s)
-                                                <option value="{{ $s->id }}">{{ $s->nm_setor . ' - ' . $s->nm_area }}
+                                                <option value="{{ $s->id }}">
+                                                    {{ $s->nm_setor . ' - ' . $s->nm_area }}
                                                 </option>
                                             @endforeach
 
@@ -188,7 +189,8 @@
                                         <select name="setor" id="edit_setor" class="form-control select2"
                                             style="width: 100%">
                                             @foreach ($setors as $s)
-                                                <option value="{{ $s->id }}">{{ $s->nm_setor . ' - ' . $s->nm_area }}</option>
+                                                <option value="{{ $s->id }}">
+                                                    {{ $s->nm_setor . ' - ' . $s->nm_area }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -271,38 +273,55 @@
                     </div>
                 </div>
             </div>
-            {{-- Modal View Recuse Procedimento --}}
-            <div class="modal modal-procedimento fade" id="modal-recuse-procedimento">
+            {{-- Modal View Outstanding Procedimento --}}
+            <div class="modal modal-procedimento fade" id="modal-reason-procedimento">
                 <div class="modal-dialog" style="">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title"><i class="fa fa-comments-o"></i> Chat - Procedimento Reprovado</h4>
+                            <h4 class="modal-title">Aprovador/Reprovados</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="direct-chat direct-chat-warning">
-                                <div class="box-body" id="box-chat">
-
-                                </div>
-                            </div>
+                            <table class="table table-bordered" id="table-motivo-reprovados">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Cód. Criador</th>
+                                        <th>Criador</th>
+                                        <th>Cód. Aprovador</th>
+                                        <th>Aprovador</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
-                        <div class="modal-footer" style="text-align: left;">
-                            <form action="{{ route('procedimento.replica') }}" method="post">
-                                @csrf
-                                <input type="hidden" name="id" id="id">
-                                <input type="hidden" name="user_approver" id="user_approver">
-                                <input type="hidden" name="user_created" id="user_created">
-                                <div class="form-group">
-                                    <label for="arquivo">Mensagem:</label>
-                                    <textarea name="description" class="form-control description" rows="4" cols="50" placeholder="Digite sua replica..."
-                                        required></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-default btn-block">
-                                        <i class="fa fa-comments-o"></i> Responder</button>
-                                </div>
-                            </form>
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Modal View Recuse Procedimento --}}
+            <div class="modal modal-outstanding-procedimento fade" id="modal-outstanding-procedimento">
+                <div class="modal-dialog" style="">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title"><i class="fa fa-comments-o"></i>Procedimento - Aguardando Aprovação
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table" id="table-procedimentos-outstanding">
+                                <thead>
+                                    <tr>
+                                        <td>Cód.</td>
+                                        <td>Usuario</td>
+                                        <td>Status</td>
+                                        <td>Atualizado em</td>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -508,6 +527,53 @@
                     }
                 });
             });
+            $('body').on('click', '#btnOutstandind', function(e) {
+                $("#table-procedimentos-outstanding").DataTable().destroy();
+                e.preventDefault();
+                var id = $(this).data('id');
+                $('#modal-outstanding-procedimento').modal('show');
+                $("#table-procedimentos-outstanding").DataTable({
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    },
+                    pagingType: "simple",
+                    processing: false,
+                    responsive: true,
+                    serverSide: false,
+                    autoWidth: false,
+                    order: [
+                        [0, "desc"]
+                    ],
+                    "pageLength": 10,
+                    ajax: {
+                        url: "{{ route('procedimento.outstanding') }}",
+                        data: {
+                            id: id
+                        }
+                    },
+                    columns: [{
+                            data: 'id_procedimento',
+                            name: 'id_procedimento'
+                        },
+                        {
+                            data: 'name',
+                            name: 'name'
+                        },
+                        {
+                            data: 'status',
+                            name: 'status'
+                        },
+                        {
+                            data: 'updated_at',
+                            name: 'updated_at'
+                        }
+                    ],
+                    columnDefs: [{
+                        width: '1%',
+                        targets: 0
+                    }],
+                });
+            });
             //Cliques nas tabs
             $('.nav-tabs a[href="#recusados"]').on('click', function() {
                 $('#table-procedimento-recusados').DataTable().destroy();
@@ -524,7 +590,7 @@
             $('body').on('click', '#btnCancelPublish', function(e) {
                 var deleteId = $(this).data('id');
                 $.ajax({
-                    url: "{{route('procedimento.delete-publish')}}",
+                    url: "{{ route('procedimento.delete-publish') }}",
                     method: 'DELETE',
                     data: {
                         "id": deleteId,

@@ -31,11 +31,14 @@ class ProcedimentoRecusado extends Model
         return ProcedimentoRecusado::select('procedimento_recusados.id_procedimento', 
         'procedimento_recusados.id_user_create', 'user_create.name as nm_create', 
         'id_user_approver', 'user_approver.name as nm_approver', 
-        'procedimento_recusados.message', 'procedimento_recusados.type')
+         'procedimento_recusados.type')
         ->join('users as user_approver', 'user_approver.id', 'procedimento_recusados.id_user_approver')
         ->join('users as user_create', 'user_create.id', 'procedimento_recusados.id_user_create')
         ->where('id_procedimento', $id)
         ->where('type', 'A')
+        ->groupBy('procedimento_recusados.id_procedimento', 
+        'procedimento_recusados.id_user_create', 'user_create.name', 
+        'id_user_approver', 'user_approver.name', 'procedimento_recusados.type')
         ->get();
     }
     public function listDataReproved($input){

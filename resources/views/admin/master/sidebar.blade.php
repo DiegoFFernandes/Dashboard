@@ -350,7 +350,7 @@
                             @endcanany
                             <li class="{{ $uri == 'procedimento-aprovador/autorizador' ? 'active' : '' }}"><a
                                     href="{{ route('procedimento.autorizador') }}">
-                                    <i class="fa fa-thumbs-o-up"></i>Liberar</a>
+                                    <i class="fa fa-thumbs-o-up"></i>Avaliar</a>
                             </li>
                             <li class="{{ $uri == 'procedimento/publicos' ? 'active' : '' }}"><a
                                     href="{{ route('procedimento.publish') }}">

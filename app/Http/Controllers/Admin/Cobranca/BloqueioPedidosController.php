@@ -136,11 +136,11 @@ class BloqueioPedidosController extends Controller
                 return route('get-item-pedido-acompanhar', $p->ID);
             })
             ->setRowClass(function ($p) {
-                if ($p->STPEDIDO == 'ATENDIDO   ') {
+                if ($p->STPEDIDO == "ATENDIDO        ") {
                     return 'bg-green';
-                } elseif ($p->STPEDIDO == 'EM PRODUCAO') {
+                } elseif ($p->STPEDIDO == "EM PRODUCAO     ") {
                     return 'bg-yellow';
-                } elseif ($p->STPEDIDO == 'BLOQUEADO  ') {
+                } elseif ($p->STPEDIDO == "BLOQUEADO       ") {
                     return 'bg-red';
                 }
             })

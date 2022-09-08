@@ -273,28 +273,21 @@
                     </div>
                 </div>
             </div>
-            {{-- Modal View Outstanding Procedimento --}}
-            <div class="modal modal-procedimento fade" id="modal-reason-procedimento">
+            {{-- Modal View Chat Reason Recuse Procedimento --}}
+            <div class="modal modal-procedimento fade" id="modal-recuse-procedimento">
                 <div class="modal-dialog" style="">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title">Aprovador/Reprovados</h4>
+                                <h4 class="modal-title"><i class="fa fa-comments-o"></i> Chat - Procedimento Reprovado</h4>
                         </div>
                         <div class="modal-body">
-                            <table class="table table-bordered" id="table-motivo-reprovados">
-                                <thead>
-                                    <tr>
-                                        <th>Id</th>
-                                        <th>Cód. Criador</th>
-                                        <th>Criador</th>
-                                        <th>Cód. Aprovador</th>
-                                        <th>Aprovador</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                            </table>
+                            <div class="direct-chat direct-chat-warning">
+                                <div class="box-body" id="box-chat">
+
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                         </div>

@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\Produto\ImportaItemJunsoftController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeiculoController;
+use App\Http\Controllers\admin\WebHook\WebHookController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PowerBi\PowerBiEmbeddedController;
 use Illuminate\Support\Facades\Artisan;
@@ -53,6 +54,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
 Route::get('/admin', [LoginController::class, 'dashboard'])->name('admin.dashborad');
 
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
+Route::get('webhook', [WebHookController::class, 'index'])->name('webhook');
 
 Route::middleware(['auth'])->group(function () {
     /**Rota Perfil usuario*/

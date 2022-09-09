@@ -77,7 +77,7 @@ class ProcedimentoAprovadorController extends Controller
                 $html .= '
                     <div class="direct-chat-msg">
                         <div class="direct-chat-info clearfix">
-                            <span class="direct-chat-name pull-left">' . $d->nm_create . '</span>
+                            <span class="direct-chat-name pull-left">' . $d->nm_approver . '</span>
                             <span class="direct-chat-timestamp pull-right">' . $d->created_at->diffForHumans() . '</span>
                         </div>
                         <div class="direct-chat-text"> 
@@ -88,7 +88,7 @@ class ProcedimentoAprovadorController extends Controller
                 $html .= '
                     <div class="direct-chat-msg right">
                         <div class="direct-chat-info clearfix">
-                            <span class="direct-chat-name pull-right">' . $d->nm_approver . '</span>
+                            <span class="direct-chat-name pull-right">' . $d->nm_create . '</span>
                             <span class="direct-chat-timestamp pull-left">' . $d->created_at->diffForHumans() . '</span>
                         </div>
                         <div class="direct-chat-text">

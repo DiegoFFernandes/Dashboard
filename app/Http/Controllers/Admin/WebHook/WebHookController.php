@@ -12,13 +12,20 @@ class WebHookController extends Controller
     {
         $this->request = $request;
     }
-    public function index(){
-        // return $this->request;
-        if($this->request->Descricao == 'endereco inexistente'){
-            $webhook = new WebHook();
-            $webhook->email = $this->request->Email;
-            $webhook->descricao = $this->request->Descricao;
-            $webhook->save();
-        };        
+    public function index()
+    {
+        // return $this->request;        
+        if ($this->request->Descricao == 'endereco inexistente') {
+            WebHook::updateOrInsert(
+                ['email' => $this->request->Email],
+                [
+                    'email' => $this->request->Email,
+                    'descricao' => $this->request->Descricao,
+                    "created_at"    =>  \Carbon\Carbon::now(), # new \Datetime()
+                    "updated_at"    => \Carbon\Carbon::now(),  # new \Datetime()
+                ]
+            );
+            return;
+        }
     }
 }

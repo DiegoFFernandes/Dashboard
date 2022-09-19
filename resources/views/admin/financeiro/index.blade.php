@@ -23,17 +23,7 @@
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <div class="form-group">
-                                <label>Periodo</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-clock-o"></i>
-                                    </div>
-                                    <input type="text" class="form-control pull-right periodo" id="daterange" value=""
-                                        autocomplete="off">
-                                </div>
-                                <!-- /.input group -->
-                            </div>
+                            @includeIf('admin.master.filtro-data')
                         </div>
                         <div class="col-md-2" align="center" style="padding-top: 24px">
                             <div class="form-group">
@@ -87,27 +77,28 @@
                 $.ajax({
                     url: "{{ route('get-conciliacao') }}",
                     method: "GET",
+                    cache: false,
                     data: {
                         cd_empresa: cd_empresa,
                         dt_inicio: inicioData,
                         dt_fim: fimData,
-                    },
-                    xhrFields: {
-                        responseType: 'blob'
-                    },
+                        nm_empresa: nm_empresa
+                    },                    
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');
                     },
-                    success: function(data) {
+                    success: function(response) {
                         $("#loading").addClass('hidden');
                         var link = document.createElement('a');
-                        link.href = window.URL.createObjectURL(data);
-                        link.download = nm_empresa + '-Conciliacao.xlsx';
+                        link.href = response.file;                        
+                        link.download = response.name;
+                        document.body.appendChild(link);
                         link.click();
+                        link.remove();
                     },
-                    fail: function(data) {
-                        alert('Not downloaded');
-                        //console.log('fail',  data);
+                    error: function(ajaxContext) {
+                        $("#loading").addClass('hidden');
+                        alert('Erro ao fazer download, contate o setor de TI.');                        
                     }
                 });
             });

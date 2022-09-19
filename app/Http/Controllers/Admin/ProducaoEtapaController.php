@@ -3,20 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Empresa;
 use App\Models\Producao;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class ProducaoEtapaController extends Controller
 {
         public $user;
-        public $resposta;
+        public $request;
 
-        public function __construct(Request $request, Producao $producao)
-        {
-                $this->resposta = $request;
+        public function __construct(
+                Request $request,
+                Producao $producao,
+                Empresa $empresa
+        ) {
+                $this->request = $request;
                 $this->producao = $producao;
+                $this->empresa  = $empresa;
                 $this->middleware(function ($request, $next) {
                         $this->user = Auth::user();
                         return $next($request);
@@ -67,7 +74,7 @@ class ProducaoEtapaController extends Controller
                         ];
                 }
 
-                $uri  = $this->resposta->route()->uri();
+                $uri  = $this->request->route()->uri();
                 $user_auth = $this->user;
                 $sql  = "SELECT
                                 SUM(X.NR_EXINI) NR_EXINI,
@@ -586,14 +593,68 @@ class ProducaoEtapaController extends Controller
 
                 return view('admin.pcp.etapas', compact('user_auth', 'uri', 'etapas'));
         }
-
         public function trocaServico()
         {
-                $uri       = $this->resposta->route()->uri();
+                $uri       = $this->request->route()->uri();
+                $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
                 $user_auth = $this->user;
-                $data = date('m-d-Y', strtotime('0 day'));
-                $empresa = 3;
-                $troca = $this->producao->trocaServico($data, $empresa);                
-                return view('admin.producao.troca-servico', compact('uri', 'user_auth', 'troca'));
+
+                return view('admin.producao.troca-servico', compact(
+                        'empresas',
+                        'uri',
+                        'user_auth',
+                ));
+        }
+        public function getChangeService()
+        {
+                if ($this->request->i == "A") {
+                        $dt_ini = date('m-d-Y', strtotime('-1 days')) . " 00:00";
+                        $dt_fim = date('m-d-Y') . " 23:59";
+                        $empresa = 3;
+                } else {
+                        $empresa = Empresa::where('cd_empresa', $this->request->cdempresa)->firstOrFail();
+                        $dt_ini = $this->request->dtini;
+                        $dt_fim = $this->request->dtfim;
+                        $empresa = $empresa->cd_empresa;
+                }
+                $data = $this->producao->trocaServico($dt_ini, $dt_fim, $empresa);
+                return DataTables::of($data)
+                        ->addColumn('actions', function ($data) {
+                                return '<button class="btn btn-default" data-id="' . $data->ORDEM . '" id="view-grid-change"><i class="fa fa-eye" aria-hidden="true"></i></button>';
+                        })
+                        ->rawColumns(['actions'])
+                        ->make(true);
+        }
+        public function getChangeServiceOrdem()
+        {
+                $this->request->validate([
+                        'ordem' => 'integer',
+                ]);
+                $grid_ordem =  $this->producao->GridChandeServiceOrdem($this->request->ordem);
+                $html = '<table class="table table-bordered" style="font-size: 12px" style="width:100%" id="table-change-ordem">
+                                <thead>
+                                    <tr>
+                                        <th>Ordem</th>
+                                        <th>Etapa</th>
+                                        <th>Servico</th>
+                                        <th>Executor</th>
+                                        <th>Autorizador</th>
+                                        <th>Alterado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>';
+                foreach ($grid_ordem as $g) {
+                        $html .= '<tr>';
+                        $html .= '<td>' . $g->ORDEM . '</td>';
+                        $html .= '<td>' . $g->DSETAPAEMPRESA . '</td>';
+                        $html .= '<td>' . $g->SERVTROCA . '</td>';
+                        $html .= '<td>' . $g->EXECUTOR . '</td>';
+                        $html .= '<td>' . $g->AUTORIZADOR . '</td>';
+                        $html .= '<td>' . $g->DTREGISTRO . '</td>';
+                        $html .= '</tr>';
+                }
+                $html .= "</tbody></table>";
+
+                return response()->json($html);
         }
 }

@@ -288,7 +288,9 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
         Route::get('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas');
         Route::post('etapas', [ProducaoEtapaController::class, 'index'])->name('admin.producao.etapas.do');
         Route::get('troca-servico', [ProducaoEtapaController::class, 'trocaServico'])->name('producao.troca-servico');
-
+        Route::get('get-troca-servico', [ProducaoEtapaController::class, 'getChangeService'])->name('producao.get-troca-servico');
+        Route::get('get-grid-ordem-troca-servico', [ProducaoEtapaController::class, 'getChangeServiceOrdem'])->name('producao.get-troca-servico-ordem');
+        
         /*Rotas Quantide lote e atrasos*/
         Route::get('lote-pcp', [LotePcpController::class, 'index'])->name('admin.lote.pcp');
         Route::get('lote-pcp/{nr_lote}/pneus-lote', [PneusLotePcpController::class, 'index'])->name('admin.lote.pneu.pcp');

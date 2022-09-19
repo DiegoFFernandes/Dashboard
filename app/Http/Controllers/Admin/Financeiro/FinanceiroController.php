@@ -39,17 +39,24 @@ class FinanceiroController extends Controller
     }
     public function getConciliacao()
     {
-        ini_set('max_execution_time', 1500);
+        ini_set('max_execution_time', 1500);        
         
         $cd_empresa = $this->request->cd_empresa;
         $dt_ini = $this->request->dt_inicio;
-        $dt_fim = $this->request->dt_fim;      
+        $dt_fim = $this->request->dt_fim;  
+        $nm_empresa = $this->request->nm_empresa;    
         
         // return $this->financeiro->Conciliacao($cd_empresa, $dt_ini, $dt_fim);
-        return Excel::download(new ConciliacaoFinanceiraExport(
+        $myFile = Excel::raw(new ConciliacaoFinanceiraExport(
             $cd_empresa,
             $dt_ini,
             $dt_fim
-        ), 'conciliacao.xlsx');
+        ), 'Xlsx');
+
+        $response = array(
+            'name' => $nm_empresa."-Conciliacao.xlsx", 
+            'file' => "data:application/vnd.ms-excel;base64,".base64_encode($myFile)
+        );
+        return response()->json($response);
     }
 }

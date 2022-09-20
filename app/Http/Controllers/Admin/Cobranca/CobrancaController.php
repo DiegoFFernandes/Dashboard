@@ -8,11 +8,13 @@ use App\Models\AgendaEnvio;
 use App\Models\AgendaPessoa;
 use App\Models\Empresa;
 use App\Models\Pessoa;
+use App\Models\WebHook;
 use Carbon\Carbon;
 use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Yajra\DataTables\DataTables;
 
 class CobrancaController extends Controller
 {
@@ -21,7 +23,8 @@ class CobrancaController extends Controller
         Empresa $empresa,
         AgendaPessoa $agenda,
         AgendaEnvio $envio,
-        Pessoa $pessoa
+        Pessoa $pessoa, 
+        WebHook $webhook,
 
     ) {
         $this->empresa  = $empresa;
@@ -31,6 +34,7 @@ class CobrancaController extends Controller
         $this->atual_dia = date("d");
         $this->pessoa = $pessoa;
         $this->envio = $envio;
+        $this->webhook = $webhook;
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -265,35 +269,31 @@ class CobrancaController extends Controller
 
         //return $search[0]->DS_MENSAGEM;
 
-        $html = '<table id="table-search" class="table table-striped" style="width:100%">
+        $html = '<table id="table-search" class="table table-striped" style="width:100%; font-size: 12px">
                     <thead>
                         <tr>                    
-                            <th>Descrição</th>
-                            <th>Nr Envio</th>
-                            <th>Nr Agenda</th>
-                            <th>Cd Pessoa</th>
-                            <th>Nome</th>
+                            <th>Descrição</th>                            
+                            <th>Nr Agenda</th>                            
+                            <th style="width: 15%">Nome</th>
                             <th>Dt Envio</th>
-                            <th>Anexo</th>
-                            <th>Email</th>
+                            <th>Anexo</th>                            
                         </tr>
                     </thead>
                     <tbody>';
         foreach ($search as $s) {
             $exploder        = explode('\\', $s->BI_ANEXORELAT);
-            $anexo = is_null($s->BI_ANEXORELAT) ? 'não existe' : '<a href="file:///\\172.29.0.2/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '" class="btn btn-primary">Anexo</a>';
-            $email = '<button class="btn btn-default ver-email" data-id="' . $s->NR_ENVIO . '" aria-hidden="true"> Ver E-mail </button>';
+            $anexo = is_null($s->BI_ANEXORELAT) ? 'não existe' : '<a href="file:///\\172.29.0.2/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '" class="btn btn-xs btn-primary">Anexo</a>';
+            $email = '<button class="btn btn-default btn-xs ver-email" data-id="' . $s->NR_ENVIO . '" aria-hidden="true"> Ver E-mail </button>';
             //var_dump($exploder);
             $html .= '
                     <tr>                    
                         <td>' . $s->DS_CONTEXTO . '</td>
-                        <td>' . $s->NR_ENVIO . '</td>
-                        <td>' . $s->NR_AGENDA . '</td>
-                        <td>' . $s->CD_PESSOA . '</td>
-                        <td>' . $s->NM_PESSOA . '</td>
+                        
+                        <td>' . $s->NR_AGENDA . '</td>                        
+                        <td>' . $s->CD_PESSOA.'-'.$s->NM_PESSOA . '</td>
                         <td>' . $s->DT_ENVIO . '</td>
-                        <td>' . $anexo . '</td>
-                        <td>' . $email . '</td>
+                        <td>' . $anexo . $email . '</td>
+                        
                     </tr>';
         }
         $html .= '</tbody>
@@ -305,4 +305,16 @@ class CobrancaController extends Controller
         $email = $this->envio->verEmail($nr_envio);
         return $email;
     }
+    public function getSubmitIagente(){
+        $email = WebHook::all();
+        foreach ($email as $e){
+            $arryEmail[] = $e->email;
+        }
+       
+        $arry = implode(",", $arryEmail);
+        $arryPrepar = str_replace(",", "','", $arry );
+        $data = $this->webhook->emailsDifferents($arryPrepar);
+        return DataTables::of($data)->make(true);
+    }
+
 }

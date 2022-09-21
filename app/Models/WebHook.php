@@ -27,7 +27,7 @@ class WebHook extends Model
                 FROM (
                     SELECT P.cd_pessoa, cast(P.nm_pessoa as varchar(100) character set UTF8) nm_pessoa, P.ds_email, 'TFA001' MODULO
                     FROM PESSOA P
-                    where p.cd_tipopessoa not in (5,8,7,6)
+                    where p.cd_tipopessoa not in (5,8,7,6,2)
 
                     union all
                 

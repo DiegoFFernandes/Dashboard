@@ -257,6 +257,7 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
         Route::get('get-email-follow/{id}', [CobrancaController::class, 'getEmailEnvio'])->name('get-email-follow');
         Route::get('get-envio-iagente', [CobrancaController::class, 'getSubmitIagente'])->name('get-envio-iagente');
         Route::delete('delete-email-webhook-iagente', [CobrancaController::class, 'DeleteEmailWebhookIagente'])->name('delete-email-webhook-iagente');
+        
 
         Route::get('chart-data', [CobrancaController::class, 'chartLineAjax'])->name('cobranca.chart-api');
         Route::get('get-qtd-clients-novos', [CobrancaController::class, 'qtdClientesNovosMes'])->name('get-qtd-clients-novos');

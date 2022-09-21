@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Cobranca;
 
 use App\Charts\AgendaPessoaChart;
 use App\Http\Controllers\Controller;
+use App\Mail\ValidateDeleteEmailWebhook;
 use App\Models\AgendaEnvio;
 use App\Models\AgendaPessoa;
 use App\Models\Empresa;
@@ -14,6 +15,8 @@ use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
+use stdClass;
 use Yajra\DataTables\DataTables;
 
 class CobrancaController extends Controller
@@ -326,9 +329,11 @@ class CobrancaController extends Controller
         try {
             $email = WebHook::where('email', $this->request->email)->firstOrFail();
             $email->delete();
+            Mail::send(new ValidateDeleteEmailWebhook($this->user, $this->request));
             return response()->json(['success' => 'Email validado, não irá aparecer na lista, até que haja um novo problema!']);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Houve algum erro ao validar o email, contacte o setor de TI']);
         }
     }
+    
 }

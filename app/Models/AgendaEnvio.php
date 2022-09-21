@@ -26,7 +26,6 @@ class AgendaEnvio extends Model
 
     public function searchSend($request)
     {
-
         //return $request->cd_number;
         $query = "select ae.nr_contexto,
                     cast(ce.ds_contexto as varchar(200) character set utf8) ds_contexto,
@@ -42,6 +41,7 @@ class AgendaEnvio extends Model
                 " . (($request->nm_pessoa != 0) ? "and p.nm_pessoa like '%$request->nm_pessoa%'" : "") . "
                 " . (($request->cpf_cnpj != 0) ? "and p.nr_cnpjcpf = '$request->cpf_cnpj'" : "") . "
                 " . (($request->inicio_data != 0) ? "and ae.dt_envio between '$request->inicio_data' and '$request->fim_data'" : "") . "
+                " . (($request->ds_email != 0) ? "and ae.ds_emaildest like '%$request->ds_email%'" : "") . "    
                 " . (($request->nr_contexto != 0) ? "and ae.nr_contexto = $request->nr_contexto" : "");
 
         return DB::connection($this->setConnet())->select($query);

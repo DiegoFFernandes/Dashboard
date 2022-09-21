@@ -63,6 +63,13 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group">
+                                                <label for="ds_email_pessoa">Email</label>
+                                                <input type="email" class="form-control" id="ds_email_pessoa"
+                                                    placeholder="Email Pessoa">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
                                                 <label for="nr_contexto">Tipo de Disparo</label>
                                                 <select class="form-control select2" name="nr_contexto" id="nr_contexto"
                                                     style="width: 100%;">
@@ -109,6 +116,7 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="iagente">
+                            {{-- <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}"> --}}
                             <div class="box-body">
                                 <div class="col-md-12" style="background-color: #ecf0f5">
                                     <div style="padding-bottom: 15px">
@@ -118,6 +126,7 @@
                                     </div>
                                     <table class="table compact" id="table-iagente">
                                         <thead>
+                                            <th>Ações</th>
                                             <th>Cod.</th>
                                             <th>Cliente</th>
                                             <th>Email</th>
@@ -207,6 +216,7 @@
                 let nm_pessoa = $("#nm_pessoa").val();
                 let cpf_cnpj = $("#cpf_cnpj").val();
                 let nr_contexto = $("#nr_contexto").val();
+                let ds_email_pessoa = $("#ds_email_pessoa").val();
 
                 $.ajax({
                     url: "{{ route('get-search-envio') }}",
@@ -216,6 +226,7 @@
                         cd_pessoa: cd_pessoa,
                         nm_pessoa: nm_pessoa,
                         cpf_cnpj: cpf_cnpj,
+                        ds_email: ds_email_pessoa,
                         nr_contexto: nr_contexto,
                         inicio_data: inicioData,
                         fim_data: fimData,
@@ -273,8 +284,29 @@
                         $('#to').val(result[0].DS_EMAILDEST);
                         // $('#message').val(text().html());
                         $('#message').val($('<div/>').html(result[0].DS_MENSAGEM).text());
+                    }
+                });
+            });
+            $(document).on('click', '#validar-email', function(e) {
+                let email = $(this).data('cdpessoa');
+                let token = $("meta[name='csrf-token']").attr("content");
+                $.ajax({
+                    type: "DELETE",
+                    url: "{{ route('delete-email-webhook-iagente') }}",
+                    data: {
+                        email: email,
+                        _token: token
                     },
-
+                    success: function(response) {
+                        if (response.error) {
+                            // alert(result.error);
+                            msg(response.error, 'alert-warning', 'fa fa-warning');
+                            return false;
+                        } else {
+                            msg(response.success, 'alert-success', 'fa fa-check');
+                            $('#table-iagente').DataTable().ajax.reload();
+                        }
+                    }
                 });
             });
 
@@ -287,10 +319,19 @@
                     },
                     pagingType: "simple",
                     processing: false,
+                    dom: 'Blfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
                     ajax: {
                         url: "{{ route('get-envio-iagente') }}"
                     },
                     columns: [{
+                            data: 'action',
+                            name: 'action',
+
+                        },
+                        {
                             data: 'CD_PESSOA',
                             name: 'CD_PESSOA'
                         },
@@ -306,7 +347,20 @@
                             data: 'MODULO',
                             name: 'MODULO'
                         },
-                    ]
+                    ],
+                    columnDefs: [{
+                            width: '1%',
+                            targets: 0
+                        },
+                        {
+                            width: '1%',
+                            targets: 1
+                        },
+                        {
+                            width: '35%',
+                            targets: 2
+                        }
+                    ],
                 });
             });
 

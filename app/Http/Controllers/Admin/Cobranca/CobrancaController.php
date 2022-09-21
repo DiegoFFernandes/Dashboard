@@ -23,7 +23,7 @@ class CobrancaController extends Controller
         Empresa $empresa,
         AgendaPessoa $agenda,
         AgendaEnvio $envio,
-        Pessoa $pessoa, 
+        Pessoa $pessoa,
         WebHook $webhook,
 
     ) {
@@ -75,7 +75,8 @@ class CobrancaController extends Controller
             'clientesNovosDia',
             'qtdClientesNovosMes',
             'qtdClientesFormaPagamento',
-            'dti', 'dtf'
+            'dti',
+            'dtf'
         ));
     }
     public function listClientFormPgto()
@@ -266,7 +267,6 @@ class CobrancaController extends Controller
     public function getSearchEnvio(Request $request)
     {
         $search = $this->envio->searchSend($request);
-
         //return $search[0]->DS_MENSAGEM;
 
         $html = '<table id="table-search" class="table table-striped" style="width:100%; font-size: 12px">
@@ -276,13 +276,13 @@ class CobrancaController extends Controller
                             <th>Nr Agenda</th>                            
                             <th style="width: 15%">Nome</th>
                             <th>Dt Envio</th>
-                            <th>Anexo</th>                            
+                            <th>Ações</th>                            
                         </tr>
                     </thead>
                     <tbody>';
         foreach ($search as $s) {
             $exploder        = explode('\\', $s->BI_ANEXORELAT);
-            $anexo = is_null($s->BI_ANEXORELAT) ? 'não existe' : '<a href="file:///\\172.29.0.2/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '" class="btn btn-xs btn-primary">Anexo</a>';
+            $anexo = is_null($s->BI_ANEXORELAT) ? '<button class="btn btn-danger btn-xs">Não Existe</button>' : '<a href="file:///\\172.29.0.2/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '" class="btn btn-xs btn-primary">Anexo</a>';
             $email = '<button class="btn btn-default btn-xs ver-email" data-id="' . $s->NR_ENVIO . '" aria-hidden="true"> Ver E-mail </button>';
             //var_dump($exploder);
             $html .= '
@@ -290,7 +290,7 @@ class CobrancaController extends Controller
                         <td>' . $s->DS_CONTEXTO . '</td>
                         
                         <td>' . $s->NR_AGENDA . '</td>                        
-                        <td>' . $s->CD_PESSOA.'-'.$s->NM_PESSOA . '</td>
+                        <td>' . $s->CD_PESSOA . '-' . $s->NM_PESSOA . '</td>
                         <td>' . $s->DT_ENVIO . '</td>
                         <td>' . $anexo . $email . '</td>
                         
@@ -305,16 +305,30 @@ class CobrancaController extends Controller
         $email = $this->envio->verEmail($nr_envio);
         return $email;
     }
-    public function getSubmitIagente(){
+    public function getSubmitIagente()
+    {
         $email = WebHook::all();
-        foreach ($email as $e){
+        foreach ($email as $e) {
             $arryEmail[] = $e->email;
         }
-       
         $arry = implode(",", $arryEmail);
-        $arryPrepar = str_replace(",", "','", $arry );
+        $arryPrepar = str_replace(",", "','", $arry);
         $data = $this->webhook->emailsDifferents($arryPrepar);
-        return DataTables::of($data)->make(true);
+        return DataTables::of($data)
+            ->addColumn('action', function ($d) {
+                return '<button id="validar-email" class="btn btn-success btn-xs" data-cdpessoa="' . $d->DS_EMAIL . '">Validar</button>';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
-
+    public function DeleteEmailWebhookIagente()
+    {
+        try {
+            $email = WebHook::where('email', $this->request->email)->firstOrFail();
+            $email->delete();
+            return response()->json(['success' => 'Email validado, não irá aparecer na lista, até que haja um novo problema!']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Houve algum erro ao validar o email, contacte o setor de TI']);
+        }
+    }
 }

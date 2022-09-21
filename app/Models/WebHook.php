@@ -28,10 +28,10 @@ class WebHook extends Model
                     SELECT P.cd_pessoa, cast(P.nm_pessoa as varchar(100) character set UTF8) nm_pessoa, P.ds_email, 'TFA001' MODULO
                     FROM PESSOA P
                     where p.cd_tipopessoa not in (5,8,7,6)
-                    
+
                     union all
                 
-                    SELECT cp.cd_pessoa, coalesce(cp.nmcontato,'SEM CONTATO') nm_pessoa, cp.dsemail ds_email, 'TFA049' MODULO
+                    SELECT cp.cd_pessoa, coalesce(cp.nmcontato,'SEM CONTATO') nm_pessoa, cp.dsemail ds_email, 'TFA029' MODULO
                     FROM contatopessoa cp ) X
                 where X.ds_email IN ('$arryEmail')";
 

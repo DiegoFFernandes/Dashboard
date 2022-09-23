@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ValidateDeleteEmailWebhook extends Mailable
+class EmailProblemWebHookMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -16,9 +16,8 @@ class ValidateDeleteEmailWebhook extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $request)
+    public function __construct($request)
     {
-        $this->user = $user;
         $this->request = $request;
     }
 
@@ -29,13 +28,11 @@ class ValidateDeleteEmailWebhook extends Mailable
      */
     public function build()
     {
-        $user = $this->user;
         $request = $this->request;
-        
-        $this->subject("Email Validado");
+        $this->subject("Email com Problema");
         $this->to('luiz.ricardo@ivorecap.com.br', 'Luiz Ricardo')
-        ->to('lucas.felipe@ivorecap.com.br', 'Lucas Felipe')
-        ->cc(env('EMAIL_CC'));        
-        return $this->markdown('admin.mail.valida-delete-email-iagente', compact('user', 'request'));
+        ->to('bernardo.almeida@ivorecap.com.br', 'Bernardo')
+        ->cc(env('EMAIL_CC'));  
+        return $this->markdown('admin.mail.problem-email-iagente', compact('request'));
     }
 }

@@ -4,7 +4,7 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">MENU DE NAVEGAÇÃO</li>
+            <li class="header">MENU DE NAVEGAÇÃO</li>            
             <li class="treeview {{ request()->segment(1) == 'admin' ? 'active' : '' }}" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-dashboard"></i> <span>Dashboard</span>
@@ -17,7 +17,8 @@
                             href="{{ route('admin.dashborad') }}"><i class="fa fa-home"></i>Inicio</a>
                     </li>
                 </ul>
-            </li>
+            </li>            
+            @unlessrole('acesso-cliente')
             <li class="treeview {{ request()->segment(1) == 'producao' ? 'active' : '' }}" style="height: auto;">
                 <a href="#">
                     <i class="fa fa-th"></i> <span>Produção</span>
@@ -106,6 +107,7 @@
                     @endcanany
                 </ul>
             </li>
+            @endunlessrole
             @role('admin')
                 <li class="treeview {{ request()->segment(1) == 'usuario' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
@@ -325,7 +327,7 @@
                     </ul>
                 </li>
             @endcanany
-
+            @unlessrole('acesso-cliente')
             <li class="treeview {{ request()->segment(1) == 'procedimento' ? 'active' : '' }}"
                 style="height: auto;">
                 <a href="#">
@@ -360,7 +362,7 @@
                     </li>
                 </ul>
             </li>
-
+            @endunlessrole
             @role('cobranca|admin')
                 <li class="treeview {{ request()->segment(1) == 'cobranca' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
@@ -414,6 +416,7 @@
                     </ul>
                 </li>
             @endrole
+            @unlessrole('acesso-cliente')
             <li class="header">Links Publicos</li>
             <li class="treeview" style="height: auto;">
                 <a href="#">
@@ -582,6 +585,7 @@
                     </li>
                 </ul>
             </li>
+            @endunlessrole
         </ul>
     </section>
     <!-- /.sidebar -->

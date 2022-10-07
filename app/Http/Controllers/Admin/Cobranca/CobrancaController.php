@@ -9,6 +9,7 @@ use App\Models\AgendaEnvio;
 use App\Models\AgendaPessoa;
 use App\Models\Empresa;
 use App\Models\Pessoa;
+use App\Models\Procedimento;
 use App\Models\WebHook;
 use Carbon\Carbon;
 use Helper;
@@ -16,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use stdClass;
 use Yajra\DataTables\DataTables;
 
@@ -270,7 +272,7 @@ class CobrancaController extends Controller
     public function getSearchEnvio(Request $request)
     {
         $search = $this->envio->searchSend($request);
-        //return $search[0]->DS_MENSAGEM;
+        // return $search[0]->BI_ANEXORELAT;
 
         $html = '<table id="table-search" class="table table-striped" style="width:100%; font-size: 12px">
                     <thead>
@@ -290,8 +292,7 @@ class CobrancaController extends Controller
             //var_dump($exploder);
             $html .= '
                     <tr>                    
-                        <td>' . $s->DS_CONTEXTO . '</td>
-                        
+                        <td>' . $s->DS_CONTEXTO . '</td>                        
                         <td>' . $s->NR_AGENDA . '</td>                        
                         <td>' . $s->CD_PESSOA . '-' . $s->NM_PESSOA . '</td>
                         <td>' . $s->DT_ENVIO . '</td>
@@ -329,11 +330,10 @@ class CobrancaController extends Controller
         try {
             $email = WebHook::where('email', $this->request->email)->firstOrFail();
             $email->delete();
-            Mail::send(new ValidateDeleteEmailWebhook($this->user, $this->request));
+            // Mail::send(new ValidateDeleteEmailWebhook($this->user, $this->request));
             return response()->json(['success' => 'Email validado, não irá aparecer na lista, até que haja um novo problema!']);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Houve algum erro ao validar o email, contacte o setor de TI']);
         }
     }
-    
 }

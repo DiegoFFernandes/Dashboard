@@ -129,7 +129,7 @@
                                             <th>Ações</th>
                                             <th>Cod.</th>
                                             <th>Cliente</th>
-                                            <th>Email</th>
+                                            <th>Email</th>                                            
                                             <th>Modulo</th>
                                         </thead>
                                     </table>

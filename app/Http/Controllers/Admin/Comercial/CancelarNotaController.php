@@ -62,17 +62,7 @@ class CancelarNotaController extends Controller
         } else {
             return response()->json(['error' => 'Houve algum erro! Já pode ter um pedido de cancelamento para essa nota!']);
         }
-    }
-    public function searchCliente()
-    {
-        $data = [];
-
-        if ($this->request->has('q')) {
-            $search = $this->request->q;
-            $data = $this->pessoa->FindPessoaJunsoftAll($search);
-        }
-        return response()->json($data);
-    }
+    }    
     public function SearchNota()
     {
         $data = $this->nota->SearchNota($this->request->nr_nota, $this->request->cd_empresa, $this->request->nr_serie);

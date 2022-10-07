@@ -51,7 +51,10 @@ class ApiNewAge extends Model
             })
             ->when($exportado == 'C', function ($q) {
                 $q->where('log_api_new_ages.exportado', '=' , 'C');
-            })
+            }) 
+            ->when($exportado == 'N', function ($q) {
+                $q->take(40);
+            })     
             ->get();
     }
     public function pneusBGW($empresa, $dt_inicial, $dt_final)

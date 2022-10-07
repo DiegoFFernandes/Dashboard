@@ -27,7 +27,7 @@ class WebHookController extends Controller
                     "updated_at"    => \Carbon\Carbon::now(),  # new \Datetime()
                 ]
             );            
-            Mail::send(new EmailProblemWebHookMail($this->request));
+            // Mail::send(new EmailProblemWebHookMail($this->request));
             return;
         }
     }

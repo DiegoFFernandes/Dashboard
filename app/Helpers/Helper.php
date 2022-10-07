@@ -61,5 +61,15 @@ class Helper
     public static function VerifyRegion($local){
        return $local == 'firebird_campina' ? 'SUL' : 'NORTE';  
     }
+    public function searchCliente()
+    {
+        $data = [];
+
+        if ($this->request->has('q')) {
+            $search = $this->request->q;
+            $data = $this->pessoa->FindPessoaJunsoftAll($search);
+        }
+        return response()->json($data);
+    }
     
 }

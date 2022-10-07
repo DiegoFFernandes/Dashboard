@@ -31,7 +31,7 @@ class EmailProblemWebHookMail extends Mailable
         $request = $this->request;
         $this->subject("Email com Problema");
         $this->to('luiz.ricardo@ivorecap.com.br', 'Luiz Ricardo')
-        ->to('bernardo.almeida@ivorecap.com.br', 'Bernardo')
+        // ->to('bernardo.almeida@ivorecap.com.br', 'Bernardo')
         ->cc(env('EMAIL_CC'));  
         return $this->markdown('admin.mail.problem-email-iagente', compact('request'));
     }

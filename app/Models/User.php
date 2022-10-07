@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'cd_pessoa',
+        'ds_tipopessoa',
         'empresa', 
         'conexao', 
         'last_seen'

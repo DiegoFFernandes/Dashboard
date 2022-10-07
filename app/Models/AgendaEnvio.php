@@ -6,6 +6,7 @@ use Facade\Ignition\QueryRecorder\Query;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AgendaEnvio extends Model
@@ -42,9 +43,12 @@ class AgendaEnvio extends Model
                 " . (($request->cpf_cnpj != 0) ? "and p.nr_cnpjcpf = '$request->cpf_cnpj'" : "") . "
                 " . (($request->inicio_data != 0) ? "and ae.dt_envio between '$request->inicio_data' and '$request->fim_data'" : "") . "
                 " . (($request->ds_email != 0) ? "and ae.ds_emaildest like '%$request->ds_email%'" : "") . "    
-                " . (($request->nr_contexto != 0) ? "and ae.nr_contexto = $request->nr_contexto" : "");
+                " . (($request->nr_contexto != 0) ? "and ae.nr_contexto in ($request->nr_contexto)" : "");        
 
-        return DB::connection($this->setConnet())->select($query);
+        $key = "anexo_" . $request->cd_number . "cliente_" . $request->cd_pessoa . "nr_contexto". $request->nr_contexto;
+        return Cache::remember($key, now()->addMinutes(60), function () use ($query) {
+            return DB::connection($this->setConnet())->select($query);
+        });
     }
 
     public function contextoEmail()

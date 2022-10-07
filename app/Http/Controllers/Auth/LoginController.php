@@ -38,8 +38,14 @@ class LoginController extends Controller
 
     public function dashboard()
     {
-        //Fazer alterações na rotina abaixo tbm
+        //Fazer alterações na rotina abaixo tbm        
         if (Auth::check() === true) {
+            if ($this->user->ds_tipopessoa == "Cliente") {
+                $user_auth = Auth::user();
+                $uri       = $this->resposta->route()->uri();
+                return view('admin.clientes.index', compact('user_auth', 'uri'));
+            }
+
             $vendedor = $this->vendedor->qtdVendedores();
             $user_auth = Auth::user();
             $uri       = $this->resposta->route()->uri();
@@ -126,15 +132,24 @@ class LoginController extends Controller
         return redirect()->back()->withInput()->withErrors(['Os dados informados são invalidos!']);
     }
     public function logout()
-    {        
+    {
         Session::flush();
         Cache::flush();
-        Auth::logout();        
+        if ($this->user->ds_tipopessoa == "Cliente" || $this->user->ds_tipopessoa == "Cliente e fornecedor") {
+            Auth::logout();
+            return redirect()->route('login-client');
+        }
+        Auth::logout();
         return redirect()->route('login');
     }
     protected function authenticated($password)
     {
         Auth::logoutOtherDevices($password);
         return redirect()->intended();
+    }
+
+    public function showLoginClientForm()
+    {
+        return view('auth.login-client');
     }
 }

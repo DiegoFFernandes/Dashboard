@@ -46,12 +46,16 @@ Route::get('/clear-cache-all', function () {
     dd("Cache Clear All");
 });
 
+/* Rotas de Login Client */
+Route::get('/login-cliente', [LoginController::class, 'showLoginClientForm'])->name('login-client');
+
+
 /* Rotas de Login */
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login/do', [LoginController::class, 'Login'])->name('admin.login.do');
 Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
-Route::get('/admin', [LoginController::class, 'dashboard'])->name('admin.dashborad');
+Route::get('/painel', [LoginController::class, 'dashboard'])->name('admin.dashborad');
 
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 Route::get('webhook', [WebHookController::class, 'index'])->name('webhook');
@@ -69,6 +73,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () 
     Route::get('cadastrar', [UserController::class, 'index'])->name('admin.usuarios.create');
     Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
     Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
+    Route::get('search-pessoa', [UserController::class, 'searchPessoa'])->name('admin.usuarios.search-pessoa');
 
 
     /*Rotas funções*/

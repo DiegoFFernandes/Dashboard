@@ -20,26 +20,31 @@
                             <div class="form-group">
                                 @if (isset($user_id->name))
                                     <input type="hidden" name="id" value="{{ $user_id->id }}">
-                                @endif
+                                @endif                                
+                                <div class="form-group">
+                                    <label for="pessoa">Pessoa:</label>
+                                    <select name='cd_pessoa' class="form-control" id="pessoa">                                        
+                                    </select>
+                                </div>
                                 <label for="name">Nome:</label>
                                 <input type="name" name='name' class="form-control" id="name" placeholder="Nome usuario"
-                                    value="{{ isset($user_id->name) ? $user_id->name : '' }}">
+                                    value="{{ isset($user_id->name) ? $user_id->name : '' }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="email">Email</label>
+                                <label for="email">Email:</label>
                                 <input type="email" name='email' class="form-control" id="email" placeholder="Email"
-                                    value="{{ isset($user_id->email) ? $user_id->email : '' }}">
+                                    value="{{ isset($user_id->email) ? $user_id->email : '' }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="password">Senha</label>
+                                <label for="password">Senha:</label>
                                 <input type="password" name='password' class="form-control" id="password"
                                     placeholder="Digite uma senha"
-                                    value="{{ isset($user_id->password) ? $user_id->password : '' }}">
+                                    value="{{ isset($user_id->password) ? $user_id->password : '' }}" required>
                             </div>
                             <!-- select -->
-                            <div class="col-md-12 pl-0">
+                            <div class="col-md-6 pl-0">
                                 <div class="form-group">
-                                    <label>Empresa Principal</label>
+                                    <label>Empresa Principal:</label>
                                     <select class="form-control" name="empresa">
                                         {{-- Condição para editar usuario --}}
                                         @if (isset($user_id))
@@ -57,7 +62,7 @@
                                                     </option>
                                                 @endif
                                             @endforeach
-                                        {{-- fim condição editar usuario --}}
+                                            {{-- fim condição editar usuario --}}
                                         @else
                                             @foreach ($empresas as $empresa)
                                                 <option value="{{ $empresa->CD_EMPRESA }}">{{ $empresa->NM_EMPRESA }}
@@ -66,10 +71,40 @@
                                         @endif
                                     </select>
                                 </div>
-                            </div>                            
+                            </div>
+                            <div class="col-md-6 pl-0">
+                                <div class="form-group">
+                                    <label for="ds_tipopessoa">Tipo Pessoa:</label>
+                                    <select class="form-control" name="ds_tipopessoa" id="ds_tipopessoa" required>
+                                        {{-- Condição para editar usuario --}}
+                                        @if (isset($user_id))
+                                            @foreach ($tipopessoa as $t)
+                                                @if ($user_id->ds_tipopessoa == ucfirst(strtolower($t->DS_TIPOPESSOA)))
+                                                    <option value="{{ $t->CD_TIPOPESSOA }}">
+                                                        {{ ucfirst(strtolower($t->DS_TIPOPESSOA))}}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                            @foreach ($tipopessoa as $t)
+                                                @if ($user_id->ds_tipopessoa != ucfirst(strtolower($t->DS_TIPOPESSOA)))
+                                                    <option value="{{ $t->CD_TIPOPESSOA }}">
+                                                        {{ ucfirst(strtolower($t->DS_TIPOPESSOA)) }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                            {{-- fim condição editar usuario --}}
+                                        @else
+                                            @foreach ($tipopessoa as $t)
+                                                <option value="{{ $t->CD_TIPOPESSOA }}">
+                                                    {{ ucfirst(strtolower($t->DS_TIPOPESSOA)) }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.box-body -->
-
                         <div class="box-footer">
                             @if (isset($user_id))
                                 <button type="submit" class="btn btn-warning">Atualizar</button>
@@ -148,14 +183,44 @@
 @section('scripts')
     @includeIf('admin.master.datatables')
     <script type="text/javascript">
-        $('#table-users').DataTable({
-            language: {
-                url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
-            },
-            responsive: true,
-            "order": [
-                [1, "asc"]
-            ],
+        $(document).ready(function() {
+            $('#table-users').DataTable({
+                language: {
+                    url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                },
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+            });
+            $('#pessoa').select2({                
+                placeholder: "{{ isset($user_id->name) ? $user_id->name : 'Pessoa' }}",
+                allowClear: true,
+                ajax: {
+                    url: '{{ route('admin.usuarios.search-pessoa') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    text: item.NM_PESSOA,
+                                    id: item.ID,
+                                    email: item.DS_EMAIL,
+                                    tipopessoa: item.CD_TIPOPESSOA
+                                }
+                            })
+
+                        };
+                    },
+                    cache: true
+                }
+            }).change(function(el) {
+                var data = $(el.target).select2('data');
+                $('#name').val(data[0].text);
+                $('#email').val(data[0].email);
+                $('#ds_tipopessoa').val(data[0].tipopessoa)
+            });
         });
     </script>
 @endsection

@@ -11,10 +11,9 @@
                     </div>
                     <div class="box-body">
                         <div class="col-md-5">
-                            <div class="form-group">
-                                <label for="cd_empresa">Empresa</label>
+                            <div class="form-group">                                
                                 <select class="form-control select2" name="cd_empresa" id="cd_empresa" style="width: 100%;">
-                                    <option value="0" selected="selected">Selecione</option>
+                                    <option value="0" selected="selected">Selecione a empresa</option>
                                     <option value="1">AM MORENO PNEUS LTDA</option>
                                     <option value="21">EMAX RECAPAGENS EIRELI</option>
                                     <option value="3">SUPER RODAS - CAMPINA</option>
@@ -25,7 +24,7 @@
                         <div class="col-md-5">
                             @includeIf('admin.master.filtro-data')
                         </div>
-                        <div class="col-md-2" align="center" style="padding-top: 24px">
+                        <div class="col-md-2" align="center">
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-block" id="submit-seach">
                                     <i class="fa fa-download"></i> Gerar Arquivo</button>

@@ -67,4 +67,15 @@
         display: none;
         ;
     }
+    .l-bg-second {
+        width: 105vw;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.2)), url('/img/wallpaper-celular.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .login-box-body,
+    .register-box-body {
+        background: #ffffff85;
+        color: black;
+    }
 }

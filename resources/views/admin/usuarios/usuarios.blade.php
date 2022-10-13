@@ -185,6 +185,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#table-users').DataTable({
+                pagingType: "simple",
                 language: {
                     url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                 },
@@ -198,7 +199,7 @@
                 allowClear: true,
                 ajax: {
                     url: '{{ route('admin.usuarios.search-pessoa') }}',
-                    dataType: 'json',
+                    dataType: 'json',                    
                     delay: 250,
                     processResults: function(data) {
                         return {

@@ -4,10 +4,10 @@
     <section class="sidebar">
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">MENU DE NAVEGAÇÃO</li>            
+            <li class="header">MENU DE NAVEGAÇÃO</li>
             <li class="treeview {{ request()->segment(1) == 'admin' ? 'active' : '' }}" style="height: auto;">
                 <a href="#">
-                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                    <i class="fa fa-dashboard"></i> <span>Painel</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -16,97 +16,103 @@
                     <li class="{{ request()->routeIs('admin.dashborad') ? 'active' : '' }}"><a
                             href="{{ route('admin.dashborad') }}"><i class="fa fa-home"></i>Inicio</a>
                     </li>
+                    @role('acesso-cliente')
+                        <li class="{{ request()->routeIs('cliente.dados-gerados-empresa.index') ? 'active' : '' }}"><a
+                                href="{{ route('cliente.dados-gerados-empresa.index') }}"><i class="fa fa-file-pdf-o"></i>2º Via</a>
+                        </li>
+                    @endrole
                 </ul>
-            </li>            
+            </li>
             @unlessrole('acesso-cliente')
-            <li class="treeview {{ request()->segment(1) == 'producao' ? 'active' : '' }}" style="height: auto;">
-                <a href="#">
-                    <i class="fa fa-th"></i> <span>Produção</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu" style="display: none;">
-                    <li class="treeview">
-                        <a href="#"><i class="fa fa-circle-o"></i> Movimentações
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{ request()->segment(2) == 'acompanha-ordem' ? 'active' : '' }}">
-                                <a href="{{ route('admin.producao.acompanha.ordem') }}">
-                                    <i class="fa fa-circle-o"></i>Acompanhar Ordem</a>
-                            </li>
-                            @role('admin|producao')
-                                <li>
-                                    <a href="{{ route('admin.producao.etapas') }}"><i class="fa fa-circle-o"></i>Produção
-                                        por
-                                        Etapa</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.lote.pcp') }}"><i class="fa fa-circle-o"></i>Lote PCP</a>
-                                </li>
-                                <li>
-                                <li>
-                                    <a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('producao.troca-servico') }}"><i class="fa fa-circle-o"></i>Troca de
-                                        Serviço</a>
-                                </li>
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i> Produtividade
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li><a href="{{ route('admin.producao.quadrante1') }}"><i
-                                                    class="fa fa-circle-o"></i>Quadrante
-                                                1</a></li>
-                                        <li><a href="{{ route('admin.producao.quadrante2') }}"><i
-                                                    class="fa fa-circle-o"></i>Quadrante
-                                                2</a></li>
-                                        <li><a href="{{ route('admin.producao.quadrante3') }}"><i
-                                                    class="fa fa-circle-o"></i>Quadrante
-                                                3</a></li>
-                                        <li><a href="{{ route('admin.producao.quadrante4') }}"><i
-                                                    class="fa fa-circle-o"></i>Quadrante
-                                                4</a></li>
-                                    </ul>
-                                </li>
-                            @endrole
-                            @can('ver-controle-epi')
-                                <li class="{{ request()->routeIs('epis.index') ? 'active' : '' }}">
-                                    <a href="{{ route('epis.index') }}"><i class="fa fa-circle-o"></i>Controle Epi</a>
-                                </li>
-                            @endcan
-
-                        </ul>
-                    </li>
-                    @canany(['ver-controle-epi'])
+                <li class="treeview {{ request()->segment(1) == 'producao' ? 'active' : '' }}" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-th"></i> <span>Produção</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
                         <li class="treeview">
-                            <a href="#"><i class="fa fa-circle-o"></i> Bridgestone
+                            <a href="#"><i class="fa fa-circle-o"></i> Movimentações
                                 <span class="pull-right-container">
                                     <i class="fa fa-angle-left pull-right"></i>
                                 </span>
                             </a>
                             <ul class="treeview-menu">
-                                <li class="{{ request()->routeIs('gqc-pneus-faturados-marca') ? 'active' : '' }}">
-                                    <a href="{{ route('gqc-pneus-faturados-marca') }}"><i class="fa fa-circle-o"></i>GQC
-                                        Brigdestone</a>
+                                <li class="{{ request()->segment(2) == 'acompanha-ordem' ? 'active' : '' }}">
+                                    <a href="{{ route('admin.producao.acompanha.ordem') }}">
+                                        <i class="fa fa-circle-o"></i>Acompanhar Ordem</a>
                                 </li>
-                                <li class="{{ request()->routeIs('api-new-age.index') ? 'active' : '' }}">
-                                    <a href="{{ route('api-new-age.index') }}">
-                                        <i class="fa fa-circle-o"></i>Garantia Ouro
-                                    </a>
-                                </li>
+                                @role('admin|producao')
+                                    <li>
+                                        <a href="{{ route('admin.producao.etapas') }}"><i class="fa fa-circle-o"></i>Produção
+                                            por
+                                            Etapa</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.lote.pcp') }}"><i class="fa fa-circle-o"></i>Lote PCP</a>
+                                    </li>
+                                    <li>
+                                    <li>
+                                        <a href=""><i class="fa fa-circle-o"></i>Status Expedição</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('producao.troca-servico') }}"><i class="fa fa-circle-o"></i>Troca
+                                            de
+                                            Serviço</a>
+                                    </li>
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i> Produtividade
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li><a href="{{ route('admin.producao.quadrante1') }}"><i
+                                                        class="fa fa-circle-o"></i>Quadrante
+                                                    1</a></li>
+                                            <li><a href="{{ route('admin.producao.quadrante2') }}"><i
+                                                        class="fa fa-circle-o"></i>Quadrante
+                                                    2</a></li>
+                                            <li><a href="{{ route('admin.producao.quadrante3') }}"><i
+                                                        class="fa fa-circle-o"></i>Quadrante
+                                                    3</a></li>
+                                            <li><a href="{{ route('admin.producao.quadrante4') }}"><i
+                                                        class="fa fa-circle-o"></i>Quadrante
+                                                    4</a></li>
+                                        </ul>
+                                    </li>
+                                @endrole
+                                @can('ver-controle-epi')
+                                    <li class="{{ request()->routeIs('epis.index') ? 'active' : '' }}">
+                                        <a href="{{ route('epis.index') }}"><i class="fa fa-circle-o"></i>Controle Epi</a>
+                                    </li>
+                                @endcan
+
                             </ul>
                         </li>
-                    @endcanany
-                </ul>
-            </li>
+                        @canany(['ver-controle-epi'])
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-circle-o"></i> Bridgestone
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{ request()->routeIs('gqc-pneus-faturados-marca') ? 'active' : '' }}">
+                                        <a href="{{ route('gqc-pneus-faturados-marca') }}"><i class="fa fa-circle-o"></i>GQC
+                                            Brigdestone</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('api-new-age.index') ? 'active' : '' }}">
+                                        <a href="{{ route('api-new-age.index') }}">
+                                            <i class="fa fa-circle-o"></i>Garantia Ouro
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endcanany
+                    </ul>
+                </li>
             @endunlessrole
             @role('admin')
                 <li class="treeview {{ request()->segment(1) == 'usuario' ? 'active' : '' }}" style="height: auto;">
@@ -328,40 +334,40 @@
                 </li>
             @endcanany
             @unlessrole('acesso-cliente')
-            <li class="treeview {{ request()->segment(1) == 'procedimento' ? 'active' : '' }}"
-                style="height: auto;">
-                <a href="#">
-                    <i class="fa fa-compass"></i> <span>Processos</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu" style="display: none;">
-                    <li class="treeview">
-                        <a href="#"><i class="fa fa-circle-o"></i><span>Procedimento</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            @canany(['ver-procedimento'])
-                                <li class="{{ $uri == 'procedimento/index' ? 'active' : '' }}"><a
-                                        href="{{ route('procedimento.index') }}">
-                                        <i class="fa fa-lock"></i>Movimentações</a>
+                <li class="treeview {{ request()->segment(1) == 'procedimento' ? 'active' : '' }}"
+                    style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-compass"></i> <span>Processos</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-circle-o"></i><span>Procedimento</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                @canany(['ver-procedimento'])
+                                    <li class="{{ $uri == 'procedimento/index' ? 'active' : '' }}"><a
+                                            href="{{ route('procedimento.index') }}">
+                                            <i class="fa fa-lock"></i>Movimentações</a>
+                                    </li>
+                                @endcanany
+                                <li class="{{ $uri == 'procedimento-aprovador/autorizador' ? 'active' : '' }}"><a
+                                        href="{{ route('procedimento.autorizador') }}">
+                                        <i class="fa fa-thumbs-o-up"></i>Avaliar</a>
                                 </li>
-                            @endcanany
-                            <li class="{{ $uri == 'procedimento-aprovador/autorizador' ? 'active' : '' }}"><a
-                                    href="{{ route('procedimento.autorizador') }}">
-                                    <i class="fa fa-thumbs-o-up"></i>Avaliar</a>
-                            </li>
-                            <li class="{{ $uri == 'procedimento/publicos' ? 'active' : '' }}"><a
-                                    href="{{ route('procedimento.publish') }}">
-                                    <i class="fa fa-book"></i>Publicos</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+                                <li class="{{ $uri == 'procedimento/publicos' ? 'active' : '' }}"><a
+                                        href="{{ route('procedimento.publish') }}">
+                                        <i class="fa fa-book"></i>Publicos</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
             @endunlessrole
             @role('cobranca|admin')
                 <li class="treeview {{ request()->segment(1) == 'cobranca' ? 'active' : '' }}" style="height: auto;">
@@ -417,174 +423,176 @@
                 </li>
             @endrole
             @unlessrole('acesso-cliente')
-            <li class="header">Links Publicos</li>
-            <li class="treeview" style="height: auto;">
-                <a href="#">
-                    <i class="fa fa-circle-o text-yellow"></i><span>Aquila</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu" style="display: none;">
-                    <li class="treeview">
-                        <a href="#"><i class="fa fa-line-chart"></i> Indicadores
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Diretoria
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        @can('ver-diretoria-norte')
+                <li class="header">Links Publicos</li>
+                <li class="treeview" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-circle-o text-yellow"></i><span>Aquila</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-line-chart"></i> Indicadores
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Diretoria
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            @can('ver-diretoria-norte')
+                                                <li class="">
+                                                    <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/Ebg3VQY5BIVMiLwGrmYzun8BmxWKCKMVXBoc_pu_7fnX2A?e=j2jucg"
+                                                        target="_blank">
+                                                        <i class="fa fa-circle-o"></i>Norte</a>
+                                                </li>
+                                            @endcan
+                                            @can('ver-diretoria-sul')
+                                                <li class="">
+                                                    <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWK_gdmcsfpBhXJ02SifaccBIBfgTuKgEROpL70aclH_og?e=IOQYSy"
+                                                        target="_blank">
+                                                        <i class="fa fa-circle-o"></i>Sul</a>
+                                                </li>
+                                            @endcan
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Administrativo
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
                                             <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/Ebg3VQY5BIVMiLwGrmYzun8BmxWKCKMVXBoc_pu_7fnX2A?e=j2jucg"
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EZxYA4dnnMVBinAVF5zqtIABd6X5ZXV9RkOHY6oeuCSoRw?e=puzc72"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>Norte</a>
                                             </li>
-                                        @endcan
-                                        @can('ver-diretoria-sul')
                                             <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWK_gdmcsfpBhXJ02SifaccBIBfgTuKgEROpL70aclH_og?e=IOQYSy"
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EXytz3uwropCst-EK_vBu2YB-q4j2ZYF2sOyLaNfbl_Xbg?e=xnQlBd"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>Sul</a>
                                             </li>
-                                        @endcan
-                                    </ul>
-                                </li>
-                            @endcanany
-                            @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Administrativo
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="">
-                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EZxYA4dnnMVBinAVF5zqtIABd6X5ZXV9RkOHY6oeuCSoRw?e=puzc72"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Norte</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EXytz3uwropCst-EK_vBu2YB-q4j2ZYF2sOyLaNfbl_Xbg?e=xnQlBd"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Sul</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endcanany
-                            @canany(['ver-comercial-norte', 'ver-comercial-sul'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Comercial
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        @role('admin|coordenador|gerencia')
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-comercial-norte', 'ver-comercial-sul'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Comercial
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            @role('admin|coordenador|gerencia')
+                                                <li class="treeview">
+                                                    <a href="#"><i class="fa fa-circle-o"></i>Coordenador
+                                                        <span class="pull-right-container">
+                                                            <i class="fa fa-angle-left pull-right"></i>
+                                                        </span>
+                                                    </a>
+                                                    <ul class="treeview-menu">
+                                                        <li class="">
+                                                            <a href="https://superrodas-my.sharepoint.com/:f:/g/personal/admin_superrodas_onmicrosoft_com/Empj1e8uWJtIkWl9se59XfoB2UGs3k-CZhpwQWbHYUEahw?e=xPKPoY"
+                                                                target="_blank">
+                                                                <i class="fa fa-circle-o"></i>Norte</a>
+                                                        </li>
+                                                        <li class="">
+                                                            <a href="https://superrodas-my.sharepoint.com/:f:/g/personal/admin_superrodas_onmicrosoft_com/EgmsKd6v3RNOicUa9vBU6nEBsTJM8h5Juzt5OR6DqrbLpg?e=6v3eKg"
+                                                                target="_blank">
+                                                                <i class="fa fa-circle-o"></i>Sul</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            @endrole
                                             <li class="treeview">
-                                                <a href="#"><i class="fa fa-circle-o"></i>Coordenador
+                                                <a href="#"><i class="fa fa-circle-o"></i>Geral
                                                     <span class="pull-right-container">
                                                         <i class="fa fa-angle-left pull-right"></i>
                                                     </span>
                                                 </a>
                                                 <ul class="treeview-menu">
-                                                    <li class="">
-                                                        <a href="https://superrodas-my.sharepoint.com/:f:/g/personal/admin_superrodas_onmicrosoft_com/Empj1e8uWJtIkWl9se59XfoB2UGs3k-CZhpwQWbHYUEahw?e=xPKPoY" target="_blank">
-                                                            <i class="fa fa-circle-o"></i>Norte</a>
-                                                    </li>
-                                                    <li class="">
-                                                        <a href="https://superrodas-my.sharepoint.com/:f:/g/personal/admin_superrodas_onmicrosoft_com/EgmsKd6v3RNOicUa9vBU6nEBsTJM8h5Juzt5OR6DqrbLpg?e=6v3eKg" target="_blank">
-                                                            <i class="fa fa-circle-o"></i>Sul</a>
-                                                    </li>
+                                                    @can('ver-comercial-norte')
+                                                        <li class="">
+                                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWv71bwBXHJBkU-OARyDPD0BKPh35ZsHp8Mvwrgdf6JN5g?e=p59EpC"
+                                                                target="_blank">
+                                                                <i class="fa fa-circle-o"></i>Norte</a>
+                                                        </li>
+                                                    @endcan
+                                                    @can('ver-comercial-sul')
+                                                        <li class="">
+                                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EfAVFr6kqUtMs121cRy0NzIBnNvkEX2opxJ9BtAQqZUZNw?e=bEqHpU"
+                                                                target="_blank">
+                                                                <i class="fa fa-circle-o"></i>Sul</a>
+                                                        </li>
+                                                    @endcan
                                                 </ul>
                                             </li>
-                                        @endrole
-                                        <li class="treeview">
-                                            <a href="#"><i class="fa fa-circle-o"></i>Geral
-                                                <span class="pull-right-container">
-                                                    <i class="fa fa-angle-left pull-right"></i>
-                                                </span>
-                                            </a>
-                                            <ul class="treeview-menu">
-                                                @can('ver-comercial-norte')
-                                                    <li class="">
-                                                        <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWv71bwBXHJBkU-OARyDPD0BKPh35ZsHp8Mvwrgdf6JN5g?e=p59EpC"
-                                                            target="_blank">
-                                                            <i class="fa fa-circle-o"></i>Norte</a>
-                                                    </li>
-                                                @endcan
-                                                @can('ver-comercial-sul')
-                                                    <li class="">
-                                                        <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EfAVFr6kqUtMs121cRy0NzIBnNvkEX2opxJ9BtAQqZUZNw?e=bEqHpU"
-                                                            target="_blank">
-                                                            <i class="fa fa-circle-o"></i>Sul</a>
-                                                    </li>
-                                                @endcan
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endcanany
-                            @canany(['ver-producao'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Produção
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="">
-                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EaN0co-wSzVMls0RzKbquNwBRSSgV49Hyh1YqqPhUqn3gg?e=87RB7p"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Norte</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/ESpx5kwIDhxEh50hlwVyDS0BXrhqnZpizouqmWPNIdfcMQ?e=0STEqc"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Sul</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endcanany
-                            @canany(['ver-recursos-humanos'])
-                                <li class="">
-                                    <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EW8KQ2lTSuxLtX1k34_X9qsB8nZH28BvD6kdZ1o5PugFxw?e=0429uh"
-                                        target="_blank">
-                                        <i class="fa fa-circle-o"></i>Recursos Humanos</a>
-                                </li>
-                            @endcanany
-                            @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Apoio
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="">
-                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EZTB2rs_zzRKu9vOkTViQIYBCr_93QfkOGXZawzlXTV5ZA?e=Xf5Rr0"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Norte</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EY1477cThWlHhpATFh1jtk4BMrhZaBsH9NzpeRhyVaiDng?e=m8A4y1"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Sul</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endcanany
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-producao'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Produção
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EaN0co-wSzVMls0RzKbquNwBRSSgV49Hyh1YqqPhUqn3gg?e=87RB7p"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Norte</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/ESpx5kwIDhxEh50hlwVyDS0BXrhqnZpizouqmWPNIdfcMQ?e=0STEqc"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Sul</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-recursos-humanos'])
+                                    <li class="">
+                                        <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EW8KQ2lTSuxLtX1k34_X9qsB8nZH28BvD6kdZ1o5PugFxw?e=0429uh"
+                                            target="_blank">
+                                            <i class="fa fa-circle-o"></i>Recursos Humanos</a>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Apoio
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EZTB2rs_zzRKu9vOkTViQIYBCr_93QfkOGXZawzlXTV5ZA?e=Xf5Rr0"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Norte</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EY1477cThWlHhpATFh1jtk4BMrhZaBsH9NzpeRhyVaiDng?e=m8A4y1"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Sul</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endcanany
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
             @endunlessrole
         </ul>
     </section>

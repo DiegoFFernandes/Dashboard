@@ -6,38 +6,40 @@ use App\Http\Controllers\Controller;
 use App\Models\AgendaEnvio;
 use App\Models\AgendaPessoa;
 use App\Models\AnexoCliente;
+use App\Models\BoletoImpresso;
 use App\Models\Contas;
 use App\Models\Empresa;
-use App\Models\Pessoa;
-use App\Models\Procedimento;
-use App\Models\WebHook;
 use Carbon\Carbon;
+use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto;
+use Eduardokum\LaravelBoleto\Pessoa;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class ClientAnexoController extends Controller
 {
+    protected static $pagador;
+    protected static $beneficiario;
+
     public function __construct(
         Request $request,
         Empresa $empresa,
-        AgendaPessoa $agenda,
         AgendaEnvio $envio,
-        Pessoa $pessoa,
-        WebHook $webhook,
+
         Contas $contas,
+        BoletoImpresso $boleto
     ) {
         $this->empresa  = $empresa;
         $this->request = $request;
-        $this->agenda = $agenda;
-        $this->pessoa = $pessoa;
+
         $this->envio = $envio;
-        $this->webhook = $webhook;
         $this->tickets = $contas;
+        $this->boleto = $boleto;
 
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
@@ -62,7 +64,8 @@ class ClientAnexoController extends Controller
                 if ($d->CD_FORMAPAGTO == "DD") {
                     return  '<button class="btn btn-xs btn-default disabled">Descontado</button>';
                 } else {
-                    return   '<button class="btn btn-xs btn-danger" id="btnDoc" data-documento="' . $d->DOCUMENTO . '">Imprimir</button>';
+                    // return   '<button class="btn btn-xs btn-danger" id="btnDoc" data-documento="' . $d->NR_DOCUMENTO . '">Imprimir</button>';
+                    return   '<a href=' . route("client-save-tickets", ["id" => Crypt::encryptString($d->NR_DOCUMENTO)]) . ' class="btn btn-xs btn-danger" target="_blank">Imprimir</a>';
                 }
             })
             // <button class="btn btn-xs btn-success" id="btnNF" data-documento="' . $d->DOCUMENTO . '">NFs-e</button>
@@ -77,36 +80,98 @@ class ClientAnexoController extends Controller
     }
     public function saveTickets()
     {
-        $request = new Request();
-        $request->cd_pessoa = $this->user->cd_pessoa;
-        $request->cd_number = $this->request->doc;
-        $request->nr_contexto = '33, 37, 41, 47';
-
-        $search = $this->envio->searchSend($request);
-        if (empty($search)) {
-            return response()->json(["error" => 'Arquivo não encontrado, favor entrar em contato com setor de TI Ivorecap!']);
+        if (!$this->request->has('id')) {
+            return abort(404);
         }
-        $file =  $search[0]->BI_ANEXORELAT;
-        $anexo = AnexoCliente::where('nr_documento', $this->request->doc)
-            ->where('nr_contexto', $search[0]->NR_CONTEXTO)
-            ->where('cd_pessoa', $this->user->cd_pessoa)
-            ->first();
-        if (!$anexo) {
-            $exploder = explode('\\', $file); // Fazer o exploder e pegar o nome do Arquivo.....
-            $path = '\\\172.29.0.2/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '';
-            Storage::disk('public')->put('anexos/' . $exploder[5] . '', file_get_contents($path));
-
-            $anexo = new AnexoCliente();
-            $anexo->cd_pessoa = $this->user->cd_pessoa;
-            $anexo->nr_documento = $this->request->doc;
-            $anexo->nm_pessoa = $search[0]->NM_PESSOA;
-            $anexo->nr_contexto = $search[0]->NR_CONTEXTO;
-            $anexo->ds_contexto = $search[0]->DS_CONTEXTO;
-            $anexo->path = 'anexos/' . $exploder[5] . ''; //incluir o nome via exploder acima        
-            $anexo->save();
+        try {
+            $nr_doc = Crypt::decryptString($this->request->id);
+        } catch (\Throwable $th) {
+            return abort(404);
         }
-        // http://portal.ivorecap.com.br/area-do-cliente/save-tickets-pdf?doc=16396
-        return response()->json(["url" => env('APP_URL') . '/area-do-cliente/view-tickets-pdf/' . $this->user->cd_pessoa . '/' . $anexo->path . '']);
+        $dados = $this->boleto->Boleto($nr_doc);
+
+        if ($this->user->cd_pessoa <> $dados[0]->CD_PESSOA) {
+            return abort(404);
+        }
+        
+        $beneficiario = new \Eduardokum\LaravelBoleto\Pessoa(
+            [
+                'nome'      => $dados[0]->NMBENF,
+                'endereco'  => $dados[0]->ENDBENF,
+                'cep'       => $dados[0]->CEPBENF,
+                'uf'        => $dados[0]->ESTBENF,
+                'cidade'    => $dados[0]->MUNBENF,
+                'documento' => $dados[0]->NR_CNPJCPFCEDENTE,
+            ]
+        );
+
+        $pagador = new \Eduardokum\LaravelBoleto\Pessoa(
+            [
+                'nome'      => $dados[0]->NM_SACADO,
+                'endereco'  => $dados[0]->DS_ENDERECOSACADO,
+                'bairro'    => $dados[0]->DS_BAIRRO,
+                'cep'       => $dados[0]->NR_CEP,
+                'uf'        => $dados[0]->SG_ESTADO,
+                'cidade'    => $dados[0]->DS_MUNICIPIO,
+                'documento' => $dados[0]->NR_CNPJCPFSACADO,
+            ]
+        );
+
+
+        if ($dados[0]->CD_BANCO == 33) {
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Santander(
+                $this->InfoTicket($dados, $pagador, $beneficiario)
+            );
+        } elseif ($dados[0]->CD_BANCO == 341) {
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Itau(
+                $this->InfoTicket($dados, $pagador, $beneficiario)
+            );
+        } elseif ($dados[0]->CD_BANCO == 104) {
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Caixa(
+                $this->InfoTicket($dados, $pagador, $beneficiario)
+            );
+        } elseif ($dados[0]->CD_BANCO == 1) {
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bb(
+                $this->InfoTicket($dados, $pagador, $beneficiario)
+            );
+        } elseif ($dados[0]->CD_BANCO == 237) {
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bradesco(
+                $this->InfoTicket($dados, $pagador, $beneficiario)
+            );
+        } else {
+            return "Outro";
+        }
+        // Gerar em HTML
+        $html = new \Eduardokum\LaravelBoleto\Boleto\Render\Html();
+        $html->addBoleto($boleto);
+
+        // Para mostrar a janela de impressão no load da página
+        $html->showPrint();
+
+        return $html->gerarBoleto();
+    }
+    public function InfoTicket($dados, $pagador, $beneficiario)
+    {
+        return [
+            'logo'                   => realpath(__DIR__ . '/../../../../../public/img/logo-ivo.png'),
+            'dataVencimento'         => new \Carbon\Carbon($dados[0]->DT_VENC),
+            'valor'                  => $dados[0]->VL_DOCUMENTO,
+            'multa'                  => false,
+            'juros'                  => false,
+            'numero'                 => $dados[0]->NR_NOSSONUMERO,
+            'numeroDocumento'        => $dados[0]->NR_DOC,
+            'pagador'                => $pagador,
+            'beneficiario'           => $beneficiario,
+            'carteira'               => $dados[0]->NR_CARTEIRA,
+            'agencia'                => $dados[0]->CD_AGENCIA,
+            'conta'                  => $dados[0]->CD_CONTACOR,
+            'convenio'               => $dados[0]->CD_CONVENIO,
+            'codigoCliente'          => $dados[0]->CD_CODIGOCEDENTE,
+            'descricaoDemonstrativo' => [$dados[0]->DS_INSTRUCAO],
+            'instrucoes'             => [$dados[0]->DS_INSTRUCAO],
+            'aceite'                 => 'S',
+            'especieDoc'             => 'DM',
+        ];
     }
     public function viewPdfTicket($cliente, $path, $anexo)
     {

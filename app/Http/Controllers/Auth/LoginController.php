@@ -134,11 +134,7 @@ class LoginController extends Controller
     public function logout()
     {
         Session::flush();
-        Cache::flush();
-        if ($this->user->ds_tipopessoa == "Cliente" || $this->user->ds_tipopessoa == "Cliente e fornecedor") {
-            Auth::logout();
-            return redirect()->route('login-client');
-        }
+        Cache::flush();        
         Auth::logout();
         return redirect()->route('login');
     }

@@ -78,7 +78,7 @@
         <div class="container-login l-bg-second ">
             <div class="login-box">
                 <div class="login-logo">
-                    <a href="../../index2.html"><b class="l-title-logo">Login</b></a>
+                    <a href="../../index2.html"><b class="l-title-logo">Entrar</b></a>
                 </div>
                 <!-- /.login-logo -->
                 <div class="login-box-body">

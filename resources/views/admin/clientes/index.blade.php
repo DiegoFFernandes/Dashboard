@@ -95,6 +95,7 @@
             });
             $('body').on('click', '#btnDoc', function(e) {
                 var documento = $(this).data('documento');
+                console.log(documento);
                 $.ajax({
                     type: "GET",
                     url: "{{ route('client-save-tickets') }}",
@@ -110,7 +111,8 @@
                             alert(response.error);
                             return false;
                         }else{
-                            window.open(response.url, '_blank');   
+                            response;
+                            // window.open(response.url, '_blank');   
                         }
                                              
                     }

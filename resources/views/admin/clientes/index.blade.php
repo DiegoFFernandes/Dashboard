@@ -29,7 +29,7 @@
                                 <div id="info-bl">
                                     <p>Use o filtro acima para obter os <b>boletos pendentes</b>!</p>
                                 </div>
-                                <table class="table compact hidden" id="table-tickets-pendents">
+                                <table class="table compact hidden" id="table-tickets-pendents" style="width: 100%">
                                     <thead>
                                         <th>Beneficiário</th>
                                         <th>Cliente</th>
@@ -54,7 +54,7 @@
                                     <p>Use o filtro acima para obter as <b>notas emitidas</b>!
                                     </p>
                                 </div>
-                                <table class="table compact hidden" id="table-nota-fiscal">
+                                <table class="table compact hidden" id="table-nota-fiscal" style="width: 100%">
                                     <thead>
                                         <th>Dt Emissão</th>
                                         <th>Nº Nota</th>
@@ -70,7 +70,26 @@
                 </div>
             </div>
         </div>
-        </div>
+        <div class="modal fade in" id="modal-fidic" style="display: none; padding-right: 17px;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">Boleto Fidic</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Esse boleto pertence a uma fidic, essa empresa envia boleto através dos correios! Para mais
+                            informações ligue no telefone <b>41 3162-7921</b> ou Através do Whatsapp.</p>
+                        <div class="text-center">
+                            <a href="https://api.whatsapp.com/send?phone=554138887921" class="btn btn-success">Whatsapp</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </section>
@@ -82,7 +101,7 @@
     <script src="https://cdn.datatables.net/plug-ins/1.10.19/dataRender/datetime.js"></script>
     <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
-        $(document).ready(function() {            
+        $(document).ready(function() {
             var inicioData = 0,
                 fimData = 0,
                 emp = 0;
@@ -126,6 +145,9 @@
                     cache: true
                 }
             });
+            $('body').on('click', '#btn-fidic', function(e) {
+                $('#modal-fidic').modal('show');
+            });
             //Gera o boleto
             $('body').on('click', '#btnDoc', function(e) {
                 var documento = $(this).data('documento');
@@ -167,12 +189,12 @@
                 );
             });
             $('body').on('click', '#btn-search-nf', function(e) {
-                emp = $('#empresas').val();                
-                if (inicioData == "") {                    
-                    msg('Período deve ser preenchida!', 'alert-warning'); 
+                emp = $('#empresas').val();
+                if (inicioData == "") {
+                    msg('Período deve ser preenchida!', 'alert-warning');
                     return false;
                 } else if (emp == null) {
-                    msg('Selecione uma empresa!', 'alert-warning');  
+                    msg('Selecione uma empresa!', 'alert-warning');
                     return false;
                 }
                 $('#info-nf').addClass('hidden');
@@ -184,7 +206,7 @@
             $('body').on('click', '#btn-search-bol', function(e) {
                 emp = $('#empresas').val();
                 if (emp == null) {
-                    msg('Selecione uma empresa!', 'alert-warning');                    
+                    msg('Selecione uma empresa!', 'alert-warning');
                     return false;
                 }
                 $('#info-bl').addClass('hidden');
@@ -198,6 +220,7 @@
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
+                    responsive: true,
                     pagingType: "simple",
                     processing: false,
                     ajax: {
@@ -240,10 +263,6 @@
                             render: $.fn.dataTable.render.moment('DD/MM/YYYY')
                         },
                         {
-                            targets: [3],
-                            width: '35%',
-                        },
-                        {
                             targets: 4,
                             render: $.fn.dataTable.render.number('.', ',', 2, 'R$ ')
                         }
@@ -257,13 +276,14 @@
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
+                    responsive: true,
                     pagingType: "simple",
                     processing: false,
                     ajax: {
                         type: "GET",
                         url: "{{ route('client.tickets-pendents-enterprise') }}",
                         data: {
-                            _token: _token,                            
+                            _token: _token,
                             emp,
                         }
                     },
@@ -298,15 +318,17 @@
                     ],
                     columnDefs: [{
                             targets: [4],
-                            render: $.fn.dataTable.render.moment('DD/MM/YYYY')
+                            render: $.fn.dataTable.render.moment('DD/MM/YYYY'),
+                            width: '1%'
                         },
                         {
                             targets: 3,
-                            render: $.fn.dataTable.render.number('.', ',', 2, 'R$ ')
+                            render: $.fn.dataTable.render.number('.', ',', 2, 'R$ '),
+                            width: '1%'
                         },
                         {
                             targets: 1,
-                            width: '35%'
+                            width: '20%'
                         }
                     ],
                     order: [4, 'asc']

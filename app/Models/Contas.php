@@ -50,7 +50,7 @@ class Contas extends Model
                         and C.cd_formapagto NOT IN ('LD')
                         AND C.cd_tipoconta = 2";
 
-        $key = "TicketsPendentsAll_" . Auth::user()->id . "_" . $empresa->cd_empresa;
+        $key = "TicketsPendentsAll" . Auth::user()->id . "_" . $empresa->cd_empresa;
         return Cache::remember($key, now()->addMinutes(60), function () use ($empresa, $query) {
             return DB::connection($this->setConnet($empresa->regiao))->select($query);
         });

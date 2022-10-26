@@ -69,7 +69,7 @@ class ClientAnexoController extends Controller
         return DataTables::of($data)
             ->addColumn('action', function ($d) {
                 if ($d->CD_FORMAPAGTO == "DD") {
-                    return  '<button class="btn btn-xs btn-default disabled">Fidic</button>';
+                    return  '<button id="btn-fidic" class="btn btn-xs btn-default">Fidic</button>';
                 } else {
                     // return   '<button class="btn btn-xs btn-danger" id="btnDoc" data-documento="' . $d->NR_DOCUMENTO . '">Imprimir</button>';
                     return   '<a href=' . route("client-save-tickets", ["id" => Crypt::encryptString($d->NR_DOCUMENTO)]) . ' class="btn btn-xs btn-danger" target="_blank">Imprimir</a>';

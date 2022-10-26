@@ -278,7 +278,7 @@
                 // }
             });
             $('#btn-search').click(function() {
-                var empresa = $('#empresas').val();
+                var empresa = $('.empresas').val();
                 if (inicioData == 0 || empresa == '') {
                     alert('Empresa e Periodo deve ser informado!')
                     return false;
@@ -303,7 +303,7 @@
             });
             $('#medida_novo').select2();
             $('#modelo_novo').select2();
-            $('#empresas').select2();
+            $('.empresas').select2();
             initTable('table-bgw', 'N')
             $('#pross-pneus').click(function() {
                 $.ajax({

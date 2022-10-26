@@ -44,7 +44,7 @@ class BloqueioPedidosController extends Controller
             $find = $this->area->findAreaUser($this->user->id);
             $array = json_decode($find, true);
             if (empty($array)) {
-                return Redirect::route('admin.dashborad')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
+                return Redirect::route('admin.dashboard')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
             }
         } elseif(!$this->user->hasRole('admin|gerencia')) {
             $regiaoUsuario = $this->regiao->regiaoPorUsuario($this->user->id);
@@ -113,7 +113,7 @@ class BloqueioPedidosController extends Controller
             $find = $this->area->findAreaUser($this->user->id);
             $array = json_decode($find, true);
             if (empty($array)) {
-                return Redirect::route('admin.dashborad')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
+                return Redirect::route('admin.dashboard')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
             }
             $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
             foreach ($regiao as $r) {

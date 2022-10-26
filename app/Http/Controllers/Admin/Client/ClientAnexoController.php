@@ -12,13 +12,17 @@ use App\Models\Empresa;
 use Carbon\Carbon;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto;
 use Eduardokum\LaravelBoleto\Pessoa;
+use Helper;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\DataTables as DataTablesDataTables;
 use Yajra\DataTables\Facades\DataTables;
 
 class ClientAnexoController extends Controller
@@ -48,25 +52,31 @@ class ClientAnexoController extends Controller
     }
     public function index()
     {
-        $title_page   = 'Parcelas pendentes';
+        $title_page   = 'Dados para sua Empresa';
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
+        if ($this->user->cd_pessoa == '') {
+            return Redirect::route('admin.dashboard')->with(['warning' => 'Usuario não está associado a nenhum pessoa, favor entrar em contato com o suporte tecnico!']);
+        }
 
         return view('admin.clientes.index', compact('title_page', 'user_auth', 'uri'));
     }
     public function getTickesPendents()
     {
-        $cd_empresa = $this->user->empresa;
-        $cd_pessoa = $this->user->cd_pessoa;
-        $data = $this->tickets->TicketsPendentsClient($cd_pessoa, $cd_empresa);
+        $empresa = Empresa::where('cd_empresa', $this->request->emp)->firstOrFail();
+        $data = $this->tickets->TicketsPendentsClient($empresa);
+
         return DataTables::of($data)
             ->addColumn('action', function ($d) {
                 if ($d->CD_FORMAPAGTO == "DD") {
-                    return  '<button class="btn btn-xs btn-default disabled">Descontado</button>';
+                    return  '<button class="btn btn-xs btn-default disabled">Fidic</button>';
                 } else {
                     // return   '<button class="btn btn-xs btn-danger" id="btnDoc" data-documento="' . $d->NR_DOCUMENTO . '">Imprimir</button>';
                     return   '<a href=' . route("client-save-tickets", ["id" => Crypt::encryptString($d->NR_DOCUMENTO)]) . ' class="btn btn-xs btn-danger" target="_blank">Imprimir</a>';
                 }
+            })
+            ->addColumn('valor_nf', function ($d) {
+                return (float)$d->VALOR;
             })
             // <button class="btn btn-xs btn-success" id="btnNF" data-documento="' . $d->DOCUMENTO . '">NFs-e</button>
             ->setRowClass(function ($d) {
@@ -93,7 +103,7 @@ class ClientAnexoController extends Controller
         if ($this->user->cd_pessoa <> $dados[0]->CD_PESSOA) {
             return abort(404);
         }
-        
+
         $beneficiario = new \Eduardokum\LaravelBoleto\Pessoa(
             [
                 'nome'      => $dados[0]->NMBENF,
@@ -194,5 +204,39 @@ class ClientAnexoController extends Controller
         } else {
             return abort(404);
         }
+    }
+    public function InvoiceClient()
+    {
+        $empresa = Empresa::where('cd_empresa', $this->request->emp)->firstOrFail();
+        if ($this->request->has('dt_ini')) {
+            if ($this->request->dt_ini == 0) {
+                $dt_ini = '01-01-2022';
+                $dt_fim = Config::get('constants.options.today');
+            } else {
+                $this->request->validate(
+                    [
+                        'dt_ini' => 'required|date',
+                        'dt_fim' => 'required|date'
+                    ],
+                    [
+                        'dt_ini.required' => 'Data inicial ser preenchida!',
+                        'dt_ini.date' => 'Deve ser uma data valida!',
+                        'dt_ini.required' => 'Data final ser preenchida!',
+                        'dt_ini.date' => 'Deve ser uma data valida!',
+                    ]
+                );
+                $dt_ini = str_replace("/", "-", $this->request->dt_ini);
+                $dt_fim = str_replace("/", "-", $this->request->dt_fim);
+            }
+        }
+        $data = $this->tickets->InvoiceClient($empresa, $dt_ini, $dt_fim);
+        return DataTables::of($data)
+            ->addColumn('action', function ($d) {
+                return '<a href="' . env('URL_PREF_CAMP') . '?cpfCnpjPrestador=' . Helper::RemoveSpecialChar($d->NR_CNPJ_EMI) . '&numeroNFSe=' . $d->NR_NOTASERVICO . '&codigoAutenticidade=' . $d->CD_AUTENTICACAO . '&dataEmissao=' . $d->DS_DTEMISSAO . '" class="btn btn-xs btn-primary" target="_blank">NFs-e</button>';
+            })
+            ->addColumn('valor_nf', function ($d) {
+                return (float)$d->VL_NF;
+            })
+            ->make(true);
     }
 }

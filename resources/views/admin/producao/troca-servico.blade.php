@@ -106,9 +106,9 @@
                 fimData = 0;
             });
             $('#submit-seach').click(function() {
-                var cd_empresa = $('#empresas').val();
+                var cd_empresa = $('.empresas').val();
                 if (cd_empresa == 0) {
-                    $('#empresas').attr('title', 'Empresa é obrigatório!').tooltip('show');
+                    $('.empresas').attr('title', 'Empresa é obrigatório!').tooltip('show');
                     return false;
                 } else if (inicioData == "") {
                     alert('Período deve ser preenchida!');

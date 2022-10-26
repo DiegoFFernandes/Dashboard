@@ -55,7 +55,7 @@ Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/login/do', [LoginController::class, 'Login'])->name('admin.login.do');
 Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
-Route::get('/painel', [LoginController::class, 'dashboard'])->name('admin.dashborad');
+Route::get('/painel', [LoginController::class, 'dashboard'])->name('admin.dashboard');
 
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 Route::get('webhook', [WebHookController::class, 'index'])->name('webhook');
@@ -64,6 +64,8 @@ Route::middleware(['auth'])->group(function () {
     /**Rota Perfil usuario*/
     Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
     Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
+    Route::get('search-empresa-fiscal', [EmpresaController::class, 'getEmpresaFiscal'])->name('search-empresa-fiscal');
+
 });
 Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('admin.usuarios');

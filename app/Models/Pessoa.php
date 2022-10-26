@@ -22,7 +22,6 @@ class Pessoa extends Model
         'numero',
         'cd_usuario'
     ];
-
     public function setConnet()
     {
         return $this->connection = Auth::user()->conexao;

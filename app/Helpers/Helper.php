@@ -71,5 +71,9 @@ class Helper
         }
         return response()->json($data);
     }
+    public static function RemoveSpecialChar($str)
+    {
+        return preg_replace('/[@\.\;\&\/\-]+/', '', $str);
+    }
     
 }

@@ -13,10 +13,10 @@
                     </span>
                 </a>
                 <ul class="treeview-menu" style="display: none;">
-                    <li class="{{ request()->routeIs('admin.dashborad') ? 'active' : '' }}"><a
-                            href="{{ route('admin.dashborad') }}"><i class="fa fa-home"></i>Inicio</a>
+                    <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><a
+                            href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i>Inicio</a>
                     </li>
-                    @role('acesso-cliente')
+                    @role('admin|acesso-cliente')
                         <li class="{{ request()->routeIs('cliente.dados-gerados-empresa.index') ? 'active' : '' }}"><a
                                 href="{{ route('cliente.dados-gerados-empresa.index') }}"><i class="fa fa-file-pdf-o"></i>2º Via</a>
                         </li>

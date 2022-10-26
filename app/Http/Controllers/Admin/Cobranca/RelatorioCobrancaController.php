@@ -52,7 +52,7 @@ class RelatorioCobrancaController extends Controller
             $find = $this->area->findAreaUser($this->user->id);
             $array = json_decode($find, true);
             if (empty($array)) {
-                return Redirect::route('admin.dashborad')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
+                return Redirect::route('admin.dashboard')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
             }
             $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
             $area = "";
@@ -67,7 +67,7 @@ class RelatorioCobrancaController extends Controller
             }
             //verifica se o usuario tem permissão mais ainda nao foi associado região para ele e retorna com mensagem!
             if (empty($cd_regiao)) {
-                return Redirect::route('admin.dashborad')->with('warning', 'Usuario com permissão mais sem vinculo com região, fale com o Administrador do sistema!');
+                return Redirect::route('admin.dashboard')->with('warning', 'Usuario com permissão mais sem vinculo com região, fale com o Administrador do sistema!');
             }
             //serialize a informação vinda do banco e faz o implode dos valores separados por (;)
             $cd_regiao = implode(",", $cd_regiao);

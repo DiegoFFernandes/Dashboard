@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class Empresa extends Model
@@ -46,13 +47,19 @@ class Empresa extends Model
             'CD_EMPRESA',
             DB::raw("CONCAT(cd_empresa,' - ',ds_local) NM_EMPRESA"), 'CONEXAO'
         ])->where('CONEXAO', $firebird)->get();
-        
     }
     public function EmpresaFiscal($local)
     {
         return Empresa::where('regiao', $local)
             ->where('cd_loja', 1)
             ->get();
+    }
+    public function EmpresaFiscalAll()
+    {
+        $key = "Empresas_" . Auth::user()->id;
+        return Cache::remember($key, now()->addMinutes(120), function () {
+            return Empresa::select('cd_empresa', DB::raw('CONCAT(ds_local,"-",regiao) AS ds_local'))->where('cd_loja', 1)->whereIn('regiao', ['norte', 'sul'])->get();
+        });
     }
     public function EmpresaAll()
     {

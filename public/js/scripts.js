@@ -1,6 +1,7 @@
 //Initialize Select2 Elements
 $(function() {
-    $('.select2').select2()
+    $('.select2').select2();
+    $('.empresas').select2();
 });
 
 
@@ -10,6 +11,7 @@ $(document).ready(function() {
     $("#ano").inputmask("9999");
     $("#peso").inputmask("99,99");
     $("#cpf_cnpj").inputmask({ mask: ['999.999.999-99', '99.999.999/9999-99'] });
+
     $(".alert-geral").fadeTo(2000, 500).slideUp(500, function() {
         $(".alert-geral").slideUp(500);
     });

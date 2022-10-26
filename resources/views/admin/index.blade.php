@@ -6,15 +6,15 @@
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-md-12">
+                @includeIf('admin.master.messages')
+            </div>
+            <div class="col-md-12">
                 <div class="box box-solid">                    
                     <div class="box-body">                        
                         <h2>Olá seja bem vindo(a), {{$user_auth->name}}!</h2>                        
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
-                @includeIf('admin.master.messages')
-            </div>
+            </div>            
             @role('admin|diretoria|gerencia')
                 <div class="col-md-12">
                     <div class="box box-success">

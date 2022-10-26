@@ -43,7 +43,7 @@ class LoginController extends Controller
             if ($this->user->ds_tipopessoa == "Cliente") {
                 $user_auth = Auth::user();
                 $uri       = $this->resposta->route()->uri();
-                return view('admin.clientes.index', compact('user_auth', 'uri'));
+                return view('admin.index', compact('user_auth', 'uri'));
             }
 
             $vendedor = $this->vendedor->qtdVendedores();
@@ -127,7 +127,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credencials, $request->has('remember'))) {
             $this->authenticated($request->password);
-            return redirect()->route('admin.dashborad');
+            return redirect()->route('admin.dashboard');
         }
         return redirect()->back()->withInput()->withErrors(['Os dados informados são invalidos!']);
     }

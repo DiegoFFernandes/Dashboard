@@ -129,6 +129,11 @@ class ApiNewAgeController extends Controller
             $username = env('USERNAME_NEWAGE_ASSIS');
             $password = env('PASSWORD_NEWAGE_ASSIS');
             $cod_emp =  env('COD_I_EMP_ASSIS');
+        } elseif ($this->user->empresa == 102) {
+            $custumerid = env('CUSTUMERID_NEWAGE_DOU');
+            $username = env('USERNAME_NEWAGE_DOU');
+            $password = env('PASSWORD_NEWAGE_DOU');
+            $cod_emp =  env('COD_I_EMP_DOU');
         } else {
             return "<div align='center'><h3>Empresa não existe vinculo com a bandag, contacte setor de TI!</h3></div>";
         }

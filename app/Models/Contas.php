@@ -26,41 +26,44 @@ class Contas extends Model
         }
         return $this->connection = 'firebird_paranavai';
     }
-    public function TicketsPendentsClient($empresa)
+    public function TicketsPendentsClient($empresa, $cnpj)
     {
         $query = "SELECT
                     E.nm_empresa empresa,
                     C.cd_pessoa||'-'||P.nm_pessoa pessoa,
+                    p.NR_CNPJCPF,
                     C.nr_documento documento,
                     C.nr_documento||'/'||C.nr_parcela nr_documento,
                     c.dt_vencimento,
                     c.cd_formapagto,
                     case c.st_contas
                         when 'T' then 'Pendente Total'
-                        when 'P' then 'Pendente Parcial'
+                        when 'P' then 'Pendente Parcial'                        
                         else c.st_contas
                     end status,
                     c.vl_documento valor
                     FROM CONTAS C
                     INNER JOIN PESSOA P ON (P.cd_pessoa = C.cd_pessoa)
                     INNER JOIN EMPRESA E ON (E.cd_empresa = C.cd_empresa)
-                    WHERE C.cd_empresa = $empresa->cd_empresa
-                        AND C.cd_pessoa = " . Auth::user()->cd_pessoa . "
-                        AND C.st_contas not in ('L', 'C')
+                    WHERE C.cd_empresa = $empresa->cd_empresa                        
+                        " . (($cnpj == 0) ? "and C.cd_pessoa = " . Auth::user()->cd_pessoa . "" : "AND p.nr_cnpjcpf in ('$cnpj')") . "                        
+                        AND C.st_contas not in ('L', 'C', 'A')
                         and C.cd_formapagto NOT IN ('LD')
                         AND C.cd_tipoconta = 2";
 
-        $key = "TicketsPendentsAll" . Auth::user()->id . "_" . $empresa->cd_empresa;
+
+        $key = "TicketsPendentsAll_" . Auth::user()->id . "_" . $empresa->cd_empresa;
         return Cache::remember($key, now()->addMinutes(60), function () use ($empresa, $query) {
             return DB::connection($this->setConnet($empresa->regiao))->select($query);
         });
     }
-    public function InvoiceClient($empresa, $dt_ini, $dt_fim)
+    public function InvoiceClient($empresa, $dt_ini, $dt_fim, $cnpj)
     {
         // return $this->setConnet($empresa->regiao);
         $query = "SELECT DISTINCT
             --EMPRESA
             N.CD_EMPRESA,
+            PE.nm_pessoa EMITENTE,
             PE.NR_CNPJCPF NR_CNPJ_EMI,
             N.NR_LANCAMENTO,
             N.TP_NOTA,
@@ -68,7 +71,8 @@ class Contas extends Model
             N.DT_EMISSAO, 
             DATETOSTR(N.DT_EMISSAO, '%Y-%m-%d') DS_DTEMISSAO,
             --NOTA--
-            NFSE.NR_NOTASERVICO,
+            N.nr_notafiscal NR_NOTASERVICO,
+            NFSE.DS_ENDERECOIMP,
             N.vl_notafiscal VL_NF,
             NFSE.CD_AUTENTICACAO,
             NFSE.NR_LOTE NR_LOTERPS, NFSE.NR_RPS,
@@ -95,14 +99,14 @@ class Contas extends Model
                 AND N.ST_NOTA = 'V'
                 AND N.DT_EMISSAO between '$dt_ini' and '$dt_fim'
                 AND P.ds_email IS NOT NULL
-                AND N.cd_empresa = $empresa->cd_empresa
-                AND N.cd_pessoa = " . Auth::user()->cd_pessoa . "
+                AND N.cd_empresa = $empresa->cd_empresa                
+                " . (($cnpj == 0) ? "and N.cd_pessoa= " . Auth::user()->cd_pessoa . "" : "AND p.nr_cnpjcpf in ('$cnpj')") . "                        
+                        
             ORDER BY N.DT_EMISSAO";
 
-        return DB::connection($this->setConnet($empresa->regiao))->select($query);
-
         $key = "InvoiceAll_" . Auth::user()->id . "_" . $dt_ini . "_" . $dt_fim;
-        return Cache::remember($key, now()->addMinutes(60), function () use ($query) {
+        return Cache::remember($key, now()->addMinutes(60), function () use ($query, $empresa) {
+            return DB::connection($this->setConnet($empresa->regiao))->select($query);
         });
     }
 }

@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\MarcaVeiculoController;
 use App\Http\Controllers\Admin\ModeloVeiculoController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\Pessoa\PessoaController;
+use App\Http\Controllers\admin\PessoaUser\PessoaUSerController;
 use App\Http\Controllers\Admin\PneusLotePcpController;
 use App\Http\Controllers\Admin\PortariaController;
 use App\Http\Controllers\Admin\Producao\ApiNewAgeController;
@@ -65,34 +66,43 @@ Route::middleware(['auth'])->group(function () {
     Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
     Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
     Route::get('search-empresa-fiscal', [EmpresaController::class, 'getEmpresaFiscal'])->name('search-empresa-fiscal');
-
 });
-Route::middleware(['auth', 'role:admin'])->prefix('usuario')->group(function () {
-    Route::get('/', [UserController::class, 'index'])->name('admin.usuarios');
-    Route::get('listar', [UserController::class, 'index'])->name('admin.usuarios.listar');
-    Route::get('editar/{id}', [UserController::class, 'edit'])->name('admin.usuarios.edit');
-    Route::get('delete/{id}', [UserController::class, 'delete'])->name('admin.usuarios.delete');
-    Route::get('cadastrar', [UserController::class, 'index'])->name('admin.usuarios.create');
-    Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
-    Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
-    Route::get('search-pessoa', [UserController::class, 'searchPessoa'])->name('admin.usuarios.search-pessoa');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // ->prefix('usuario')
+    Route::prefix('usuario')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('admin.usuarios');
+        Route::get('listar', [UserController::class, 'index'])->name('admin.usuarios.listar');
+        Route::get('editar/{id}', [UserController::class, 'edit'])->name('admin.usuarios.edit');
+        Route::get('delete/{id}', [UserController::class, 'delete'])->name('admin.usuarios.delete');
+        Route::get('cadastrar', [UserController::class, 'index'])->name('admin.usuarios.create');
+        Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
+        Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
+        Route::get('search-pessoa', [UserController::class, 'searchPessoa'])->name('admin.usuarios.search-pessoa');
+        
+        /*Rotas funções*/
+        Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');
+        Route::get('funcao/editar/{id}', [RoleController::class, 'edit'])->name('admin.usuarios.role.edit');
+        Route::post('funcao/editar', [RoleController::class, 'update'])->name('admin.usuarios.role.edit.do');
+        Route::get('funcao/novo', [RoleController::class, 'create'])->name('admin.usuarios.role.create');
+        Route::post('funcao/novo', [RoleController::class, 'save'])->name('admin.usuarios.role.create.do');
+        Route::get('funcao/delete/{id}', [RoleController::class, 'delete'])->name('admin.usuarios.role.delete');
 
-
-    /*Rotas funções*/
-    Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');
-    Route::get('funcao/editar/{id}', [RoleController::class, 'edit'])->name('admin.usuarios.role.edit');
-    Route::post('funcao/editar', [RoleController::class, 'update'])->name('admin.usuarios.role.edit.do');
-    Route::get('funcao/novo', [RoleController::class, 'create'])->name('admin.usuarios.role.create');
-    Route::post('funcao/novo', [RoleController::class, 'save'])->name('admin.usuarios.role.create.do');
-    Route::get('funcao/delete/{id}', [RoleController::class, 'delete'])->name('admin.usuarios.role.delete');
-
-    /*Rotas permission*/
-    Route::get('permissao', [PermissionController::class, 'index'])->name('admin.usuarios.permission');
-    Route::get('permissao/editar/{id}', [PermissionController::class, 'edit'])->name('admin.usuarios.permission.edit');
-    Route::post('permissao/editar', [PermissionController::class, 'update'])->name('admin.usuarios.permission.edit.do');
-    Route::get('permissao/novo', [PermissionController::class, 'create'])->name('admin.usuarios.permission.create');
-    Route::post('permissao/novo', [PermissionController::class, 'save'])->name('admin.usuarios.permission.create.do');
-    Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
+        /*Rotas permission*/
+        Route::get('permissao', [PermissionController::class, 'index'])->name('admin.usuarios.permission');
+        Route::get('permissao/editar/{id}', [PermissionController::class, 'edit'])->name('admin.usuarios.permission.edit');
+        Route::post('permissao/editar', [PermissionController::class, 'update'])->name('admin.usuarios.permission.edit.do');
+        Route::get('permissao/novo', [PermissionController::class, 'create'])->name('admin.usuarios.permission.create');
+        Route::post('permissao/novo', [PermissionController::class, 'save'])->name('admin.usuarios.permission.create.do');
+        Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
+    });
+    Route::prefix('associar-pessoa-usuario')->group(function () {
+        Route::get('vincular-pessoas-usuario', [PessoaUSerController::class, 'connectPeopleUser'])->name('connect-people-user');
+        Route::post('cadastrar-pessoas-usuario', [PessoaUSerController::class, 'createPeopleUser'])->name('create-connect-people-user.do');
+        Route::get('get-pessoas-usuario', [PessoaUSerController::class, 'getPeopleUserAll'])->name('get-people-user-all');
+        Route::get('edit-pessoas-usuario/{id}', [PessoaUSerController::class, 'edit'])->name('edit-connect-people-user');
+        Route::post('atualizar', [PessoaUSerController::class, 'update'])->name('update-connect-people-user');
+        Route::get('delete/{id}', [PessoaUSerController::class, 'delete'])->name('delete-connect-people-user');
+    });
 });
 /*Rotas sem autenticação*/
 Route::prefix('producao')->group(function () {
@@ -103,7 +113,7 @@ Route::prefix('producao')->group(function () {
 
     Route::get('search-operador', [ExecutorController::class, 'searchExecutor'])->name('search-operador');
     Route::get('meta-operador', [MetaOperadorController::class, 'index'])->name('meta-operador');
-    
+
 
     /*Produtividade Executores*/
     Route::get('produtividade-executores/quadrante-1', [ProdutividadeController::class, 'index'])->name('admin.producao.quadrante1');
@@ -264,7 +274,7 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
         Route::get('get-email-follow/{id}', [CobrancaController::class, 'getEmailEnvio'])->name('get-email-follow');
         Route::get('get-envio-iagente', [CobrancaController::class, 'getSubmitIagente'])->name('get-envio-iagente');
         Route::delete('delete-email-webhook-iagente', [CobrancaController::class, 'DeleteEmailWebhookIagente'])->name('delete-email-webhook-iagente');
-        
+
 
         Route::get('chart-data', [CobrancaController::class, 'chartLineAjax'])->name('cobranca.chart-api');
         Route::get('get-qtd-clients-novos', [CobrancaController::class, 'qtdClientesNovosMes'])->name('get-qtd-clients-novos');
@@ -300,7 +310,7 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
         Route::get('troca-servico', [ProducaoEtapaController::class, 'trocaServico'])->name('producao.troca-servico');
         Route::get('get-troca-servico', [ProducaoEtapaController::class, 'getChangeService'])->name('producao.get-troca-servico');
         Route::get('get-grid-ordem-troca-servico', [ProducaoEtapaController::class, 'getChangeServiceOrdem'])->name('producao.get-troca-servico-ordem');
-        
+
         /*Rotas Quantide lote e atrasos*/
         Route::get('lote-pcp', [LotePcpController::class, 'index'])->name('admin.lote.pcp');
         Route::get('lote-pcp/{nr_lote}/pneus-lote', [PneusLotePcpController::class, 'index'])->name('admin.lote.pneu.pcp');

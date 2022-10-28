@@ -9,6 +9,7 @@ use App\Models\AnexoCliente;
 use App\Models\BoletoImpresso;
 use App\Models\Contas;
 use App\Models\Empresa;
+use App\Models\EmpresasGrupoPessoa;
 use Carbon\Carbon;
 use Eduardokum\LaravelBoleto\Contracts\Boleto\Boleto;
 use Eduardokum\LaravelBoleto\Pessoa;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use stdClass;
 use Yajra\DataTables\DataTables as DataTablesDataTables;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -36,11 +38,12 @@ class ClientAnexoController extends Controller
         AgendaEnvio $envio,
 
         Contas $contas,
-        BoletoImpresso $boleto
+        BoletoImpresso $boleto,
+        EmpresasGrupoPessoa $grupo,
     ) {
         $this->empresa  = $empresa;
         $this->request = $request;
-
+        $this->grupo = $grupo;
         $this->envio = $envio;
         $this->tickets = $contas;
         $this->boleto = $boleto;
@@ -58,13 +61,21 @@ class ClientAnexoController extends Controller
         if ($this->user->cd_pessoa == '') {
             return Redirect::route('admin.dashboard')->with(['warning' => 'Usuario não está associado a nenhum pessoa, favor entrar em contato com o suporte tecnico!']);
         }
-
         return view('admin.clientes.index', compact('title_page', 'user_auth', 'uri'));
     }
     public function getTickesPendents()
     {
+        $grupo = $this->grupo->EmpresaGrupoAll();
+        if (Helper::is_empty_object($grupo)) {
+            $cnpjs = 0;
+        } else {
+            foreach ($grupo as $g) {
+                $cnpjs[] = $g->nr_cnpjcpf;
+            }
+            $cnpjs = implode("' , '", $cnpjs);
+        }
         $empresa = Empresa::where('cd_empresa', $this->request->emp)->firstOrFail();
-        $data = $this->tickets->TicketsPendentsClient($empresa);
+        $data = $this->tickets->TicketsPendentsClient($empresa, $cnpjs);
 
         return DataTables::of($data)
             ->addColumn('action', function ($d) {
@@ -207,7 +218,17 @@ class ClientAnexoController extends Controller
     }
     public function InvoiceClient()
     {
+        $grupo = $this->grupo->EmpresaGrupoAll();
+        if (Helper::is_empty_object($grupo)) {
+            $cnpjs = 0;
+        } else {
+            foreach ($grupo as $g) {
+                $cnpjs[] = $g->nr_cnpjcpf;
+            }
+            $cnpjs = implode("' , '", $cnpjs);
+        }
         $empresa = Empresa::where('cd_empresa', $this->request->emp)->firstOrFail();
+
         if ($this->request->has('dt_ini')) {
             if ($this->request->dt_ini == 0) {
                 $dt_ini = '01-01-2022';
@@ -229,10 +250,16 @@ class ClientAnexoController extends Controller
                 $dt_fim = str_replace("/", "-", $this->request->dt_fim);
             }
         }
-        $data = $this->tickets->InvoiceClient($empresa, $dt_ini, $dt_fim);
+        $data = $this->tickets->InvoiceClient($empresa, $dt_ini, $dt_fim, $cnpjs);
         return DataTables::of($data)
             ->addColumn('action', function ($d) {
-                return '<a href="' . env('URL_PREF_CAMP') . '?cpfCnpjPrestador=' . Helper::RemoveSpecialChar($d->NR_CNPJ_EMI) . '&numeroNFSe=' . $d->NR_NOTASERVICO . '&codigoAutenticidade=' . $d->CD_AUTENTICACAO . '&dataEmissao=' . $d->DS_DTEMISSAO . '" class="btn btn-xs btn-primary" target="_blank">NFs-e</button>';
+                if ($d->CD_EMPRESA == 3) {
+                    return '<a href="' . env('URL_PREF_CAMP') . '?cpfCnpjPrestador=' . Helper::RemoveSpecialChar($d->NR_CNPJ_EMI) . '&numeroNFSe=' . $d->NR_NOTASERVICO . '&codigoAutenticidade=' . $d->CD_AUTENTICACAO . '&dataEmissao=' . $d->DS_DTEMISSAO . '" class="btn btn-xs btn-primary" target="_blank">NFs-e</button>';
+                } elseif ($d->CD_EMPRESA == 1) {
+                    return '<a href="' . $d->DS_ENDERECOIMP . '" class="btn btn-xs btn-primary" target="_blank">NFs-e</button>';
+                }else{
+                    return 'Há parametrizar';
+                }
             })
             ->addColumn('valor_nf', function ($d) {
                 return (float)$d->VL_NF;

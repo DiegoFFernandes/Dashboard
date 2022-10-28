@@ -56,9 +56,13 @@ class Empresa extends Model
     }
     public function EmpresaFiscalAll()
     {
-        $key = "Empresas_" . Auth::user()->id;
+        $key = "Empresas_3" . Auth::user()->id;
         return Cache::remember($key, now()->addMinutes(120), function () {
-            return Empresa::select('cd_empresa', DB::raw('CONCAT(ds_local,"-",regiao) AS ds_local'))->where('cd_loja', 1)->whereIn('regiao', ['norte', 'sul'])->get();
+            return Empresa::select('cd_empresa', DB::raw('CONCAT(ds_local,"-",regiao) AS ds_local'))
+                ->where('cd_loja', 1)
+                ->whereIn('regiao', ['norte', 'sul'])
+                ->where('cd_empresa', 3)
+                ->get();
         });
     }
     public function EmpresaAll()

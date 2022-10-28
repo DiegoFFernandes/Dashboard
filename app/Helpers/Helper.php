@@ -75,5 +75,11 @@ class Helper
     {
         return preg_replace('/[@\.\;\&\/\-]+/', '', $str);
     }
+    public static function is_empty_object($object)
+    {
+        foreach ($object as $o) return false;
+
+        return true;
+    }
     
 }

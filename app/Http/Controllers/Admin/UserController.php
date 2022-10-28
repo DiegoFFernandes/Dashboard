@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
+use App\Models\EmpresasGrupoPessoa;
 use App\Models\Pessoa;
 use App\Models\TipoPessoa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -18,11 +20,13 @@ class UserController extends Controller
         Request $request,
         Pessoa $pessoa,
         TipoPessoa $tipo,
+        EmpresasGrupoPessoa $grupo
     ) {
         $this->empresa  = $empresa;
         $this->request = $request;
         $this->pessoa = $pessoa;
         $this->tipopessoa = $tipo;
+        $this->grupo = $grupo;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -41,7 +45,7 @@ class UserController extends Controller
             'users',
             'user_auth',
             'empresas',
-            'uri', 
+            'uri',
             'tipopessoa'
         ));
     }
@@ -61,7 +65,7 @@ class UserController extends Controller
             }
         }
         $request['password'] = Hash::make($request['password']);
-        $request['ds_tipopessoa'] = $this->verifyTipoPessoa($this->request->ds_tipopessoa);        
+        $request['ds_tipopessoa'] = $this->verifyTipoPessoa($this->request->ds_tipopessoa);
         $request['email'] = strtolower($this->request->email);
         $request['name'] = mb_convert_case($this->request->name, MB_CASE_TITLE, 'UTF-8');
         $user                = $this->_validade($request);
@@ -72,7 +76,6 @@ class UserController extends Controller
 
         return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário criado com sucesso!');
     }
-
     public function edit(Request $request)
     {
         $user_auth = $this->user;
@@ -124,16 +127,14 @@ class UserController extends Controller
     }
     public function delete($id)
     {
-        $user = User::findOrFail($id);
+        // $user = User::findOrFail($id);
         try {
             $user = User::findOrFail($id);
             $user->delete();
             return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário deletado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('admin.usuarios.listar')->with('warning', 'Usúario não pode ser excluido, está associados a outras tabelas do banco de dados!');
-        }
-
-        return $user;
+        }        
         return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário deletado com sucesso!');
     }
     public function _validade(Request $request)
@@ -185,13 +186,15 @@ class UserController extends Controller
         }
         return response()->json($data);
     }
-    public function verifyTipoPessoa($cd_tipo){
-        if($cd_tipo == 1){
+    public function verifyTipoPessoa($cd_tipo)
+    {
+        if ($cd_tipo == 1) {
             return "Cliente";
-        }elseif($cd_tipo == 3){
+        } elseif ($cd_tipo == 3) {
             return "Cliente e fornecedor";
-        }elseif($cd_tipo == 5){
+        } elseif ($cd_tipo == 5) {
             return "Funcionario";
         }
     }
+    
 }

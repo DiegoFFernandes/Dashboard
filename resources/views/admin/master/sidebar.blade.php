@@ -18,7 +18,8 @@
                     </li>
                     @role('admin|acesso-cliente')
                         <li class="{{ request()->routeIs('cliente.dados-gerados-empresa.index') ? 'active' : '' }}"><a
-                                href="{{ route('cliente.dados-gerados-empresa.index') }}"><i class="fa fa-file-pdf-o"></i>2º Via</a>
+                                href="{{ route('cliente.dados-gerados-empresa.index') }}"><i
+                                    class="fa fa-file-pdf-o"></i>2º Via</a>
                         </li>
                     @endrole
                 </ul>
@@ -130,6 +131,10 @@
                         <li class="{{ $uri == 'usuarios/listar' ? 'active' : '' }}"><a
                                 href="{{ route('admin.usuarios.listar') }}">
                                 <i class="fa fa-list"></i>Listar usuários</a>
+                        </li>
+                        <li class="{{ $uri == 'usuario/vincular-pessoas-usuario' ? 'active' : '' }}"><a
+                                href="{{ route('connect-people-user') }}">
+                                <i class="fa fa-plug"></i>Associar Pessoas/Usuarios</a>
                         </li>
                         <li class="{{ $uri == 'usuarios/funcao' ? 'active' : '' }}"><a
                                 href="{{ route('admin.usuarios.role') }}">

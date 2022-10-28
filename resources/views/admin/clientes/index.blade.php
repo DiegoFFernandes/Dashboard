@@ -29,15 +29,16 @@
                                 <div id="info-bl">
                                     <p>Use o filtro acima para obter os <b>boletos pendentes</b>!</p>
                                 </div>
-                                <table class="table compact hidden" id="table-tickets-pendents" style="width: 100%">
+                                <table class="table compact hidden stripe" id="table-tickets-pendents" style="width: 100%">
                                     <thead>
                                         <th>Beneficiário</th>
+                                        <th>Cnpj</th>
                                         <th>Cliente</th>
                                         <th>Documento</th>
                                         <th>Valor</th>
                                         <th>Vencimento</th>
-                                        <th>Status</th>
-                                        <th>2º Via</th>
+                                        <th style="width: 50px">Status</th>
+                                        <th style="width: 25px">2º Via</th>
                                     </thead>
                                 </table>
                             </div>
@@ -54,11 +55,12 @@
                                     <p>Use o filtro acima para obter as <b>notas emitidas</b>!
                                     </p>
                                 </div>
-                                <table class="table compact hidden" id="table-nota-fiscal" style="width: 100%">
+                                <table class="table compact hidden stripe" id="table-nota-fiscal" style="width: 100%">
                                     <thead>
-                                        <th>Dt Emissão</th>
-                                        <th>Nº Nota</th>
-                                        <th>Série</th>
+                                        <th>Emissor</th>
+                                        <th style="width: 80px">Dt Emissão</th>
+                                        <th style="width: 50px">Nº Nota</th>
+                                        <th style="width: 25px">Série</th>
                                         <th>Pessoa</th>
                                         <th>Vl Nota Fiscal</th>
                                         <th>#</th>
@@ -234,6 +236,10 @@
                         }
                     },
                     columns: [{
+                            data: 'EMITENTE',
+                            name: 'EMITENTE'
+                        },
+                        {
                             data: 'DS_DTEMISSAO',
                             name: 'DS_DTEMISSAO'
                         },
@@ -259,13 +265,13 @@
                         },
                     ],
                     columnDefs: [{
-                            targets: [0],
+                            targets: [1],
                             render: $.fn.dataTable.render.moment('DD/MM/YYYY')
                         },
                         {
-                            targets: 4,
+                            targets: 5,
                             render: $.fn.dataTable.render.number('.', ',', 2, 'R$ ')
-                        }
+                        },
                     ],
                     order: [0, 'desc']
                 });
@@ -290,6 +296,10 @@
                     columns: [{
                             data: 'EMPRESA',
                             name: 'EMPRESA',
+                        },
+                        {
+                            data: 'NR_CNPJCPF',
+                            name: 'NR_CNPJCPF',
                         },
                         {
                             data: 'PESSOA',
@@ -317,21 +327,26 @@
                         },
                     ],
                     columnDefs: [{
-                            targets: [4],
+                            targets: [5],
                             render: $.fn.dataTable.render.moment('DD/MM/YYYY'),
                             width: '1%'
                         },
                         {
-                            targets: 3,
+                            targets: 4,
                             render: $.fn.dataTable.render.number('.', ',', 2, 'R$ '),
                             width: '1%'
                         },
                         {
-                            targets: 1,
+                            targets: 2,
                             width: '20%'
+                        },
+                        {
+                            targets: 3,
+                            width: '1%'
                         }
+
                     ],
-                    order: [4, 'asc']
+                    order: [5, 'asc']
 
                 });
             }

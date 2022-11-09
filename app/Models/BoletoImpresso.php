@@ -17,12 +17,15 @@ class BoletoImpresso extends Model
     {
         $this->connection = 'firebird_campina';
     }
-    public function setConnet()
+    public function setConnet($cd_empresa)
     {
-        return $this->connection = Auth::user()->conexao;
+        if ($cd_empresa == 'SUL') {
+            return $this->connection = 'firebird_campina';
+        }
+        return $this->connection = 'firebird_paranavai';
     }
 
-    public function Boleto($nr_doc)
+    public function Boleto($nr_doc, $emp)
     {
         $query = "SELECT DISTINCT BENF.nm_pessoa NMBENF,
         ENDBENF.ds_endereco||', '||ENDBENF.nr_endereco ENDBENF,
@@ -50,8 +53,10 @@ class BoletoImpresso extends Model
         bi.nr_parcela,
         bi.cd_banco,
         B.cd_codigocedente,
+        B.dg_codigocedente,
         B.cd_agencia,
         B.cd_contacor,
+        B.DG_CONTACOR,
         B.cd_convenio,
         cast(bi.ds_codigobanco as varchar(60) character set utf8) ds_codigobanco,
         cast(bi.ds_banco as varchar(60) character set utf8) ds_banco,
@@ -66,13 +71,14 @@ class BoletoImpresso extends Model
         bi.tp_aceite,
         bi.dt_processamento,
         C.nr_boleto nr_nossonumero,
+        bi.nr_nossonumero bi_nossonumero,
         bi.ds_usobanco,
         bi.nr_carteira,
         bi.ds_moeda,
         bi.qt_moeda,
         bi.vl_moeda,
         bi.vl_documento,
-        cast(bi.ds_instrucao as varchar(300) character set utf8) ds_instrucao,
+        cast(bi.ds_instrucao as varchar(600) character set utf8) ds_instrucao,
         bi.vl_descontoabatimento,
         bi.vl_deducao,
         bi.vl_multajuro,
@@ -101,7 +107,9 @@ class BoletoImpresso extends Model
                                     AND BI2.NR_LANCAMENTO = C.NR_LANCAMENTO
                                     AND BI2.NR_PARCELA = C.NR_PARCELA
                                     ORDER BY BI2.NR_SEQUENCIA DESC))
-        INNER JOIN BOLETO B ON (B.cd_banco = BI.cd_banco AND B.cd_empresa = BI.cd_empresa)
+        INNER JOIN BOLETO B ON (B.cd_banco = BI.cd_banco
+                                    AND B.cd_empresa = BI.cd_empresa
+                                    AND B.cd_formapagto = C.cd_formapagto)
         INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
         INNER JOIN ENDERECOPESSOA EP ON (EP.cd_pessoa = P.cd_pessoa)
         INNER JOIN MUNICIPIO M ON (M.cd_municipio = EP.cd_municipio)
@@ -128,7 +136,7 @@ class BoletoImpresso extends Model
         WHERE C.ST_CONTAS NOT IN ('C',
                         'L',
                         'A')
-        AND C.cd_empresa = 3
+        AND C.cd_empresa in ($emp)
         AND BI.nr_documento IN ('$nr_doc')
         GROUP BY BENF.nm_pessoa,
         ENDBENF,
@@ -149,8 +157,10 @@ class BoletoImpresso extends Model
         bi.nr_parcela,
         bi.cd_banco,
         B.cd_codigocedente,
+        B.dg_codigocedente,
         B.cd_agencia,
         B.cd_contacor,
+        B.DG_CONTACOR,
         B.cd_convenio,
         bi.ds_codigobanco,
         bi.ds_banco,
@@ -192,12 +202,14 @@ class BoletoImpresso extends Model
         bi.nr_docserieparc,
         bi.cd_sacado,        
         bi.nm_avalista,
-        bi.nr_cnpjcpfavalista";
+        bi.nr_cnpjcpfavalista,
+        bi.nr_nossonumero";
 
         $key = "Boleto_". $nr_doc .'_'. Auth::user()->id;
-
-        return Cache::remember($key, now()->addMinutes(1), function () use ($query) {
-            return DB::connection($this->setConnet())->select($query);
+        return DB::connection($this->setConnet($emp))->select($query);
+       
+        return Cache::remember($key, now()->addMinutes(1), function () use ($query, $emp) {
+            return DB::connection($this->setConnet($emp))->select($query);
         });
         
         

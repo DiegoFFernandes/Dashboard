@@ -36,7 +36,7 @@
                                         <th>Cliente</th>
                                         <th>Documento</th>
                                         <th>Valor</th>
-                                        <th>Vencimento</th>
+                                        <th style="width: 80px">Vencimento</th>
                                         <th style="width: 50px">Status</th>
                                         <th style="width: 25px">2º Via</th>
                                     </thead>
@@ -62,8 +62,8 @@
                                         <th style="width: 50px">Nº Nota</th>
                                         <th style="width: 25px">Série</th>
                                         <th>Pessoa</th>
-                                        <th>Vl Nota Fiscal</th>
-                                        <th>#</th>
+                                        <th>Valor</th>
+                                        <th class="text-center"></th>
                                     </thead>
                                 </table>
                             </div>
@@ -266,11 +266,13 @@
                     ],
                     columnDefs: [{
                             targets: [1],
-                            render: $.fn.dataTable.render.moment('DD/MM/YYYY')
+                            render: $.fn.dataTable.render.moment('DD/MM/YYYY'),
+                            width: '1%'
                         },
                         {
                             targets: 5,
-                            render: $.fn.dataTable.render.number('.', ',', 2, 'R$ ')
+                            render: $.fn.dataTable.render.number('.', ',', 2, 'R$ '),
+                            width: '1%'
                         },
                     ],
                     order: [0, 'desc']

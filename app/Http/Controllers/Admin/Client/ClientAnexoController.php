@@ -78,12 +78,12 @@ class ClientAnexoController extends Controller
         $data = $this->tickets->TicketsPendentsClient($empresa, $cnpjs);
 
         return DataTables::of($data)
-            ->addColumn('action', function ($d) {
+            ->addColumn('action', function ($d) use ($empresa) {
                 if ($d->CD_FORMAPAGTO == "DD") {
                     return  '<button id="btn-fidic" class="btn btn-xs btn-default">Fidic</button>';
                 } else {
                     // return   '<button class="btn btn-xs btn-danger" id="btnDoc" data-documento="' . $d->NR_DOCUMENTO . '">Imprimir</button>';
-                    return   '<a href=' . route("client-save-tickets", ["id" => Crypt::encryptString($d->NR_DOCUMENTO)]) . ' class="btn btn-xs btn-danger" target="_blank">Imprimir</a>';
+                    return   '<a href=' . route("client-save-tickets", ["id" => Crypt::encryptString($d->NR_DOCUMENTO), 'emp' => Crypt::encryptString($empresa->cd_empresa)]) . ' class="btn btn-xs btn-danger" target="_blank">Imprimir</a>';
                 }
             })
             ->addColumn('valor_nf', function ($d) {
@@ -106,13 +106,14 @@ class ClientAnexoController extends Controller
         }
         try {
             $nr_doc = Crypt::decryptString($this->request->id);
+            $emp = Crypt::decryptString($this->request->emp);
         } catch (\Throwable $th) {
             return abort(404);
         }
-        $dados = $this->boleto->Boleto($nr_doc);
-
-        if ($this->user->cd_pessoa <> $dados[0]->CD_PESSOA) {
-            return abort(404);
+        $dados = $this->boleto->Boleto($nr_doc, $emp);
+        // dd($dados);
+        if (Helper::is_empty_object($dados)) {
+            return "Dados do Boleto vazio";
         }
 
         $beneficiario = new \Eduardokum\LaravelBoleto\Pessoa(
@@ -151,12 +152,32 @@ class ClientAnexoController extends Controller
             $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Caixa(
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
-        } elseif ($dados[0]->CD_BANCO == 1) {
+        } elseif ($dados[0]->CD_BANCO == 1) { //Banco do Brasil
             $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bb(
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
-        } elseif ($dados[0]->CD_BANCO == 237) {
+        } elseif ($dados[0]->CD_BANCO == 237) { //Banco Bradesco
             $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bradesco(
+                $this->InfoTicket($dados, $pagador, $beneficiario)
+            );
+        } elseif ($dados[0]->CD_BANCO == 84) { //Banco UniPrime
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\UniPrime(
+                $this->InfoTicket($dados, $pagador, $beneficiario)
+            );
+        } elseif ($dados[0]->CD_BANCO == 756) { //Banco Sicoob     
+            $dados[0]->NR_CARTEIRA = 1;   
+            $dados[0]->NR_NOSSONUMERO = $dados[0]->BI_NOSSONUMERO;   
+            $dados[0]->CD_CONVENIO = intval($dados[0]->CD_CODIGOCEDENTE).'-'.$dados[0]->DG_CODIGOCEDENTE;
+                        
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bancoob(                
+                $this->InfoTicket($dados, $pagador, $beneficiario)
+            );
+        } elseif ($dados[0]->CD_BANCO == 422) { //Banco Safra
+            $dados[0]->CD_CONTACOR = $dados[0]->CD_CONTACOR . '-' . $dados[0]->DG_CONTACOR;
+            $dados[0]->NR_NOSSONUMERO = $dados[0]->BI_NOSSONUMERO;
+            $dados[0]->DS_INSTRUCAO = $dados[0]->DS_INSTRUCAO . '. ESTE BOLETO REPRESENTA DUPLICATA CEDIDA FIDUCIARIAMENTE AO BANCO SAFRA S/A, FICANDO VEDADO O PAGAMENTO DE
+            QUALQUER OUTRA FORMA QUE NÃO ATRAVÉS DO PRESENTE BOLETO.';
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Safra(
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
         } else {
@@ -255,9 +276,9 @@ class ClientAnexoController extends Controller
             ->addColumn('action', function ($d) {
                 if ($d->CD_EMPRESA == 3) {
                     return '<a href="' . env('URL_PREF_CAMP') . '?cpfCnpjPrestador=' . Helper::RemoveSpecialChar($d->NR_CNPJ_EMI) . '&numeroNFSe=' . $d->NR_NOTASERVICO . '&codigoAutenticidade=' . $d->CD_AUTENTICACAO . '&dataEmissao=' . $d->DS_DTEMISSAO . '" class="btn btn-xs btn-primary" target="_blank">NFs-e</button>';
-                } elseif ($d->CD_EMPRESA == 1) {
+                } elseif ($d->CD_EMPRESA == 1 || $d->CD_EMPRESA == 101) {
                     return '<a href="' . $d->DS_ENDERECOIMP . '" class="btn btn-xs btn-primary" target="_blank">NFs-e</button>';
-                }else{
+                } else {
                     return 'Há parametrizar';
                 }
             })

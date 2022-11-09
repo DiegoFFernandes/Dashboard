@@ -19,10 +19,14 @@ class MetaOperador extends Model
         return $this->connection = Auth::user()->conexao;
     }
 
-    public function MetaOperadorSetor($cd_executor, $etapa){
-        $query = "SELECT X.ID, X.NMEXECUTOR, SUM(X.DIAATUAL) DIAATUAL, SUM(X.ONTEM) ONTEM, SUM(X.ANTEONTEM) ANTEONTEM, meta.qtmetadiaria meta
+    public function MetaOperadorSetor($cd_executor, $etapa)
+    {
+        $query = "SELECT X.ID,       
+            CAST(X.NMEXECUTOR AS VARCHAR(100) CHARACTER SET UTF8) NMEXECUTOR,
+            SUM(X.DIAATUAL) DIAATUAL, SUM(X.ONTEM) ONTEM, SUM(X.ANTEONTEM) ANTEONTEM, meta.qtmetadiaria meta
         FROM (
-           SELECT E.id, E.NMEXECUTOR, COUNT(I.ID) DIAATUAL, 0 ONTEM, 0 ANTEONTEM
+           SELECT E.id,
+           CAST(E.NMEXECUTOR AS VARCHAR(100) CHARACTER SET UTF8) NMEXECUTOR, COUNT(I.ID) DIAATUAL, 0 ONTEM, 0 ANTEONTEM
            FROM $etapa->nm_tabela I
            INNER JOIN EXECUTORETAPA E ON (I.IDEXECUTOR = E.ID)
            INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)
@@ -36,7 +40,9 @@ class MetaOperador extends Model
            
            UNION ALL
            
-           SELECT E.id, E.NMEXECUTOR, 0 DIAATUAL, COUNT(I.ID) ONTEM, 0 ANTEONTEM
+           SELECT E.id, 
+           CAST(E.NMEXECUTOR AS VARCHAR(100) CHARACTER SET UTF8) NMEXECUTOR,
+            0 DIAATUAL, COUNT(I.ID) ONTEM, 0 ANTEONTEM
            FROM $etapa->nm_tabela I
            INNER JOIN EXECUTORETAPA E ON (I.IDEXECUTOR = E.ID)
            INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)
@@ -50,7 +56,9 @@ class MetaOperador extends Model
            
            UNION ALL
            
-           SELECT E.id, E.NMEXECUTOR, 0 DIAATUAL, 0 ONTEM, COUNT(I.ID) ANTEONTEM
+           SELECT E.id, 
+           CAST(E.NMEXECUTOR AS VARCHAR(100) CHARACTER SET UTF8) NMEXECUTOR,
+           0 DIAATUAL, 0 ONTEM, COUNT(I.ID) ANTEONTEM
            FROM $etapa->nm_tabela I
            INNER JOIN EXECUTORETAPA E ON (I.IDEXECUTOR = E.ID)
            INNER JOIN ORDEMPRODUCAORECAP OPR ON (OPR.ID = I.IDORDEMPRODUCAORECAP)

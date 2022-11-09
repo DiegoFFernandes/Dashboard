@@ -16,12 +16,12 @@
                     <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><a
                             href="{{ route('admin.dashboard') }}"><i class="fa fa-home"></i>Inicio</a>
                     </li>
-                    @role('admin|acesso-cliente')
+                    @can('ver-acesso-cliente')
                         <li class="{{ request()->routeIs('cliente.dados-gerados-empresa.index') ? 'active' : '' }}"><a
                                 href="{{ route('cliente.dados-gerados-empresa.index') }}"><i
                                     class="fa fa-file-pdf-o"></i>2º Via</a>
                         </li>
-                    @endrole
+                    @endcan
                 </ul>
             </li>
             @unlessrole('acesso-cliente')
@@ -115,7 +115,8 @@
                     </ul>
                 </li>
             @endunlessrole
-            @role('admin')
+
+            @canany(['ver-usuario'])
                 <li class="treeview {{ request()->segment(1) == 'usuario' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-user"></i> <span>Usuários</span>
@@ -124,29 +125,33 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        <li class="{{ $uri == 'usuarios/cadastrar' ? 'active' : '' }}"><a
-                                href="{{ route('admin.usuarios.create') }}">
-                                <i class="fa fa-plus-circle"></i>Adicionar usuário</a>
-                        </li>
-                        <li class="{{ $uri == 'usuarios/listar' ? 'active' : '' }}"><a
-                                href="{{ route('admin.usuarios.listar') }}">
-                                <i class="fa fa-list"></i>Listar usuários</a>
-                        </li>
+                        @role('admin')
+                            <li class="{{ $uri == 'usuarios/cadastrar' ? 'active' : '' }}"><a
+                                    href="{{ route('admin.usuarios.create') }}">
+                                    <i class="fa fa-plus-circle"></i>Adicionar usuário</a>
+                            </li>
+                            <li class="{{ $uri == 'usuarios/listar' ? 'active' : '' }}"><a
+                                    href="{{ route('admin.usuarios.listar') }}">
+                                    <i class="fa fa-list"></i>Listar usuários</a>
+                            </li>
+                            <li class="{{ $uri == 'usuarios/funcao' ? 'active' : '' }}"><a
+                                    href="{{ route('admin.usuarios.role') }}">
+                                    <i class="fa fa-shield"></i>Funções</a>
+                            </li>
+                            <li class="{{ $uri == 'usuarios/permissao' ? 'active' : '' }}"><a
+                                    href="{{ route('admin.usuarios.permission') }}">
+                                    <i class="fa fa-lock"></i>Permissões</a>
+                            </li>
+                        @endrole
+                        @can('ver-usuario')
                         <li class="{{ $uri == 'usuario/vincular-pessoas-usuario' ? 'active' : '' }}"><a
                                 href="{{ route('connect-people-user') }}">
                                 <i class="fa fa-plug"></i>Associar Pessoas/Usuarios</a>
                         </li>
-                        <li class="{{ $uri == 'usuarios/funcao' ? 'active' : '' }}"><a
-                                href="{{ route('admin.usuarios.role') }}">
-                                <i class="fa fa-shield"></i>Funções</a>
-                        </li>
-                        <li class="{{ $uri == 'usuarios/permissao' ? 'active' : '' }}"><a
-                                href="{{ route('admin.usuarios.permission') }}">
-                                <i class="fa fa-lock"></i>Permissões</a>
-                        </li>
+                        @endcan
                     </ul>
                 </li>
-            @endrole
+            @endcanany
             @role('admin')
                 <li class="treeview" style="height: auto;">
                     <a href="#">

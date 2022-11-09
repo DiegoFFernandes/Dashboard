@@ -206,9 +206,8 @@ class BoletoImpresso extends Model
         bi.nr_nossonumero";
 
         $key = "Boleto_". $nr_doc .'_'. Auth::user()->id;
-        return DB::connection($this->setConnet($emp))->select($query);
-       
-        return Cache::remember($key, now()->addMinutes(1), function () use ($query, $emp) {
+        // return DB::connection($this->setConnet($emp))->select($query);       
+        return Cache::remember($key, now()->addMinutes(15), function () use ($query, $emp) {
             return DB::connection($this->setConnet($emp))->select($query);
         });
         

@@ -81,7 +81,11 @@ class ClientAnexoController extends Controller
             ->addColumn('action', function ($d) use ($empresa) {
                 if ($d->CD_FORMAPAGTO == "DD") {
                     return  '<button id="btn-fidic" class="btn btn-xs btn-default">Fidic</button>';
-                } else {
+                } 
+                elseif ($d->CD_FORMAPAGTO == "DI") {
+                    return  '<button id="btn-dinheiro" class="btn btn-xs btn-success">Dinheiro</button>';
+                } 
+                else {
                     // return   '<button class="btn btn-xs btn-danger" id="btnDoc" data-documento="' . $d->NR_DOCUMENTO . '">Imprimir</button>';
                     return   '<a href=' . route("client-save-tickets", ["id" => Crypt::encryptString($d->NR_DOCUMENTO), 'emp' => Crypt::encryptString($empresa->cd_empresa)]) . ' class="btn btn-xs btn-danger" target="_blank">Imprimir</a>';
                 }
@@ -111,11 +115,9 @@ class ClientAnexoController extends Controller
             return abort(404);
         }
         $dados = $this->boleto->Boleto($nr_doc, $emp);
-        // dd($dados);
         if (Helper::is_empty_object($dados)) {
-            return "Dados do Boleto vazio";
+            return redirect()->route('cliente.dados-gerados-empresa.index')->with('warning', 'Boleto não encontrado, favor contactar setor de TI!');
         }
-
         $beneficiario = new \Eduardokum\LaravelBoleto\Pessoa(
             [
                 'nome'      => $dados[0]->NMBENF,
@@ -165,11 +167,11 @@ class ClientAnexoController extends Controller
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
         } elseif ($dados[0]->CD_BANCO == 756) { //Banco Sicoob     
-            $dados[0]->NR_CARTEIRA = 1;   
-            $dados[0]->NR_NOSSONUMERO = $dados[0]->BI_NOSSONUMERO;   
-            $dados[0]->CD_CONVENIO = intval($dados[0]->CD_CODIGOCEDENTE).'-'.$dados[0]->DG_CODIGOCEDENTE;
-                        
-            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bancoob(                
+            $dados[0]->NR_CARTEIRA = 1;
+            $dados[0]->NR_NOSSONUMERO = $dados[0]->BI_NOSSONUMERO;
+            $dados[0]->CD_CONVENIO = intval($dados[0]->CD_CODIGOCEDENTE) . '-' . $dados[0]->DG_CODIGOCEDENTE;
+
+            $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bancoob(
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
         } elseif ($dados[0]->CD_BANCO == 422) { //Banco Safra
@@ -181,7 +183,7 @@ class ClientAnexoController extends Controller
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
         } else {
-            return "Outro";
+            return redirect()->route('cliente.dados-gerados-empresa.index')->with('warning', 'Não existe banco associado para esse documento, favor contactar setor de TI!');
         }
         // Gerar em HTML
         $html = new \Eduardokum\LaravelBoleto\Boleto\Render\Html();

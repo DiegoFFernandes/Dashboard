@@ -8,6 +8,7 @@
                 @includeIf('admin.master.filtro-por-empresa')
             </div>
             <div class="col-md-12">
+                @includeIf('admin.master.messages')
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li class="active">

@@ -111,10 +111,12 @@ class ClientAnexoController extends Controller
         try {
             $nr_doc = Crypt::decryptString($this->request->id);
             $emp = Crypt::decryptString($this->request->emp);
+            $empresa = Empresa::where('cd_empresa', $emp)->firstOrFail();
         } catch (\Throwable $th) {
             return abort(404);
         }
-        $dados = $this->boleto->Boleto($nr_doc, $emp);
+        $dados = $this->boleto->Boleto($nr_doc, $emp, $empresa);
+        
         if (Helper::is_empty_object($dados)) {
             return redirect()->route('cliente.dados-gerados-empresa.index')->with('warning', 'Boleto não encontrado, favor contactar setor de TI!');
         }
@@ -154,7 +156,9 @@ class ClientAnexoController extends Controller
             $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Caixa(
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
-        } elseif ($dados[0]->CD_BANCO == 1) { //Banco do Brasil
+        } elseif ($dados[0]->CD_BANCO == 1) { //Banco do Brasil            
+            $dados[0]->CD_CONVENIO = 3066749;
+            
             $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bb(
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
@@ -209,7 +213,7 @@ class ClientAnexoController extends Controller
             'carteira'               => $dados[0]->NR_CARTEIRA,
             'agencia'                => $dados[0]->CD_AGENCIA,
             'conta'                  => $dados[0]->CD_CONTACOR,
-            'convenio'               => $dados[0]->CD_CONVENIO,
+            'convenio'               => intval($dados[0]->CD_CONVENIO),
             'codigoCliente'          => $dados[0]->CD_CODIGOCEDENTE,
             'descricaoDemonstrativo' => [$dados[0]->DS_INSTRUCAO],
             'instrucoes'             => [$dados[0]->DS_INSTRUCAO],

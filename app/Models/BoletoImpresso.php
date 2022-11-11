@@ -25,7 +25,7 @@ class BoletoImpresso extends Model
         return $this->connection = 'firebird_paranavai';
     }
 
-    public function Boleto($nr_doc, $emp)
+    public function Boleto($nr_doc, $emp, $empresa)
     {
         $query = "SELECT DISTINCT BENF.nm_pessoa NMBENF,
         ENDBENF.ds_endereco||', '||ENDBENF.nr_endereco ENDBENF,
@@ -129,13 +129,11 @@ class BoletoImpresso extends Model
                         AND CO.CD_PESSOA = O.CD_PESSOA
                         AND CO.CD_TIPOCONTA = O.CD_TIPOCONTA
                         AND CO.NR_PARCELA = O.NR_PARCELA)
-        INNER JOIN NOTA N ON (N.CD_EMPRESA = COALESCE(CO.CD_EMPRESA, C.CD_EMPRESA)
+        LEFT JOIN NOTA N ON (N.CD_EMPRESA = COALESCE(CO.CD_EMPRESA, C.CD_EMPRESA)
                     AND N.CD_PESSOA = COALESCE(CO.CD_PESSOA, C.CD_PESSOA)
                     AND N.NR_LANCAMENTO = COALESCE(CO.NR_LANCTONOTA, C.NR_LANCTONOTA)
                     AND N.TP_NOTA = COALESCE(CO.TP_CONTAS, C.TP_CONTAS))
-        WHERE C.ST_CONTAS NOT IN ('C',
-                        'L',
-                        'A')
+        WHERE C.ST_CONTAS NOT IN ('C','L', 'A')
         AND C.cd_empresa in ($emp)
         AND BI.nr_documento IN ('$nr_doc')
         GROUP BY BENF.nm_pessoa,
@@ -205,10 +203,10 @@ class BoletoImpresso extends Model
         bi.nr_cnpjcpfavalista,
         bi.nr_nossonumero";
 
-        $key = "Boleto_". $nr_doc .'_'. Auth::user()->id;
-        // return DB::connection($this->setConnet($emp))->select($query);       
-        return Cache::remember($key, now()->addMinutes(15), function () use ($query, $emp) {
-            return DB::connection($this->setConnet($emp))->select($query);
+        
+        $key = "Boleto_". $nr_doc .'_'. Auth::user()->id;            
+        return Cache::remember($key, now()->addMinutes(15), function () use ($query, $empresa) {
+            return DB::connection($this->setConnet($empresa->regiao))->select($query);
         });
         
         

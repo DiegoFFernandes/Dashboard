@@ -50,10 +50,10 @@ class Contas extends Model
                         AND C.st_contas not in ('L', 'C', 'A')
                         and C.cd_formapagto NOT IN ('LD')
                         AND C.cd_tipoconta = 2";
-
-        return DB::connection($this->setConnet($empresa->regiao))->select($query);
+        
         $key = "TicketsPendentsAll_" . Auth::user()->id . "_" . $empresa->cd_empresa;
         return Cache::remember($key, now()->addMinutes(60), function () use ($empresa, $query) {
+            return DB::connection($this->setConnet($empresa->regiao))->select($query);
         });
     }
     public function InvoiceClient($empresa, $dt_ini, $dt_fim, $cnpj)

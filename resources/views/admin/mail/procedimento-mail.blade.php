@@ -38,11 +38,11 @@
 @endcomponent
 
 @if ($request['status'] == 'R' || $request['status'] == 'L')
-@component('mail::button', ['url' => 'http://producao.ivorecap.com.br/procedimento/index', 'color' => 'success'])
+@component('mail::button', ['url' => 'https://portal.ivorecap.com.br/procedimento/index', 'color' => 'success'])
 Ver procedimento
 @endcomponent
 @else
-@component('mail::button', ['url' => 'https://producao.ivorecap.com.br/procedimento-aprovador/autorizador', 'color' => 'primary'])
+@component('mail::button', ['url' => 'https://portal.ivorecap.com.br/procedimento-aprovador/autorizador', 'color' => 'primary'])
 Ver procedimento
 @endcomponent
 @endif

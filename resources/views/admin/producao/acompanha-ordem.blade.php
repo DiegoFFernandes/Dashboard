@@ -30,7 +30,7 @@
                                         <div class="form-inline">
                                             <div class="form-group">
                                                 <label for="numeroOrdem">Ordem:</label>
-                                                (<a href="http://zxing.appspot.com/scan?ret=https://producao.ivorecap.com.br/producao/acompanha-ordem/{CODE}"
+                                                (<a href="https://zxing.appspot.com/scan?ret=https://producao.ivorecap.com.br/producao/acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo{CODE}"
                                                     data-toggle="tooltip" data-placement="top"
                                                     title="Exclusivo Celular">Leitor</a>):
                                                 <input type="number" class="form-control" name="nr_ordem"

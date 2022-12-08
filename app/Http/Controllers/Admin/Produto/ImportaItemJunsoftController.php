@@ -43,6 +43,6 @@ class ImportaItemJunsoftController extends Controller
         if($import == 1){
             return response()->json(['msg' => "Importação de produto realizada com sucesso!"]);
         }
-        return response()->json(['msg' => "Houve algum erro!"]);
+        return response()->json(['msg' => $import]);
     }
 }

@@ -34,7 +34,12 @@ class Item extends Model
                     --and i.cd_item = 1002289";
         $itens = DB::connection($this->setConnet())->select($query);
 
-        return $this->InsertItem($itens);
+        $status = $this->InsertItem($itens);
+        if ($status == 1) {
+            return 1;
+        } else {
+            return $status;
+        }
     }
     public function InsertItem($itens)
     {
@@ -56,7 +61,8 @@ class Item extends Model
                     ]
                 );
             } catch (\Illuminate\Database\QueryException $ex) {
-                return $ex;
+                return ($ex->errorInfo[2]);
+                return "Houve algum erro ao importar os itens";
             }
         }
         return 1;

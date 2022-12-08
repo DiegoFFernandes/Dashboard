@@ -2,6 +2,7 @@
 $(function() {
     $('.select2').select2();
     $('.empresas').select2();
+    $('.etapas').select2();
 });
 
 

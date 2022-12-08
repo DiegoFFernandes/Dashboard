@@ -1,3 +1,7 @@
+{{-- Leitor Qr Code --}}
+<script src="{{asset('adminlte/bower_components/html5-qrcode/html5-qrcode.min.js')}}"></script>
+{{-- Camera --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
 <!-- jQuery 3 -->
 <script src="{{asset('adminlte/bower_components/jquery/dist/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->

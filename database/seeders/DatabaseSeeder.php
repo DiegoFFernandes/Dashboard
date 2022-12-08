@@ -21,12 +21,13 @@ class DatabaseSeeder extends Seeder
         $this->call(TipoVeiculoTableSeeder::class);
         $this->call(MarcaVeiculoTableSeeder::class);
         $this->call(ModeloVeiculoTableSeeder::class);
-        $this->call(PessoaTableSeeder::class);     
-        $this->call(MarcaModeloFrotaTableSeeder::class); 
-        $this->call(MotoristaVeiculoTableSeeder::class); 
-        $this->call(EpiTableSeeder::class); 
-        $this->call(EtapasProducaoPneuTableSeeder::class);  
-        $this->call(EpiEtapasProducaoTableSeeder::class);     
-        
+        $this->call(PessoaTableSeeder::class);
+        $this->call(MarcaModeloFrotaTableSeeder::class);
+        $this->call(MotoristaVeiculoTableSeeder::class);
+        $this->call(EpiTableSeeder::class);
+        $this->call(EtapasProducaoPneuTableSeeder::class);
+        $this->call(EpiEtapasProducaoTableSeeder::class);
+        $this->call(MaquinaTableSeeder::class);
+        $this->call(EtapaMaquinaTableSeeder::class);
     }
 }

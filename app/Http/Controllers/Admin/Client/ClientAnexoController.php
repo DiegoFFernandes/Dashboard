@@ -157,7 +157,7 @@ class ClientAnexoController extends Controller
                 $this->InfoTicket($dados, $pagador, $beneficiario)
             );
         } elseif ($dados[0]->CD_BANCO == 1) { //Banco do Brasil            
-            $dados[0]->CD_CONVENIO = 3066749;
+            // $dados[0]->CD_CONVENIO = 3066749;
             
             $boleto = new \Eduardokum\LaravelBoleto\Boleto\Banco\Bb(
                 $this->InfoTicket($dados, $pagador, $beneficiario)

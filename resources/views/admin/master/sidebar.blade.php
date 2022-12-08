@@ -432,6 +432,21 @@
                     </ul>
                 </li>
             @endrole
+            @role('admin|manutencao')
+                <li class="treeview {{ request()->segment(1) == 'manutencao' ? 'active' : '' }}" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-cogs"></i> <span>Manutenção</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="{{ request()->routeIs('manutencao.index') ? 'active' : '' }}"><a
+                                href="{{ route('manutencao.index') }}"><i class="fa fa-ticket "></i>Chamados</a>
+                        </li>
+                    </ul>
+                </li>
+            @endrole
             @unlessrole('acesso-cliente')
                 <li class="header">Links Publicos</li>
                 <li class="treeview" style="height: auto;">

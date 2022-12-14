@@ -24,6 +24,9 @@ class OrdemProducaoRecap extends Model
     public function UnlockOrdem($ordem)
     {
         return DB::transaction(function () use ($ordem){
+
+             DB::connection($this->setConnet())->select("EXECUTE PROCEDURE ACESSO_IVO");
+
             $query = "update ORDEMPRODUCAORECAP opr set opr.STALTERANDO = 'N' where opr.ID = $ordem";
             
             return DB::connection($this->setConnet())->statement($query);

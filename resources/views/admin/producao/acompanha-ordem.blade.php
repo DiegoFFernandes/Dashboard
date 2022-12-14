@@ -48,7 +48,7 @@
                                                 <h3 class="box-title">Informações da Ordem -
                                                     {{ $info_pneu[0]->ORDEM }}</h3>
                                                 <div class="box-tools pull-right">
-                                                    @if ($info_pneu[0]->ALTERANDO == 'D')
+                                                    @if ($info_pneu[0]->ALTERANDO == 'D' || $info_pneu[0]->ALTERANDO == 'S')
                                                         <a href="{{ route('unlock-order', ['nr_ordem' => Crypt::encrypt($info_pneu[0]->ORDEM)]) }}"
                                                             class="btn btn-warning btn-sm">Desbloquear</a>
                                                     @endif

@@ -444,6 +444,9 @@
                         <li class="{{ request()->routeIs('manutencao.index') ? 'active' : '' }}"><a
                                 href="{{ route('manutencao.index') }}"><i class="fa fa-ticket "></i>Chamados</a>
                         </li>
+                        <li class="{{ request()->routeIs('manutencao.machines') ? 'active' : '' }}"><a
+                            href="{{ route('manutencao.machines') }}"><i class="fa fa-flag "></i>Cadastro de Maquinas</a>
+                    </li>
                     </ul>
                 </li>
             @endrole

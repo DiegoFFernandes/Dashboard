@@ -59,11 +59,11 @@
                                     aria-hidden="true">×</button>
                             </div>
                             <form id="formMarcaModelo">
-                                <div class="col-md-4">
-                                    <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
+                                <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
+                                <div class="col-md-4">                                    
                                     <div class="form-group">
                                         <label>Marca</label>
-                                        <select class="form-control select2" name="cd_marca" id="cd_marca">
+                                        <select class="form-control" name="cd_marca" id="cd_marca">
                                             <option selected>Selecione</option>
                                             @foreach ($marcas as $marca)
                                                 <option value="{{ $marca->id }}">{{ $marca->descricao }}</option>

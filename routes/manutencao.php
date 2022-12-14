@@ -14,6 +14,9 @@ Route::middleware(['auth', 'role:admin|manutencao|coordenador'])->group(function
         Route::post('status-chamado', [ManutencaoController::class, 'statusChamado'])->name('manutencao.status');
         Route::post('reopen-chamado', [ManutencaoController::class, 'reOpen'])->name('manutencao.reopen');
         Route::post('view-pictures-tickets', [ManutencaoController::class, 'viewPictures'])->name('manutencao.pictures');
+
+        Route::get('maquinas', [ManutencaoController::class, 'machines'])->name('manutencao.machines');
+        Route::get('search-maquinas', [ManutencaoController::class, 'searchMaquinas'])->name('manutencao.seach-maquinas');
         
     });
 });

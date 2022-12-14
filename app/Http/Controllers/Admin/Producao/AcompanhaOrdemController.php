@@ -6,8 +6,10 @@ namespace App\Http\Controllers\Admin\Producao;
 use App\Http\Controllers\Controller;
 use App\Models\AcompanhamentoPneu;
 use App\Models\EtapasProducaoPneu;
+use App\Models\OrdemProducaoRecap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 
 class AcompanhaOrdemController extends Controller
@@ -19,10 +21,12 @@ class AcompanhaOrdemController extends Controller
     Request $request,
     AcompanhamentoPneu $acompanha,
     EtapasProducaoPneu $etapa,
+    OrdemProducaoRecap $ordem
   ) {
     $this->request = $request;
     $this->acompanha = $acompanha;
     $this->etapas = $etapa;
+    $this->ordem = $ordem;
     $this->middleware(function ($request, $next) {
       $this->user = Auth::user();
       return $next($request);
@@ -93,6 +97,14 @@ class AcompanhaOrdemController extends Controller
     if ($nr_ordem >= 9999999999 || $iditempedidopneu === []) {
       $sem_info = 0;
       return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem', 'etapas'));
+    }
+  }
+  public function unlockOrder()
+  {
+    $ordem = Crypt::decrypt($this->request->nr_ordem);
+    $unlock = $this->ordem->UnlockOrdem($ordem);
+    if($unlock){      
+      return redirect()->route('admin.producao.acompanha.ordem')->with('status', 'Ordem '.$ordem.' Desbloqueada com sucesso!');      
     }
   }
 }

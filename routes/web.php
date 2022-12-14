@@ -111,6 +111,10 @@ Route::prefix('producao')->group(function () {
     Route::get('acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo{codigo_barras}', [AcompanhaOrdemController::class, 'index'])->name('admin.producao.acompanha.ordem.barras');
     Route::post('acompanha-ordem/h^f7dbtz^E1tj8xAZ6aEy7gsQ4ReEBYdo', [AcompanhaOrdemController::class, 'statusOrdem'])->name('admin.producao.acompanha.ordem.do');
 
+    /*Desbloquear ordem */
+    Route::get('desbloqueio-ordem', [AcompanhaOrdemController::class, 'unlockOrder'])->name('unlock-order');
+    
+    
     Route::get('search-operador', [ExecutorController::class, 'searchExecutor'])->name('search-operador');
     Route::get('meta-operador', [MetaOperadorController::class, 'index'])->name('meta-operador');
 

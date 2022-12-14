@@ -9,7 +9,7 @@
                     <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Maquinas Paradas</span>
-                        <span class="info-box-number">{{$parada}}</span>
+                        <span class="info-box-number">{{ $parada }}</span>
                     </div>
                 </div>
             </div>
@@ -19,7 +19,7 @@
                     <span class="info-box-icon bg-red"><i class=""></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Chamados Abertos/Andamento</span>
-                        <span class="info-box-number">{{$aberto}}</span>
+                        <span class="info-box-number">{{ $aberto }}</span>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                     <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Chamados Finalizados</span>
-                        <span class="info-box-number">{{$finalizado}}</span>
+                        <span class="info-box-number">{{ $finalizado }}</span>
                     </div>
                 </div>
 
@@ -42,7 +42,7 @@
                     <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
                     <div class="info-box-content">
                         <span class="info-box-text">Chamados Total</span>
-                        <span class="info-box-number">{{$total}}</span>
+                        <span class="info-box-number">{{ $total }}</span>
                     </div>
                 </div>
             </div>
@@ -299,9 +299,6 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
-            var teclaEnter = jQuery.Event("keypress");
-            teclaEnter.ctrlKey = false;
-            teclaEnter.which = 9; //Código da tecla Enter
 
             $('#btn-send').click(function() {
                 if ($('#tp_chamado').val() == 0 || $('#observacao').val() === '') {
@@ -315,9 +312,12 @@
             const html5QrCode = new Html5Qrcode("qr-reader");
             const qrCodeSuccessCallback = (decodedText, decodedResult) => {
                 $('#cd_maq').val(decodedText);
-                console.log(decodedText);
+                var teclaEnter = jQuery.Event("keypress");
+                teclaEnter.ctrlKey = false;
+                teclaEnter.which = 9; //Código da tecla Enter
+                console.log(decodedText);                
                 $("#cd_maq").trigger(teclaEnter);
-                $(".btn-close").trigger('click')
+                $(".btn-close").trigger('click');
             };
             const config = {
                 fps: 10,
@@ -325,7 +325,7 @@
             };
             $("#cd_maq").on("keypress focusout", function(event) {
                 var keycode = (event.keyCode ? event.keyCode : event.which);
-                var cd_barras = $("#cd_maq").val();
+                var cd_barras = $("#cd_maq").val();                
                 if (keycode == '9' || keycode == '13' || event.type == "focusout") {
                     $('.maquina').val(cd_barras).trigger('change');
                     return false;
@@ -483,6 +483,7 @@
                         id: ticketId,
                     },
                     success: function(response) {
+                        $('#pictures-img').remove();
                         $('#response-pictures').append(response.html);
                         $('#modal-pictures').modal('show');
                     }

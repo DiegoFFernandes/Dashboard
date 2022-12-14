@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin\Manutencao;
 
 use App\Http\Controllers\Controller;
+use App\Models\Empresa;
 use App\Models\EtapaMaquina;
 use App\Models\EtapasProducaoPneu;
+use App\Models\Maquina;
 use App\Models\PictureTicket;
 use App\Models\Ticket;
 use App\Models\TicketAcompanhamento;
 use Exception;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -21,17 +24,21 @@ class ManutencaoController extends Controller
     public function __construct(
         Request $request,
         EtapasProducaoPneu $etapa,
-        EtapaMaquina $maquina,
+        EtapaMaquina $etapa_maquina,
         Ticket $ticket,
         TicketAcompanhamento $acompanhamento,
         PictureTicket $image,
+        Empresa $empresa,
+        Maquina $maquina,
     ) {
         $this->request = $request;
         $this->etapas = $etapa;
+        $this->etapa_maquina = $etapa_maquina;
         $this->maquina = $maquina;
         $this->tickets = $ticket;
         $this->acompanhamento = $acompanhamento;
         $this->picture = $image;
+        $this->empresa = $empresa;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -42,18 +49,21 @@ class ManutencaoController extends Controller
         $title_page   = 'Abrir Chamado Manutenção';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
-        $maquinas = $this->maquina->maquinaAll();
+        $maquinas = $this->etapa_maquina->maquinaAll();
         $parada = Ticket::where('maq_parada', 'S')->WhereIn('status', ['R', 'A'])->count();
         $aberto = Ticket::WhereIn('status', ['R', 'A'])->count();
         $finalizado = Ticket::WhereIn('status', ['F'])->count();
         $total = Ticket::count();
-        
+
         return view('admin.manutencao.index', compact(
             'title_page',
             'user_auth',
             'uri',
             'maquinas',
-            'parada','aberto', 'finalizado', 'total'
+            'parada',
+            'aberto',
+            'finalizado',
+            'total'
 
         ));
     }
@@ -205,7 +215,7 @@ class ManutencaoController extends Controller
     {
 
         $pictures = PictureTicket::where('cd_tickets', $this->request->id)->get();
-        $html = '<div class="col-sm-12">';
+        $html = '<div class="col-sm-12" id="pictures-img">';
 
         foreach ($pictures as $picture) {
             $html .= '<img class="img-responsive" src="' . asset('storage/' . $picture->path) . '" alt="Photo"> <br> ';
@@ -213,5 +223,32 @@ class ManutencaoController extends Controller
         $html .= '</div>';
 
         return response()->json(['html' => $html]);
+    }
+    public function machines()
+    {
+
+        $title_page   = 'Maquinas cadastradas';
+        $user_auth    = $this->user;
+        $uri          = $this->request->route()->uri();
+        $etapa_maquina = $this->etapa_maquina->maquinaAll();
+        $maquinas = $this->maquina->all();
+        $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
+        $etapas = $this->etapas->all();
+
+
+        return view('admin.manutencao.machines', compact(
+            'title_page',
+            'user_auth',
+            'uri',
+            'maquinas',
+            'empresas',
+            'etapas',
+            'maquinas', 'etapa_maquina'
+        ));
+    }
+    public function searchMaquinas(Request $request)
+    {
+        return true;
+        
     }
 }

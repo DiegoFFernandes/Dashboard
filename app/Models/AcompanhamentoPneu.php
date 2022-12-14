@@ -46,7 +46,7 @@ class AcompanhamentoPneu extends Model
     {
         $query = "select IPP.idpedidopneu PEDIDO, OPR.id ORDEM, PP.idpessoa ||' - '|| P.NM_PESSOA CLIENTE, SP.dsservico SERVICO,
         MP.dsmodelo||' - '||M.dsmarca as MODELO, MD.dsmedidapneu MEDIDA,
-        PN.nrserie SERIE, PN.nrfogo FOGO, PN.nrdot DOT, LOPR.idmontagemlotepcp LOTE
+        PN.nrserie SERIE, PN.nrfogo FOGO, PN.nrdot DOT, LOPR.idmontagemlotepcp LOTE, OPR.stalterando alterando
         FROM ITEMPEDIDOPNEU IPP
         INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.idpedidopneu)
         INNER JOIN PNEU PN on (PN.ID = IPP.idpneu)
@@ -61,7 +61,7 @@ class AcompanhamentoPneu extends Model
         LEFT JOIN controlelotepcprecap CLR ON (CLR.id = MLP.idcontrolelotepcprecap)
         where OPR.id = $nr_ordem
         group by IPP.idpedidopneu, OPR.id, PP.idpessoa, P.NM_PESSOA, SP.dsservico, MODELO, MD.dsmedidapneu,
-        PN.nrserie, PN.nrfogo, PN.nrdot, LOPR.idmontagemlotepcp";
+        PN.nrserie, PN.nrfogo, PN.nrdot, LOPR.idmontagemlotepcp, OPR.stalterando";
 
         return DB::connection($this->setConnet())->select($query);
     }

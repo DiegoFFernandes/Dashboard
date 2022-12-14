@@ -60,7 +60,13 @@ class AcompanhaOrdemController extends Controller
     /* verifica se a ordem e maior que o limite //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
     if ($nr_ordem >= 9999999999) {
       $sem_info = 0;
-      return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem', 'etapas'));
+      return view('admin.producao.acompanha-ordem', compact(
+        'user_auth',
+        'uri',
+        'sem_info',
+        'nr_ordem',
+        'etapas'
+      ));
     }
 
     /*Com a informação do usuario, consulta no banco e pega o ID do itempedidopneu*/
@@ -69,7 +75,13 @@ class AcompanhaOrdemController extends Controller
     /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
     if (empty($iditempedidopneu[0]->IDITEMPEDIDOPNEU)) {
       $sem_info = 0;
-      return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem', 'etapas'));
+      return view('admin.producao.acompanha-ordem', compact(
+        'user_auth',
+        'uri',
+        'sem_info',
+        'nr_ordem',
+        'etapas'
+      ));
     }
     /*Consulta no Banco através do IDPEDIDOPNEU buscando os setores que a ordem passou RRC016*/
     $status_etapas = $this->acompanha->BuscaSetores($iditempedidopneu[0]->IDITEMPEDIDOPNEU);
@@ -77,11 +89,23 @@ class AcompanhaOrdemController extends Controller
     /*Verifica se a consulta do banco e um array vazio //VALIDAR ISSO COM UMA FUNÇÃO TA NA GAMBIS se sim redireciona */
     if ($status_etapas === []) {
       $sem_info = $status_etapas;
-      return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem', 'etapas'));
+      return view('admin.producao.acompanha-ordem', compact(
+        'user_auth',
+        'uri',
+        'sem_info',
+        'nr_ordem',
+        'etapas'
+      ));
     }
     /* Consulta informações da ORDEM */
     $info_pneu = $this->acompanha->showDataPneus($nr_ordem);
-    return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'status_etapas', 'info_pneu', 'etapas'));
+    return view('admin.producao.acompanha-ordem', compact(
+      'user_auth',
+      'uri',
+      'status_etapas',
+      'info_pneu',
+      'etapas'
+    ));
   }
 
   public function layout()
@@ -99,12 +123,13 @@ class AcompanhaOrdemController extends Controller
       return view('admin.producao.acompanha-ordem', compact('user_auth', 'uri', 'sem_info', 'nr_ordem', 'etapas'));
     }
   }
+  // Desbloquea Ordem
   public function unlockOrder()
   {
     $ordem = Crypt::decrypt($this->request->nr_ordem);
     $unlock = $this->ordem->UnlockOrdem($ordem);
-    if($unlock){      
-      return redirect()->route('admin.producao.acompanha.ordem')->with('status', 'Ordem '.$ordem.' Desbloqueada com sucesso!');      
+    if ($unlock) {
+      return redirect()->route('admin.producao.acompanha.ordem')->with('status', 'Ordem ' . $ordem . ' Desbloqueada com sucesso!');
     }
   }
 }

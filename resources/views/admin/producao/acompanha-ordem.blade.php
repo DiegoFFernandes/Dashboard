@@ -21,7 +21,7 @@
                     <div class="tab-content no-padding">
                         <div class="tab-pane active" id="acompanhamento">
                             <div class="box-body" id="body-select">
-                                <div class="col-md-6 mb-4" style="margin-bottom: 2em">                                    
+                                <div class="col-md-6 mb-4" style="margin-bottom: 2em">
                                     <!-- /.box-header -->
                                     <form class="form" action="{{ route('admin.producao.acompanha.ordem') }}"
                                         method="post">
@@ -48,9 +48,12 @@
                                                 <h3 class="box-title">Informações da Ordem -
                                                     {{ $info_pneu[0]->ORDEM }}</h3>
                                                 <div class="box-tools pull-right">
-                                                    <a href="{{route('unlock-order', ['nr_ordem' => Crypt::encrypt($info_pneu[0]->ORDEM )])}}" class="btn btn-warning btn-sm">Desbloquear</a>
-                                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                                            class="fa fa-plus"></i>
+                                                    @if ($info_pneu[0]->ALTERANDO == 'D')
+                                                        <a href="{{ route('unlock-order', ['nr_ordem' => Crypt::encrypt($info_pneu[0]->ORDEM)]) }}"
+                                                            class="btn btn-warning btn-sm">Desbloquear</a>
+                                                    @endif
+                                                    <button type="button" class="btn btn-box-tool"
+                                                        data-widget="collapse"><i class="fa fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </div>

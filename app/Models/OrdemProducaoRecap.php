@@ -18,7 +18,7 @@ class OrdemProducaoRecap extends Model
 
     public function setConnet()
     {
-        return $this->connection = Auth::user()->conexao;
+        return $this->connection = 'firebird_campina';
     }
 
     public function UnlockOrdem($ordem)

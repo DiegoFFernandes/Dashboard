@@ -10,6 +10,7 @@ use App\Models\Maquina;
 use App\Models\PictureTicket;
 use App\Models\Ticket;
 use App\Models\TicketAcompanhamento;
+use BaconQrCode\Encoder\QrCode;
 use Exception;
 use Helper;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
 use Yajra\DataTables\Facades\DataTables;
 
 class ManutencaoController extends Controller
@@ -140,7 +143,7 @@ class ManutencaoController extends Controller
                 }
             })
             ->make(true);
-    }
+    }    
     public function chatTickets()
     {
         $data = $this->acompanhamento->listAcompanhamentoTickets($this->request->id);
@@ -233,7 +236,7 @@ class ManutencaoController extends Controller
         $etapa_maquina = $this->etapa_maquina->maquinaAll();
         $maquinas = $this->maquina->all();
         $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
-        $etapas = $this->etapas->all();
+        $etapas = $this->etapas::select('dsetapaempresa', 'cd_etapa as id')->where('cd_etapa', '<>', 0)->get();
 
 
         return view('admin.manutencao.machines', compact(
@@ -243,12 +246,78 @@ class ManutencaoController extends Controller
             'maquinas',
             'empresas',
             'etapas',
-            'maquinas', 'etapa_maquina'
+            'maquinas',
+            'etapa_maquina'
         ));
     }
-    public function searchMaquinas(Request $request)
+    public function associatePhases()
     {
-        return true;
+
+        $maquina = $this->__validade($this->request);
+
+        if ($maquina->fails()) {
+            $error = '<ul>';
+
+            foreach ($maquina->errors()->all() as $e) {
+                $error .= '<li>' . $e . '</li>';
+            }
+            $error .= '</ul>';
+
+            return response()->json([
+                'error' => $error
+            ]);
+        }
+        $store = $this->etapa_maquina->StoreData($maquina->validated());
+        if ($store) {
+            return response()->json(['success' => 'Maquina associada com sucesso, cód.: ' . $store->id]);
+        }
+    }
+    public function __validade($request)
+    {
+        return Validator::make(
+            $request->all(),
+            [
+                'empresa' => 'required|integer',
+                'maquina' => 'required|integer',
+                'seq_maquina' => 'required|integer',
+                'etapa' => 'required|integer',
+            ],
+            [
+                'empresa.integer' => 'Cód. Empresa de ser do tipo inteiro',
+                'empresa.required' => 'Empresa e obrigatória',
+                'maquina.integer' => 'Cód. Maquina de ser do tipo inteiro',
+                'maquina.required' => 'Maquina é obrigatória',
+                'seq_maquina.required' => 'Sequencia da maquina é obrigatória',
+                'etapa.required' => 'Etapa do setor é obrigatória.',
+            ]
+        );
+    }
+    public function editPhases()
+    {
+        $etapa = EtapaMaquina::findOrFail($this->request->id);
+        return response()->json($etapa);
+    }
+    public function updatePhases()
+    {        
+        $maquina = $this->etapa_maquina::findOrFail($this->request->id);
+        $validate = $this->__validade($this->request);
+        $validate = $validate->validated();
+        $cd_barras = $validate['empresa'].$validate['etapa'].$validate['seq_maquina'];        
+
+        $maquina['cd_empresa'] = $validate['empresa'];
+        $maquina['cd_maquina'] = $validate['maquina'];
+        $maquina['cd_etapa_producao'] = $validate['etapa'];
+        $maquina['cd_seq_maq'] = $validate['seq_maquina'];
+        $maquina['cd_barras'] = $cd_barras;
+        $update = $maquina->save();
+        if($update){
+            return response()->json([ 'success'=> 'Maquina editada com sucesso!']);
+        }else{
+            return response()->json(['error'=> 'Houve algum erro ao Editar favor contatar o TI!']);
+        }
+
         
+
+       
     }
 }

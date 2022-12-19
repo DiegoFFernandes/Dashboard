@@ -31,7 +31,8 @@
                                             <td>{{ $m->ds_maquina }}</td>
                                             <td>{{ $m->cd_barras }}</td>
                                             <td>{!! QrCode::generate($m->cd_barras) !!}</td>
-                                            <td><button class="btn btn-primary">Editar</button></td>
+                                            <td><button class="btn btn-primary btn-edit btn-sm"
+                                                    data-id="{{ $m->id }}">Editar</button></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -41,8 +42,8 @@
                 </div>
             </div>
         </div>
-        {{-- Create Motorista Veiculo --}}
-        <div class="modal" id="CreateMachineSetor">
+        {{-- Associar Maquina / Setor --}}
+        <div class="modal" id="CreateEditMachineSetor">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- Modal Header -->
@@ -58,10 +59,11 @@
                         </div>
                         <div class="col-md-12">
                             <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
+                            <input id="id_machine" type="hidden" type="number">
                             <div class="form-group">
                                 <label>Empresa:</label>
                                 <select class="form-control" name="cd_empresa" id="cd_empresa">
-                                    <option selected>Selecione</option>
+                                    <option selected value="">Selecione</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->cd_empresa }}">{{ $empresa->ds_local }}
                                         </option>
@@ -90,11 +92,12 @@
                                     @endfor
                                     <select>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="SubmitCreateMarcaModeloForm">Criar</button>
+                        <button type="button" class="btn btn-success" id="SubmitAssociarMachine">Associar</button>
+                        <button type="button" class="btn btn-warning" id="SubmitEditMachine">Editar</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
@@ -111,44 +114,109 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#table-machines').DataTable({
-                dom: 'Blfrtip',
-                buttons: [{
-                    extend: 'pdfHtml5',
-                    download: 'open'
-                }],
-            });
+
+            function InitTable() {
+                $('#table-machines').DataTable({
+                    dom: 'Blfrtip',
+                    buttons: [{
+                            extend: 'pdfHtml5',
+                            download: 'open',
+                        },
+                        'print'
+                    ],
+                });
+            }
+            InitTable();
             $("#create").click(function() {
-                $('#CreateMachineSetor').modal('show');
+                $('#SubmitAssociarMachine').show();
+                $('#SubmitEditMachine').hide();
+
+                $('#CreateEditMachineSetor').modal('show');
             });
             $('#cd_maquina').select2();
-            // $('#cd_empresa').on('change', function(e) {
-            //     var empresa = ($(this).val());
-            //     $.ajax({
-            //         url: '{{ route('manutencao.seach-maquinas') }}?empresa='+empresa,
-            //         type: 'get',
-            //         success: function (res) {
-            //             $('#cd_maquina').html('<option value="">Selectione a maquina</option>');
-            //             // $.each(res, function (key, value) {
-            //             //     $('#state').append('<option value="' + value
-            //             //         .id + '">' + value.name + '</option>');
-            //             // });
+            $('#SubmitAssociarMachine').click(function() {
+                let empresa = $('#cd_empresa').val();
+                let maquina = $('#cd_maquina').val();
+                let seq_maquina = $('#seq_maquina').val();
+                let etapa = $('.etapas').val();
 
-            //         }
-            //     });
+                if (etapa == 0) {
+                    msgToastr('Selecione uma etapa', "warning");
+                    return false;
+                }
+                $.ajax({
+                    url: '{{ route('manutencao.associate-phases') }}',
+                    type: 'get',
+                    data: {
+                        _token: $("[name=csrf-token]").attr("content"),
+                        empresa: empresa,
+                        maquina: maquina,
+                        seq_maquina: seq_maquina,
+                        etapa: etapa
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(response) {
+                        $("#loading").addClass('hidden');
+                        if (response.error) {
+                            // toastr["warning"](response.error);
+                            msgToastr(response.error, "warning");
+                        } else {
+                            msgToastr(response.success, "success");
+
+                        };
+
+                    }
+                });
+
+            });
+
+            $('body').on('click', '.btn-edit', function(e) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('manutencao.edit-phases') }}",
+                    data: {
+                        _token: $("[name=csrf-token]").attr("content"),
+                        id: $(this).data('id'),
+                    },
+                    success: function(response) {
+                        $('#SubmitEditMachine').show();
+                        $('#SubmitAssociarMachine').hide();
+                        $('#id_machine').val(response['id']);
+                        $('#cd_empresa').val(response['cd_empresa']);
+                        $('.etapas').val(response['cd_etapa_producao']).trigger('change');
+                        $('#cd_maquina').val(response['cd_maquina']).trigger('change');
+                        $('#seq_maquina').val(response['cd_seq_maq']);
+                        $('#CreateEditMachineSetor').modal('show');
+                    }
+                });
+            });
+            $('#SubmitEditMachine').click(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('manutencao.update-phases') }}",
+                    data: {
+                        _token: $("[name=csrf-token]").attr("content"),
+                        id: $('#id_machine').val(),
+                        empresa: $('#cd_empresa').val(),
+                        etapa: $('.etapas').val(),
+                        maquina: $('#cd_maquina').val(),
+                        seq_maquina: $('#seq_maquina').val(),
+                    },
+                    success: function(response) {
+                        $('#CreateEditMachineSetor').modal('hide');
+                        if (response.error) {
+                            msgToastr(response.error, 'warning')
+                        } else {
+                            msgToastr(response.success, 'success');
+                            location.reload();
+                        }
+                    }
+                });
+            });
 
 
-            // });
-
-            // $("#cd_maq").on("keypress focusout", function(event) {
-            //     var keycode = (event.keyCode ? event.keyCode : event.which);
-            //     var cd_barras = $("#cd_maq").val();                
-            //     if (keycode == '9' || keycode == '13' || event.type == "focusout") {
-            //         $('.maquina').val(cd_barras).trigger('change');
-            //         return false;
-
-            //     }
-            // });
         });
     </script>
 @endsection

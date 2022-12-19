@@ -43,6 +43,10 @@
     <![endif]-->
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">  
+
+    <!-- Toastr CSS File -->
+    <link href="{{asset('adminlte/bower_components/toastr/toastr.min.css')}}" rel="stylesheet">  
+
     <!-- Template Main CSS File -->
     <link href="{{asset ('css/styleAdmin.css') }}" rel="stylesheet">
 

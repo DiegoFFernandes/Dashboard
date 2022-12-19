@@ -4,6 +4,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 
+
 {{-- Camera --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
 <!-- jQuery 3 -->
@@ -28,6 +29,9 @@ $.widget.bridge('uibutton', $.ui.button);
 <script src="{{asset('adminlte/bower_components/inputmask/dist/inputmask/inputmask.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/inputmask/dist/inputmask/inputmask.extensions.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/inputmask/dist/inputmask/jquery.inputmask.js')}}"></script>
+
+{{-- Toastr --}}
+<script src="{{asset('adminlte/bower_components/toastr/toastr.min.js')}}"></script>
 
 
 <!-- Bootstrap WYSIHTML5 -->

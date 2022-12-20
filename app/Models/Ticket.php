@@ -44,7 +44,7 @@ class Ticket extends Model
         ]);
     }
 
-    public function ListTickets($user)
+    public function ListTickets($user, $input, $wpp)
     {
         return Ticket::select(
             'tickets.id',
@@ -85,7 +85,11 @@ class Ticket extends Model
             }, function ($q) {
                 return $q->where('tickets.id_user', Auth::user()->id);
             })
-
+            ->when($wpp == 'sim', function ($q) use ($input) {
+                return $q->where('tickets.id', $input['id']);
+            }, function ($q) {
+                return;
+            })
             ->get();
     }
 }

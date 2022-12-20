@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
 use Yajra\DataTables\Facades\DataTables;
+use solutekWpp;
 
 class ManutencaoController extends Controller
 {
@@ -73,7 +74,12 @@ class ManutencaoController extends Controller
     public function store()
     {
         $validate = $this->__validate();
-        $etapa_maquina = EtapaMaquina::where('cd_barras', $validate['cd_maq'])->firstOrFail();
+        try {
+            $etapa_maquina = EtapaMaquina::where('cd_barras', $validate['cd_maq'])->firstOrFail();
+        } catch (\Exception $th) {
+            return redirect()->route('manutencao.index')->with('error', 'Cód de Qrcode da Maquina não existe, verificar se digitou corretamente ou verifique TI!');
+        }
+
         $validate['cd_empresa'] = $etapa_maquina->cd_empresa;
         $validate['status'] = 'P';
         $this->__validateFile();
@@ -81,6 +87,11 @@ class ManutencaoController extends Controller
         $ticket = $this->tickets->storeData($validate);
         $ticket['cd_user_resp'] = '';
         $ticket['type'] = 'C';
+
+        $find = $this->tickets->ListTickets($user = 0, $ticket, $wpp = 'sim');
+        $input = json_decode($find);
+
+        solutekWpp::DataMsgWpp($input);
 
         $this->acompanhamento->storeData($ticket);
 
@@ -97,7 +108,7 @@ class ManutencaoController extends Controller
                 $pictures->save();
             }
         }
-        return redirect()->route('manutencao.index')->with('status', 'Chamado criado com sucesso!');
+        return redirect()->route('manutencao.index')->with('message', 'Chamado criado com sucesso!');
     }
     public function __validate()
     {
@@ -125,7 +136,7 @@ class ManutencaoController extends Controller
             $user = '';
         }
 
-        $data = $this->tickets->ListTickets($user);
+        $data = $this->tickets->ListTickets($user, $input = 0, $wpp = 0);
         return DataTables::of($data)
             ->addColumn('actions', function ($data) {
                 $button = '<button type="button" class="btn btn-primary btn-sm" data-id="' . $data->id . '" id="pictures">Fotos</button>';
@@ -143,7 +154,7 @@ class ManutencaoController extends Controller
                 }
             })
             ->make(true);
-    }    
+    }
     public function chatTickets()
     {
         $data = $this->acompanhamento->listAcompanhamentoTickets($this->request->id);
@@ -298,11 +309,11 @@ class ManutencaoController extends Controller
         return response()->json($etapa);
     }
     public function updatePhases()
-    {        
+    {
         $maquina = $this->etapa_maquina::findOrFail($this->request->id);
         $validate = $this->__validade($this->request);
         $validate = $validate->validated();
-        $cd_barras = $validate['empresa'].$validate['etapa'].$validate['seq_maquina'];        
+        $cd_barras = $validate['empresa'] . $validate['etapa'] . $validate['seq_maquina'];
 
         $maquina['cd_empresa'] = $validate['empresa'];
         $maquina['cd_maquina'] = $validate['maquina'];
@@ -310,14 +321,19 @@ class ManutencaoController extends Controller
         $maquina['cd_seq_maq'] = $validate['seq_maquina'];
         $maquina['cd_barras'] = $cd_barras;
         $update = $maquina->save();
-        if($update){
-            return response()->json([ 'success'=> 'Maquina editada com sucesso!']);
-        }else{
-            return response()->json(['error'=> 'Houve algum erro ao Editar favor contatar o TI!']);
+        if ($update) {
+            return response()->json(['success' => 'Maquina editada com sucesso!']);
+        } else {
+            return response()->json(['error' => 'Houve algum erro ao Editar favor contatar o TI!']);
         }
+    }
+    public function SendWpp()
+    {
+        $ticket['id']  = 35;
+        $ticket = $this->tickets->ListTickets($user = 0, $ticket, $wpp = 'sim');
+        $input = json_decode($ticket);
 
-        
 
-       
+        return solutekWpp::DataMsgWpp($ticket);
     }
 }

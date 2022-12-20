@@ -174,7 +174,7 @@
 
             $('body').on('click', '.btn-edit', function(e) {
                 $.ajax({
-                    type: "GET",
+                    type: "POST",
                     url: "{{ route('manutencao.edit-phases') }}",
                     data: {
                         _token: $("[name=csrf-token]").attr("content"),
@@ -194,7 +194,7 @@
             });
             $('#SubmitEditMachine').click(function() {
                 $.ajax({
-                    type: "GET",
+                    type: "POST",
                     url: "{{ route('manutencao.update-phases') }}",
                     data: {
                         _token: $("[name=csrf-token]").attr("content"),

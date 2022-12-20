@@ -6,6 +6,7 @@ $(function() {
 });
 
 
+
 // Mascaras input
 $(document).ready(function() {
     $("#placa").inputmask({ mask: ['AAA9999', 'AAA9A99'] });

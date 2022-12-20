@@ -16,7 +16,9 @@ Route::middleware(['auth', 'role:admin|manutencao|coordenador'])->group(function
 
         Route::get('maquinas', [ManutencaoController::class, 'machines'])->name('manutencao.machines');        
         Route::get('associar-etapas', [ManutencaoController::class, 'associatePhases'])->name('manutencao.associate-phases');        
-        Route::get('editar-etapas', [ManutencaoController::class, 'editPhases'])->name('manutencao.edit-phases'); 
-        Route::get('update-etapas', [ManutencaoController::class, 'updatePhases'])->name('manutencao.update-phases');   
+        Route::post('editar-etapas', [ManutencaoController::class, 'editPhases'])->name('manutencao.edit-phases'); 
+        Route::post('update-etapas', [ManutencaoController::class, 'updatePhases'])->name('manutencao.update-phases');   
+
+        Route::get('send-wpp', [ManutencaoController::class, 'SendWpp']); 
     });
 });

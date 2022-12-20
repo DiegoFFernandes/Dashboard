@@ -50,7 +50,6 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                @includeIf('admin.master.messages')
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li>
@@ -301,9 +300,16 @@
 
 
             $('#btn-send').click(function() {
-                if ($('#tp_chamado').val() == 0 || $('#observacao').val() === '') {
-                    msg('Selecione os campos obrigatorios Tipo problema e Breve descrição!',
-                        'alert-warning');
+                // console.log($('.maquina').val());
+                // return false;
+                if ($('#tp_chamado').val() == 0 || $('#observacao').val() === '' || $('#cd_maq').val() ===
+                    '') {
+                    msgToastr(
+                        'Selecione os campos obrigatorios Tipo problema / Breve descrição / Cód Maquina!',
+                        'warning');
+                    event.preventDefault();
+                } else if ($('.maquina').val() === null) {
+                    msgToastr('Etapa maquina deve ser selecionada!', 'warning');
                     event.preventDefault();
                 } else {
                     $('#form-ticket').submit();
@@ -315,7 +321,7 @@
                 var teclaEnter = jQuery.Event("keypress");
                 teclaEnter.ctrlKey = false;
                 teclaEnter.which = 9; //Código da tecla Enter
-                console.log(decodedText);                
+                console.log(decodedText);
                 $("#cd_maq").trigger(teclaEnter);
                 $(".btn-close").trigger('click');
             };
@@ -325,7 +331,7 @@
             };
             $("#cd_maq").on("keypress focusout", function(event) {
                 var keycode = (event.keyCode ? event.keyCode : event.which);
-                var cd_barras = $("#cd_maq").val();                
+                var cd_barras = $("#cd_maq").val();
                 if (keycode == '9' || keycode == '13' || event.type == "focusout") {
                     $('.maquina').val(cd_barras).trigger('change');
                     return false;

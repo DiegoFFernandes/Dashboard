@@ -74,22 +74,33 @@ class EpisController extends Controller
     public function SaveEpiSetorOperador()
     {
 
+        // return $this->request->epis[0];
+        // return $this->request;
         $executor = ExecutorEtapa::findOrFail($this->request->executor);
         $etapa = EtapasProducaoPneu::findOrFail($this->request->etapa);
         $episEtapa = $this->epi_etapa->SearchEpisEtapas($this->request->etapa);
+        
+        foreach($episEtapa as $e){
+            $ids_epi[] = $e->id_epi;
+        }
+        $arrayDiferenca = array_diff($ids_epi, $this->request->epis);
 
+        // return isset($arrayDiferenca[0]);
         $existe = $this->epiexecutor->VerifyIfExists($executor->id, $etapa->id, date('Y-m-d'));
+        
         if($existe){
             return response()->json(['error' => 'Epis já associados para o operador hoje!']); 
         }
 
         foreach ($episEtapa as $key => $e) {
-            if ($e->id_epi == isset($this->request->epis[$key])) {
-                $this->epiexecutor->store($executor->id, $etapa->id, $e->id_epi, 'CF');
-            } else {
+            if ($e->id_epi == isset($arrayDiferenca[$key])) {
+                // echo $e->ds_epi ." = ". $e->id ."<b> não conforme</b></br>";
                 $this->epiexecutor->store($executor->id, $etapa->id, $e->id_epi, 'NF');
+            } else {
+                // echo $e->ds_epi .": ". $e->id." <b>conforme</b></br>";
+                $this->epiexecutor->store($executor->id, $etapa->id, $e->id_epi, 'CF');
             }
-        }
+        }        
         return response()->json(['success' => 'Epis associados para o operador!']);
     }
     public function RelatorioUsoEpi()

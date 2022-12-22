@@ -279,6 +279,13 @@ iframe {
     .small-box-info {
         height: auto;
     }
+    #tickets-existing .box-body .box-header {
+        height: 100px;
+    }
+    #tickets-existing .box-body .box-header .box-tools {
+        top: 40px;
+    }
+
 }
 
 .fa-minus-circle {

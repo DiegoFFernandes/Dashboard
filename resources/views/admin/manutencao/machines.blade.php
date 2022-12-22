@@ -16,9 +16,9 @@
                         <div class="col-md-12">
                             <table class="table table-sm" id="table-machines" style="width: 100%">
                                 <thead>
-                                    <th>Cód.</th>
-                                    <th>Empresa</th>
+                                    <th>Cód.</th>                                    
                                     <th>Descrição</th>
+                                    <th>Empresa</th>
                                     <th>Nr. Cód. QR</th>
                                     <th>QR Code</th>
                                     <th>Acões</th>
@@ -27,8 +27,8 @@
                                     @foreach ($etapa_maquina as $m)
                                         <tr>
                                             <td>{{ $m->id }}</td>
-                                            <td>{{ $m->cd_empresa }}</td>
                                             <td>{{ $m->ds_maquina }}</td>
+                                            <td>{{ $m->cd_empresa }}</td>                                            
                                             <td>{{ $m->cd_barras }}</td>
                                             <td>{!! QrCode::generate($m->cd_barras) !!}</td>
                                             <td><button class="btn btn-primary btn-edit btn-sm"
@@ -118,6 +118,8 @@
             function InitTable() {
                 $('#table-machines').DataTable({
                     dom: 'Blfrtip',
+                    responsive: true,
+                    pagingType: "simple",
                     buttons: [{
                             extend: 'pdfHtml5',
                             download: 'open',

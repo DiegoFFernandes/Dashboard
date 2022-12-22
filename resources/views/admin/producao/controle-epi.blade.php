@@ -9,8 +9,7 @@
                 <div class="box box-info collapsed-box">
                     <div class="box-header with-border">
                         <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                    class="fa fa-plus"></i>
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
                             </button>
                         </div>
                         <h4 class="box-title">Atualizar Executores</h4>
@@ -30,8 +29,7 @@
                         <li class="pull-left active"><a href="#operador-epi" data-toggle="tab" aria-expanded="true">Operador
                                 x Epi</a>
                         </li>
-                        <li class="pull-left"><a href="#relatorio-epi" data-toggle="tab"
-                                aria-expanded="false">Relatório</a>
+                        <li class="pull-left"><a href="#relatorio-epi" data-toggle="tab" aria-expanded="false">Relatório</a>
                         </li>
 
                         {{-- <li class="header"><i class="fa fa-inbox"></i> Controle Epi</li> --}}
@@ -118,6 +116,7 @@
 @endsection
 @section('scripts')
     @includeIf('admin.master.datatables')
+    <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             var executor, etapa;
@@ -192,25 +191,11 @@
                     beforeSend: function() {
                         // $('#epis-etapa').remove();
                     },
-                    success: function(result) {                        
+                    success: function(result) {
                         if (result.error) {
-                            setTimeout(function() {
-                                $(".alert").removeClass('alert-success hidden').addClass('alert-warning');
-                                $(".alert p").text(result.error);
-                            }, 400);
-                            window.setTimeout(function() {
-                                $(".alert").addClass('hidden');
-                            }, 4000);
+                            msgToastr(result.error, 'error');
                         } else {
-                            setTimeout(function() {
-                                $(".alert").removeClass('alert-warning hidden').addClass('alert-success');
-                                $(".alert p").text(result.success);
-                            }, 400);
-                            window.setTimeout(function() {
-                                $(".alert").addClass('hidden');
-                            }, 4000);
-                            // $('#btn-save').removeClass('hidden');
-                            // $('#body-select').append(result.html);
+                            msgToastr(result.success, 'success');
                         }
                     }
                 });

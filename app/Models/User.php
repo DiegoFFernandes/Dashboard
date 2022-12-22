@@ -26,6 +26,7 @@ class User extends Authenticatable
         'ds_tipopessoa',
         'empresa', 
         'conexao', 
+        'phone',
         'last_seen'
     ];
 

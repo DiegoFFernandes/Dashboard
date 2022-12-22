@@ -10,6 +10,7 @@ use App\Models\Maquina;
 use App\Models\PictureTicket;
 use App\Models\Ticket;
 use App\Models\TicketAcompanhamento;
+use App\Models\User;
 use BaconQrCode\Encoder\QrCode;
 use Exception;
 use Helper;
@@ -91,7 +92,7 @@ class ManutencaoController extends Controller
         $find = $this->tickets->ListTickets($user = 0, $ticket, $wpp = 'sim');
         $input = json_decode($find);
 
-        solutekWpp::DataMsgWpp($input);
+        solutekWpp::DataMsgWpp($input, $status = 0);
 
         $this->acompanhamento->storeData($ticket);
 
@@ -136,7 +137,10 @@ class ManutencaoController extends Controller
             $user = '';
         }
 
-        $data = $this->tickets->ListTickets($user, $input = 0, $wpp = 0);
+        
+        $status = $this->request->validate(['status' => 'required:in:P,A,F']);
+        
+        $data = $this->tickets->ListTickets($user, $input = 0, $wpp = 0, $status);
         return DataTables::of($data)
             ->addColumn('actions', function ($data) {
                 $button = '<button type="button" class="btn btn-primary btn-sm" data-id="' . $data->id . '" id="pictures">Fotos</button>';
@@ -209,12 +213,20 @@ class ManutencaoController extends Controller
         }
 
         $ticket['observacao'] = $this->request->observacao;
-        $this->acompanhamento->storeData($ticket);
+        $store = $this->acompanhamento->storeData($ticket);
+
+        $user_create = User::find($store->cd_user_create);
+        $store['user_create'] = $user_create->name;
+        $store['phone_create'] = $user_create->phone;
+        $store['user_resolve'] = $this->user->name;
+        $store['phone_resolve'] = $this->user->phone;        
 
         if ($this->request->status_ticket == "A") {
-            return redirect()->route('manutencao.index')->with('warning', 'Feito Acompanhamento com sucesso!');
+            solutekWpp::DataMsgWpp($store, $status = 'acompanhamento'); //Dispara uma mensagem com acompanhamento.
+            return redirect()->route('manutencao.index')->with('message', 'Feito Acompanhamento com sucesso!');
         } else {
-            return redirect()->route('manutencao.index')->with('status', 'Finalizado com sucesso!');
+            solutekWpp::DataMsgWpp($store, $status = 'finalizado'); //Dispara uma mensagem de finalização.
+            return redirect()->route('manutencao.index')->with('message', 'Finalizado com sucesso!');
         }
     }
     public function reOpen()
@@ -329,11 +341,17 @@ class ManutencaoController extends Controller
     }
     public function SendWpp()
     {
-        $ticket['id']  = 35;
-        $ticket = $this->tickets->ListTickets($user = 0, $ticket, $wpp = 'sim');
-        $input = json_decode($ticket);
+        $store = $this->acompanhamento::find(45);
+        // $input = json_decode($store);
+        $user_create = User::find($store->cd_user_create);
+
+        $store['user_create'] = $user_create->name;
+        $store['phone_create'] = $user_create->phone;
+        $store['user_resolve'] = $this->user->name;
+        $store['phone_resolve'] = $this->user->phone;
 
 
-        return solutekWpp::DataMsgWpp($ticket);
+        // return $store;
+        return solutekWpp::DataMsgWpp($store, $status = 'finalizado');
     }
 }

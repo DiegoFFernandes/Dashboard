@@ -8,6 +8,7 @@ use App\Models\EmpresasGrupoPessoa;
 use App\Models\Pessoa;
 use App\Models\TipoPessoa;
 use App\Models\User;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -68,13 +69,15 @@ class UserController extends Controller
         $request['ds_tipopessoa'] = $this->verifyTipoPessoa($this->request->ds_tipopessoa);
         $request['email'] = strtolower($this->request->email);
         $request['name'] = mb_convert_case($this->request->name, MB_CASE_TITLE, 'UTF-8');
+        $request['phone'] = Helper::RemoveSpecialChar($this->request->phone);
+       
         $user                = $this->_validade($request);
         $user                = User::create($user);
         if ($user->ds_tipopessoa == 'Cliente' || $user->ds_tipopessoa == 'Cliente e fornecedor') {
             $user->assignRole('acesso-cliente');
         }
 
-        return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário criado com sucesso!');
+        return redirect()->route('admin.usuarios.listar')->with('message', 'Usuário criado com sucesso!');
     }
     public function edit(Request $request)
     {
@@ -102,6 +105,7 @@ class UserController extends Controller
         $request['ds_tipopessoa'] = $this->verifyTipoPessoa($this->request->ds_tipopessoa);
         $request['email']    = $request->email;
         $request['empresa']  = $request->empresa;
+        $request['phone'] = Helper::RemoveSpecialChar($this->request->phone);
         $data             = $this->_validade($request);
 
         if ($user->password == $request->password) {
@@ -120,7 +124,7 @@ class UserController extends Controller
         $user->fill($data);
         $status = $user->save();
         if ($status == 1) {
-            return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário atualizado com sucesso!');
+            return redirect()->route('admin.usuarios.listar')->with('message', 'Usuário atualizado com sucesso!');
         } else {
             return redirect()->route('admin.usuarios.listar')->with('warning', 'Ouve algum erro!');
         }
@@ -131,11 +135,11 @@ class UserController extends Controller
         try {
             $user = User::findOrFail($id);
             $user->delete();
-            return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário deletado com sucesso!');
+            return redirect()->route('admin.usuarios.listar')->with('info', 'Usuário deletado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('admin.usuarios.listar')->with('warning', 'Usúario não pode ser excluido, está associados a outras tabelas do banco de dados!');
         }        
-        return redirect()->route('admin.usuarios.listar')->with('status', 'Usuário deletado com sucesso!');
+        return redirect()->route('admin.usuarios.listar')->with('info', 'Usuário deletado com sucesso!');
     }
     public function _validade(Request $request)
     {
@@ -147,6 +151,7 @@ class UserController extends Controller
                 'password' => 'required', 'alpha_num',
                 'empresa'  => 'required', 'integer:1,2,3,21,22',
                 'cd_pessoa' => 'integer',
+                'phone' => 'numeric|min:10',
                 'ds_tipopessoa' => 'required|max:60',
                 'conexao' => 'max:30',
             ],
@@ -155,6 +160,7 @@ class UserController extends Controller
                 'email.required'    => 'Por favor informe um email.',
                 'password.required' => 'Por favor informe uma senha.',
                 'empresa.required'  => 'Por favor informe uma empresa valida.',
+                'phone.numeric' => 'Celular deve numerico',
             ]
         );
     }
@@ -173,7 +179,7 @@ class UserController extends Controller
 
         User::find($this->user->id)->update(['password' => Hash::make($request->password)]);
 
-        return response()->json(['success' => 'Perfil atualizado com sucesso! Você será redirecionado a home para entrar novamente.']);
+        return response()->json(['message' => 'Perfil atualizado com sucesso! Você será redirecionado a home para entrar novamente.']);
     }
     public function searchPessoa()
     {

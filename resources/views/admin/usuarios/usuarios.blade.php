@@ -17,32 +17,53 @@
                         @csrf
                         <div class="box-body">
                             @includeIf('admin.master.messages')
+
                             <div class="form-group">
                                 @if (isset($user_id->name))
                                     <input type="hidden" name="id" value="{{ $user_id->id }}">
-                                @endif                                
+                                @endif
+                            </div>
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="pessoa">Pessoa:</label>
-                                    <select name='cd_pessoa' class="form-control" id="pessoa">                                        
+                                    <select name='cd_pessoa' class="form-control" id="pessoa" style="width: 100%">
                                     </select>
                                 </div>
-                                <label for="name">Nome:</label>
-                                <input type="name" name='name' class="form-control" id="name" placeholder="Nome usuario"
-                                    value="{{ isset($user_id->name) ? $user_id->name : '' }}" required>
                             </div>
-                            <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="name">Nome:</label>
+                                    <input type="name" name='name' class="form-control" id="name"
+                                        placeholder="Nome usuario" value="{{ isset($user_id->name) ? $user_id->name : '' }}"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
                                 <label for="email">Email:</label>
-                                <input type="email" name='email' class="form-control" id="email" placeholder="Email"
-                                    value="{{ isset($user_id->email) ? $user_id->email : '' }}" required>
+                                <div class="form-group">
+                                    <input type="email" name='email' class="form-control" id="email"
+                                        placeholder="Email" value="{{ isset($user_id->email) ? $user_id->email : '' }}"
+                                        required>
+                                </div>
                             </div>
+                            <div class="col-md-4">
+                                <label for="email">Celular:</label>
+                                <div class="form-group">
+                                    <input type="text" name='phone' class="form-control" id="phone"
+                                        placeholder="(99)99999-9999" value="{{ isset($user_id->phone) ? $user_id->phone : '' }}"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
                             <div class="form-group">
                                 <label for="password">Senha:</label>
                                 <input type="password" name='password' class="form-control" id="password"
                                     placeholder="Digite uma senha"
                                     value="{{ isset($user_id->password) ? $user_id->password : '' }}" required>
                             </div>
+                            </div>
                             <!-- select -->
-                            <div class="col-md-6 pl-0">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Empresa Principal:</label>
                                     <select class="form-control" name="empresa">
@@ -81,7 +102,7 @@
                                             @foreach ($tipopessoa as $t)
                                                 @if ($user_id->ds_tipopessoa == ucfirst(strtolower($t->DS_TIPOPESSOA)))
                                                     <option value="{{ $t->CD_TIPOPESSOA }}">
-                                                        {{ ucfirst(strtolower($t->DS_TIPOPESSOA))}}
+                                                        {{ ucfirst(strtolower($t->DS_TIPOPESSOA)) }}
                                                     </option>
                                                 @endif
                                             @endforeach
@@ -182,24 +203,25 @@
 @endsection
 @section('scripts')
     @includeIf('admin.master.datatables')
+    <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#table-users').DataTable({
                 pagingType: "simple",
                 language: {
-                    url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                 },
                 responsive: true,
                 "order": [
                     [1, "asc"]
                 ],
             });
-            $('#pessoa').select2({                
+            $('#pessoa').select2({
                 placeholder: "{{ isset($user_id->name) ? $user_id->name : 'Pessoa' }}",
                 allowClear: true,
                 ajax: {
                     url: '{{ route('admin.usuarios.search-pessoa') }}',
-                    dataType: 'json',                    
+                    dataType: 'json',
                     delay: 250,
                     processResults: function(data) {
                         return {
@@ -208,7 +230,8 @@
                                     text: item.NM_PESSOA,
                                     id: item.ID,
                                     email: item.DS_EMAIL,
-                                    tipopessoa: item.CD_TIPOPESSOA
+                                    tipopessoa: item.CD_TIPOPESSOA, 
+                                    phone: item.NR_CELULAR
                                 }
                             })
 
@@ -220,7 +243,8 @@
                 var data = $(el.target).select2('data');
                 $('#name').val(data[0].text);
                 $('#email').val(data[0].email);
-                $('#ds_tipopessoa').val(data[0].tipopessoa)
+                $('#ds_tipopessoa').val(data[0].tipopessoa);
+                $('#phone').val(data[0].phone);
             });
         });
     </script>

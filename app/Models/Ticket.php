@@ -24,7 +24,7 @@ class Ticket extends Model
         'tp_problema',
         'maq_parada',
         'observacao',
-        'id_user', 
+        'id_user',
         'status'
     ];
 
@@ -44,7 +44,7 @@ class Ticket extends Model
         ]);
     }
 
-    public function ListTickets($user, $input, $wpp)
+    public function ListTickets($user, $input, $wpp, $status)
     {
         return Ticket::select(
             'tickets.id',
@@ -90,6 +90,7 @@ class Ticket extends Model
             }, function ($q) {
                 return;
             })
+            ->whereIn('tickets.status', $status['status'])
             ->get();
     }
 }

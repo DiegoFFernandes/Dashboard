@@ -156,10 +156,36 @@
                         <div class="tab-pane active" id="tickets-existing">
                             {{-- <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}"> --}}
                             <div class="box-body">
+
                                 <div class="col-md-12" style="background-color: #ecf0f5">
                                     <div style="padding-bottom: 15px">
                                         <div class="box-header with-border" style="border-bottom: 1px solid #d1d1d1;">
                                             <h3 class="box-title" style="text-align: center;">Lista de chamados</h3>
+                                            <div class="box-tools pull-right">
+                                                <!-- checkbox -->
+                                                <div class="form-group">
+                                                    <label>
+                                                        <input type="checkbox" class="minimal" name="status"
+                                                            value="R" checked>
+                                                        Reaberto
+                                                    </label>
+                                                    <label>
+                                                        <input type="checkbox" class="minimal" name="status"
+                                                            value="P" checked>
+                                                        Pendentes
+                                                    </label>
+                                                    <label>
+                                                        <input type="checkbox" class="minimal" name="status"
+                                                            value="A" checked>
+                                                        Andamento
+                                                    </label>
+                                                    <label>
+                                                        <input type="checkbox" class="minimal" name="status"
+                                                            value="F">
+                                                        Finalizado
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <table class="table compact" id="table-tickets" style="font-size: 12px">
@@ -297,7 +323,30 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+            // // iCheck for checkbox and radio inputs
+            // $('input[type="checkbox"].minimal').on('ifChecked ifUnchecked', function(event){
+            //   console.log(this.id)
+            // }).iCheck({
+            //     checkboxClass: 'icheckbox_minimal-red',
+            //     radioClass: 'iradio_minimal-red'
+            // });
+            var status;
 
+            status = ArrCheck();
+
+            $('.minimal').click(function() {
+                status = ArrCheck();
+                console.log(status);
+                if (status.length === 0) {
+                    msgToastr('Algum campo de status deve estar preenchido', 'warning');
+                    event.preventDefault();
+                } else {
+                    $('#table-tickets').DataTable().clear().destroy();
+                    console.log(status);
+                    initTable(status);
+                }
+
+            });
 
             $('#btn-send').click(function() {
                 // console.log($('.maquina').val());
@@ -385,67 +434,83 @@
                 }
 
             });
+            initTable(status);
 
-            var table = $('#table-tickets');
-            table.DataTable({
-                language: {
-                    url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
-                },
-                responsive: true,
-                pagingType: "simple",
-                processing: false,
-                ajax: {
-                    url: "{{ route('manutencao.get-tickets') }}"
-                },
-                columns: [{
-                        data: 'id',
-                        name: 'id',
+            function ArrCheck() {
+                var arr = [];
+                $.each($("input[name='status']:checked"), function() {
+                    arr.push($(this).val());
+                });
+                return arr;
+            }
+
+            function initTable(status) {
+                var table = $('#table-tickets');
+                table.DataTable({
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
-                    {
-                        data: 'maquina',
-                        name: 'maquina',
+                    "pageLength": 50,
+                    responsive: true,
+                    pagingType: "simple",
+                    processing: false,
+                    ajax: {
+                        url: "{{ route('manutencao.get-tickets') }}",
+                        data: {
+                            status: status
+                        }
                     },
-                    {
-                        data: 'prioridade',
-                        name: 'prioridade',
-                    },
-                    {
-                        data: 'tp_problema',
-                        name: 'tp_problema',
-                    },
-                    {
-                        data: 'parada',
-                        name: 'parada',
-                    },
-                    {
-                        data: 'name',
-                        name: 'name',
-                    },
-                    {
-                        data: 'empresa',
-                        name: 'empresa',
-                    },
-                    {
-                        data: 'status',
-                        name: 'status',
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at',
-                    },
-                    {
-                        data: 'actions',
-                        name: 'actions',
-                    },
-                ],
-                order: [
-                    [0, "desc"]
-                ],
-            });
+                    columns: [{
+                            data: 'id',
+                            name: 'id',
+                        },
+                        {
+                            data: 'maquina',
+                            name: 'maquina',
+                        },
+                        {
+                            data: 'prioridade',
+                            name: 'prioridade',
+                        },
+                        {
+                            data: 'tp_problema',
+                            name: 'tp_problema',
+                        },
+                        {
+                            data: 'parada',
+                            name: 'parada',
+                        },
+                        {
+                            data: 'name',
+                            name: 'name',
+                        },
+                        {
+                            data: 'empresa',
+                            name: 'empresa',
+                        },
+                        {
+                            data: 'status',
+                            name: 'status',
+                        },
+                        {
+                            data: 'created_at',
+                            name: 'created_at',
+                        },
+                        {
+                            data: 'actions',
+                            name: 'actions',
+                        },
+                    ],
+                    order: [
+                        [0, "desc"]
+                    ],
+                });
+            }
+
 
             //Cliques nas tabs
             $('.nav-tabs a[href="#tickets-existing"]').on('click', function() {
-                table.DataTable().ajax.reload();
+                $('#table-tickets').DataTable().ajax.reload();
             });
             $('body').on('click', '#ticket-andamento', function(e) {
                 var ticketId = $(this).data('id');
@@ -530,7 +595,7 @@
                 var status = $('#status_ticket').val();
                 var ds_acompanhamento = $('#ds_acompanhamento').val();
                 if (ds_acompanhamento === '') {
-                    msg('Escreva uma breve descrição!', 'alert-warning');
+                    msgToastr('Escreva uma breve descrição!', 'warning');
                     return false;
                 } else {
                     $('#form-acompanhamento').submit();

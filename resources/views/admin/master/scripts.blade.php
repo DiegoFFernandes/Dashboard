@@ -33,6 +33,8 @@
 {{-- Toastr --}}
 <script src="{{ asset('adminlte/bower_components/toastr/toastr.min.js') }}"></script>
 
+{{-- icheck --}}
+<script src="{{ asset('adminlte/plugins/iCheck/icheck.min.js') }}"></script>
 
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{ asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>

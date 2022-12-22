@@ -3,10 +3,25 @@
 class solutekWpp
 {
 
-    static function DataMsgWpp($input)
+    static function DataMsgWpp($input, $status)
     {
-
-        $phones = explode(',', env('PHONE_TICKETS_MANUTENCION'));
+       
+        if ($status == 'acompanhamento') {
+            if ($input->type == "C") { //Se a mensagem for do criador dispara a mensagem para os responsaveis.
+                $phones = explode(',', env('PHONE_TICKETS_MANUTENCION'));
+                $mensagem = "Olá, teve um andamento no chamado da manunteção: *" . $input->cd_ticket . "*, pelo usuario *" . $input->user_create . "* com a seguinte descrição, *" . $input->message . "* , para mais detalhes acesse o portal.";
+            } else { //Se a mensagem for do resolvedor dispara a mensagem para o criador.
+                $phones = ['55' . $input->phone_create];
+                $mensagem = "Olá, teve um andamento no chamado da manutenção: *" . $input->cd_ticket . "*, pelo usuario *" . $input->user_resolve . "* com a seguinte descrição, *" . $input->message . "* , para mais detalhes acesse o portal.";
+            }
+        } elseif ($status == 'finalizado') {
+            $phones = ['55' . $input->phone_create];
+            $mensagem = "Olá, o chamado da manutenção: *" . $input->cd_ticket . "*, foi finalizado pelo usuario *" . $input->user_resolve . "* com a seguinte descrição, *" . $input->message . "* , para mais detalhes acesse o portal.";
+        
+        } else {
+            $phones = explode(',', env('PHONE_TICKETS_MANUTENCION'));
+            $mensagem = "Olá, foi aberto um chamado cód. *" . $input[0]->id . "* pelo responsavel, *" . $input[0]->name . "*, para a maquina *" . $input[0]->maquina . "*, com o problema *" . $input[0]->tp_problema . "*, a maquina *" . $input[0]->parada . "* está parada.\nEntre no portal para mais detalhes.\nNão e necessario responder está mensagem.";
+        }
 
         $email = env('EMAIL_SOLUTEK');
         $token = env('TOKEN_SOLUTEK');
@@ -25,7 +40,6 @@ class solutekWpp
         foreach ($phones as $p) {
             $idmsg = rand();
             $whatsapp = $p; //EX: 5581988888888
-            $mensagem = "Olá, foi aberto um chamado cód. *" . $input[0]->id . "* pelo responsavel, *" . $input[0]->name . "*, para a maquina *" . $input[0]->maquina . "*, com o problema *" . $input[0]->tp_problema . "*, a maquina *" . $input[0]->parada . "* está parada.\nEntre no portal para mais detalhes.\nNão e necessario responder está mensagem.";
             $dados['email'] = $email;
             $dados['token'] = $token;
             $dados['idapp'] = $idapp;
@@ -35,7 +49,7 @@ class solutekWpp
             $dados['whatsapp'] = $whatsapp;
             $dados['mensagem'] = $mensagem;
             $dados['emoji'] = $emoji;
-            
+
             $retorno = self::SendWpp($dados, 'https://www.solutek.online/api/whatsapp/gateway/json/' . $funcao . '');
         }
 
@@ -65,5 +79,8 @@ class solutekWpp
         curl_close($curl);
 
         return json_decode($executa_api);
+    }
+    static function LoadingData()
+    {
     }
 }

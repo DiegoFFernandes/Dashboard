@@ -13,6 +13,7 @@ $(document).ready(function() {
     $("#ano").inputmask("9999");
     $("#peso").inputmask("99,99");
     $("#cpf_cnpj").inputmask({ mask: ['999.999.999-99', '99.999.999/9999-99'] });
+    $('#phone').inputmask({mask:['(99)9999-9999', '(99)99999-9999']});
 
     $(".alert-geral").fadeTo(2000, 500).slideUp(500, function() {
         $(".alert-geral").slideUp(500);

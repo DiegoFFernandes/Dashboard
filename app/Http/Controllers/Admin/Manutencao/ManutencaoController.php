@@ -137,9 +137,8 @@ class ManutencaoController extends Controller
             $user = '';
         }
 
-        
         $status = $this->request->validate(['status' => 'required:in:P,A,F']);
-        
+
         $data = $this->tickets->ListTickets($user, $input = 0, $wpp = 0, $status);
         return DataTables::of($data)
             ->addColumn('actions', function ($data) {
@@ -219,7 +218,7 @@ class ManutencaoController extends Controller
         $store['user_create'] = $user_create->name;
         $store['phone_create'] = $user_create->phone;
         $store['user_resolve'] = $this->user->name;
-        $store['phone_resolve'] = $this->user->phone;        
+        $store['phone_resolve'] = $this->user->phone;
 
         if ($this->request->status_ticket == "A") {
             solutekWpp::DataMsgWpp($store, $status = 'acompanhamento'); //Dispara uma mensagem com acompanhamento.
@@ -354,4 +353,6 @@ class ManutencaoController extends Controller
         // return $store;
         return solutekWpp::DataMsgWpp($store, $status = 'finalizado');
     }
+    
+   
 }

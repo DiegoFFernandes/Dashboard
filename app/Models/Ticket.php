@@ -43,7 +43,6 @@ class Ticket extends Model
             'status' => $input['status']
         ]);
     }
-
     public function ListTickets($user, $input, $wpp, $status)
     {
         return Ticket::select(
@@ -91,6 +90,68 @@ class Ticket extends Model
                 return;
             })
             ->whereIn('tickets.status', $status['status'])
+            ->get();
+    }
+    public function ListTpProblem($status, $inicio, $fim, $empresa)
+    {
+        // return $status;
+        return Ticket::select(
+            'tickets.cd_empresa',
+            'tickets.cd_barras_etapa_maq as cd_barras',
+            DB::raw("concat(epp.dsetapaempresa,' - ',m.ds_maquina,' - ',em.cd_seq_maq) as ds_maquina"),
+            DB::raw("count(tickets.maq_parada) as qtd")
+        )
+            ->join('etapa_maquinas as em', 'em.cd_barras', 'tickets.cd_barras_etapa_maq')
+            ->join('etapasproducaopneus as epp', 'epp.cd_etapa', 'em.cd_etapa_producao')
+            ->join('maquinas as m', 'm.id', 'em.cd_maquina')
+            ->whereIn('tickets.maq_parada', $status)
+            ->when($inicio <> 0, function ($q) use ($inicio, $fim) {
+                return $q->whereBetween('tickets.created_at', [$inicio, $fim]);
+            })
+            ->when($empresa <> 0, function ($q) use ($empresa) {
+                return $q->where('tickets.cd_empresa', $empresa);
+            })
+            ->groupBy('cd_empresa', 'cd_barras', 'epp.dsetapaempresa', 'ds_maquina', 'cd_seq_maq')
+            ->orderBy('qtd', 'desc')
+            ->get();
+    }
+    public function timeTickets($inicio, $fim, $empresa)
+    {
+        return Ticket::select(
+            'tickets.cd_empresa',
+            'tickets.id',
+            DB::raw('timestampdiff(DAY, created_at, updated_at) as dias'),
+            DB::raw('timestampdiff(HOUR, created_at + INTERVAL TIMESTAMPDIFF(DAY, created_at, updated_at) DAY, updated_at) as horas'),
+            DB::raw('timestampdiff(MINUTE, created_at + INTERVAL TIMESTAMPDIFF(HOUR, created_at, updated_at) HOUR, updated_at) as minutos')
+        )
+            ->whereIn('tickets.status', ['F', 'A'])
+            ->when($inicio <> 0, function ($q) use ($inicio, $fim) {
+                return $q->whereBetween('tickets.created_at', [$inicio, $fim]);
+            })
+            ->when($empresa <> 0, function ($q) use ($empresa) {
+                return $q->where('tickets.cd_empresa', $empresa);
+            })
+            ->get();
+    }
+    public function averageTickets($inicio, $fim, $empresa)
+    {
+        return Ticket::select(
+            'tickets.cd_empresa',
+            DB::raw('format(SEC_TO_TIME(AVG(time_to_sec(TIMEDIFF(tickets.updated_at, tickets.created_at)))) / 60, 2) as espera_media'),
+            DB::raw("case tickets.status 
+                when 'P' then 'Pendente'
+                when 'A' then 'Andamento'  
+                when 'F' then 'Finalizado' 
+                when 'R' then 'Reaberto'       
+            end status"),
+        )
+            ->when($inicio <> 0, function ($q) use ($inicio, $fim) {
+                return $q->whereBetween('tickets.created_at', [$inicio, $fim]);
+            })
+            ->when($empresa <> 0, function ($q) use ($empresa) {
+                return $q->where('tickets.cd_empresa', $empresa);
+            })
+            ->groupBy('cd_empresa', 'tickets.status')
             ->get();
     }
 }

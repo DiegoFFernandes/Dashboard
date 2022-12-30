@@ -35,7 +35,9 @@ $(document).ready(function() {
         "hideEasing": "linear",
         "showMethod": "fadeIn",
         "hideMethod": "fadeOut"
-    }
+    };
+
+    
 
 });
 
@@ -73,4 +75,30 @@ function msg(msg, classe, icon) {
     window.setTimeout(function() {
         $("#alert-msg").addClass('hidden');
     }, 4000);
+}
+
+function ArrCheck() {
+    var arr = new Array();
+    $.each($("input[name='status']:checked"), function() {
+        arr.push($(this).val());
+    });
+    console.log(arr);
+    return arr;    
+}
+
+function ClickSelect(table){    
+    var status = ArrCheck();        
+        if (status.length === 0) {
+            msgToastr('Algum campo de status deve estar preenchido', 'warning');
+            event.preventDefault();
+        } else {
+            $(table).DataTable().clear().destroy();            
+            initTable(status);
+        }
+}
+
+function CheckedClick(){
+    $('.minimal').click(function() {
+        
+    });
 }

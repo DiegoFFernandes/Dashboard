@@ -18,8 +18,8 @@
                     </li>
                     @can('ver-acesso-cliente')
                         <li class="{{ request()->routeIs('cliente.dados-gerados-empresa.index') ? 'active' : '' }}"><a
-                                href="{{ route('cliente.dados-gerados-empresa.index') }}"><i
-                                    class="fa fa-file-pdf-o"></i>2º Via</a>
+                                href="{{ route('cliente.dados-gerados-empresa.index') }}"><i class="fa fa-file-pdf-o"></i>2º
+                                Via</a>
                         </li>
                     @endcan
                 </ul>
@@ -144,10 +144,10 @@
                             </li>
                         @endrole
                         @can('ver-usuario')
-                        <li class="{{ $uri == 'usuario/vincular-pessoas-usuario' ? 'active' : '' }}"><a
-                                href="{{ route('connect-people-user') }}">
-                                <i class="fa fa-plug"></i>Associar Pessoas/Usuarios</a>
-                        </li>
+                            <li class="{{ $uri == 'usuario/vincular-pessoas-usuario' ? 'active' : '' }}"><a
+                                    href="{{ route('connect-people-user') }}">
+                                    <i class="fa fa-plug"></i>Associar Pessoas/Usuarios</a>
+                            </li>
                         @endcan
                     </ul>
                 </li>
@@ -290,8 +290,8 @@
                                     </li>
                                     @can('ver-cancela-nota')
                                         <li class="{{ request()->routeIs('comercial.cancela-nota') ? 'active' : '' }}">
-                                            <a href="{{ route('comercial.cancela-nota') }}"><i
-                                                    class="fa fa-ban"></i>Cancelar Nota</a>
+                                            <a href="{{ route('comercial.cancela-nota') }}"><i class="fa fa-ban"></i>Cancelar
+                                                Nota</a>
                                         </li>
                                     @endcan
                                     @role('controladoria|admin')
@@ -344,8 +344,7 @@
                 </li>
             @endcanany
             @unlessrole('acesso-cliente')
-                <li class="treeview {{ request()->segment(1) == 'procedimento' ? 'active' : '' }}"
-                    style="height: auto;">
+                <li class="treeview {{ request()->segment(1) == 'procedimento' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-compass"></i> <span>Processos</span>
                         <span class="pull-right-container">
@@ -407,11 +406,11 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        <li class="active"><a href="{{ route('importa.index') }}"><i
-                                    class="fa fa-archive"></i>Importa Item Junsoft</a>
+                        <li class="active"><a href="{{ route('importa.index') }}"><i class="fa fa-archive"></i>Importa
+                                Item Junsoft</a>
                         </li>
-                        <li class="active"><a href="{{ route('estoque.index') }}"><i
-                                    class="fa fa-archive"></i>Criar Lote Estoque</a>
+                        <li class="active"><a href="{{ route('estoque.index') }}"><i class="fa fa-archive"></i>Criar
+                                Lote Estoque</a>
                         </li>
                     </ul>
                 </li>
@@ -445,7 +444,11 @@
                                 href="{{ route('manutencao.index') }}"><i class="fa fa-ticket "></i>Chamados</a>
                         </li>
                         <li class="{{ request()->routeIs('manutencao.machines') ? 'active' : '' }}"><a
-                            href="{{ route('manutencao.machines') }}"><i class="fa fa-flag "></i>Cadastro de Maquinas</a>
+                                href="{{ route('manutencao.machines') }}"><i class="fa fa-puzzle-piece"></i>Cadastro de
+                                Maquinas</a>
+                        </li>
+                        <li class="{{ request()->routeIs('manutencao-report') ? 'active' : '' }}"><a
+                            href="{{ route('manutencao-report') }}"><i class="fa fa-flag"></i>Relatório</a>
                     </li>
                     </ul>
                 </li>

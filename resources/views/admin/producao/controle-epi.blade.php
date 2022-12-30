@@ -281,15 +281,9 @@
                     beforeSend: function() {
                         $('#loading').removeClass('hidden');
                     },
-                    success: function(result) {
+                    success: function(result) {                     
                         $('#loading').addClass('hidden');
-                        setTimeout(function() {
-                            $(".alert").removeClass('hidden');
-                            $(".alert p").text(result.success);
-                        }, 400);
-                        window.setTimeout(function() {
-                            $(".alert").addClass('hidden');
-                        }, 3000);
+                        msgToastr(result.success, 'success');
                     }
                 });
             });

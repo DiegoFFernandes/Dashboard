@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Manutencao\ManutencaoController;
+use App\Http\Controllers\Admin\Manutencao\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin|manutencao|coordenador'])->group(function () {
@@ -19,6 +20,13 @@ Route::middleware(['auth', 'role:admin|manutencao|coordenador'])->group(function
         Route::post('editar-etapas', [ManutencaoController::class, 'editPhases'])->name('manutencao.edit-phases'); 
         Route::post('update-etapas', [ManutencaoController::class, 'updatePhases'])->name('manutencao.update-phases');   
 
-        Route::get('send-wpp', [ManutencaoController::class, 'SendWpp']); 
+        // Route::get('send-wpp', [ManutencaoController::class, 'SendWpp']); 
+
+        Route::get('relatorio', [ReportController::class, 'index'])->name('manutencao-report'); 
+
+        //ajax report
+        Route::get('defeito', [ReportController::class, 'tpProblem'])->name('manutencao.problem'); 
+        Route::get('tempo-chamados', [ReportController::class, 'timeTickets'])->name('manutencao.time-tickets'); 
+        Route::get('media-tempo-chamados', [ReportController::class, 'averageTickets'])->name('manutencao.average-tickets');
     });
 });

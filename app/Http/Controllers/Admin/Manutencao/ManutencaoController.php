@@ -89,7 +89,9 @@ class ManutencaoController extends Controller
         $ticket['cd_user_resp'] = '';
         $ticket['type'] = 'C';
 
-        $find = $this->tickets->ListTickets($user = 0, $ticket, $wpp = 'sim');
+        $find = $this->tickets->ListTickets($user = 0, $ticket, $wpp = 'sim', $status = 0);
+
+        //public function ListTickets($user, $input, $wpp, $status)
         $input = json_decode($find);
 
         solutekWpp::DataMsgWpp($input, $status = 0);

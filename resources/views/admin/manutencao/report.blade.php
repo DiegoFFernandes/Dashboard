@@ -101,7 +101,7 @@
                             <thead>
                                 <tr>
                                     <th>Emp</th>                                    
-                                    <th>Média Espera(Min)</th>                                    
+                                    <th>Média(Min)</th>                                    
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -259,7 +259,7 @@
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                 },
                 searching: false,
-                bPaginate: true,
+                bPaginate: false,
                 info: false,
                 processing: false,
 

@@ -89,7 +89,9 @@ class Ticket extends Model
             }, function ($q) {
                 return;
             })
-            ->whereIn('tickets.status', $status['status'])
+            ->when($status <> 0, function ($q) use ($status) {
+                return $q->whereIn('tickets.status', $status['status']);
+            })
             ->get();
     }
     public function ListTpProblem($status, $inicio, $fim, $empresa)
@@ -137,7 +139,9 @@ class Ticket extends Model
     {
         return Ticket::select(
             'tickets.cd_empresa',
-            DB::raw('format(SEC_TO_TIME(AVG(time_to_sec(TIMEDIFF(tickets.updated_at, tickets.created_at)))) / 60, 2) as espera_media'),
+            DB::raw('format((sum(timestampdiff(DAY, created_at, updated_at))*24*60 +
+            sum(timestampdiff(HOUR, created_at + INTERVAL TIMESTAMPDIFF(DAY, created_at, updated_at) DAY, updated_at))*60 +
+            sum(timestampdiff(MINUTE, created_at + INTERVAL TIMESTAMPDIFF(HOUR, created_at, updated_at) HOUR, updated_at))) / count(*),2) as espera_media'),
             DB::raw("case tickets.status 
                 when 'P' then 'Pendente'
                 when 'A' then 'Andamento'  

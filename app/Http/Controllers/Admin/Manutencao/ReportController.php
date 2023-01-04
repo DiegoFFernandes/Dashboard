@@ -17,6 +17,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ReportController extends Controller
 {
+    public $request, $etapas, $etapa_maquina, $maquina, $tickets, $acompanhamento, $picture, $empresa, $user;
+    
     public function __construct(
         Request $request,
         EtapasProducaoPneu $etapa,

@@ -26,6 +26,8 @@ use solutekWpp;
 
 class ManutencaoController extends Controller
 {
+    public $request, $etapas, $etapa_maquina, $maquina, $tickets, $acompanhamento, $picture, $empresa, $user;
+
     public function __construct(
         Request $request,
         EtapasProducaoPneu $etapa,
@@ -355,6 +357,4 @@ class ManutencaoController extends Controller
         // return $store;
         return solutekWpp::DataMsgWpp($store, $status = 'finalizado');
     }
-    
-   
 }

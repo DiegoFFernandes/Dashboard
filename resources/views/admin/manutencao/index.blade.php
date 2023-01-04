@@ -388,6 +388,10 @@
                 }
             });
             $('.maquina').select2();
+            $('.maquina').change(function(){
+                $('#cd_maq').val($(this).val());
+            })
+
             $('.btn-qr').click(function() {
                 $('#qr-reader').css("display", "block");
                 // Select front camera or fail with `OverconstrainedError`.
@@ -507,7 +511,6 @@
                 });
             }
 
-
             //Cliques nas tabs
             $('.nav-tabs a[href="#tickets-existing"]').on('click', function() {
                 $('#table-tickets').DataTable().ajax.reload();
@@ -560,7 +563,6 @@
                     }
                 });
             });
-
             $('#finalizar').click(function() {
                 $('#form-acompanhamento').show();
                 $('.label-acompanhamento').html('Solução:');

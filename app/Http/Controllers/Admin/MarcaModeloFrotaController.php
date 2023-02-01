@@ -60,7 +60,8 @@ class MarcaModeloFrotaController extends Controller
 
   public function getMarcaModelos(Request $request)
   {
-    $data = $this->marcamodelo->MarcaModeloAll();
+    $frota = 0;
+    $data = $this->marcamodelo->MarcaModeloAll($frota);
     return DataTables::of($data)
       ->addColumn('Actions', function ($data) {
         return '<button type="button" class="btn btn-success btn-sm" id="getEditMarcaModeloData" data-id="' . $data->id . '">Editar</button>

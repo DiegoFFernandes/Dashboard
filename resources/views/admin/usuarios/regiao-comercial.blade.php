@@ -138,7 +138,7 @@
             $('#cd_usuario').select2();
             $('#cd_usuario_modal').select2();
             $('#btn-vincular').click(function() {
-                let ds_regiaocomercial = $("#cd_regiaocomercial option:selected").text()
+                let ds_regiaocomercial = $("#cd_regiaocomercial option:selected").text();
                 let cd_regiaocomercial = $('#cd_regiaocomercial').val();
                 let cd_usuario = $('#cd_usuario').val();
                 $.ajax({

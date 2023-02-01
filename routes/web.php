@@ -237,6 +237,15 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('estoque')->group(function () {
+        Route::middleware(['auth', 'permission:ver-producao|ver-comercial-sul|ver-diretoria-sul'])->group(function () {
+            Route::get('saldo-estoque', [LoteEntradaEstoqueController::class, 'saldoEstoque'])->name('estoque.saldo-estoque');
+        });        
+    });
+});
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     //Rotas Pessoa
     Route::prefix('pessoa')->group(function () {
@@ -289,13 +298,15 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
     Route::prefix('importa-item-junsoft')->group(function () {
         Route::get('index', [ImportaItemJunsoftController::class, 'index'])->name('importa.index');
         Route::post('id-marca-ajax', [ImportaItemJunsoftController::class, 'AjaxImportaItem'])->name('importa-item.index');
+        Route::post('importa-motivo-pneu-ajax', [ImportaItemJunsoftController::class, 'AjaxImportaMotivoPneu'])->name('importa-motivo-pneu');
     });
     Route::prefix('estoque-entrada')->group(function () {
         Route::get('index', [LoteEntradaEstoqueController::class, 'index'])->name('estoque.index');
         Route::post('cria-lote', [LoteEntradaEstoqueController::class, 'store'])->name('estoque.cria-lote');
         Route::get('get-lotes', [LoteEntradaEstoqueController::class, 'getLotes'])->name('estoque.get-lotes');
         Route::post('finaliza-lote', [LoteEntradaEstoqueController::class, 'finishLote'])->name('estoque.finish-lote');
-        Route::delete('delete-lote', [LoteEntradaEstoqueController::class, 'delete'])->name('estoque.delete-lote');
+        Route::delete('delete-lote', [LoteEntradaEstoqueController::class, 'delete'])->name('estoque.delete-lote');     
+
 
         Route::get('add-item-lote/{id}', [ItemLoteEntradaEstoqueController::class, 'index'])->name('add-item-lote.index');
         Route::get('get-busca-item/{cd_barras}', [ItemLoteEntradaEstoqueController::class, 'getBuscaItem'])->name('get-item-lote');

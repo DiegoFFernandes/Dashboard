@@ -17,7 +17,7 @@ class MarcaModeloFrota extends Model
         'cd_usuario'
     ];
 
-    public function MarcaModeloAll()
+    public function MarcaModeloAll($frota)
     {
         return MarcaModeloFrota::select(
             'marca_modelo_frotas.id',
@@ -34,6 +34,9 @@ class MarcaModeloFrota extends Model
             ->join('modeloveiculos', 'modeloveiculos.id', 'marca_modelo_frotas.cd_modelo')
             ->join('users', 'users.id', 'marca_modelo_frotas.cd_usuario')
             ->join('frotaveiculos', 'frotaveiculos.id', 'marca_modelo_frotas.cd_frota')
+            ->when($frota = 1, function($d) use ($frota){
+                return $d->where('marca_modelo_frotas.cd_frota', $frota);
+            })
             ->orderBy('marca_modelo_frotas.id')
             ->get();
     }

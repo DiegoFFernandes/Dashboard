@@ -135,7 +135,7 @@ class ManutencaoController extends Controller
     }
     public function getTickets()
     {
-        if ($this->user->hasRole('admin')) {
+        if ($this->user->hasRole('admin|manutencao')) {
             $user = 'ver-todos-chamados';
         } else {
             $user = '';
@@ -293,6 +293,7 @@ class ManutencaoController extends Controller
                 'error' => $error
             ]);
         }
+        
         $store = $this->etapa_maquina->StoreData($maquina->validated());
         if ($store) {
             return response()->json(['success' => 'Maquina associada com sucesso, cód.: ' . $store->id]);

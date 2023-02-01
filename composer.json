@@ -42,7 +42,8 @@
             "app/Helpers/functions.php",
             "app/Helpers/PowerBIEmbedded.php",
             "app/Helpers/Helper.php",
-            "app/Helpers/SolutekWpp.php"
+            "app/Helpers/SolutekWpp.php",
+            "app/Helpers/Procedimento.php"
         ]
     },
     "autoload-dev": {

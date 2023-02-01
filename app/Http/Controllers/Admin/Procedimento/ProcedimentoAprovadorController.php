@@ -19,6 +19,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ProcedimentoAprovadorController extends Controller
 {
+    public $request, $procedimento, $aprovador, $recusa, $user;
+    
     public function __construct(
         Request $request,
         Procedimento $procedimento,

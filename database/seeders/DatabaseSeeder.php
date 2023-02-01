@@ -29,5 +29,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EpiEtapasProducaoTableSeeder::class);
         $this->call(MaquinaTableSeeder::class);
         $this->call(EtapaMaquinaTableSeeder::class);
+        $this->call(PosicaoPneuTableSeeder::class);
     }
 }

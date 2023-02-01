@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AcompanhamentoPneu;
 use App\Models\EtapasProducaoPneu;
 use App\Models\OrdemProducaoRecap;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -14,8 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class AcompanhaOrdemController extends Controller
 {
-  public $user;
-  public $resposta;
+  public $user, $request, $etapas, $ordem, $acompanha;
 
   public function __construct(
     Request $request,
@@ -31,10 +31,11 @@ class AcompanhaOrdemController extends Controller
       $this->user = Auth::user();
       return $next($request);
     });
-  }
+  }  
+
 
   public function index(Request $request)
-  {
+  {    
     $exploder  = explode('/', $this->request->route()->uri());
     $uri = $exploder[0] . "/" . $exploder[1];
     $user_auth = $this->user;

@@ -77,7 +77,7 @@ class ProcedimentoAprovador extends Model
     {
         return ProcedimentoAprovador::where('id_procedimento', $input)->update(['aprovado' => 'N']);
     }
-    public function verifyIfReleased($input)
+    static function verifyIfReleased($input)
     {
         return ProcedimentoAprovador::select('aprovado')
             ->where('id_procedimento', $input)
@@ -102,5 +102,14 @@ class ProcedimentoAprovador extends Model
         )
             ->join('users', 'users.id', 'procedimento_aprovadors.id_user')
             ->where('id_procedimento', $id)->get();
+    }
+    public function groupVerifyIfReleased(){
+        return ProcedimentoAprovador::select('procedimento_aprovadors.id_procedimento as id')
+        ->join('procedimentos as p', 'p.id', 'procedimento_aprovadors.id_procedimento')
+        ->where('procedimento_aprovadors.created_at', '<=', Config::get('constants.options.dt10days'))
+        ->where('procedimento_aprovadors.aprovado', '<>', 'R')
+        ->whereNotIn('p.status', ['L', 'R'])
+        ->groupBy('procedimento_aprovadors.id_procedimento')
+        ->get();
     }
 }

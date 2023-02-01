@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Config;
 
 class Helper
 {
+    public $request, $pessoa;
+
     public static function verificaMes($dt)
     {
         if ($dt == 0) {
@@ -58,8 +60,9 @@ class Helper
 
         return array("dti" => $datai, "dtf" => $dataf, 'nmes' => $nmes);
     }
-    public static function VerifyRegion($local){
-       return $local == 'firebird_campina' ? 'SUL' : 'NORTE';  
+    public static function VerifyRegion($local)
+    {
+        return $local == 'firebird_campina' ? 'SUL' : 'NORTE';
     }
     public function searchCliente()
     {
@@ -81,5 +84,23 @@ class Helper
 
         return true;
     }
-    
+    public static function Get_Client_Ip()
+    {
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if (isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if (isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if (isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if (isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else
+            $ipaddress = 'UNKNOWN';
+        return $ipaddress;
+    }
 }

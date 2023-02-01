@@ -18,12 +18,14 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Days;
+use ProcedimentoHelper;
 use stdClass;
 use Yajra\DataTables\DataTables as DataTablesDataTables;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProcedimentoController extends Controller
 {
+    public $request, $procedimento, $aprovador, $publish, $user, $setor;
     public function __construct(
         Request $request,
         Procedimento $procedimento,
@@ -49,6 +51,12 @@ class ProcedimentoController extends Controller
         $users        = User::where('id', '<>', 1)->get();
         $setors       = $this->setor->listData();
         $this->aprovador->updateIfCreateLargerDays();
+        $largeDays = $this->aprovador->groupVerifyIfReleased();
+        
+        foreach ($largeDays as $l){
+             ProcedimentoHelper::verifyIfRealeased($l);            
+        }
+       
         return view('admin.qualidade.index', compact(
             'title_page',
             'user_auth',

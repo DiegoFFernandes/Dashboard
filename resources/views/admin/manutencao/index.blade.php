@@ -389,7 +389,11 @@
             });
             $('.maquina').select2();
             $('.maquina').change(function(){
-                $('#cd_maq').val($(this).val());
+                if($(this).val() == 0){
+                    $('#cd_maq').val('');
+                }else{
+                    $('#cd_maq').val($(this).val());
+                }             
             })
 
             $('.btn-qr').click(function() {

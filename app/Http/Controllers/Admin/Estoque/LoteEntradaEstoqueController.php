@@ -14,6 +14,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class LoteEntradaEstoqueController extends Controller
 {
+    public  $empresa, $request, $lote, $itemlote, $user;
+
     public function __construct(
         Request $request,
         Empresa $empresa,
@@ -91,5 +93,12 @@ class LoteEntradaEstoqueController extends Controller
             ['tp_lote' => 'required'],
             ['tp_lote.required' => 'Tipo lote deve ser preenchido'],
         );
+    }
+
+    public function saldoEstoque(){
+        $title_page   = 'Saldo Estoque';
+        $user_auth    = $this->user;
+        $uri          = $this->request->route()->uri();
+        return view('admin.estoque.saldo-estoque-sul', compact('title_page', 'user_auth', 'uri'));
     }
 }

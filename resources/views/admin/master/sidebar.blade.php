@@ -314,6 +314,13 @@
                                             Acompanhamento Pedidos
                                         </a></li>
                                 @endcan
+                                @role('admin')
+                                    <li class="{{ request()->routeIs('analise-frota.index') ? 'active' : '' }}">
+                                        <a href="{{ route('analise-frota.index') }}">
+                                            <i class="fa fa-medkit"></i>Analise de Frota
+                                        </a>
+                                    </li>
+                                @endrole
                             </ul>
                         </li>
                     </ul>
@@ -397,7 +404,7 @@
                     </ul>
                 </li>
             @endrole
-            @role('admin|producao')
+            @canany(['ver-comercial-sul', 'ver-diretoria-sul', 'ver-producao'])
                 <li class="treeview" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-industry"></i> <span>Estoque</span>
@@ -406,15 +413,22 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        <li class="active"><a href="{{ route('importa.index') }}"><i class="fa fa-archive"></i>Importa
-                                Item Junsoft</a>
+                        @can('ver-producao')
+                            <li class="active"><a href="{{ route('importa.index') }}"><i class="fa fa-archive"></i>Importa
+                                    Item Junsoft</a>
+                            </li>
+                            <li class="active"><a href="{{ route('estoque.index') }}"><i class="fa fa-archive"></i>Criar
+                                    Lote Estoque</a>
+                            </li>
+                        @endcan
+                        @canany(['ver-comercial-sul', 'ver-diretoria-sul'])
+                        <li class="active"><a href="{{ route('estoque.saldo-estoque') }}"><i
+                                    class="fa fa-balance-scale"></i>Saldo Estoque</a>
                         </li>
-                        <li class="active"><a href="{{ route('estoque.index') }}"><i class="fa fa-archive"></i>Criar
-                                Lote Estoque</a>
-                        </li>
+                        @endcanany
                     </ul>
                 </li>
-            @endrole
+            @endcanany
             @role('admin|financeiro')
                 <li class="treeview {{ request()->segment(1) == 'financeiro' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
@@ -448,8 +462,8 @@
                                 Maquinas</a>
                         </li>
                         <li class="{{ request()->routeIs('manutencao-report') ? 'active' : '' }}"><a
-                            href="{{ route('manutencao-report') }}"><i class="fa fa-flag"></i>Relatório</a>
-                    </li>
+                                href="{{ route('manutencao-report') }}"><i class="fa fa-flag"></i>Relatório</a>
+                        </li>
                     </ul>
                 </li>
             @endrole

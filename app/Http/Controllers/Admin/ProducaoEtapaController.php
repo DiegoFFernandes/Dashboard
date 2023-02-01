@@ -595,7 +595,7 @@ class ProducaoEtapaController extends Controller
         }
         public function trocaServico()
         {
-                $uri       = $this->request->route()->uri();
+                $uri       = $this->request->route()->uri();                
                 $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
                 $user_auth = $this->user;
 
@@ -610,7 +610,8 @@ class ProducaoEtapaController extends Controller
                 if ($this->request->i == "A") {
                         $dt_ini = date('m-d-Y', strtotime('-1 days')) . " 00:00";
                         $dt_fim = date('m-d-Y') . " 23:59";
-                        $empresa = 3;
+                        $empresa = $this->user->empresa;
+
                 } else {
                         $empresa = Empresa::where('cd_empresa', $this->request->cdempresa)->firstOrFail();
                         $dt_ini = $this->request->dtini;

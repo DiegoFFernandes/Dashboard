@@ -9,8 +9,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ $title_page }}</h3>
                         <div class="box-tools box-right">
-                            <span data-toggle="tooltip" class="badge bg-green" style="display:none;">
-                                <i class="fa fa-plus add-item" aria-hidden="true"></i></span>
+                            <button class="btn btn-sm btn-primary add-item" style="display:none;">Incluir</button>
                         </div>
                     </div>
                     <div class="box-body">
@@ -173,13 +172,9 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="capture-image" style="display: none;">
+            <div class="modal fade" id="capture-image" data-backdrop="static" data-keyboard="false" style="display: none;">
                 <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span></button>
-                        </div>
+                    <div class="modal-content">                        
                         <div class="modal-body">
                             <div id="my_camera"></div>
 
@@ -214,6 +209,7 @@
             $('#modelo').select2();
             $('#posicao').select2();
             id = $('#id_analise').val();
+
             $("#table-add-item").DataTable({
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
@@ -282,6 +278,11 @@
                 width = 240;
                 height = 320;
             }
+            $('.add-item').click(function() {
+                $('#submit-edit-item').hide();
+                $('#submit-add-item').show();
+                clear();
+            });
             $("#open-camera").click(function() {
                 $('#take_picture').show();
                 $('#my_camera').show();
@@ -341,13 +342,21 @@
                             $("#confirmationButtonYes").click(function() {
                                 update_image = 1;
                                 EditStore("{{ route('edit-item-analysis') }}");
+                                clear();
+                                $('#submit-edit-item').hide();
+                                $('#submit-add-item').show();
                             });
                             $("#confirmationButtonNo").click(function() {
                                 update_image = 0;
                                 EditStore("{{ route('edit-item-analysis') }}");
+                                clear();
+                                $('#submit-edit-item').hide();
+                                $('#submit-add-item').show();
+
                             });
                         }
                     });
+
             });
             $("#table-add-item").on('click', '#delete-item', function() {
                 id = $(this).data('id');
@@ -390,7 +399,7 @@
                 pictures = [];
                 $('#submit-add-item').hide();
                 $('#submit-edit-item').show();
-                $('.badge').show();
+                $('.add-item').show();
                 var rowData = $('#table-add-item').DataTable().row($(this).parents('tr')).data();
                 if (rowData == undefined) {
                     var selected_row = $(this).parents('tr');
@@ -399,7 +408,6 @@
                     }
                     rowData = $('#table-add-item').DataTable().row(selected_row).data();
                 }
-                console.log(rowData);
                 $('#medida').val(rowData.id_medida).trigger('change');
                 $('#fogo').val(rowData.fogo);
                 $('#sulco').val(rowData.sulco);
@@ -417,18 +425,19 @@
                     url: "{{ route('finish-analysis') }}",
                     data: {
                         _token: $("[name=csrf-token]").attr("content"),
-                        id: id
+                        id: $('#id_analise').val()
                     },
-                    success: function(response) {                        
+                    success: function(response) {
                         if (response.error) {
                             msgToastr(response.error, 'error');
                         } else {
-                            toastr.success(response.success, 'Analise: ' + id,{
+                            toastr.success(response.success, 'Analise: ' + id, {
                                 closeButton: true,
                                 allowHtml: true,
                                 progressBar: true,
                                 onHidden: function() {
-                                    window.location.href = "{{ route('analise-frota.index') }}";
+                                    window.location.href =
+                                        "{{ route('analise-frota.index') }}";
                                 }
                             });
                         }
@@ -466,6 +475,18 @@
                 }
             });
 
+            function clear() {
+                $('#medida').val(0).trigger('change');
+                $('#fogo').val("");
+                $('#sulco').val("");
+                $('#dot').val("");
+                $('#ps').val("");
+                $('#modelo').val(0).trigger('change');
+                $('#motivo').val(0).trigger('change');
+                $('#posicao').val(0).trigger('change');
+                $('#id_item_analysis').val(0);
+            }
+
             function listPictures(pictures) {
                 $('#menu').empty();
                 $.each(pictures, function(indexInArray, valueOfElement) {
@@ -483,7 +504,7 @@
             function EditStore(url) {
                 id = $('#id_analise').val();
                 fogo = $('#fogo').val();
-                dot = $('#dot').val();                
+                dot = $('#dot').val();
                 sulco = $('#sulco').val();
                 id_modelo = $('#modelo').val();
                 ds_modelo = $('#modelo option:selected').text();
@@ -493,6 +514,7 @@
                 id_posicao = $('#posicao').val();
                 pressao = $('#ps').val();
                 id_item = $('#id_item_analysis').val();
+
                 $.ajax({
                     type: "post",
                     url: url,

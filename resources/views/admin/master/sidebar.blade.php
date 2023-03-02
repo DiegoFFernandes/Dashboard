@@ -314,13 +314,13 @@
                                             Acompanhamento Pedidos
                                         </a></li>
                                 @endcan
-                                @role('admin')
+                                @can('ver-analise-frota')
                                     <li class="{{ request()->routeIs('analise-frota.index') ? 'active' : '' }}">
                                         <a href="{{ route('analise-frota.index') }}">
-                                            <i class="fa fa-medkit"></i>Analise de Frota
+                                            <i class="fa fa-medkit"></i>Análise de Frota
                                         </a>
                                     </li>
-                                @endrole
+                                @endcan
                             </ul>
                         </li>
                     </ul>

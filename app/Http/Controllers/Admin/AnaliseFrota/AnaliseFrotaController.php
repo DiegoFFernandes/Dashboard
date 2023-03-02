@@ -128,7 +128,7 @@ class AnaliseFrotaController extends Controller
     {
     }
     public function finishAnalysis()
-    {
+    {        
         try {
             $analise = AnaliseFrota::findOrFail($this->request->id);
             $analise->status = 'F';

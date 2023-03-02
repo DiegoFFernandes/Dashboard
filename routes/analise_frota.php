@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\AnaliseFrota\AnaliseFrotaController;
 use App\Http\Controllers\Admin\AnaliseFrota\ItemAnaliseFrotaController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'permission:ver-analise-frota'])->group(function () {
     Route::prefix('analise-frota')->group(function () {
         Route::get('index', [AnaliseFrotaController::class, 'index'])->name('analise-frota.index');
 

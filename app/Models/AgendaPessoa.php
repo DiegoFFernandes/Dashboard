@@ -128,6 +128,7 @@ class AgendaPessoa extends Model
         where p.dt_cadastro between '$this->dti30dias' and '$this->dtf30dias'
             and p.cd_usuariocad not in ('ti02', 'ti04')
             and u.cd_emprpadrao = '3'
+            and p.cd_tipopessoa in (1,3)
         group by p.cd_usuariocad, u.nm_usuario
         
         union all
@@ -138,6 +139,7 @@ class AgendaPessoa extends Model
         where p.dt_cadastro between '$this->dti60dias' and '$this->dtf60dias'
             and p.cd_usuariocad not in ('ti02', 'ti04')
             and u.cd_emprpadrao = '3'
+            and p.cd_tipopessoa in (1,3)
         group by p.cd_usuariocad, u.nm_usuario
         
         union all
@@ -148,6 +150,7 @@ class AgendaPessoa extends Model
         where p.dt_cadastro between '$this->dti90dias' and '$this->dtf90dias'
             and p.cd_usuariocad not in ('ti02', 'ti04')
             and u.cd_emprpadrao = '3'
+            and p.cd_tipopessoa in (1,3)
         group by p.cd_usuariocad, u.nm_usuario
         )x
         group by x.cd_usuariocad, x.nm_usuario";
@@ -210,7 +213,6 @@ class AgendaPessoa extends Model
                     and p.dt_cadastro between '$dt' and '$dt'
                     and p.cd_tipopessoa = 1";
 
-        return DB::connection($this->setConnet())->select($query);
-        
+        return DB::connection($this->setConnet())->select($query);        
     }
 }

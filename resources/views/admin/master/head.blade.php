@@ -52,9 +52,9 @@
     <link href="{{ asset('adminlte/bower_components/toastr/toastr.min.css') }}" rel="stylesheet">
 
     <!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="{{asset('adminlte/plugins/iCheck/all.css')}}">
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/iCheck/all.css') }}">
     <!-- Template Main CSS File -->
     <link href="{{ asset('css/styleAdmin.css') }}" rel="stylesheet">
 
-
+    @yield('style')    
 </head>

@@ -303,3 +303,9 @@ iframe {
 input[type='file'] {
     /* display: none; */
 }
+.hr-dashed{
+    border-top: 1px solid #eee;
+}
+.page-break{
+    page-break-after: always;
+}

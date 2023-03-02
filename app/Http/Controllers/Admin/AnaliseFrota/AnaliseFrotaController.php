@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin\AnaliseFrota;
 use App\Http\Controllers\Controller;
 use App\Models\AnaliseFrota;
 use App\Models\MarcaModeloFrota;
+use App\Models\PictureAnalysisFrota;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -47,7 +50,6 @@ class AnaliseFrotaController extends Controller
     }
     public function create()
     {
-        $this->request['modelo_veiculo'] = decrypt($this->request->modelo_veiculo);
         $input = $this->__validate();
         if ($input->fails()) {
             $error = '<ul>';
@@ -68,15 +70,43 @@ class AnaliseFrotaController extends Controller
             return response()->json(['error' => 'houve algum erro contate setor de TI!']);
         }
     }
+    public function update()
+    {
+        $input = $this->__validate();
+        if ($input->fails()) {
+            $error = '<ul>';
+
+            foreach ($input->errors()->all() as $e) {
+                $error .= '<li>' . $e . '</li>';
+            }
+            $error .= '</ul>';
+
+            return response()->json([
+                'error' => $error
+            ]);
+        }
+        try {
+            $this->analise->updateData($input->validated());
+            return response()->json(['success' => 'Análise atualizada com sucesso!']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'houve algum erro contate setor de TI!']);
+        }
+    }
     public function getListaData()
     {
         $data =  $this->analise->listData();
         return DataTables::of($data)
             ->addColumn('action', function ($d) {
-                return
-                    '<button type="button" class="btn btn-warning btn-sm" id="edit-analysis" data-id="' . $d->id . '">Editar</button>
-                    <a href="' . route('item-analysis', ['id' => $d->id]) . '" class="btn btn-success btn-sm" id="item-analysis">Item</a>
-                    <button type="button" data-id="' . $d->id . '" data-toggle="modal" data-target="#DeleteAnalise" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
+                $buttons = "";
+                if ($d->status == "F") {
+                    $buttons .= '<a href="' . route('get-print-analysis', ['id' => Crypt::encrypt($d->id)]) . '" class="btn btn-primary btn-sm" id="item-analysis">Imprimir</a>';
+                } else {                    
+                    $buttons .= ' <button type="button" class="btn btn-warning btn-sm" id="edit-analysis" data-id="' . $d->id . '">Editar</button>';
+                    $buttons .= ' <a href="' . route('item-analysis', ['id' => $d->id]) . '" class="btn btn-success btn-sm" id="item-analysis">Item</a>';
+                    $buttons .= ' <button type="button" data-id="' . $d->id . '" data-toggle="modal" data-target="#DeleteAnalise" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>';
+                }
+
+                return $buttons;
             })
             ->addColumn('cliente', function ($d) {
                 return $d->cd_pessoa . '-' . $d->nm_pessoa;
@@ -90,12 +120,24 @@ class AnaliseFrotaController extends Controller
             $this->analise->DestroyData($data->id);
             return response()->json(['success' => 'Analise deletada com sucesso!']);
         } catch (\Throwable $th) {
-            return response()->json(['error' => 'Houve algum erro favor contactar setor de TI']);
+            return response()->json(['error' => 'Houve algum erro favor contactar setor de TI.']);
         }
     }
 
     public function itemAnalise()
     {
+    }
+    public function finishAnalysis()
+    {
+        try {
+            $analise = AnaliseFrota::findOrFail($this->request->id);
+            $analise->status = 'F';
+            $analise->save();
+
+            return response()->json(['success' => 'Finalizada com sucesso.']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => 'Houve um erro ao finalizar, contacte setor de TI.']);
+        }
     }
 
     public function __validate()
@@ -103,6 +145,7 @@ class AnaliseFrotaController extends Controller
         return Validator::make(
             $this->request->all(),
             [
+                'id' => 'required|integer',
                 'pessoa' => 'required|integer',
                 'nm_pessoa' => 'required|string|max:255',
                 'sulco' => 'required|integer',

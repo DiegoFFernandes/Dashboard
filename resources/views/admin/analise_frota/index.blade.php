@@ -9,7 +9,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">Analises Cadastradas:</h3>
                         <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-sm badge bg-green" data-toggle="modal"
+                            <button type="button" id="btn-create" class="btn btn-sm badge bg-green" data-toggle="modal"
                                 data-target="#modal-create"><i class="fa fa-plus"></i>
                             </button>
 
@@ -42,17 +42,18 @@
                     </div>
                     <div class="modal-body">
                         <form id="form-analysis">
-                            <div class="col-md-8 col-xs-12">
+                            <input type="number" class="hidden" id="id_analysis">
+                            <div class="col-md-8">
                                 @includeIf('admin.master.pessoa')
                             </div>
-                            <div class="col-md-4 col-xs-8">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="password">Placa:</label>
                                     <input type="text" name='placa' class="form-control" id="placa"
                                         placeholder="AA1A-0000" value="" required>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-4">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="sulco">Sulco Ideal:</label>
                                     <input type="number" name='sulco' class="form-control" id="sulco" placeholder="4"
@@ -64,9 +65,9 @@
                                     <label for="modelo_veiculo">Modelo Veiculo:</label>
                                     <select class="form-control" name="modelo_veiculo" id="modelo_veiculo" required
                                         style="width: 100%">
-                                        <option value=" {!! Crypt::encrypt(0) !!}" selected>Selecione um Modelo</option>
+                                        <option value="0" selected>Selecione um Modelo</option>
                                         @foreach ($modelo as $m)
-                                            <option value=" {!! Crypt::encrypt($m->id) !!}">
+                                            <option value="{{ $m->id }}">
                                                 {{ $m->dsmarca . ' - ' . $m->dsmodelo }}
                                             </option>
                                         @endforeach
@@ -98,7 +99,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
-                        <button type="button" class="btn btn-primary"id="create-analysis">Criar</button>
+                        <button type="button" class="btn btn-primary" id="create-analysis">Criar</button>
+                        <button type="button" class="btn btn-warning" id="update_analysis">Atualizar</button>
                     </div>
                 </div>
             </div>
@@ -114,9 +116,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var cd_pessoa, placa, modelo_veiculo, ps_min, ps_max, sulco, obs, analise;
-            $('#modelo_veiculo').select2();
+            $('#modelo_veiculo').select2({
+                placeholder: 'Selecione um modelo',
+            });
             $('#pessoa').select2({
-                placeholder: "{{ isset($user_id->name) ? $user_id->name : 'Pessoa' }}",
+                placeholder: "Pessoa",
                 allowClear: true,
                 ajax: {
                     url: '{{ route('admin.usuarios.search-pessoa') }}',
@@ -140,49 +144,38 @@
                 ps_min = $('#ps_min').val();
                 $('#ps_max').val(parseInt(ps_min) + 10);
             })
-            $('#create-analysis').click(function() {
-
-                pessoa = $('#pessoa').val();
-                placa = $('#placa').val();
-                sulco = $('#sulco').val();
-                modelo_veiculo = $('#modelo_veiculo').val();
-                ps_min = $('#ps_min').val();
-                ps_max = $('#ps_max').val();
-                nm_pessoa = $('#pessoa :selected').text();
-                obs = $('#obs').val();
-
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('analise-frota.create') }}",
-                    data: {
-                        pessoa: pessoa,
-                        nm_pessoa: nm_pessoa,
-                        sulco: sulco,
-                        placa: placa,
-                        modelo_veiculo: modelo_veiculo,
-                        ps_min: ps_min,
-                        ps_max: ps_max,
-                        obs: obs,
-                    },
-                    beforeSend: function() {
-                        $("#loading").removeClass('hidden');
-                    },
-                    success: function(response) {
-                        $("#loading").addClass('hidden');
-                        if (response.success) {
-                            $('#modal-create').modal('hide');
-                            msgToastr(response.success, 'success');
-                            $('#pessoa').val(null).trigger('change');
-                            $('#modelo_veiculo').val(0).trigger('change');
-                            $('#form-analysis').each(function() {
-                                this.reset();
-                            });
-                            $('#table-analise').DataTable().ajax.reload();
-                        } else {
-                            msgToastr(response.error, 'warning');
-                        }
+            $('#btn-create').click(function(){
+                $('#update_analysis').hide();
+                $('#create-analysis').show();
+            });
+            $('#create-analysis').click(function() {              
+               CreateEdit("{{ route('analise-frota.create') }}");
+            });
+            $('#table-analise').on('click', '#edit-analysis', function() {
+                var rowData = $('#table-analise').DataTable().row($(this).parents('tr')).data();
+                if (rowData == undefined) {
+                    var selected_row = $(this).parents('tr');
+                    if (selected_row.hasClass('child')) {
+                        selected_row = selected_row.prev();
                     }
-                });
+                    rowData = $('#table-analise').DataTable().row(selected_row).data();
+                }    
+                console.log(rowData);  
+                $('#id_analysis').val(rowData.id);      
+                $('#pessoa').append('<option value="'+rowData.cd_pessoa+'" selected>'+rowData.nm_pessoa+'</option>');
+                $('#placa').val(rowData.placa);
+                $('#sulco').val(rowData.sulco);
+                $('#modelo_veiculo').val(rowData.id_modelo).trigger('change');                
+                $('#ps_min').val(rowData.ps_min);
+                $('#ps_max').val(rowData.ps_max);                
+                $('#obs').val(rowData.observacao);
+                $('#create-analysis').hide();
+                $('#update_analysis').show();
+                $('#modal-create').modal('show');
+
+            });
+            $('#update_analysis').click(function(){
+                CreateEdit("{{ route('analise-frota.update') }}");
             });
             $('#table-analise').DataTable({
                 language: {
@@ -242,7 +235,51 @@
                         }
                     }
                 });
-            })
+            });
+            function CreateEdit(url){
+                analise = $('#id_analysis').val();
+                pessoa = $('#pessoa').val();
+                placa = $('#placa').val();
+                sulco = $('#sulco').val();
+                modelo_veiculo = $('#modelo_veiculo').val();
+                ps_min = $('#ps_min').val();
+                ps_max = $('#ps_max').val();
+                nm_pessoa = $('#pessoa :selected').text();
+                obs = $('#obs').val();                
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {
+                        id: analise,
+                        pessoa: pessoa,
+                        nm_pessoa: nm_pessoa,
+                        sulco: sulco,
+                        placa: placa,
+                        modelo_veiculo: modelo_veiculo,
+                        ps_min: ps_min,
+                        ps_max: ps_max,
+                        obs: obs,
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(response) {
+                        $("#loading").addClass('hidden');
+                        if (response.success) {
+                            $('#modal-create').modal('hide');
+                            msgToastr(response.success, 'success');
+                            $('#pessoa').val(null).trigger('change');
+                            $('#modelo_veiculo').val(0).trigger('change');
+                            $('#form-analysis').each(function() {
+                                this.reset();
+                            });
+                            $('#table-analise').DataTable().ajax.reload();
+                        } else {
+                            msgToastr(response.error, 'warning');
+                        }
+                    }
+                });
+            }
         });
     </script>
 @endsection

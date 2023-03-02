@@ -8,12 +8,16 @@
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ $title_page }}</h3>
+                        <div class="box-tools box-right">
+                            <span data-toggle="tooltip" class="badge bg-green" style="display:none;">
+                                <i class="fa fa-plus add-item" aria-hidden="true"></i></span>
+                        </div>
                     </div>
                     <div class="box-body">
                         <div class="col-md-3 col-xs-12">
                             <div class="form-group">
                                 <label for="id_analise">Cód.:</label>
-                                <input type="email" class="form-control" id="id_analise" value="{{ $analise->id }}"
+                                <input type="number" class="form-control" id="id_analise" value="{{ $analise->id }}"
                                     disabled>
                             </div>
                         </div>
@@ -44,7 +48,8 @@
                                 <input type="text" class="form-control" value="{{ $analise->sulco }}" disabled>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <input type="number" class="hidden" id="id_item_analysis" value="0">
+                        <div class="col-md-8">
                             <div class="form-group">
                                 <label for="medida">Medida: </label>
                                 <select class="form-control" name="medida" id="medida" required style="width: 100%">
@@ -55,16 +60,22 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3 hidden-xs">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="fogo">Fogo:</label>
-                                <input type="number" class="form-control" id="fogo" required>
+                                <input type="number" class="form-control" id="fogo" placeholder="1111" required>
                             </div>
                         </div>
-                        <div class="col-md-3 hidden-xs">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="dot">Dot:</label>
+                                <input type="number" class="form-control" id="dot" placeholder="0120" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="sulco">Sulco:</label>
-                                <input type="number" class="form-control" id="sulco" required>
+                                <input type="number" class="form-control" id="sulco" placeholder="4" required>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -73,7 +84,7 @@
                                 <input type="number" class="form-control" id="ps" placeholder="110">
                             </div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="modelo">Modelo: </label>
                                 <select class="form-control" name="modelo" id="modelo" required style="width: 100%">
@@ -91,7 +102,7 @@
                                 <select class="form-control" name="motivo" id="motivo" required style="width: 100%">
                                     <option value="0" selected>Selecione um Dano</option>
                                     @foreach ($motivopneu as $m)
-                                        <option value=" {!! $m->id !!}">{{ $m->ds_motivo }}</option>
+                                        <option value="{{ $m->id }}"> {{ $m->ds_motivo }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -102,7 +113,7 @@
                                 <select class="form-control" name="posicao" id="posicao" required style="width: 100%">
                                     <option value="0" selected>Selecione um posição</option>
                                     @foreach ($posicaopneu as $p)
-                                        <option value=" {!! $p->id !!}">{{ $p->ds_posicao }}</option>
+                                        <option value="{{ $p->id }}"> {{ $p->ds_posicao }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -118,7 +129,9 @@
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
-                        <button id="submit-add-item" class="btn btn-success pull-right">Adicionar item</button>
+                        <button id="submit-add-item" class="btn btn-success pull-right">Adicionar</button>
+                        <button id="submit-edit-item" class="btn btn-warning pull-right"
+                            style="display: none;">Editar</button>
                     </div>
                 </div>
             </div>
@@ -127,8 +140,6 @@
                     <!-- Tabs within a box -->
                     <ul class="nav nav-tabs pull-right ui-sortable-handle">
                         <li class=""><a href="#finalizar" data-toggle="tab" aria-expanded="false">Finalizar</a>
-                        </li>
-                        <li class=""><a href="#table-resumo" data-toggle="tab" aria-expanded="false">Resumo</a>
                         </li>
                         <li class="active"><a href="#table-itens" data-toggle="tab" aria-expanded="true">Itens</a>
                         </li>
@@ -151,47 +162,11 @@
                                 </thead>
                             </table>
                         </div>
-                        <div class="tab-pane" id="table-resumo">
-                            <table id="table-item-group" class="table">
-                                {{-- <thead>
-                                    <tr>
-                                        <th>Cód. Item</th>
-                                        <th>Descrição</th>
-                                        <th>Quantidade</th>
-                                        <th>Soma Peso</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($itemgroup as $i)
-                                        <tr>
-                                            <td>{{ $i->cd_produto }}</td>
-                                            <td>{{ $i->ds_item }}</td>
-                                            <td>{{ $i->qtditem }}</td>
-                                            <td>{{ number_format($i->peso, 2) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th></th>
-                                        <th style="text-align: center">Total</th>
-                                        <th>{{ $itemgroup->sum(function ($i) {
-                                            return $i->qtditem;
-                                        }) }}
-                                        </th>
-                                        <th>{{ $pesototal = $itemgroup->sum(function ($i) {
-                                            return $i->peso;
-                                        }) }}
-                                        </th>
-                                    </tr>
-                                </tfoot> --}}
-                            </table>
-                        </div>
                         <div class="tab-pane" id="finalizar">
                             <div class="box">
                                 <div class="box-body">
-                                    <button type="button" id="finalizar-lote" data-id=""
-                                        class="btn btn-success center-block">Finalizar Lote</button>
+                                    <button type="button" id="finish-analysis" data-id=""
+                                        class="btn btn-success center-block">Finalizar Análise</button>
                                 </div>
                             </div>
                         </div>
@@ -230,14 +205,15 @@
     @includeIf('admin.master.datatables')
     <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function(e) {
             var pictures = [],
-                height, width, medida, ds_medida, fogo, sulco, modelo, ds_modelo, motivo, posicao, imagem, id,
-                pressao;
+                height, width, medida, ds_medida, fogo, dot, sulco, modelo, ds_modelo, motivo, posicao, imagem, id,
+                pressao, id_item, update_image = 0;
             $('#motivo').select2();
             $('#medida').select2();
             $('#modelo').select2();
             $('#posicao').select2();
+            id = $('#id_analise').val();
             $("#table-add-item").DataTable({
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
@@ -245,8 +221,12 @@
                 pagingType: "simple",
                 ajax: {
                     type: 'GET',
+                    data: {
+                        id: id,
+                    },
                     url: "{{ route('get-item-analysis') }}",
                 },
+                responsive: true,
                 columns: [{
                         data: 'id',
                         name: 'id',
@@ -303,6 +283,9 @@
                 height = 320;
             }
             $("#open-camera").click(function() {
+                $('#take_picture').show();
+                $('#my_camera').show();
+                $('#close-camera').text('Fechar Câmera');
                 var cameraFacingMode = (cameraFacingMode == 'user') ? 'environment' : 'user';
                 Webcam.set({
                     width: width,
@@ -342,69 +325,133 @@
                 listPictures(pictures);
             });
             $('#submit-add-item').click(function() {
-                id = $('#id_analise').val();
-                fogo = $('#fogo').val();
-                sulco = $('#sulco').val();
-                id_modelo = $('#modelo').val();
-                ds_modelo = $('#modelo option:selected').text();
-                id_medida = $('#medida').val();
-                ds_medida = $('#medida option:selected').text();
-                id_motivo = $('#motivo').val();
-                id_posicao = $('#posicao').val();
-                pressao = $('#ps').val();
+                EditStore("{{ route('store-item-analysis') }}");
+            });
+            $('#submit-edit-item').click(function(e) {
+                toastr.warning(
+                    "<button type='button' id='confirmationButtonYes' class='btn btn-success clear'>Sim</button>" +
+                    "<button type='button' id='confirmationButtonNo' class='btn btn-primary clear'>Não</button>",
+                    'Deseja apagar as fotos e substituir pela atuais?', {
+                        closeButton: false,
+                        allowHtml: true,
+                        progressBar: false,
+                        timeOut: 0,
+                        positionClass: "toast-top-center",
+                        onShown: function(toast) {
+                            $("#confirmationButtonYes").click(function() {
+                                update_image = 1;
+                                EditStore("{{ route('edit-item-analysis') }}");
+                            });
+                            $("#confirmationButtonNo").click(function() {
+                                update_image = 0;
+                                EditStore("{{ route('edit-item-analysis') }}");
+                            });
+                        }
+                    });
+            });
+            $("#table-add-item").on('click', '#delete-item', function() {
+                id = $(this).data('id');
+                toastr.warning(
+                    "<button type='button' class='btn btn-danger' id='confirmationButtonYes' class='btn clear'>Sim</button>",
+                    'Deseja excluir o item: ' + id + '', {
+                        closeButton: true,
+                        allowHtml: true,
+                        progressBar: false,
+                        onShown: function(toast) {
+                            $("#confirmationButtonYes").click(function() {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "{{ route('delete-item-analysis') }}",
+                                    data: {
+                                        _token: $("[name=csrf-token]").attr(
+                                            "content"),
+                                        id: id,
+                                    },
+                                    success: function(response) {
+                                        if (response.success) {
+                                            $("#table-add-item").DataTable()
+                                                .ajax.reload();
+                                            msgToastr(response.success,
+                                                'success');
+                                        } else {
+                                            msgToastr(response.error,
+                                                'warning');
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
 
+
+            });
+            $('#table-add-item').on('click', '#edit-item', function() {
+                $('#menu').empty();
+                pictures = [];
+                $('#submit-add-item').hide();
+                $('#submit-edit-item').show();
+                $('.badge').show();
+                var rowData = $('#table-add-item').DataTable().row($(this).parents('tr')).data();
+                if (rowData == undefined) {
+                    var selected_row = $(this).parents('tr');
+                    if (selected_row.hasClass('child')) {
+                        selected_row = selected_row.prev();
+                    }
+                    rowData = $('#table-add-item').DataTable().row(selected_row).data();
+                }
+                console.log(rowData);
+                $('#medida').val(rowData.id_medida).trigger('change');
+                $('#fogo').val(rowData.fogo);
+                $('#sulco').val(rowData.sulco);
+                $('#dot').val(rowData.dot);
+                $('#ps').val(rowData.pressao);
+                $('#modelo').val(rowData.id_modelo).trigger('change');
+                $('#motivo').val(rowData.id_motivo_pneu).trigger('change');
+                $('#posicao').val(rowData.id_posicao).trigger('change');
+                $('#id_item_analysis').val(rowData.id);
+
+            });
+            $('#finish-analysis').click(function() {
                 $.ajax({
-                    type: "post",
-                    url: "{{ route('store-item-analysis') }}",
+                    type: "POST",
+                    url: "{{ route('finish-analysis') }}",
                     data: {
                         _token: $("[name=csrf-token]").attr("content"),
-                        id: id,
-                        id_medida: id_medida,
-                        ds_medida: ds_medida,
-                        fogo: fogo,
-                        sulco: sulco,
-                        pressao: pressao,
-                        modelo: id_modelo,
-                        ds_modelo: ds_modelo,
-                        motivo: id_motivo,
-                        posicao: id_posicao,
-                        imagem: pictures
+                        id: id
                     },
-                    beforeSend: function() {
-
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $("#table-add-item").DataTable().ajax.reload();
-                            msgToastr(response.success, 'success');
+                    success: function(response) {                        
+                        if (response.error) {
+                            msgToastr(response.error, 'error');
                         } else {
-                            msgToastr(response.error, 'danger');
+                            toastr.success(response.success, 'Analise: ' + id,{
+                                closeButton: true,
+                                allowHtml: true,
+                                progressBar: true,
+                                onHidden: function() {
+                                    window.location.href = "{{ route('analise-frota.index') }}";
+                                }
+                            });
                         }
                     }
                 });
             });
-            $("#table-add-item").on('click', '#delete-item', function() {
+            $("#table-add-item").on('click', '#picture-item', function() {
+                $('#menu').empty();
+                $('#my_camera').hide();
+                $('#capture-image').modal('show');
+                $('#take_picture').hide();
+                $('#close-camera').text('Fechar Fotos');
                 id = $(this).data('id');
-
-                if (confirm('Deseja excluir o item: ' + id + '')) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('delete-item-analysis') }}",
-                        data: {
-                            _token: $("[name=csrf-token]").attr("content"),
-                            id: id,
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                $("#table-add-item").DataTable().ajax.reload();
-                                msgToastr(response.success, 'success');
-                            } else {
-                                msgToastr(response.error, 'warning');
-                            }
-                        }
-                    });
-                }
-
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('get-picture-item-analysis') }}",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        $('#menu').append(response.html);
+                    }
+                });
             });
             $('#cd_barras').focus();
             $('.pula').keypress(function(e) {
@@ -430,6 +477,53 @@
                         '<button id="image" type="button" class="btn btn-danger" data-id="' +
                         valueOfElement + '" >X</button>' +
                         '</li>');
+                });
+            }
+
+            function EditStore(url) {
+                id = $('#id_analise').val();
+                fogo = $('#fogo').val();
+                dot = $('#dot').val();                
+                sulco = $('#sulco').val();
+                id_modelo = $('#modelo').val();
+                ds_modelo = $('#modelo option:selected').text();
+                id_medida = $('#medida').val();
+                ds_medida = $('#medida option:selected').text();
+                id_motivo = $('#motivo').val();
+                id_posicao = $('#posicao').val();
+                pressao = $('#ps').val();
+                id_item = $('#id_item_analysis').val();
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: {
+                        _token: $("[name=csrf-token]").attr("content"),
+                        id_item: id_item,
+                        id: id,
+                        id_medida: id_medida,
+                        ds_medida: ds_medida,
+                        fogo: fogo,
+                        dot: dot,
+                        sulco: sulco,
+                        pressao: pressao,
+                        modelo: id_modelo,
+                        ds_modelo: ds_modelo,
+                        motivo: id_motivo,
+                        posicao: id_posicao,
+                        imagem: pictures,
+                        update_image: update_image,
+                    },
+                    beforeSend: function() {
+
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $("#table-add-item").DataTable().ajax.reload();
+                            msgToastr(response.success, 'success');
+                        } else {
+                            msgToastr(response.errors, 'warning');
+                        }
+                    }
                 });
             }
 

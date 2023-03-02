@@ -15,4 +15,11 @@ class PictureAnalysisFrota extends Model
         'created_at',
         'updated_at'
     ];
+    public function listPictures($id){
+        return PictureAnalysisFrota::where('id_item_analysis', $id)->get();
+    }
+
+    public function DestroyPicture($id){
+        return PictureAnalysisFrota::where('id_item_analysis', $id)->delete();
+    }
 }

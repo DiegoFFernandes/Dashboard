@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AnaliseFrota\ItemAnaliseFrotaController;
 use App\Http\Controllers\Admin\Cobranca\BloqueioPedidosController;
 use App\Http\Controllers\Admin\Producao\AcompanhaOrdemController;
 use App\Http\Controllers\Admin\Cobranca\CobrancaController;
@@ -49,7 +50,8 @@ Route::get('/clear-cache-all', function () {
 
 /* Rotas de Login Client */
 Route::get('/login-cliente', [LoginController::class, 'showLoginClientForm'])->name('login-client');
-
+// Route::get('imprimir-coleta-analise/{id}', [ItemAnaliseFrotaController::class, 'getPrintItemAnaliseAll'])->name('get-print-analysis');
+       
 
 /* Rotas de Login */
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');

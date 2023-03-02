@@ -180,7 +180,8 @@ return [
         Yajra\DataTables\ButtonsServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        Artisaninweb\SoapWrapper\ServiceProvider::class, 
+        Artisaninweb\SoapWrapper\ServiceProvider::class,         
+        Barryvdh\Snappy\ServiceProvider::class,
 
     ],
 
@@ -237,7 +238,9 @@ return [
         'Firebird' => Firebird\FirebirdServiceProvider::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'SoapWrapper' => Artisaninweb\SoapWrapper\Facade\SoapWrapper::class,
+        'SoapWrapper' => Artisaninweb\SoapWrapper\Facade\SoapWrapper::class,        
+        'SnappyPdf' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

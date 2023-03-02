@@ -17,7 +17,7 @@ class LoteEntradaEstoque extends Model
         'status',
         'tp_lote'
     ];
-    
+
     public $timestamps = true;
     public $table = 'lote_entrada_estoques';
     protected $connection;

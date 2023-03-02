@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class FinanceiroController extends Controller
 {
+    public $request, $financeiro, $user;
     public function __construct(
         Request $request,
         Financeiro $financeiro

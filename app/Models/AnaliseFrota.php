@@ -14,6 +14,7 @@ class AnaliseFrota extends Model
         'cd_pessoa',
         'nm_pessoa',
         'placa',
+        'status',
         'marca_modelo',
         'sulco',
         'ps_min',
@@ -27,6 +28,21 @@ class AnaliseFrota extends Model
             'cd_pessoa' => $input['pessoa'],
             'nm_pessoa' => $input['nm_pessoa'],
             'placa' => $input['placa'],
+            'status' => 'A',
+            'marca_modelo' => $input['modelo_veiculo'],
+            'sulco' => $input['sulco'],
+            'ps_min' => $input['ps_min'],
+            'ps_max' => $input['ps_max'],
+            'observacao' => $input['obs'],
+        ]);
+    }
+    public function updateData($input)
+    {
+        return AnaliseFrota::where('id', $input['id'])->update([
+            'cd_pessoa' => $input['pessoa'],
+            'nm_pessoa' => $input['nm_pessoa'],
+            'placa' => $input['placa'],
+            'status' => 'A',
             'marca_modelo' => $input['modelo_veiculo'],
             'sulco' => $input['sulco'],
             'ps_min' => $input['ps_min'],
@@ -41,7 +57,9 @@ class AnaliseFrota extends Model
             'analise_frotas.cd_pessoa',
             'analise_frotas.nm_pessoa',
             'analise_frotas.placa',
+            'analise_frotas.status',
             DB::raw("CONCAT(ma.descricao,' - ', mo.descricao) as modelo"),
+            'mo.id as id_modelo',
             'mo.descricao',
             'analise_frotas.sulco',
             'analise_frotas.ps_min',
@@ -53,7 +71,8 @@ class AnaliseFrota extends Model
             ->join('modeloveiculos as mo', 'mo.id', 'mmf.cd_modelo')
             ->get();
     }
-    public function DestroyData($id){
+    public function DestroyData($id)
+    {
         return AnaliseFrota::find($id)->delete();
     }
 }

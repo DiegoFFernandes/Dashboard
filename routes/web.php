@@ -69,6 +69,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
     Route::get('search-empresa-fiscal', [EmpresaController::class, 'getEmpresaFiscal'])->name('search-empresa-fiscal');
 });
+
+Route::middleware(['auth', 'role_or_permission:ver-analise-frota|admin'])->group(function () {
+    Route::prefix('usuario')->group(function () {
+        Route::get('search-pessoa', [UserController::class, 'searchPessoa'])->name('admin.usuarios.search-pessoa');
+    });
+});
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     // ->prefix('usuario')
     Route::prefix('usuario')->group(function () {
@@ -78,8 +85,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('delete/{id}', [UserController::class, 'delete'])->name('admin.usuarios.delete');
         Route::get('cadastrar', [UserController::class, 'index'])->name('admin.usuarios.create');
         Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
-        Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
-        Route::get('search-pessoa', [UserController::class, 'searchPessoa'])->name('admin.usuarios.search-pessoa');
+        Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');        
         
         /*Rotas funções*/
         Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');
@@ -287,6 +293,7 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
         Route::get('envio-follow-up', [CobrancaController::class, 'searchEnvio'])->name('search-envio');
         Route::get('get-search-follow', [CobrancaController::class, 'getSearchEnvio'])->name('get-search-envio');
         Route::get('get-email-follow/{id}', [CobrancaController::class, 'getEmailEnvio'])->name('get-email-follow');
+        Route::post('reenvia-follow', [CobrancaController::class, 'reenviaFollow'])->name('reenvia-follow');
         Route::get('get-envio-iagente', [CobrancaController::class, 'getSubmitIagente'])->name('get-envio-iagente');
         Route::delete('delete-email-webhook-iagente', [CobrancaController::class, 'DeleteEmailWebhookIagente'])->name('delete-email-webhook-iagente');
 

@@ -23,6 +23,7 @@ use Yajra\DataTables\DataTables;
 
 class CobrancaController extends Controller
 {
+    public $empresa, $request, $agenda, $envio, $pessoa, $p_dia, $atual_dia, $webhook, $user;
     public function __construct(
         Request $request,
         Empresa $empresa,
@@ -289,6 +290,7 @@ class CobrancaController extends Controller
             $exploder        = explode('\\', $s->BI_ANEXORELAT);
             $anexo = is_null($s->BI_ANEXORELAT) ? '<button class="btn btn-danger btn-xs">Não Existe</button>' : '<a href="file:///\\172.29.0.2/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '" class="btn btn-xs btn-primary">Anexo</a>';
             $email = '<button class="btn btn-default btn-xs ver-email" data-id="' . $s->NR_ENVIO . '" aria-hidden="true"> Ver E-mail </button>';
+            $reenviar = '<button class="btn btn-warning btn-xs reenviar-email" data-id="' . $s->NR_ENVIO . '" aria-hidden="true"> Reenviar </button>';
             //var_dump($exploder);
             $html .= '
                     <tr>                    
@@ -296,7 +298,7 @@ class CobrancaController extends Controller
                         <td>' . $s->NR_AGENDA . '</td>                        
                         <td>' . $s->CD_PESSOA . '-' . $s->NM_PESSOA . '</td>
                         <td>' . $s->DT_ENVIO . '</td>
-                        <td>' . $anexo . $email . '</td>
+                        <td>' . $anexo . ' ' . $email . ' ' . $reenviar . '</td>
                         
                     </tr>';
         }
@@ -308,6 +310,15 @@ class CobrancaController extends Controller
     {
         $email = $this->envio->verEmail($nr_envio);
         return $email;
+    }
+    public function reenviaFollow()
+    {
+        $reenvio = $this->envio->reenviaFollow($this->request->nr_envio);
+        if ($reenvio) {
+            return response()->json(['success' => 'Reenviado com sucesso, pode demorar até 5 minutos para chegar ao destinatario!']);
+        } else {
+            return response()->json(['error' => 'Houve algum erro ao reenviar, contate setor de TI!']);
+        }
     }
     public function getSubmitIagente()
     {

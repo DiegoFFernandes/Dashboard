@@ -24,7 +24,6 @@ class AgendaEnvio extends Model
     {
         return $this->connection = Auth::user()->conexao;
     }
-
     public function searchSend($request)
     {
         //return $request->cd_number;
@@ -43,14 +42,13 @@ class AgendaEnvio extends Model
                 " . (($request->cpf_cnpj != 0) ? "and p.nr_cnpjcpf = '$request->cpf_cnpj'" : "") . "
                 " . (($request->inicio_data != 0) ? "and ae.dt_envio between '$request->inicio_data' and '$request->fim_data'" : "") . "
                 " . (($request->ds_email != 0) ? "and ae.ds_emaildest like '%$request->ds_email%'" : "") . "    
-                " . (($request->nr_contexto != 0) ? "and ae.nr_contexto in ($request->nr_contexto)" : "");        
+                " . (($request->nr_contexto != 0) ? "and ae.nr_contexto in ($request->nr_contexto)" : "");
 
-        $key = "anexo_" . $request->cd_number . "cliente_" . $request->cd_pessoa . "nr_contexto". $request->nr_contexto;
+        $key = "anexo_" . $request->cd_number . "cliente_" . $request->cd_pessoa . "nr_contexto" . $request->nr_contexto;
         return Cache::remember($key, now()->addMinutes(60), function () use ($query) {
             return DB::connection($this->setConnet())->select($query);
         });
     }
-
     public function contextoEmail()
     {
         $query = "select ce.nr_contexto, cast(ce.ds_contexto as varchar(200) character set utf8) ds_contexto, ce.st_ativo
@@ -61,7 +59,6 @@ class AgendaEnvio extends Model
         order by ce.ds_contexto";
         return DB::connection($this->setConnet())->select($query);
     }
-
     public function verEmail($nr_envio)
     {
         $query = "select 
@@ -75,5 +72,16 @@ class AgendaEnvio extends Model
                 where ae.nr_envio = $nr_envio";
 
         return DB::connection($this->setConnet())->select($query);
+    }
+    public function reenviaFollow($nr_envio)
+    {
+        return DB::transaction(function () use ($nr_envio) {
+
+            DB::connection($this->setConnet())->select("EXECUTE PROCEDURE ACESSO_IVO");
+
+            $query = "update AGENDAENVIO AE SET AE.st_envio = 'A' WHERE AE.nr_envio = $nr_envio";
+
+            return DB::connection($this->setConnet())->statement($query);
+        });
     }
 }

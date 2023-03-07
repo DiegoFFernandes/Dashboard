@@ -241,7 +241,7 @@
                         $("#search").append(result);
                         $("#table-search").DataTable({
                             language: {
-                                url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                                url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                             },
                             responsive: true,
                             "order": [
@@ -287,6 +287,28 @@
                     }
                 });
             });
+            $(document).on('click', '.reenviar-email', function(e) {
+                let nr_envio = $(this).data('id');                
+                $.ajax({
+                    url: "{{ route('reenvia-follow') }}",
+                    method: 'POST',
+                    data:{
+                        _token: $("[name=csrf-token]").attr("content"),
+                        nr_envio: nr_envio
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(response) {
+                        $("#loading").addClass('hidden');
+                        if(response.error){
+                            msgToastr(response.error, 'warning');
+                        }else{
+                            msgToastr(response.success, 'success');
+                        }
+                    }
+                });
+            });
             $(document).on('click', '#validar-email', function(e) {
                 let email = $(this).data('cdpessoa');
                 let token = $("meta[name='csrf-token']").attr("content");
@@ -300,10 +322,10 @@
                     success: function(response) {
                         if (response.error) {
                             // alert(result.error);
-                            msg(response.error, 'alert-warning', 'fa fa-warning');
+                            msgToastr(response.error, 'warning');
                             return false;
                         } else {
-                            msg(response.success, 'alert-success', 'fa fa-check');
+                            msgToastr(response.success, 'success');
                             $('#table-iagente').DataTable().ajax.reload();
                         }
                     }

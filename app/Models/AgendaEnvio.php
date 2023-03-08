@@ -73,13 +73,17 @@ class AgendaEnvio extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
-    public function reenviaFollow($nr_envio)
+    public function reenviaFollow($nr_envio, $copia)
     {
-        return DB::transaction(function () use ($nr_envio) {
+        $email = Auth::user()->email;
+        return DB::transaction(function () use ($nr_envio, $copia, $email) {
 
             DB::connection($this->setConnet())->select("EXECUTE PROCEDURE ACESSO_IVO");
 
-            $query = "update AGENDAENVIO AE SET AE.st_envio = 'A' WHERE AE.nr_envio = $nr_envio";
+            $query = "update AGENDAENVIO AE 
+                    SET AE.st_envio = 'A' 
+                    " . (($copia == 1) ? ", ae.tp_emailcopia = 'N', AE.DS_EMAILCOPIA = '". $email ."'" : "") . "
+                    WHERE AE.nr_envio = $nr_envio";                   
 
             return DB::connection($this->setConnet())->statement($query);
         });

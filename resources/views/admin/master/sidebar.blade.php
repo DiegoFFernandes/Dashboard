@@ -240,7 +240,7 @@
                 </li>
             @endrole
             @canany(['ver-comercial-norte', 'ver-comercial-sul', 'ver-rel-cobranca-sul',
-                'ver-pedidos-coletados-acompanhamento', 'ver-analise-frota']])
+                'ver-pedidos-coletados-acompanhamento', 'ver-analise-frota'])
                 <li class="treeview {{ request()->segment(1) == 'comercial' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-map"></i> <span>Comercial</span>

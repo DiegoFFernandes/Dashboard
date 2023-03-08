@@ -312,8 +312,8 @@ class CobrancaController extends Controller
         return $email;
     }
     public function reenviaFollow()
-    {
-        $reenvio = $this->envio->reenviaFollow($this->request->nr_envio);
+    {        
+        $reenvio = $this->envio->reenviaFollow($this->request->nr_envio, $this->request->email);
         if ($reenvio) {
             return response()->json(['success' => 'Reenviado com sucesso, pode demorar até 5 minutos para chegar ao destinatario!']);
         } else {

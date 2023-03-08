@@ -194,6 +194,7 @@
         $(document).ready(function() {
             var inicioData = 0;
             var fimData = 0;
+            var update_email = 0;
             $('#daterange').on('apply.daterangepicker', function(ev, picker) {
                 $(this).val(picker.startDate.format('DD/MM/YYYY HH:mm') + ' - ' + picker.endDate.format(
                     'DD/MM/YYYY HH:mm'));
@@ -288,26 +289,31 @@
                 });
             });
             $(document).on('click', '.reenviar-email', function(e) {
-                let nr_envio = $(this).data('id');                
-                $.ajax({
-                    url: "{{ route('reenvia-follow') }}",
-                    method: 'POST',
-                    data:{
-                        _token: $("[name=csrf-token]").attr("content"),
-                        nr_envio: nr_envio
-                    },
-                    beforeSend: function() {
-                        $("#loading").removeClass('hidden');
-                    },
-                    success: function(response) {
-                        $("#loading").addClass('hidden');
-                        if(response.error){
-                            msgToastr(response.error, 'warning');
-                        }else{
-                            msgToastr(response.success, 'success');
+                let nr_envio = $(this).data('id');    
+                
+                toastr.warning(
+                    "<button type='button' id='confirmationButtonYes' class='btn btn-success clear'>Sim</button> " +
+                    "<button type='button' id='confirmationButtonNo' class='btn btn-primary clear'>Não</button>",
+                    'Deseja encaminhar uma copia para o seu email, para ter certeza que chegou?', {
+                        closeButton: false,
+                        allowHtml: true,
+                        progressBar: false,
+                        timeOut: 0,
+                        positionClass: "toast-top-center",
+                        onShown: function(toast) {
+                            $("#confirmationButtonYes").click(function() {
+                                update_email = 1;   
+                                ReenviaFollow(nr_envio, update_email);                            
+                            });
+                            $("#confirmationButtonNo").click(function() {
+                                update_email = 0;   
+                                ReenviaFollow(nr_envio, update_email);                              
+
+                            });
                         }
-                    }
-                });
+                    });
+                   
+                
             });
             $(document).on('click', '#validar-email', function(e) {
                 let email = $(this).data('cdpessoa');
@@ -385,6 +391,29 @@
                     ],
                 });
             });
+
+            function ReenviaFollow(nr_envio, update_email){
+                $.ajax({
+                    url: "{{ route('reenvia-follow') }}",
+                    method: 'POST',
+                    data:{
+                        _token: $("[name=csrf-token]").attr("content"),
+                        nr_envio: nr_envio,
+                        email: update_email
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(response) {
+                        $("#loading").addClass('hidden');
+                        if(response.error){
+                            msgToastr(response.error, 'warning');
+                        }else{
+                            msgToastr(response.success, 'success');
+                        }
+                    }
+                });
+            }
 
         });
     </script>

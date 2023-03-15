@@ -29,7 +29,7 @@
     <script type="text/javascript" defer>
         if ($(window).width() < 960) {
             let div = '<div class="iframe-embed-wrapper iframe-embed-responsive-16by9">' +
-                '<iframe src="https://app.powerbi.com/view?r=eyJrIjoiMGNmOGQwMmUtYTZhYi00MjgwLTgwOTYtZmIyZDFiOTY5ZGFhIiwidCI6IjcyMmY4Y2UzLTlkMDItNDEyZS1hMjFmLWZmYTU1ZDM3ZWNkMyJ9&pageName=ReportSection88a54e23b3034a6e6937" frameborder="0">' +
+                '<iframe src="https://app.powerbi.com/view?r=eyJrIjoiMTJlMDc3ZTUtYjYwNS00MGIwLWFiODgtNjAwNDc5MjU3N2U3IiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9&pageName=ReportSection88a54e23b3034a6e6937" frameborder="0">' +
                 '</iframe>' +
                 '</div>';
             $('#iframe-mobile').html(div);
@@ -47,5 +47,5 @@
             });
         });
     </script>
-    <script src="{{ asset('js/diretoria-sul/script.js') }}"></script>
+    <script src="{{ asset('js/diretoria-sul/script.js?v=2') }}"></script>
 @endsection

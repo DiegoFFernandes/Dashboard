@@ -18,7 +18,7 @@
                                 <th>Cód.</th>
                                 <th>Setor</th>
                                 <th>Titulo</th>
-                                <th>Descrição</th>                                
+                                <th>Descrição</th>
                                 <th>Status</th>
                                 <th>Resp.</th>
                                 <th>Versão</th>
@@ -27,7 +27,39 @@
                         </table>
                     </div>
                 </div>
-            </div>            
+            </div>
+
+            {{-- Modal Revisão --}}
+            <div class="modal fade" id="modal-revisar" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title">Revião procedimento</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form role="form">
+                                <div class="form-group">
+                                    <label for="title">Procedimento</label>
+                                    <input type="text" class="form-control" id="title-procedimento" val="" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="obs">Revisão/Notificar:</label>
+                                    <textarea class="form-control" rows="2" name="obs" id="obs"
+                                        placeholder="Revisão ou Notificação, tente informar o local ou o paragrafo para sermos mais efetivo na melhoria."></textarea>
+                                </div>                                
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-primary">Notificar</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
 
     </section>
@@ -40,6 +72,21 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var dataTable = initTable('table-procedimento', 'pub');
+
+            $('#table-procedimento').on('click', '.btn-notify', function() {
+                var rowData = $('#table-procedimento').DataTable().row($(this).parents('tr')).data();
+                if (rowData == undefined) {
+                    var selected_row = $(this).parents('tr');
+                    if (selected_row.hasClass('child')) {
+                        selected_row = selected_row.prev();
+                    }
+                    rowData = $('#table-procedimento').DataTable().row(selected_row).data();                    
+                }
+                console.log(rowData);
+                    $('#title-procedimento').val(rowData.title);
+                
+
+            });
 
             function initTable(tableId, data) {
                 $("#" + tableId).DataTable({

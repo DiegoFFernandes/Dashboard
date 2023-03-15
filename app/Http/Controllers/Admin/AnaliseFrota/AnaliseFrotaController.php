@@ -50,6 +50,7 @@ class AnaliseFrotaController extends Controller
     }
     public function create()
     {
+        $this->request['id'] = 0;
         $input = $this->__validate();
         if ($input->fails()) {
             $error = '<ul>';

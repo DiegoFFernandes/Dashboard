@@ -52,11 +52,11 @@ class ProcedimentoController extends Controller
         $setors       = $this->setor->listData();
         $this->aprovador->updateIfCreateLargerDays();
         $largeDays = $this->aprovador->groupVerifyIfReleased();
-        
-        foreach ($largeDays as $l){
-             ProcedimentoHelper::verifyIfRealeased($l);            
+
+        foreach ($largeDays as $l) {
+            ProcedimentoHelper::verifyIfRealeased($l);
         }
-       
+
         return view('admin.qualidade.index', compact(
             'title_page',
             'user_auth',
@@ -295,15 +295,29 @@ class ProcedimentoController extends Controller
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
                 return '  
-            <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>                        
+                        <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>  
+                                              
                         ';
+                        //<button class="btn btn-warning btn-sm btn-notify" data-id="' . $data->id . '" data-toggle="modal" data-target="#modal-revisar">Revisar</button>  
             })
             ->rawColumns(['Actions'])
             ->make(true);
     }
-    public function approverOutstanding(){
+    public function approverOutstanding()
+    {
         Procedimento::findOrFail($this->request->id);
         $data =  $this->aprovador->outStandingApprover($this->request->id);
         return DataTables::of($data)->make(true);
+    }
+    public function reviseProcedimento()
+    {
+        // return $this->request;
+        $data_aprovador = $this->__validate($this->request);
+        $procedimento = Procedimento::findOrFail($data_aprovador['id']);
+        $setor = Setor::findOrFail($procedimento['id_setor']);
+        $user = User::findOrFail($procedimento['id_user_create']);
+
+        Mail::send(new ProcedimentoMail($this->request, $setor, $user));
+        return response()->json(['success' => 'Procedimento aprovado com sucesso!']);
     }
 }

@@ -166,15 +166,15 @@ class ProcedimentoController extends Controller
                         ';
                 } elseif ($data->status == 'Liberado') {
                     $html = ' 
-                        <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
+                        <a class="btn btn-danger btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank" title="PDF"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
                         ';
                     if ($data->public == 'P') {
-                        $html .= '<button type="button" class="btn btn-danger btn-sm" data-id="' . $data->id . '" id="btnCancelPublish">Despublicar</button>';;
+                        $html .= '<button type="button" class="btn btn-danger btn-sm" data-id="' . $data->id . '" id="btnCancelPublish" title="Despublicar"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button>';;
                     } else {
-                        $html .= '<button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="btnPublish">Publicar</button> ';
+                        $html .= '<button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="btnPublish" title="Publicar"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button> ';
                     }
-                    $html .= ' <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados">Reanalisar</button> 
-                    <button type="button" class="btn btn-primary btn-sm" data-id="' . $data->id . '" id="getViewReason"><i class="fa fa-comments" aria-hidden="true"></i></button>                        
+                    $html .= ' <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados" title="Reanalisar"><i class="fa fa-refresh" aria-hidden="true"></i></button> 
+                    <button type="button" class="btn btn-primary btn-sm" data-id="' . $data->id . '" id="getViewReason" title="Chat"><i class="fa fa-comments" aria-hidden="true"></i></button>                        
                             
                     ';
                     return $html;
@@ -299,8 +299,8 @@ class ProcedimentoController extends Controller
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
                 return '  
-                        <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>  
-                        <button class="btn btn-warning btn-sm btn-notify" data-id="' . $data->id . '" data-toggle="modal" data-target="#modal-revisar">Revisar</button>                    
+                        <a class="btn btn-danger btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank" title="PDF"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>  
+                        <button class="btn btn-warning btn-sm btn-notify" data-id="' . $data->id . '" data-toggle="modal" data-target="#modal-revisar" title="Revisão"><i class="fa fa-refresh" aria-hidden="true"></i></button>                    
                         ';
                           
             })

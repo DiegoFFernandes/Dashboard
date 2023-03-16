@@ -18,8 +18,7 @@
                                 <th>Cód.</th>
                                 <th>Setor</th>
                                 <th>Titulo</th>
-                                <th>Descrição</th>
-                                <th>Status</th>
+                                <th>Descrição</th>                                
                                 <th>Resp.</th>
                                 <th>Versão</th>
                                 <th>Acões</th>
@@ -151,11 +150,7 @@
                         {
                             data: 'description',
                             name: 'description'
-                        },
-                        {
-                            data: 'status',
-                            name: 'status'
-                        },
+                        },                          
                         {
                             data: 'name',
                             name: 'name'

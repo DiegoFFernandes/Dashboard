@@ -40,20 +40,22 @@
                         </div>
                         <div class="modal-body">
                             <form role="form">
+                                <input type="number" class="hide" id="cd_procedimento" val="">
                                 <div class="form-group">
                                     <label for="title">Procedimento</label>
-                                    <input type="text" class="form-control" id="title-procedimento" val="" disabled>
+                                    <input type="text" class="form-control" id="title-procedimento" val=""
+                                        disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="obs">Revisão/Notificar:</label>
                                     <textarea class="form-control" rows="2" name="obs" id="obs"
                                         placeholder="Revisão ou Notificação, tente informar o local ou o paragrafo para sermos mais efetivo na melhoria."></textarea>
-                                </div>                                
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Fechar</button>
-                            <button type="button" class="btn btn-primary">Notificar</button>
+                            <button type="button" class="btn btn-primary" id="saveNotify">Notificar</button>
                         </div>
                     </div>
 
@@ -80,11 +82,37 @@
                     if (selected_row.hasClass('child')) {
                         selected_row = selected_row.prev();
                     }
-                    rowData = $('#table-procedimento').DataTable().row(selected_row).data();                    
+                    rowData = $('#table-procedimento').DataTable().row(selected_row).data();
                 }
                 console.log(rowData);
-                    $('#title-procedimento').val(rowData.title);
-                
+                $('#title-procedimento').val(rowData.title);
+                $('#cd_procedimento').val(rowData.id);
+
+            });
+            $("#saveNotify").click(function(e) {
+                let id = $('#cd_procedimento').val();
+                let revision = $('#obs').val();
+                if (revision == "") {
+                    msgToastr('Informe uma breve descrição para revisão!', 'warning');
+                    return false;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('revision-procedimento.publish') }}",
+                    data: {
+                        id: id,
+                        revision: revision
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            msgToastr(response.success,
+                                'success');
+                        } else {
+                            msgToastr(response.error,
+                                'warning');
+                        }
+                    }
+                });
 
             });
 

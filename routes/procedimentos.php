@@ -41,5 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('procedimento-publicos')->group(function () {
         Route::get('liberados', [ProcedimentoController::class, 'procedimentoPublish'])->name('procedimento.publish');
         Route::get('get-liberados', [ProcedimentoController::class, 'GetprocedimentoPublish'])->name('get-procedimento.publish');
+        Route::get('revisao-procedimento', [ProcedimentoController::class, 'reviseProcedimento'])->name('revision-procedimento.publish');
+    
     });
 });

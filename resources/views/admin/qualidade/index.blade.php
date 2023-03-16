@@ -280,7 +280,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span></button>
-                                <h4 class="modal-title"><i class="fa fa-comments-o"></i> Chat - Procedimento Reprovado</h4>
+                                <h4 class="modal-title"><i class="fa fa-comments-o"></i> Chat - Procedimento</h4>
                         </div>
                         <div class="modal-body">
                             <div class="direct-chat direct-chat-warning">

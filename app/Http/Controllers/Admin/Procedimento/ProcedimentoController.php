@@ -25,12 +25,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ProcedimentoController extends Controller
 {
-    public $request, $procedimento, $aprovador, $publish, $user, $setor;
+    public $request, $procedimento, $aprovador, $publish, $user, $setor, $recusa;
     public function __construct(
         Request $request,
         Procedimento $procedimento,
         ProcedimentoAprovador $aprovador,
         ProcedimentoPublish $publish,
+        ProcedimentoRecusado $recusa,
         Setor $setor
     ) {
         $this->request = $request;
@@ -38,6 +39,7 @@ class ProcedimentoController extends Controller
         $this->aprovador = $aprovador;
         $this->publish = $publish;
         $this->setor = $setor;
+        $this->recusa = $recusa;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -158,7 +160,7 @@ class ProcedimentoController extends Controller
                         <button type="button" class="btn btn-danger btn-sm" data-id="' . $data->id . '" id="getDeleteId">Excluir</button>';
                 } elseif ($data->status == 'Reprovado') {
                     return '  
-                    <button type="button" class="btn btn-success btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-recusados">Reanalise</button>          
+                        <button type="button" class="btn btn-success btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-recusados">Reanalise</button>          
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>
                         <button type="button" class="btn btn-warning btn-sm" data-id="' . $data->id . '" id="getViewReason">Motivo</button>                        
                         ';
@@ -172,7 +174,9 @@ class ProcedimentoController extends Controller
                         $html .= '<button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="btnPublish">Publicar</button> ';
                     }
                     $html .= ' <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados">Reanalisar</button> 
-                        ';
+                    <button type="button" class="btn btn-primary btn-sm" data-id="' . $data->id . '" id="getViewReason"><i class="fa fa-comments" aria-hidden="true"></i></button>                        
+                            
+                    ';
                     return $html;
                 } elseif ($data->status == 'Em andamento') {
                     return '  
@@ -296,9 +300,9 @@ class ProcedimentoController extends Controller
             ->addColumn('Actions', function ($data) {
                 return '  
                         <a class="btn btn-info btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank">PDF</a>  
-                                              
+                        <button class="btn btn-warning btn-sm btn-notify" data-id="' . $data->id . '" data-toggle="modal" data-target="#modal-revisar">Revisar</button>                    
                         ';
-                        //<button class="btn btn-warning btn-sm btn-notify" data-id="' . $data->id . '" data-toggle="modal" data-target="#modal-revisar">Revisar</button>  
+                          
             })
             ->rawColumns(['Actions'])
             ->make(true);
@@ -310,14 +314,31 @@ class ProcedimentoController extends Controller
         return DataTables::of($data)->make(true);
     }
     public function reviseProcedimento()
-    {
-        // return $this->request;
-        $data_aprovador = $this->__validate($this->request);
-        $procedimento = Procedimento::findOrFail($data_aprovador['id']);
+    {        
+        
+       
+
+        $validate = $this->request->validate(
+            [
+                'id' => 'required|integer',
+                'revision' => 'required|string'                
+            ],
+        );        
+        
+        $procedimento = Procedimento::findOrFail($validate['id']);
         $setor = Setor::findOrFail($procedimento['id_setor']);
         $user = User::findOrFail($procedimento['id_user_create']);
 
-        Mail::send(new ProcedimentoMail($this->request, $setor, $user));
-        return response()->json(['success' => 'Procedimento aprovado com sucesso!']);
+        $aprovador['user'] = $this->user->id;
+        $aprovador['title'] = $procedimento['title'];
+        $aprovador['description_recusa'] = $validate['revision'];
+        $aprovador['status'] = 'revision';
+        $aprovador['op_table'] = false;
+        
+        $store = $this->recusa->storeData($procedimento, $aprovador);        
+
+        Mail::send(new ProcedimentoMail($aprovador, $setor, $user));        
+        
+        return response()->json(['success' => 'Pedido de revisão criado com sucesso!']);
     }
 }

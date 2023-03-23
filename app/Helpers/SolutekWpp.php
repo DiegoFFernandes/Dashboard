@@ -2,13 +2,19 @@
 
 class solutekWpp
 {
+    public $input, $status, $local;
 
-    static function DataMsgWpp($input, $status)
+    static function DataMsgWpp($input, $status, $local)
     {
-       
+
         if ($status == 'acompanhamento') {
             if ($input->type == "C") { //Se a mensagem for do criador dispara a mensagem para os responsaveis.
-                $phones = explode(',', env('PHONE_TICKETS_MANUTENCION'));
+                if ($local == "NORTE") {
+                    $phones = explode(',', env('PHONE_TICKETS_MANUTENCION_NORTE'));
+                } else {
+                    $phones = explode(',', env('PHONE_TICKETS_MANUTENCION_SUL'));
+                }
+
                 $mensagem = "Olá, teve um andamento no chamado da manunteção: *" . $input->cd_ticket . "*, pelo usuario *" . $input->user_create . "* com a seguinte descrição, *" . $input->message . "* , para mais detalhes acesse o portal.";
             } else { //Se a mensagem for do resolvedor dispara a mensagem para o criador.
                 $phones = ['55' . $input->phone_create];
@@ -17,9 +23,12 @@ class solutekWpp
         } elseif ($status == 'finalizado') {
             $phones = ['55' . $input->phone_create];
             $mensagem = "Olá, o chamado da manutenção: *" . $input->cd_ticket . "*, foi finalizado pelo usuario *" . $input->user_resolve . "* com a seguinte descrição, *" . $input->message . "* , para mais detalhes acesse o portal.";
-        
         } else {
-            $phones = explode(',', env('PHONE_TICKETS_MANUTENCION'));
+            if ($local == "NORTE") {
+                $phones = explode(',', env('PHONE_TICKETS_MANUTENCION_NORTE'));
+            } else {
+                $phones = explode(',', env('PHONE_TICKETS_MANUTENCION_SUL'));
+            }
             $mensagem = "Olá, foi aberto um chamado cód. *" . $input[0]->id . "* pelo responsavel, *" . $input[0]->name . "*, para a maquina *" . $input[0]->maquina . "*, com o problema *" . $input[0]->tp_problema . "*, a maquina *" . $input[0]->parada . "* está parada.\nEntre no portal para mais detalhes.\nNão e necessario responder está mensagem.";
         }
 

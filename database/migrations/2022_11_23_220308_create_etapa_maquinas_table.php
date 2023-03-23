@@ -16,7 +16,7 @@ class CreateEtapaMaquinasTable extends Migration
         Schema::create('etapa_maquinas', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('cd_empresa');
-            $table->unsignedBigInteger('cd_etapa_producao');
+            $table->unsignedBigInteger('cd_etapa_producao')->nullable();
             $table->unsignedBigInteger('cd_maquina');
             $table->integer('cd_seq_maq');
             $table->integer('cd_barras');

@@ -11,8 +11,7 @@ class EtapaMaquina extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id',
-        'cd_empresa',
+        'id',        
         'cd_etapa_producao',
         'cd_maquina',
         'cd_seq_maq',
@@ -35,12 +34,11 @@ class EtapaMaquina extends Model
     }
     public function StoreData($input)
     {
-        $cd_barras = $input['empresa'] . $input['etapa'] . $input['seq_maquina'];
+        $cd_barras = '3' . $input['etapa'] . $input['seq_maquina'];
 
         $maquina = new EtapaMaquina;
 
-        return $maquina::firstOrCreate([
-            'cd_empresa' => $input['empresa'],
+        return $maquina::firstOrCreate([  
             'cd_etapa_producao' => $input['etapa'],
             'cd_maquina' => $input['maquina'],
             'cd_seq_maq' => $input['seq_maquina'],
@@ -49,11 +47,9 @@ class EtapaMaquina extends Model
     }
     public function UpdateDate($input)
     {
-        $cd_barras = $input['empresa'] . $input['etapa'] . $input['seq_maquina'];
-
+        $cd_barras = '3' . $input['etapa'] . $input['seq_maquina'];
         
-        $maquina = new EtapaMaquina();
-        $maquina->cd_empresa = $input['empresa'];
+        $maquina = new EtapaMaquina();       
         $maquina->cd_etapa_producao = $input['etapa'];
         $maquina->cd_maquina = $input['maquina'];
         $maquina->cd_seq_maq = $input['seq_maquina'];

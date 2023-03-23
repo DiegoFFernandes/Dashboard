@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\Manutencao\ManutencaoController;
 use App\Http\Controllers\Admin\Manutencao\ReportController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:admin|manutencao|coordenador'])->group(function () {
+Route::middleware(['auth', 'permission:ver-manutencao'])->group(function () {
     Route::prefix('manutencao')->group(function () {
         Route::get('index', [ManutencaoController::class, 'index'])->name('manutencao.index');
         Route::post('store', [ManutencaoController::class, 'store'])->name('manutencao.store');

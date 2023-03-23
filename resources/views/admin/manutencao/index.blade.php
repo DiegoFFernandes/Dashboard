@@ -66,7 +66,18 @@
                                 <div class="box-body">
                                     @csrf
                                     <div class="col-md-12" style="background-color: #ecf0f5; padding-top:15px">
-
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Empresa:</label>
+                                                <select class="form-control" name="cd_empresa" id="cd_empresa">
+                                                    <option selected value="0">Selecione</option>
+                                                    @foreach ($empresas as $empresa)
+                                                        <option value="{{ $empresa->cd_empresa }}">{{ $empresa->ds_local }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div class="col-md-5">
                                             <label for="">Urgência:</label>
                                             <div class="form-group">
@@ -78,7 +89,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label for="cd_etapa"><button type="button"
                                                     class="btn btn-block btn-primary btn-xs btn-qr" data-toggle="modal"
                                                     data-target="#modal-default">Cód. Maq. (QR
@@ -352,17 +363,21 @@
             $('#btn-send').click(function() {
                 // console.log($('.maquina').val());
                 // return false;
-                if ($('#tp_chamado').val() == 0 || $('#observacao').val() === '' || $('#cd_maq').val() ===
-                    '') {
+                var cd_empresa = $('#cd_empresa').val();               
+                if (cd_empresa == 0) {
+                    msgToastr('Escolha uma empresa!', 'warning');                    
+                    return false;
+                } else if ($('#tp_chamado').val() == 0 || $('#observacao').val() === '' || $('#cd_maq').val() === '') {
                     msgToastr(
                         'Selecione os campos obrigatorios Tipo problema / Breve descrição / Cód Maquina!',
                         'warning');
-                    event.preventDefault();
+                    return false;
                 } else if ($('.maquina').val() === null) {
                     msgToastr('Etapa maquina deve ser selecionada!', 'warning');
-                    event.preventDefault();
+                    return false;
                 } else {
                     $('#form-ticket').submit();
+                    $('#form-ticket').clear();
                 }
             })
             const html5QrCode = new Html5Qrcode("qr-reader");
@@ -389,12 +404,12 @@
                 }
             });
             $('.maquina').select2();
-            $('.maquina').change(function(){
-                if($(this).val() == 0){
+            $('.maquina').change(function() {
+                if ($(this).val() == 0) {
                     $('#cd_maq').val('');
-                }else{
+                } else {
                     $('#cd_maq').val($(this).val());
-                }             
+                }
             })
 
             $('.btn-qr').click(function() {

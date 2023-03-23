@@ -61,6 +61,7 @@ class ManutencaoController extends Controller
         $aberto = Ticket::WhereIn('status', ['R', 'A'])->count();
         $finalizado = Ticket::WhereIn('status', ['F'])->count();
         $total = Ticket::count();
+        $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
 
         return view('admin.manutencao.index', compact(
             'title_page',
@@ -70,7 +71,8 @@ class ManutencaoController extends Controller
             'parada',
             'aberto',
             'finalizado',
-            'total'
+            'total',
+            'empresas'
 
         ));
     }
@@ -82,8 +84,7 @@ class ManutencaoController extends Controller
         } catch (\Exception $th) {
             return redirect()->route('manutencao.index')->with('error', 'Cód de Qrcode da Maquina não existe, verificar se digitou corretamente ou verifique TI!');
         }
-
-        $validate['cd_empresa'] = $etapa_maquina->cd_empresa;
+        
         $validate['status'] = 'P';
         $this->__validateFile();
 
@@ -96,7 +97,8 @@ class ManutencaoController extends Controller
         //public function ListTickets($user, $input, $wpp, $status)
         $input = json_decode($find);
 
-        solutekWpp::DataMsgWpp($input, $status = 0);
+        $local = Helper::VerifyRegion($this->user->conexao);
+        solutekWpp::DataMsgWpp($input, $status = 0, $local);
 
         $this->acompanhamento->storeData($ticket);
 
@@ -118,6 +120,7 @@ class ManutencaoController extends Controller
     public function __validate()
     {
         return $this->request->validate([
+            'cd_empresa' => 'required|integer',
             'urgencia' => 'required|string:B,M,A',
             'cd_maq' => 'required|integer',
             'mq_parada' => 'required|string:S,N',
@@ -293,7 +296,7 @@ class ManutencaoController extends Controller
                 'error' => $error
             ]);
         }
-        
+
         $store = $this->etapa_maquina->StoreData($maquina->validated());
         if ($store) {
             return response()->json(['success' => 'Maquina associada com sucesso, cód.: ' . $store->id]);
@@ -302,9 +305,7 @@ class ManutencaoController extends Controller
     public function __validade($request)
     {
         return Validator::make(
-            $request->all(),
-            [
-                'empresa' => 'required|integer',
+            $request->all(),            [
                 'maquina' => 'required|integer',
                 'seq_maquina' => 'required|integer',
                 'etapa' => 'required|integer',
@@ -329,9 +330,7 @@ class ManutencaoController extends Controller
         $maquina = $this->etapa_maquina::findOrFail($this->request->id);
         $validate = $this->__validade($this->request);
         $validate = $validate->validated();
-        $cd_barras = $validate['empresa'] . $validate['etapa'] . $validate['seq_maquina'];
-
-        $maquina['cd_empresa'] = $validate['empresa'];
+        $cd_barras = '3'. $validate['etapa'] . $validate['seq_maquina'];        
         $maquina['cd_maquina'] = $validate['maquina'];
         $maquina['cd_etapa_producao'] = $validate['etapa'];
         $maquina['cd_seq_maq'] = $validate['seq_maquina'];

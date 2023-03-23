@@ -17,8 +17,7 @@
                             <table class="table table-sm" id="table-machines" style="width: 100%">
                                 <thead>
                                     <th>Cód.</th>                                    
-                                    <th>Descrição</th>
-                                    <th>Empresa</th>
+                                    <th>Descrição</th>                                    
                                     <th>Nr. Cód. QR</th>
                                     <th>QR Code</th>
                                     <th>Acões</th>
@@ -27,8 +26,7 @@
                                     @foreach ($etapa_maquina as $m)
                                         <tr>
                                             <td>{{ $m->id }}</td>
-                                            <td>{{ $m->ds_maquina }}</td>
-                                            <td>{{ $m->cd_empresa }}</td>                                            
+                                            <td>{{ $m->ds_maquina }}</td>                                                                                       
                                             <td>{{ $m->cd_barras }}</td>
                                             <td>{!! QrCode::generate($m->cd_barras) !!}</td>
                                             <td><button class="btn btn-primary btn-edit btn-sm"
@@ -59,17 +57,7 @@
                         </div>
                         <div class="col-md-12">
                             <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
-                            <input id="id_machine" type="hidden" type="number">
-                            <div class="form-group">
-                                <label>Empresa:</label>
-                                <select class="form-control" name="cd_empresa" id="cd_empresa">
-                                    <option selected value="">Selecione</option>
-                                    @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->cd_empresa }}">{{ $empresa->ds_local }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <input id="id_machine" type="hidden" type="number">                            
                         </div>
                         <div class="col-md-12">
                             @includeIf('admin.master.etapas-produtivas')
@@ -150,8 +138,7 @@
                     url: '{{ route('manutencao.associate-phases') }}',
                     type: 'get',
                     data: {
-                        _token: $("[name=csrf-token]").attr("content"),
-                        empresa: empresa,
+                        _token: $("[name=csrf-token]").attr("content"),                        
                         maquina: maquina,
                         seq_maquina: seq_maquina,
                         etapa: etapa
@@ -166,7 +153,7 @@
                             msgToastr(response.error, "warning");
                         } else {
                             msgToastr(response.success, "success");
-
+                            location.reload();
                         };
 
                     }
@@ -190,7 +177,7 @@
                         $('.etapas').val(response['cd_etapa_producao']).trigger('change');
                         $('#cd_maquina').val(response['cd_maquina']).trigger('change');
                         $('#seq_maquina').val(response['cd_seq_maq']);
-                        $('#CreateEditMachineSetor').modal('show');
+                        $('#CreateEditMachineSetor').modal('show');                        
                     }
                 });
             });
@@ -200,8 +187,7 @@
                     url: "{{ route('manutencao.update-phases') }}",
                     data: {
                         _token: $("[name=csrf-token]").attr("content"),
-                        id: $('#id_machine').val(),
-                        empresa: $('#cd_empresa').val(),
+                        id: $('#id_machine').val(),                        
                         etapa: $('.etapas').val(),
                         maquina: $('#cd_maquina').val(),
                         seq_maquina: $('#seq_maquina').val(),

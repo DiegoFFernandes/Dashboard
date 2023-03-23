@@ -148,6 +148,7 @@ class Ticket extends Model
                 when 'F' then 'Finalizado' 
                 when 'R' then 'Reaberto'       
             end status"),
+            DB::raw('count(*) as qtd')
         )
             ->when($inicio <> 0, function ($q) use ($inicio, $fim) {
                 return $q->whereBetween('tickets.created_at', [$inicio, $fim]);

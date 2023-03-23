@@ -101,7 +101,8 @@
                             <thead>
                                 <tr>
                                     <th>Emp</th>                                    
-                                    <th>Média(Min)</th>                                    
+                                    <th>Média(Min)</th>   
+                                    <th>Quantidade</th>                                 
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -278,6 +279,9 @@
                     {
                         data: 'espera_media',
                         name: 'espera_media'
+                    },{
+                        data: 'qtd',
+                        name: 'qtd'
                     },
                     {
                         data: 'status',

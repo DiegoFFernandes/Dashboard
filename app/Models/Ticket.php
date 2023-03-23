@@ -73,7 +73,8 @@ class Ticket extends Model
                 when 'F' then 'Finalizado' 
                 when 'R' then 'Reaberto'       
             end status"),
-            'tickets.created_at'
+            'tickets.created_at',
+            'tickets.updated_at'
         )
             ->join('etapa_maquinas as em', 'em.cd_barras', 'tickets.cd_barras_etapa_maq')
             ->join('etapasproducaopneus as epp', 'epp.cd_etapa', 'em.cd_etapa_producao')

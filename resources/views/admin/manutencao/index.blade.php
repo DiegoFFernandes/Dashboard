@@ -199,6 +199,7 @@
                                             <th>Emp</th>
                                             <th>Status</th>
                                             <th>Criado em</th>
+                                            <th>Finalizado em</th>
                                             <th>#</th>
                                         </thead>
                                     </table>
@@ -503,6 +504,10 @@
                         {
                             data: 'created_at',
                             name: 'created_at',
+                        },
+                        {
+                            data: 'updated_at',
+                            name: 'updated_at',
                         },
                         {
                             data: 'actions',

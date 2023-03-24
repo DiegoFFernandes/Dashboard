@@ -162,7 +162,10 @@
                 searching: false,
                 bPaginate: false,
                 processing: false,
-
+                dom: 'Blfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
                 ajax: {
                     url: "{{ route('manutencao.problem') }}",
                     data: {
@@ -213,6 +216,11 @@
                 searching: false,
                 bPaginate: true,
                 processing: false,
+                pagingType: "simple",
+                dom: 'Blfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
                 info: false,
                 ajax: {
                     url: "{{ route('manutencao.time-tickets') }}",
@@ -264,7 +272,10 @@
                 bPaginate: false,
                 info: false,
                 processing: false,
-
+                dom: 'Blfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
                 ajax: {
                     url: "{{ route('manutencao.average-tickets') }}",
                     data: {

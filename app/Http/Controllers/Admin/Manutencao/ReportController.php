@@ -12,13 +12,14 @@ use App\Models\EtapasProducaoPneu;
 use App\Http\Controllers\Controller;
 use App\Models\TicketAcompanhamento;
 use Carbon\Carbon;
+use Helper;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class ReportController extends Controller
 {
     public $request, $etapas, $etapa_maquina, $maquina, $tickets, $acompanhamento, $picture, $empresa, $user;
-    
+
     public function __construct(
         Request $request,
         EtapasProducaoPneu $etapa,
@@ -47,11 +48,13 @@ class ReportController extends Controller
         $title_page   = 'Relátorio Manutenção';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
+        $empresas = $this->empresa->EmpresaFiscal(Helper::VerifyRegion($this->user->conexao));
 
         return view('admin.manutencao.report', compact(
             'title_page',
             'user_auth',
-            'uri'
+            'uri',
+            'empresas'
         ));
     }
     public function tpProblem()

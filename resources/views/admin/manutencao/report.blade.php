@@ -16,12 +16,12 @@
                     <div class="box-body">
                         <div class="col-md-5">
                             <div class="form-group">
-                                <select class="form-control select2" name="cd_empresa" id="cd_empresa" style="width: 100%;">
-                                    <option value="0" selected="selected">TODAS EMPRESAS</option>
-                                    <option value="1">AM MORENO PNEUS LTDA</option>
-                                    <option value="21">EMAX RECAPAGENS EIRELI</option>
-                                    <option value="3">SUPER RODAS - CAMPINA</option>
-                                    <option value="4">SUPER RODAS - GUARAPUAVA</option>
+                                <select class="form-control" name="cd_empresa" id="cd_empresa">
+                                    <option selected value="0">Selecione</option>
+                                    @foreach ($empresas as $empresa)
+                                        <option value="{{ $empresa->cd_empresa }}">{{ $empresa->ds_local }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -100,9 +100,9 @@
                         <table class="table table-bordered" id="table-ticket-average" style="width: 100%; font-size: 12px">
                             <thead>
                                 <tr>
-                                    <th>Emp</th>                                    
-                                    <th>Média(Min)</th>   
-                                    <th>Quantidade</th>                                 
+                                    <th>Emp</th>
+                                    <th>Média(Min)</th>
+                                    <th>Quantidade</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -143,10 +143,10 @@
         initTable(statusArray, inicioData, fimData, empresa);
         initTableTimeTickets(inicioData, fimData, empresa);
         initTableAverageTickets(inicioData, fimData, empresa);
-        
-        $('#submit-seach').click(function(){
+
+        $('#submit-seach').click(function() {
             var empresa = $('#cd_empresa').val();
-            $('#table-maq-defeito').DataTable().clear().destroy();  
+            $('#table-maq-defeito').DataTable().clear().destroy();
             initTable(statusArray, inicioData, fimData, empresa);
             $('#table-time-tickets').DataTable().clear().destroy();
             initTableTimeTickets(inicioData, fimData, empresa);
@@ -190,7 +190,7 @@
                     },
                 ],
                 columnDefs: [{
-                        targets: [0,1],
+                        targets: [0, 1],
                         width: '1%'
                     },
                     // {
@@ -244,7 +244,7 @@
                     },
                 ],
                 columnDefs: [{
-                        targets: [0,1,2,3,4],
+                        targets: [0, 1, 2, 3, 4],
                         width: '1%'
                     }
 
@@ -254,6 +254,7 @@
                 ],
             });
         }
+
         function initTableAverageTickets(inicioData, fimData, empresa) {
             $('#table-ticket-average').DataTable({
                 language: {
@@ -279,7 +280,7 @@
                     {
                         data: 'espera_media',
                         name: 'espera_media'
-                    },{
+                    }, {
                         data: 'qtd',
                         name: 'qtd'
                     },
@@ -299,6 +300,5 @@
                 ],
             });
         }
-
     </script>
 @endsection

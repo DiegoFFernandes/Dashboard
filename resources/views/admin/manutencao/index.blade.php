@@ -210,7 +210,7 @@
                                             <th>Emp</th>
                                             <th>Status</th>
                                             <th>Criado em</th>
-                                            <th>Finalizado em</th>
+                                            <th>Atualizado em</th>
                                             <th>#</th>
                                         </thead>
                                     </table>
@@ -478,6 +478,10 @@
                     responsive: true,
                     pagingType: "simple",
                     processing: false,
+                    dom: 'Blfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
                     ajax: {
                         url: "{{ route('manutencao.get-tickets') }}",
                         data: {

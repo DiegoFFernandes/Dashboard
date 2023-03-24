@@ -12,8 +12,8 @@ class Ticket extends Model
     use HasFactory;
 
     protected $casts = [
-        'created_at' => 'date:d/m/Y',
-        'updated_at'  => 'date:d/m/Y',
+        'created_at' => 'date:d/m/Y h:m:s',
+        'updated_at'  => 'date:d/m/Y h:m:s',
 
     ];
 

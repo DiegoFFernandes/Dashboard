@@ -84,7 +84,7 @@ class ManutencaoController extends Controller
         } catch (\Exception $th) {
             return redirect()->route('manutencao.index')->with('error', 'Cód de Qrcode da Maquina não existe, verificar se digitou corretamente ou verifique TI!');
         }
-        
+
         $validate['status'] = 'P';
         $this->__validateFile();
 
@@ -226,12 +226,13 @@ class ManutencaoController extends Controller
         $store['phone_create'] = $user_create->phone;
         $store['user_resolve'] = $this->user->name;
         $store['phone_resolve'] = $this->user->phone;
+        $local = Helper::VerifyRegion($this->user->conexao);
 
         if ($this->request->status_ticket == "A") {
-            solutekWpp::DataMsgWpp($store, $status = 'acompanhamento'); //Dispara uma mensagem com acompanhamento.
+            solutekWpp::DataMsgWpp($store, $status = 'acompanhamento', $local); //Dispara uma mensagem com acompanhamento.
             return redirect()->route('manutencao.index')->with('message', 'Feito Acompanhamento com sucesso!');
         } else {
-            solutekWpp::DataMsgWpp($store, $status = 'finalizado'); //Dispara uma mensagem de finalização.
+            solutekWpp::DataMsgWpp($store, $status = 'finalizado', $local); //Dispara uma mensagem de finalização.
             return redirect()->route('manutencao.index')->with('message', 'Finalizado com sucesso!');
         }
     }
@@ -305,7 +306,8 @@ class ManutencaoController extends Controller
     public function __validade($request)
     {
         return Validator::make(
-            $request->all(),            [
+            $request->all(),
+            [
                 'maquina' => 'required|integer',
                 'seq_maquina' => 'required|integer',
                 'etapa' => 'required|integer',
@@ -330,7 +332,7 @@ class ManutencaoController extends Controller
         $maquina = $this->etapa_maquina::findOrFail($this->request->id);
         $validate = $this->__validade($this->request);
         $validate = $validate->validated();
-        $cd_barras = '3'. $validate['etapa'] . $validate['seq_maquina'];        
+        $cd_barras = '3' . $validate['etapa'] . $validate['seq_maquina'];
         $maquina['cd_maquina'] = $validate['maquina'];
         $maquina['cd_etapa_producao'] = $validate['etapa'];
         $maquina['cd_seq_maq'] = $validate['seq_maquina'];
@@ -352,9 +354,10 @@ class ManutencaoController extends Controller
         $store['phone_create'] = $user_create->phone;
         $store['user_resolve'] = $this->user->name;
         $store['phone_resolve'] = $this->user->phone;
+        $local = Helper::VerifyRegion($this->user->conexao);
 
 
         // return $store;
-        return solutekWpp::DataMsgWpp($store, $status = 'finalizado');
+        return solutekWpp::DataMsgWpp($store, $status = 'finalizado', $local);
     }
 }

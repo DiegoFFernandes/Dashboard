@@ -319,6 +319,9 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
 
         Route::get('add-item-lote/{id}', [ItemLoteEntradaEstoqueController::class, 'index'])->name('add-item-lote.index');
         Route::get('get-busca-item/{cd_barras}', [ItemLoteEntradaEstoqueController::class, 'getBuscaItem'])->name('get-item-lote');
+        Route::get('get-itens-lote', [ItemLoteEntradaEstoqueController::class, 'getItensLote'])->name('estoque.get-itens-lote');
+        Route::get('get-resume-itens-lote', [ItemLoteEntradaEstoqueController::class, 'getResumeItens'])->name('estoque.get-resume-itens-lote');
+        
         Route::get('get-busca-item',  function () {
             return;
         });

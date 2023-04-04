@@ -15,21 +15,41 @@ class ItemLoteEntradaEstoque extends Model
         'peso',
         'cd_usuario'
     ];
+    // protected $casts = [
+    //     'created_at' => 'datetime:d/m/Y H:m:s'
+
+    // ];
+    protected function serializeDate($date)
+    {
+        return $date->format('d/m/Y H:i:s');
+    }
+
     public function list($id)
     {
-        return ItemLoteEntradaEstoque::select('item_lote_entrada_estoques.id', 'item_lote_entrada_estoques.cd_produto', 'itens.ds_item', 
-        'item_lote_entrada_estoques.peso', 'itens.ps_liquido', 'users.name', 'item_lote_entrada_estoques.created_at')
-        ->join('itens', 'itens.cd_item', 'item_lote_entrada_estoques.cd_produto')
-        ->join('users', 'users.id', 'item_lote_entrada_estoques.cd_usuario')
-        ->where('cd_lote', $id)->get();
+        return ItemLoteEntradaEstoque::select(
+            'item_lote_entrada_estoques.id',
+            'item_lote_entrada_estoques.cd_produto',
+            'itens.ds_item',
+            'item_lote_entrada_estoques.peso',
+            'itens.ps_liquido',
+            'users.name',
+            'item_lote_entrada_estoques.created_at'
+        )
+            ->join('itens', 'itens.cd_item', 'item_lote_entrada_estoques.cd_produto')
+            ->join('users', 'users.id', 'item_lote_entrada_estoques.cd_usuario')
+            ->where('cd_lote', $id)->get();
     }
-    public function listGroup($id){
-        return ItemLoteEntradaEstoque::select('item_lote_entrada_estoques.cd_produto', 'itens.ds_item',        
-        DB::raw('count(*) qtditem, sum(item_lote_entrada_estoques.peso) peso'))
-        ->join('itens', 'itens.cd_item', 'item_lote_entrada_estoques.cd_produto')
-        ->where('cd_lote', $id)
-        ->groupBy('item_lote_entrada_estoques.cd_produto', 'itens.ds_item')
-        ->get();
+    public function listGroup($id)
+    {
+        return ItemLoteEntradaEstoque::select(
+            'item_lote_entrada_estoques.cd_produto',
+            'itens.ds_item',
+            DB::raw('count(*) qtditem, sum(item_lote_entrada_estoques.peso) peso')
+        )
+            ->join('itens', 'itens.cd_item', 'item_lote_entrada_estoques.cd_produto')
+            ->where('cd_lote', $id)
+            ->groupBy('item_lote_entrada_estoques.cd_produto', 'itens.ds_item')
+            ->get();
     }
     public function store($input)
     {
@@ -45,11 +65,14 @@ class ItemLoteEntradaEstoque extends Model
         }
         return 1;
     }
-    public function destroyData($id){
+    public function destroyData($id)
+    {
         ItemLoteEntradaEstoque::find($id)->delete();
         return response()->json(['success' => 'Item excluido com sucesso!']);
     }
-    public function countData($cd_lote){
-        return ItemLoteEntradaEstoque::where('cd_lote', $cd_lote)->count();
+    public function countData($cd_lote)
+    {
+        return ItemLoteEntradaEstoque::select(DB::raw('sum(peso) as peso, count(*) as qtd'))
+        ->where('cd_lote', $cd_lote)->get();
     }
 }

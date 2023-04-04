@@ -6,6 +6,7 @@
 <script src="{{ asset('adminlte/bower_components/datatables.net/js/jszip.min.js') }}"></script>
 <script src="{{ asset('adminlte/bower_components/datatables.net/js/buttons.html5.min.js') }}"></script>
 <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.13.4/api/sum().js"></script>
 
 
 

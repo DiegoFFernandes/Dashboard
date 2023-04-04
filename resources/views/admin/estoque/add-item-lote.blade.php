@@ -8,6 +8,9 @@
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ $title_page }}</h3>
+                        <div class="box-tools pull-right">
+                            <span class="label label-danger" id="qtd_itens_coleta">{{ $qtde_coleta }} Itens</span>
+                        </div>
                     </div>
                     <div class="box-body">
                         <div class="alert alert-success alert-fixed hidden">
@@ -15,10 +18,12 @@
                         </div>
                         @includeIf('admin.master.messages')
                         <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
+                        <input type="hidden" class="form-control" id="id_subgrupo" value="{{ $lote->id_subgrupo }}">
+                        <input type="hidden" class="form-control" id="id_marca" value="{{ $lote->id_marca }}">
                         <div class="col-md-2 col-xs-6">
                             <div class="form-group">
                                 <label for="lote">Cód. Lote</label>
-                                <input type="email" class="form-control" id="id_lote" value="{{ $lote->id }}"
+                                <input type="text" class="form-control" id="id_lote" value="{{ $lote->id }}"
                                     disabled>
                             </div>
                         </div>
@@ -61,18 +66,21 @@
                                 <input type="text" class="form-control" id="ds_produto" disabled>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="cd_barras_peso">Cód. Barras Peso</label>
-                                <input type="text" class="form-control pula" id="cd_barras_peso" placeholder="Cód. Peso">
+                        @if ($lote->id_subgrupo == 101 && $lote->id_marca == 30)
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="cd_barras_peso">Cód. Barras Peso</label>
+                                    <input type="text" class="form-control pula" id="cd_barras_peso"
+                                        placeholder="Cód. Peso">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="peso">Peso Kg</label>
-                                <input type="text" class="form-control" id="peso" disabled>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="peso">Peso Kg</label>
+                                    <input type="text" class="form-control" id="peso" disabled>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer">
@@ -88,11 +96,9 @@
                 <div class="nav-tabs-custom" style="cursor: move;">
                     <!-- Tabs within a box -->
                     <ul class="nav nav-tabs pull-right ui-sortable-handle">
-                        <li class=""><a href="#finalizar" data-toggle="tab"
-                                aria-expanded="false">Finalizar</a>
+                        <li class=""><a href="#finalizar" data-toggle="tab" aria-expanded="false">Finalizar</a>
                         </li>
-                        <li class=""><a href="#table-resumo" data-toggle="tab"
-                                aria-expanded="false">Resumo</a>
+                        <li class=""><a href="#table-resumo" data-toggle="tab" aria-expanded="false">Resumo</a>
                         </li>
                         <li class="active"><a href="#table-itens" data-toggle="tab" aria-expanded="true">Itens</a>
                         </li>
@@ -100,33 +106,19 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="table-itens">
-                            <table id="table-add-item" class="table" style="width:100%">
+                            <table id="table-add-item" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Cód. Item</th>
                                         <th>Descrição</th>
-                                        <th>Peso</th>
+                                        <th>{{ $lote->id_subgrupo == 101 && $lote->id_marca == 30 ? 'Kg' : 'Unid.' }}</th>
                                         <th>Úsuario</th>
                                         <th>Entrada em</th>
                                         <th>Deletar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($itemlote as $i)
-                                        <tr>
-                                            <td>{{ $i->cd_produto }}</td>
-                                            <td>{{ $i->ds_item }}</td>
-                                            @if ($i->peso < $i->ps_liquido)
-                                                <td class="bg-red color-palette">{{ number_format($i->peso, 2) }}</td>
-                                            @else
-                                                <td class="bg-green color-palette">{{ number_format($i->peso, 2) }}</td>
-                                            @endif
-                                            <td>{{ $i->name }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($i->created_at)->format('d/m/Y H:i:s') }}</td>
-                                            <td><button class="delete fa fa-trash-o" aria-hidden="true"
-                                                    data-id="{{ $i->id }}"></button></td>
-                                        </tr>
-                                    @endforeach
+
                                 </tbody>
                             </table>
                         </div>
@@ -136,21 +128,22 @@
                                     <tr>
                                         <th>Cód. Item</th>
                                         <th>Descrição</th>
-                                        <th>Quantidade</th>
-                                        <th>Soma Peso</th>
+                                        <th>Qtd.</th>
+                                        <th>{{ $lote->id_subgrupo == 101 && $lote->id_marca == 30 ? 'Soma Kg' : 'Unid.' }}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($itemgroup as $i)
+                                    {{-- @foreach ($itemgroup as $i)
                                         <tr>
                                             <td>{{ $i->cd_produto }}</td>
                                             <td>{{ $i->ds_item }}</td>
                                             <td>{{ $i->qtditem }}</td>
                                             <td>{{ number_format($i->peso, 2) }}</td>
                                         </tr>
-                                    @endforeach
+                                    @endforeach --}}
                                 </tbody>
-                                <tfoot>
+                                {{-- <tfoot>
                                     <tr>
                                         <th></th>
                                         <th style="text-align: center">Total</th>
@@ -163,7 +156,15 @@
                                         }) }}
                                         </th>
                                     </tr>
-                                </tfoot>
+                                </tfoot> --}}
+                                <tfoot>
+                                    <tr>
+                                      <td></td>
+                                      <th style="text-align: right">Total</th>
+                                      <td></td>
+                                      <td></td>
+                                    </tr>
+                                  </tfoot>
                             </table>
                         </div>
                         <div class="tab-pane" id="finalizar">
@@ -182,8 +183,12 @@
 @endsection
 @section('scripts')
     @includeIf('admin.master.datatables')
+    <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
-        var pesoitem;
+        var pesoitem, subgrupo;
+        subgrupo = $('#id_subgrupo').val();
+        marca = $('#id_marca').val();
+        id_lote = $("#id_lote").val();
         let token = $("meta[name='csrf-token']").attr("content");
         $(document).ready(function() {
             $("#cd_barras").inputmask({
@@ -246,10 +251,15 @@
                 if (cd_produto == "") {
                     $('#cd_barras').attr('title', 'Código produto obrigatório!').tooltip('show');
                     return false;
-                } else if (cd_peso == "") {
-                    $("#cd_item").tooltip('hide');
-                    $('#cd_barras_peso').attr('title', 'Código peso ou kg obrigatório!').tooltip('show');
-                    return false;
+                }
+
+                if (subgrupo == 101 && marca == 30) {
+                    if (cd_peso == "") {
+                        $("#cd_item").tooltip('hide');
+                        $('#cd_barras_peso').attr('title', 'Código peso ou kg obrigatório!').tooltip(
+                            'show');
+                        return false;
+                    }
                 }
 
                 $.ajax({
@@ -257,29 +267,30 @@
                     url: "{{ route('add-item-lote.store') }}",
                     data: {
                         _token: $('#token').val(),
-                        cd_lote: $("#id_lote").val(),
+                        cd_lote: id_lote,
                         cd_produto: $("#cd_item").val(),
                         peso: $("#peso").val(),
+                        id_subgrupo: subgrupo,
+                        id_marca: marca
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');
                     },
                     success: function(result) {
+
                         $("#loading").addClass('hidden');
                         if (result.errors) {
-                            alert(result.errors +
-                            " Peso ou produtos está fora dos parâmetros!");
-                        } else {
-                            //alert(result.success);                            
-                            setTimeout(function() {
-                                $(".alert").removeClass('hidden');
-                                $(".alert p").text(result.success);
-                            }, 400);
+                            msgToastr(result.errors, 'warning');
 
-                            window.setTimeout(function() {
-                                $(".alert").alert('close');
-                                location.reload()
-                            }, 1000);
+                        } else {
+                            //console.log(result);  
+                            $("#cd_barras").val("");
+                            $('#cd_item').val("");
+                            $('#peso').val("");
+                            $('#cd_barras_peso').val("");
+                            msgToastr(result.success, 'success');
+                            $('#table-add-item').DataTable().ajax.reload();
+                            $('#qtd_itens_coleta').text(result.qtde + " Itens");
                         }
                     }
                 });
@@ -290,8 +301,7 @@
                     method: "POST",
                     url: "{{ route('estoque.finish-lote') }}",
                     data: {
-                        id: id_lote['id'],
-                        peso: {{ $pesototal }},
+                        id: id_lote['id'],                        
                         _token: token,
                     },
                     beforeSend: function() {
@@ -304,44 +314,6 @@
                     }
                 });
             });
-        });
-        $("#table-add-item").DataTable({
-            language: {
-                url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
-            },
-            pagingType: "simple",
-            responsive: true,
-            "order": [
-                [3, "desc"]
-            ],
-            lengthMenu: [
-                [10, 25, 50, 75, -1],
-                [10, 25, 50, 75, "Todos"]
-            ],
-            pageLength: 10
-        });
-        $("#table-add-item").on('click', '.delete', function() {
-            let rowId = $(this).data();
-            if (confirm('Deseja excluir o item: ' + rowId['id'] + '')) {
-                $.ajax({
-                    method: "DELETE",
-                    url: "{{ route('delete-item-lote') }}",
-                    data: {
-                        id: rowId['id'],
-                        _token: token
-                    },
-                    beforeSend: function() {
-                        $("#loading").removeClass('hidden');
-                    },
-                    success: function(result) {
-                        $("#loading").addClass('hidden');
-                        alert(result.success);
-                        location.reload()
-                    }
-                });
-            }
-        });
-        $(document).ready(function() {
             $('#cd_barras').focus();
             $('.pula').keypress(function(e) {
                 var tecla = (e.keyCode ? e.keyCode : e.which);
@@ -353,7 +325,130 @@
                         proximo.focus();
                     }
                 }
-            })
-        })
+            });
+            $("#table-add-item").DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                },
+                pagingType: "simple",
+                responsive: true,
+                "order": [
+                    [3, "desc"]
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 75, -1],
+                    [10, 25, 50, 75, "Todos"]
+                ],
+                pageLength: 10,
+                ajax: {
+                    url: "{{ route('estoque.get-itens-lote') }}",
+                    data: {
+                        id_lote: id_lote
+                    }
+                },
+                columns: [{
+                        data: 'cd_produto',
+                        name: 'cd_produto'
+                    },
+                    {
+                        data: 'ds_item',
+                        name: 'ds_item'
+                    },
+                    {
+                        data: 'peso',
+                        name: 'peso'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'created_at',
+                        name: 'created_at'
+                    },
+                    {
+                        data: 'actions',
+                        name: 'actions'
+                    },
+
+                ],
+                createdRow: (row, data, dataIndex, cells) => {
+                    $(cells[2]).css('background-color', data.ps);
+                },
+
+            });
+            $("#table-add-item").on('click', '.delete', function() {
+                let rowId = $(this).data();
+                if (confirm('Deseja excluir o item: ' + rowId['id'] + '')) {
+                    $.ajax({
+                        method: "DELETE",
+                        url: "{{ route('delete-item-lote') }}",
+                        data: {
+                            id: rowId['id'],
+                            _token: token
+                        },
+                        beforeSend: function() {
+                            $("#loading").removeClass('hidden');
+                        },
+                        success: function(result) {
+                            $("#loading").addClass('hidden');
+                            alert(result.success);
+                            location.reload()
+                        }
+                    });
+                }
+            });
+            $('.nav-tabs a[href="#table-resumo"]').on('click', function() {
+                $('#table-item-group').DataTable().destroy();
+                $("#table-item-group").DataTable({
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    },
+                    pagingType: "simple",
+
+                    lengthMenu: [
+                        [10, 25, 50, 75, -1],
+                        [10, 25, 50, 75, "Todos"]
+                    ],
+                    pageLength: 10,
+                    ajax: {
+                        url: "{{ route('estoque.get-resume-itens-lote') }}",
+                        data: {
+                            id_lote: id_lote
+                        }
+                    },
+                    columns: [{
+                        data: 'cd_produto',
+                        name: 'cd_produto'
+                    }, {
+                        data: 'ds_item',
+                        name: 'ds_item'
+                    }, {
+                        data: 'qtditem',
+                        name: 'qtditem'
+                    }, {
+                        data: 'peso',
+                        name: 'peso'
+                    }],
+                    footerCallback: function(row, data, start, end, display) {
+                        var api = this.api();
+
+                        // Total da coluna "qtditem"
+                        var totalQtdItem = api.column(2, {
+                            page: 'current'
+                        }).data().sum();
+
+                        var totalPesoItem = api.column(3,{
+                            page: 'current'
+                        }).data().sum();
+
+                        // Adiciona o valor no rodapé da coluna "qtditem"
+                        $(api.column(2).footer()).html(totalQtdItem);
+                        $(api.column(3).footer()).html(totalPesoItem);
+                    }
+
+                });
+            });
+        });
     </script>
 @endsection

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\ItemLoteEntradaEstoque;
 use App\Models\LoteEntradaEstoque;
+use App\Models\MarcaPneu;
+use App\Models\SubGrupo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -38,10 +40,15 @@ class LoteEntradaEstoqueController extends Controller
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
         $this->itemlote->countData(1);
+        $subgrupo = SubGrupo::all();
+        $marca = MarcaPneu::all();
         return view('admin.estoque.index', compact(
             'title_page',
             'user_auth',
-            'uri'
+            'uri',
+            'subgrupo',
+            'marca'
+            
         ));
     }
     public function getLotes()
@@ -82,6 +89,7 @@ class LoteEntradaEstoqueController extends Controller
     public function finishLote()
     {
         $qtd_item = $this->itemlote->countData($this->request->id);
+        
         return $this->lote->updateData($this->request, $qtd_item);
     }
     public function _validator(Request $request)
@@ -92,6 +100,8 @@ class LoteEntradaEstoqueController extends Controller
             ['ds_lote.required' => 'Descrição deve ser preenchida'],
             ['tp_lote' => 'required'],
             ['tp_lote.required' => 'Tipo lote deve ser preenchido'],
+            ['cd_subgrupo' => 'required|integer'],
+            ['cd_subgrupo.required' => 'Tipo de produto e obrigatório']
         );
     }
 

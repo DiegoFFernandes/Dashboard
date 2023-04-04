@@ -23,15 +23,26 @@ class Item extends Model
     }
     public function ImportaItemJunsoft($cd_marca)
     {
-        $query = "select i.cd_codbarraemb, i.cd_item, cast((i.ds_item) as varchar(100) character set utf8) ds_item, 
-            i.ps_liquido, i.sg_unidmed, i.cd_subgrupo, i.cd_marca, i.dt_registro
-                    from item i
-                    where i.cd_marca = $cd_marca
-                    and i.tp_item = 'I'
-                    and i.cd_grupo = 1
-                    and i.cd_subgrupo = '101'
-                    and i.st_ativo = 'S'
-                    --and i.cd_item = 1002289";
+        $query = "select
+                    case i.cd_subgrupo
+                    when 101 then i.cd_codbarraemb
+                    when 308 then i.cd_codigobarra
+                    when 103 then i.cd_codbarraemb
+                    end cd_codbarraemb,
+                    i.cd_item,
+                    cast((i.ds_item) as varchar(100) character set utf8) ds_item, 
+                    i.ps_liquido,
+                    i.sg_unidmed,
+                    i.cd_subgrupo,
+                    i.cd_marca,
+                    i.dt_registro
+                from item i
+                where i.cd_marca = $cd_marca
+                and i.tp_item in ('I','S')
+                and i.cd_grupo in (1,3)
+                and i.cd_subgrupo in (101,308,103)
+                and i.st_ativo = 'S'
+                --and i.cd_item in ('3107','1001904')";
         $itens = DB::connection($this->setConnet())->select($query);
 
         $status = $this->InsertItem($itens);

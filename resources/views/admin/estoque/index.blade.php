@@ -20,6 +20,24 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="cd_subgrupo" class="control-label">Produto</label>
+                            <select class="form-control" id="cd_subgrupo">
+                                <option value="0">Selecione</option>
+                                @foreach ($subgrupo as $s)
+                                    <option value="{{ $s->id }}">{{ $s->ds_marca }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cd_marca" class="control-label">Marca</label>
+                            <select class="form-control" id="cd_marca">
+                                <option value="0">Selecione</option>
+                                @foreach ($marca as $m)
+                                    <option value="{{ $m->id }}">{{ $m->ds_marca }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="ds_lote" class="control-label">Descrição</label>
                             <input type="text" class="form-control" id="ds_lote"
                                 placeholder="Descrição para o Lote: Banda/Consertos...">
@@ -103,7 +121,14 @@
                     },
                     {
                         data: 'ps_liquido_total',
-                        name: 'ps_liquido_total'
+                        name: 'ps_liquido_total',
+                        render: function(data, type, full, meta) {
+                            // Formata o valor numérico para usar ponto como separador decimal e vírgula como separador de milhar
+                            return parseFloat(data).toLocaleString('pt-BR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                        }
                     },
                     {
                         data: 'status',
@@ -138,12 +163,24 @@
                     method: 'POST',
                     data: {
                         tp_lote: $('#tp_lote').val(),
+                        cd_subgrupo: $('#cd_subgrupo').val(),
+                        cd_marca: $('#cd_marca').val(),
                         ds_lote: $("#ds_lote").val(),
                         _token: $('#token').val(),
                     },
                     beforeSend: function() {
                         if ($("#tp_lote").val() == "") {
                             $('#tp_lote').attr('title', 'Tipo lote é obrigatório!')
+                                .tooltip('show');
+                            return false;
+                        }
+                        if ($("#cd_subgrupo").val() == 0) {
+                            $('#cd_subgrupo').attr('title', 'Selecione o tipo do produto!')
+                                .tooltip('show');
+                            return false;
+                        }
+                        if ($("#cd_marca").val() == 0) {
+                            $('#cd_marca').attr('title', 'Selecione uma marca!')
                                 .tooltip('show');
                             return false;
                         }
@@ -158,10 +195,10 @@
                         $("#loading").addClass('hidden');
                         if (result.errors) {
                             // alert(result.errors);
-                            msg(result.errors, 'alert-warning', 'fa fa-warning');                            
+                            msgToastr(result.errors, 'warning');
                         } else {
                             // alert(result.success);
-                            msg(result.success, 'alert-success', 'fa fa-check');
+                            msgToastr(result.success, 'success');
                         }
                         $('#table-lote').DataTable().ajax.reload();
                     }

@@ -51,7 +51,7 @@ class AnaliseFrotaController extends Controller
     public function create()
     {
         $this->request['id'] = 0;
-        $input = $this->__validate();
+        $input = $this->__validate();        
         if ($input->fails()) {
             $error = '<ul>';
 
@@ -152,7 +152,7 @@ class AnaliseFrotaController extends Controller
                 'sulco' => 'required|integer',
                 'placa' => 'required|string',
                 'modelo_veiculo' => 'required|integer',
-                'obs' => 'max:255',
+                'obs' => 'max:255|min:0',
                 'ps_min' => 'required|integer',
                 'ps_max' => 'required|integer'
             ],

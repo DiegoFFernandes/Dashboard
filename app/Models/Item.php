@@ -84,4 +84,10 @@ class Item extends Model
             return 0;
         });
     }
+    public function FindProdutoAll($term){
+        $this->connection = 'mysql';
+
+        return Item::where('ds_item','like', '%'.$term.'%')
+		->limit(10)->get();
+    }
 }

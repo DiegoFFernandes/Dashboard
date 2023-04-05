@@ -172,9 +172,10 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="capture-image" data-backdrop="static" data-keyboard="false" style="display: none;">
+            <div class="modal fade" id="capture-image" data-backdrop="static" data-keyboard="false"
+                style="display: none;">
                 <div class="modal-dialog">
-                    <div class="modal-content">                        
+                    <div class="modal-content">
                         <div class="modal-body">
                             <div id="my_camera"></div>
 
@@ -435,6 +436,7 @@
                                 closeButton: true,
                                 allowHtml: true,
                                 progressBar: true,
+                                timeOut: 1000,
                                 onHidden: function() {
                                     window.location.href =
                                         "{{ route('analise-frota.index') }}";
@@ -541,6 +543,13 @@
                     success: function(response) {
                         if (response.success) {
                             $("#table-add-item").DataTable().ajax.reload();
+                            pictures = [];
+                            $('#menu').empty();
+                            $('#fogo').val("");
+                            $('#dot').val("");
+                            $('#sulco').val("");
+                            $('#modelo').val(0).trigger('change');                            
+                            pressao = $('#ps').val();
                             msgToastr(response.success, 'success');
                         } else {
                             msgToastr(response.errors, 'warning');

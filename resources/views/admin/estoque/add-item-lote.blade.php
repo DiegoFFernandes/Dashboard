@@ -48,10 +48,17 @@
                                     disabled>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="cd_barras">Cód. Barras Prod.</label>
-                                <input type="text" class="form-control pula" id="cd_barras" placeholder="Cód. Barras">
+                                <div class="input-group">
+                                    <input type="text" class="form-control pula" id="cd_barras"
+                                        placeholder="Cód. Barras">
+                                    <div class="input-group-addon" id="">
+                                        <button data-toggle="modal" data-target="#modal-search"><i
+                                                class="fa fa-search"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3 hidden-xs">
@@ -60,7 +67,7 @@
                                 <input type="text" class="form-control" id="cd_item" disabled required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="ds_produto">Descrição Produto</label>
                                 <input type="text" class="form-control" id="ds_produto" disabled>
@@ -159,12 +166,12 @@
                                 </tfoot> --}}
                                 <tfoot>
                                     <tr>
-                                      <td></td>
-                                      <th style="text-align: right">Total</th>
-                                      <td></td>
-                                      <td></td>
+                                        <td></td>
+                                        <th style="text-align: right">Total</th>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
-                                  </tfoot>
+                                </tfoot>
                             </table>
                         </div>
                         <div class="tab-pane" id="finalizar">
@@ -178,6 +185,24 @@
                     </div>
                 </div>
             </div>
+            {{-- Modal de Pesquisa de Produto --}}
+            <div class="modal fade" id="modal-search" role="dialog" aria-labelledby="ModalSearch">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Pesquisar por descrição</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <select class="form-control" id="item" style="width: 100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     </section>
     <!-- /.content -->
 @endsection
@@ -301,7 +326,7 @@
                     method: "POST",
                     url: "{{ route('estoque.finish-lote') }}",
                     data: {
-                        id: id_lote['id'],                        
+                        id: id_lote['id'],
                         _token: token,
                     },
                     beforeSend: function() {
@@ -438,7 +463,7 @@
                             page: 'current'
                         }).data().sum();
 
-                        var totalPesoItem = api.column(3,{
+                        var totalPesoItem = api.column(3, {
                             page: 'current'
                         }).data().sum();
 
@@ -449,6 +474,47 @@
 
                 });
             });
+
+            $('#modal-search').on('shown.bs.modal', function() {
+                $('#item').select2({
+                        placeholder: "Ex: B269 240",
+                        allowClear: true,
+                        ajax: {
+                            url: '{{ route('search-product') }}',
+                            dataType: 'json',
+                            delay: 250,
+                            processResults: function(data) {
+                                console.log(data);
+                                return {
+                                    results: $.map(data, function(item) {
+                                        return {
+                                            text: item.ds_item,
+                                            id: item.cd_item,
+                                            cd_barras: item.cd_codbarraemb
+                                        }
+                                    })
+
+                                };
+                            },
+                            cache: true
+                        }
+                    })
+                    .change(function(el) {
+                        var data = $(el.target).select2('data');
+                        $('#ds_produto').val(data[0].text);
+                        $('#cd_item').val(data[0].id);
+                        $('#cd_barras').val(data[0].cd_barras);
+                    });
+            });
+
+
+
+
+
+
+
+
+
         });
     </script>
 @endsection

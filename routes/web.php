@@ -32,6 +32,7 @@ use App\Http\Controllers\admin\Producao\MetaOperadorController;
 use App\Http\Controllers\Admin\ProducaoEtapaController;
 use App\Http\Controllers\admin\ProdutividadeController;
 use App\Http\Controllers\Admin\Produto\ImportaItemJunsoftController;
+use App\Http\Controllers\Admin\Produto\ItemController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeiculoController;
@@ -68,6 +69,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');
     Route::post('perfil-usuario/do', [UserController::class, 'updateProfileUser'])->name('profile-user.update');
     Route::get('search-empresa-fiscal', [EmpresaController::class, 'getEmpresaFiscal'])->name('search-empresa-fiscal');
+    Route::get('search-produto', [ItemController::class, 'searchProduto'])->name('search-product');
 });
 
 Route::middleware(['auth', 'role_or_permission:ver-analise-frota|admin'])->group(function () {

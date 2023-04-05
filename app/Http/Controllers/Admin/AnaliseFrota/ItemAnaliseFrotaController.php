@@ -330,9 +330,9 @@ class ItemAnaliseFrotaController extends Controller
 
        $html = $view->render();
 
-        // return view('admin.analise_frota.print-analysis', $data);
+        
         // Adiciona um tempo de espera de 1 segundo antes de renderizar o PDF
-        $js = "setTimeout(function() {window.status = 'ready';, 10000);";
+        $js = "setTimeout(function() {window.status = 'ready';, 1000);";
 
         $pdf = SnappyPdf::loadHTML($html,)
             // ->setOption('javascript-delay', 1000)
@@ -349,6 +349,6 @@ class ItemAnaliseFrotaController extends Controller
             ->setOption('margin-bottom', 10)
             ->setOption('margin-left', 10);
 
-        return $pdf->stream('Relatório Análise.pdf');
+        return $pdf->download('Relatório Análise.pdf'); //mudar para stream para visualzar direto
     }
 }

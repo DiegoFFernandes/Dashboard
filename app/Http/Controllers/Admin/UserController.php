@@ -16,6 +16,8 @@ use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
+    public $empresa, $request, $pessoa, $tipopessoa, $user, $grupo;
+
     public function __construct(
         Empresa $empresa,
         Request $request,

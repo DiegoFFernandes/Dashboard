@@ -322,7 +322,7 @@ class CobrancaController extends Controller
     }
     public function getSubmitIagente()
     {
-        $email = WebHook::all();
+        $email = WebHook::where('tipo', 'bounce')->get();
         foreach ($email as $e) {
             $arryEmail[] = $e->email;
         }

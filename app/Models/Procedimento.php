@@ -21,7 +21,7 @@ class Procedimento extends Model
     ];
     protected $casts = [
         'criado'  => 'date:d-m-Y',
-        
+
     ];
     public function storeData($input, $file)
     {
@@ -35,7 +35,7 @@ class Procedimento extends Model
             'id_user_create' => Auth::user()->id
         ]);
     }
-    public function listData($status)
+    public function listData($status, $setor)
     {
         return Procedimento::select(
             'procedimentos.id',
@@ -44,6 +44,7 @@ class Procedimento extends Model
             'procedimentos.title',
             'procedimentos.description',
             'procedimentos.path',
+            'i.path as path2',
             'procedimentos.id_user_create',
             'users.name',
             DB::raw("CASE procedimentos.status 
@@ -53,17 +54,23 @@ class Procedimento extends Model
                                 WHEN 'R' THEN 'Reprovado'
                                 WHEN 'N' THEN 'Reanalise' 
                                 END status"),
-            'procedimentos.created_at as criado', 
-            'procedimento_public.status as public'                 
+            'procedimentos.created_at as criado',
+            'procedimento_public.status as public'
         )
             ->join('setors', 'setors.id', 'procedimentos.id_setor')
             ->join('users', 'users.id', 'procedimentos.id_user_create')
             ->leftJoin('procedimento_public', 'procedimento_public.id_procedimento', 'procedimentos.id')
-            ->when($status == 'pub', function($q){
-                return $q->where('procedimento_public.status', 'P');
-            }, function($q) use ($status) {
+            ->leftJoin('item_files as i', 'i.id_item', 'procedimentos.id')
+            ->when($status == 'pub', function ($q) use ($setor) {
+                if ($setor == 'all') {
+                    return $q->where('procedimento_public.status', 'P');
+                } else {
+                    return $q->where('procedimento_public.status', 'P')
+                        ->where('procedimentos.id_setor', $setor);
+                }
+            }, function ($q) use ($status) {
                 return $q->whereIn('procedimentos.status', $status);
-            })            
+            })
             ->get();
     }
     public function updateData($input)
@@ -81,7 +88,21 @@ class Procedimento extends Model
                 ]
             );
     }
-    public function updateIfReproved($input){
+    public function updateIfReproved($input)
+    {
         return Procedimento::where('id', $input)->update(['status' => 'N']);
+    }
+    public function storeUpdateFileEdit()
+    {
+    }
+    public function countProcedimentos()
+    {
+        return Procedimento::select('procedimentos.id_setor', 's.nm_setor', DB::raw('count(*) as qtd'))
+            ->join('setors as s', 's.id', 'procedimentos.id_setor')
+            ->join('procedimento_public as p', 'p.id_procedimento', 'procedimentos.id')
+            ->where('p.status', 'P')
+            ->groupBy('procedimentos.id_setor', 's.nm_setor')
+            ->orderBy('s.nm_setor')
+            ->get();
     }
 }

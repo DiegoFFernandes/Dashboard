@@ -24,14 +24,6 @@
     </div>
     <!-- /alert -->
 @endif
-@if (session('error'))
-    <!-- alert -->
-    <div class="alert alert-danger alert-dismissible alert-geral">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <i class="icon fa fa-ban"></i>{{ session('status') }}
-    </div>
-    <!-- /alert -->
-@endif
 {{-- @error('file')
     <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
 @enderror --}}

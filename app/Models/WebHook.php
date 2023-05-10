@@ -25,7 +25,7 @@ class WebHook extends Model
         $query = "SELECT 
                     X.cd_pessoa, X.nm_pessoa, X.ds_email, MODULO
                 FROM (
-                    SELECT P.cd_pessoa, cast(P.nm_pessoa as varchar(100) character set UTF8) nm_pessoa, P.ds_email, 'TFA001' MODULO
+                    SELECT P.cd_pessoa, cast(P.nm_pessoa as varchar(1000) character set UTF8) nm_pessoa, P.ds_email, 'TFA001' MODULO
                     FROM PESSOA P
                     where p.cd_tipopessoa not in (5,8,7,6,2)
 

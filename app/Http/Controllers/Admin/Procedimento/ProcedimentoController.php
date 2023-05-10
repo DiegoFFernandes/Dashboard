@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Procedimento;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ProcedimentoMail;
+use App\Models\ItemFile;
 use App\Models\Procedimento;
 use App\Models\ProcedimentoAprovador;
 use App\Models\ProcedimentoPublish;
@@ -17,11 +18,14 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Days;
 use ProcedimentoHelper;
 use stdClass;
 use Yajra\DataTables\DataTables as DataTablesDataTables;
 use Yajra\DataTables\Facades\DataTables;
+
+use function PHPUnit\Framework\isNull;
 
 class ProcedimentoController extends Controller
 {
@@ -149,7 +153,7 @@ class ProcedimentoController extends Controller
         if ($status['status'] == 'A') {
             $status = ['A', 'N'];
         }
-        $data = $this->procedimento->listData($status);
+        $data = $this->procedimento->listData($status, "all");
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
                 if ($data->status == 'Aguardando' || $data->status == 'Reanalise') {
@@ -174,8 +178,8 @@ class ProcedimentoController extends Controller
                         $html .= '<button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="btnPublish" title="Publicar"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i></button> ';
                     }
                     $html .= ' <button type="button" class="btn btn-warning btn-sm btn-edit" id="getEditProcedimento" data-id="' . $data->id . '"" data-table="table-procedimento-liberados" title="Reanalisar"><i class="fa fa-refresh" aria-hidden="true"></i></button> 
-                    <button type="button" class="btn btn-primary btn-sm" data-id="' . $data->id . '" id="getViewReason" title="Chat"><i class="fa fa-comments" aria-hidden="true"></i></button>                        
-                            
+                    <button type="button" class="btn btn-success btn-sm" data-id="' . $data->id . '" id="getViewReason" title="Chat"><i class="fa fa-comments" aria-hidden="true"></i></button>                        
+                    <button type="button" class="btn btn-primary btn-sm" data-id="' . $data->id . '" id="EditFile"><i class="fa fa-file" aria-hidden="true"></i></button>         
                     ';
                     return $html;
                 } elseif ($data->status == 'Em andamento') {
@@ -270,11 +274,13 @@ class ProcedimentoController extends Controller
         $title_page   = 'Procedimentos Publicos';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
-
+        $filtro = $this->procedimento->countProcedimentos();
+       
         return view('admin.qualidade.procedimento-publicos', compact(
             'title_page',
             'user_auth',
             'uri',
+            'filtro'
         ));
     }
     public function storePublish()
@@ -293,16 +299,22 @@ class ProcedimentoController extends Controller
     public function GetProcedimentoPublish()
     {
         $public = $this->request->validate([
-            'public' => 'required|in:pub'
+            'public' => 'required|in:pub',
+            'setor' => 'required'
         ]);
-        $data = $this->procedimento->listData($public['public']);
+        $data = $this->procedimento->listData($public['public'], $public['setor']);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
-                return '  
-                        <a class="btn btn-danger btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank" title="PDF"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>  
+                $btn = '<a class="btn btn-danger btn-sm btn-pdf" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path]) . '" target="_blank" title="PDF"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>  
                         <button class="btn btn-warning btn-sm btn-notify" data-id="' . $data->id . '" data-toggle="modal" data-target="#modal-revisar" title="Revisão"><i class="fa fa-refresh" aria-hidden="true"></i></button>                    
                         ';
-                          
+                if (!is_null($data->path2)) {
+                    $btn .= '<a class="btn btn-primary btn-sm btn-download" href="' . route('procedimento.show-pdf', ['arquivo' => $data->path2]) . '" title="Arquivo Editavel"><i class="fa fa-file-o" aria-hidden="true"></i></a>  
+                    ';
+                }
+
+
+                return $btn;
             })
             ->rawColumns(['Actions'])
             ->make(true);
@@ -314,17 +326,14 @@ class ProcedimentoController extends Controller
         return DataTables::of($data)->make(true);
     }
     public function reviseProcedimento()
-    {        
-        
-       
-
+    {
         $validate = $this->request->validate(
             [
                 'id' => 'required|integer',
-                'revision' => 'required|string'                
+                'revision' => 'required|string'
             ],
-        );        
-        
+        );
+
         $procedimento = Procedimento::findOrFail($validate['id']);
         $setor = Setor::findOrFail($procedimento['id_setor']);
         $user = User::findOrFail($procedimento['id_user_create']);
@@ -334,11 +343,43 @@ class ProcedimentoController extends Controller
         $aprovador['description_recusa'] = $validate['revision'];
         $aprovador['status'] = 'revision';
         $aprovador['op_table'] = false;
-        
-        $store = $this->recusa->storeData($procedimento, $aprovador);        
 
-        Mail::send(new ProcedimentoMail($aprovador, $setor, $user));        
-        
+        $store = $this->recusa->storeData($procedimento, $aprovador);
+
+        Mail::send(new ProcedimentoMail($aprovador, $setor, $user));
+
         return response()->json(['success' => 'Pedido de revisão criado com sucesso!']);
+    }
+    public function storeUpdateFileEdit()
+    {
+        try {
+            $procedimento = $this->procedimento->where('id', $this->request->id_procedimento)->firstOrFail();
+        } catch (\Throwable $th) {
+            return redirect()->route('procedimento.index')->with('error', 'Procedimento não existe!');
+        }
+
+        $validate = $this->request->validate([
+            'id_procedimento' => 'integer|required',
+            'file' => ['required', 'file', 'file_extension:xlsx,docx'],
+        ]);
+
+        $arquivo = $this->request->file('file');
+        $fileNameOriginal = $arquivo->getClientOriginalName();
+        $extension = pathinfo($fileNameOriginal, PATHINFO_EXTENSION);
+        $fileName = uniqid() . '.' . $extension;
+        $path = $arquivo->storeAs('procedimentos', $fileName);
+
+        ItemFile::updateOrInsert(
+            ['id_item' => $validate['id_procedimento']],
+            [
+                'id_item' => $validate['id_procedimento'],
+                'path' => $path,
+                'type' => 'PR',
+                "created_at"    =>  \Carbon\Carbon::now(), # new \Datetime()
+                "updated_at"    => \Carbon\Carbon::now(),  # new \Datetime()
+            ]
+        );
+
+        return redirect()->route('procedimento.index')->with('message', 'Arquivo carregado com sucesso!');
     }
 }

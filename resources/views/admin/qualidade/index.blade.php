@@ -103,7 +103,8 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="arquivo">Setor designado</label>
-                                        <select name="setor" id="setor" class="form-control select2" style="width: 100%">
+                                        <select name="setor" id="setor" class="form-control select2"
+                                            style="width: 100%">
                                             @foreach ($setors as $s)
                                                 <option value="{{ $s->id }}">
                                                     {{ $s->nm_setor . ' - ' . $s->nm_area }}
@@ -173,7 +174,8 @@
                             <h4 class="modal-title">Editar Procedimento</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('procedimento.update') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('procedimento.update') }}" method="post"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" id="op-table" name="op_table">
                                 <div class="col-md-3">
@@ -198,8 +200,9 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="users">Usuarios Responsaveis</label>
-                                        <select class="form-control users" id="" name="users[]" multiple="multiple"
-                                            data-placeholder="Selecione os usuarios" style="width: 100%;" required>
+                                        <select class="form-control users" id="" name="users[]"
+                                            multiple="multiple" data-placeholder="Selecione os usuarios"
+                                            style="width: 100%;" required>
                                             @foreach ($users as $u)
                                                 <option value="{{ $u->id }}">{{ $u->name }}</option>
                                             @endforeach
@@ -280,7 +283,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span></button>
-                                <h4 class="modal-title"><i class="fa fa-comments-o"></i> Chat - Procedimento</h4>
+                            <h4 class="modal-title"><i class="fa fa-comments-o"></i> Chat - Procedimento</h4>
                         </div>
                         <div class="modal-body">
                             <div class="direct-chat direct-chat-warning">
@@ -315,6 +318,59 @@
                                     </tr>
                                 </thead>
                             </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Modal Submit File Edit --}}
+            <div class="modal  fade" id="modal-edit-file">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+                            <h4 class="modal-title">Salvar Arquivo Editavel</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('procedimento.store-update') }}" method="post"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="id_procedimento">Cód.</label>
+                                        <input class="form-control id_procedimento" type="number" id=""
+                                            name="id_procedimento" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="arquivo">Titulo</label>
+                                        <input type="text" class="form-control title" name='title'
+                                            placeholder="Titulo Procedimento" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <label for="arquivo">Buscar arquivos</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-file-word-o"></i></span>
+                                        <input type="file" name="file" class="form-control"
+                                            placeholder="Clique/Arraste e Solte aqui" accept=".xlsx,.xls,.doc,.docx">
+
+                                    </div>
+                                    <p class="help-block">Somente arquivos em Word ou Excel.</p>
+                                </div>
+                                <div class="col-md-12" align="center" style="padding-top: 24px">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-success btn-block">
+                                            <i class="fa fa-download"></i> Enviar Documento</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+
                         </div>
                     </div>
                 </div>
@@ -603,6 +659,24 @@
                         }
                     }
                 });
+            });
+            $('body').on('click', '#EditFile', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var rowData = $('#table-procedimento-liberados').DataTable().row($(this).parents('tr'))
+                    .data();
+                if (rowData == undefined) {
+                    var selected_row = $(this).parents('tr');
+                    if (selected_row.hasClass('child')) {
+                        selected_row = selected_row.prev();
+                    }
+                    rowData = $('#table-procedimento-liberados').DataTable().row(selected_row).data();
+                }
+
+                console.log(rowData);
+                $('.id_procedimento').val(rowData.id);
+                $('.title').val(rowData.title);
+                $('#modal-edit-file').modal('show');
             });
 
             function initTable(tableId, data) {

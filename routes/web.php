@@ -52,7 +52,7 @@ Route::get('/clear-cache-all', function () {
 /* Rotas de Login Client */
 Route::get('/login-cliente', [LoginController::class, 'showLoginClientForm'])->name('login-client');
 // Route::get('imprimir-coleta-analise/{id}', [ItemAnaliseFrotaController::class, 'getPrintItemAnaliseAll'])->name('get-print-analysis');
-       
+
 
 /* Rotas de Login */
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
@@ -87,8 +87,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('delete/{id}', [UserController::class, 'delete'])->name('admin.usuarios.delete');
         Route::get('cadastrar', [UserController::class, 'index'])->name('admin.usuarios.create');
         Route::post('cadastrar', [UserController::class, 'create'])->name('admin.usuarios.create.do');
-        Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');        
-        
+        Route::post('atualizar', [UserController::class, 'update'])->name('admin.usuarios.update');
+
         /*Rotas funções*/
         Route::get('funcao', [RoleController::class, 'index'])->name('admin.usuarios.role');
         Route::get('funcao/editar/{id}', [RoleController::class, 'edit'])->name('admin.usuarios.role.edit');
@@ -123,8 +123,8 @@ Route::prefix('producao')->group(function () {
 
     /*Desbloquear ordem */
     Route::get('desbloqueio-ordem', [AcompanhaOrdemController::class, 'unlockOrder'])->name('unlock-order');
-    
-    
+
+
     Route::get('search-operador', [ExecutorController::class, 'searchExecutor'])->name('search-operador');
     Route::get('meta-operador', [MetaOperadorController::class, 'index'])->name('meta-operador');
 
@@ -188,6 +188,9 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
     });
 });
 Route::middleware(['auth'])->group(function () {
+    Route::prefix('powerbi')->group(function () {
+        Route::get('index', [PowerBiEmbeddedController::class, 'index'])->name('powerbi.index');
+    });
     Route::prefix('comercial')->group(function () {
         Route::middleware(['auth', 'permission:ver-comercial-norte'])->group(function () {
             Route::get('ivorecap-norte', [ComercialController::class, 'ivoComercialNorte'])->name('comercial.ivo-norte');
@@ -252,7 +255,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('estoque')->group(function () {
         Route::middleware(['auth', 'permission:ver-producao|ver-comercial-sul|ver-diretoria-sul'])->group(function () {
             Route::get('saldo-estoque', [LoteEntradaEstoqueController::class, 'saldoEstoque'])->name('estoque.saldo-estoque');
-        });        
+        });
     });
 });
 
@@ -275,9 +278,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('edit/{id}/do', [EmailController::class, 'update'])->name('email.update.do');
         Route::delete('delete/{id}', [EmailController::class, 'destroy'])->name('email.delete');
     });
-    Route::prefix('powerbi')->group(function () {
-        Route::get('index', [PowerBiEmbeddedController::class, 'index'])->name('powerbi.index');
-    });
+
     Route::prefix('inadimplencia')->group(function () {
         Route::get('index', [InadimplenciaController::class, 'index'])->name('inadimplencia.index');
         Route::get('get-table-vencer', [InadimplenciaController::class, 'getVencer'])->name('inadimplencia.get-vencer');
@@ -316,14 +317,14 @@ Route::middleware(['auth', 'role:admin|producao'])->group(function () {
         Route::post('cria-lote', [LoteEntradaEstoqueController::class, 'store'])->name('estoque.cria-lote');
         Route::get('get-lotes', [LoteEntradaEstoqueController::class, 'getLotes'])->name('estoque.get-lotes');
         Route::post('finaliza-lote', [LoteEntradaEstoqueController::class, 'finishLote'])->name('estoque.finish-lote');
-        Route::delete('delete-lote', [LoteEntradaEstoqueController::class, 'delete'])->name('estoque.delete-lote');     
+        Route::delete('delete-lote', [LoteEntradaEstoqueController::class, 'delete'])->name('estoque.delete-lote');
 
 
         Route::get('add-item-lote/{id}', [ItemLoteEntradaEstoqueController::class, 'index'])->name('add-item-lote.index');
         Route::get('get-busca-item/{cd_barras}', [ItemLoteEntradaEstoqueController::class, 'getBuscaItem'])->name('get-item-lote');
         Route::get('get-itens-lote', [ItemLoteEntradaEstoqueController::class, 'getItensLote'])->name('estoque.get-itens-lote');
         Route::get('get-resume-itens-lote', [ItemLoteEntradaEstoqueController::class, 'getResumeItens'])->name('estoque.get-resume-itens-lote');
-        
+
         Route::get('get-busca-item',  function () {
             return;
         });

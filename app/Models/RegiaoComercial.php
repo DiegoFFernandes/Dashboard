@@ -49,7 +49,7 @@ class RegiaoComercial extends Model
         inner join areacomercial ac on (ac.cd_areacomercial = rc.cd_areacomercial)
         where ac.cd_areacomercial = $cd_areacomercial
         order by ds_regiaocomercial";      
-        $key = "regiao_comercial_". Auth::user()->id; 
+        $key = "regiao_comercial__". Auth::user()->id; 
         return Cache::remember($key, now()->addMinutes(60), function() use ($query){
             return DB::connection($this->setConnet())->select($query);
         });

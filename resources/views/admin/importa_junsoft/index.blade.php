@@ -81,11 +81,13 @@
                     },
                     success: function(response) {
                         $("#loading").addClass('hidden');
+                        
                         if (response.success) {
                             msgToastr(response.success, 'success');
                         } else {
-                            msgToastr(response.error, 'danger');
+                            msgToastr(response.error, 'warning');
                         }
+                        
                     }
                 });
             });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cargo;
 use App\Models\Empresa;
 use App\Models\EmpresasGrupoPessoa;
 use App\Models\Pessoa;
@@ -43,13 +44,15 @@ class UserController extends Controller
         // $empresas  = $this->empresa->empresa();
         $empresas  = $this->empresa->EmpresaAll();
         $tipopessoa = $this->tipopessoa->tipoPessoaAll();
-
+        $cargos = Cargo::all();
+        
         return view('admin.usuarios.usuarios', compact(
             'users',
             'user_auth',
             'empresas',
             'uri',
-            'tipopessoa'
+            'tipopessoa',
+            'cargos'
         ));
     }
     public function create(Request $request)
@@ -67,12 +70,13 @@ class UserController extends Controller
                 $request['conexao'] = $empresa->CONEXAO;
             }
         }
+
         $request['password'] = Hash::make($request['password']);
         $request['ds_tipopessoa'] = $this->verifyTipoPessoa($this->request->ds_tipopessoa);
         $request['email'] = strtolower($this->request->email);
         $request['name'] = mb_convert_case($this->request->name, MB_CASE_TITLE, 'UTF-8');
         $request['phone'] = Helper::RemoveSpecialChar($this->request->phone);
-       
+
         $user                = $this->_validade($request);
         $user                = User::create($user);
         if ($user->ds_tipopessoa == 'Cliente' || $user->ds_tipopessoa == 'Cliente e fornecedor') {
@@ -89,6 +93,7 @@ class UserController extends Controller
         $user_id  = User::findOrFail($request->id);
         $empresas = $this->empresa->EmpresaAll();
         $tipopessoa = $this->tipopessoa->tipoPessoaAll();
+        $cargos = Cargo::all();
 
         return view('admin.usuarios.usuarios', compact(
             'user_id',
@@ -96,7 +101,8 @@ class UserController extends Controller
             'empresas',
             'uri',
             'user_auth',
-            'tipopessoa'
+            'tipopessoa',
+            'cargos'
         ));
     }
     public function update(Request $request)
@@ -140,7 +146,7 @@ class UserController extends Controller
             return redirect()->route('admin.usuarios.listar')->with('info', 'Usuário deletado com sucesso!');
         } catch (\Throwable $th) {
             return redirect()->route('admin.usuarios.listar')->with('warning', 'Usúario não pode ser excluido, está associados a outras tabelas do banco de dados!');
-        }        
+        }
         return redirect()->route('admin.usuarios.listar')->with('info', 'Usuário deletado com sucesso!');
     }
     public function _validade(Request $request)
@@ -152,6 +158,7 @@ class UserController extends Controller
                 'email'    => 'required|email',
                 'password' => 'required', 'alpha_num',
                 'empresa'  => 'required', 'integer:1,2,3,21,22',
+                'cargo'     => 'required', 'integer:1,2,3,4',
                 'cd_pessoa' => 'integer',
                 'phone' => 'numeric|min:10',
                 'ds_tipopessoa' => 'required|max:60',
@@ -162,6 +169,8 @@ class UserController extends Controller
                 'email.required'    => 'Por favor informe um email.',
                 'password.required' => 'Por favor informe uma senha.',
                 'empresa.required'  => 'Por favor informe uma empresa valida.',
+                'cargo.required' => 'Por favor informe um cargo',
+                'cargo.integer' => 'Cargo informado não e valido!',
                 'phone.numeric' => 'Celular deve numerico',
             ]
         );
@@ -204,5 +213,4 @@ class UserController extends Controller
             return "Funcionario";
         }
     }
-    
 }

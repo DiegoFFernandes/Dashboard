@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'cd_pessoa',
+        'cargo',
         'ds_tipopessoa',
         'empresa', 
         'conexao', 

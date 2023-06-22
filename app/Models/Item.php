@@ -27,7 +27,7 @@ class Item extends Model
                     case i.cd_subgrupo
                     when 101 then i.cd_codbarraemb
                     when 308 then i.cd_codigobarra
-                    when 103 then i.cd_codbarraemb
+                    when 103 then i.cd_codigobarra
                     end cd_codbarraemb,
                     i.cd_item,
                     cast((i.ds_item) as varchar(100) character set utf8) ds_item, 
@@ -38,7 +38,7 @@ class Item extends Model
                     i.dt_registro
                 from item i
                 where i.cd_marca = $cd_marca
-                and i.tp_item in ('I','S')
+                and i.tp_item in ('I','S','P')
                 and i.cd_grupo in (1,3)
                 and i.cd_subgrupo in (101,308,103)
                 and i.st_ativo = 'S'

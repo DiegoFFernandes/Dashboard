@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+  public $user, $resposta;
   public function __construct(Request $request)
   {
     $this->resposta = $request;

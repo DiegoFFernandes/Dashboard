@@ -24,14 +24,42 @@
                                 @endif
                             </div>
                             <div class="col-md-12">
-                                @includeIf("admin.master.pessoa")
+                                @includeIf('admin.master.pessoa')
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-8">
                                 <div class="form-group">
                                     <label for="name">Nome:</label>
                                     <input type="name" name='name' class="form-control" id="name"
                                         placeholder="Nome usuario" value="{{ isset($user_id->name) ? $user_id->name : '' }}"
                                         required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="cargo">Nivel PW:</label>
+                                    <select class="form-control" name="cargo" id="cargo" required>
+                                        {{-- Condição para editar usuario --}}
+                                        @if (isset($user_id))
+                                            @foreach ($cargos as $c)
+                                                @if ($user_id->cargo == $c->id)
+                                                    <option value="{{ $c->id }}">{{ $c->ds_cargo }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                            @foreach ($cargos as $c)
+                                                @if ($user_id->cargo != $c->id)
+                                                    <option value="{{ $c->id }}">{{ $c->ds_cargo }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                            {{-- fim condição editar usuario --}}
+                                        @else
+                                            @foreach ($cargos as $c)
+                                                <option value="{{ $c->id }}">{{ $c->ds_cargo }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-8">
@@ -46,17 +74,17 @@
                                 <label for="email">Celular:</label>
                                 <div class="form-group">
                                     <input type="text" name='phone' class="form-control" id="phone"
-                                        placeholder="(99)99999-9999" value="{{ isset($user_id->phone) ? $user_id->phone : '' }}"
-                                        required>
+                                        placeholder="(99)99999-9999"
+                                        value="{{ isset($user_id->phone) ? $user_id->phone : '' }}" required>
                                 </div>
                             </div>
                             <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="password">Senha:</label>
-                                <input type="password" name='password' class="form-control" id="password"
-                                    placeholder="Digite uma senha"
-                                    value="{{ isset($user_id->password) ? $user_id->password : '' }}" required>
-                            </div>
+                                <div class="form-group">
+                                    <label for="password">Senha:</label>
+                                    <input type="password" name='password' class="form-control" id="password"
+                                        placeholder="Digite uma senha"
+                                        value="{{ isset($user_id->password) ? $user_id->password : '' }}" required>
+                                </div>
                             </div>
                             <!-- select -->
                             <div class="col-md-6">
@@ -226,7 +254,7 @@
                                     text: item.NM_PESSOA,
                                     id: item.ID,
                                     email: item.DS_EMAIL,
-                                    tipopessoa: item.CD_TIPOPESSOA, 
+                                    tipopessoa: item.CD_TIPOPESSOA,
                                     phone: item.NR_CELULAR
                                 }
                             })

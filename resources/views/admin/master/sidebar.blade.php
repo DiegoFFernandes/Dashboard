@@ -335,18 +335,22 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        @can('ver-diretoria-norte')
+                        <li class=""><a href="{{ route('diretoria.index') }}"><i
+                                    class="fa fa-arrow-up"></i>Indicadores</a>
+                        </li>
+
+                        {{-- @can('ver-diretoria-norte')
                             <li class="{{ request()->routeIs('diretoria.ivo-norte') ? 'active' : '' }}"><a
                                     href="{{ route('diretoria.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
                                     Norte</a>
                             </li>
-                        @endcan
-                        @can('ver-diretoria-sul')
+                        @endcan --}}
+                        {{-- @can('ver-diretoria-sul')
                             <li class="{{ request()->routeIs('diretoria.ivo-sul') ? 'active' : '' }}"><a
                                     href="{{ route('diretoria.ivo-sul') }}"><i class="fa fa-arrow-down"></i>Ivo Recap -
                                     Sul</a>
                             </li>
-                        @endcan
+                        @endcan --}}
                     </ul>
                 </li>
             @endcanany
@@ -422,9 +426,9 @@
                             </li>
                         @endcan
                         @canany(['ver-comercial-sul', 'ver-diretoria-sul'])
-                        <li class="active"><a href="{{ route('estoque.saldo-estoque') }}"><i
-                                    class="fa fa-balance-scale"></i>Saldo Estoque</a>
-                        </li>
+                            <li class="active"><a href="{{ route('estoque.saldo-estoque') }}"><i
+                                        class="fa fa-balance-scale"></i>Saldo Estoque</a>
+                            </li>
                         @endcanany
                     </ul>
                 </li>
@@ -445,7 +449,7 @@
                     </ul>
                 </li>
             @endrole
-            @canany(['ver-manutencao'])           
+            @canany(['ver-manutencao'])
                 <li class="treeview {{ request()->segment(1) == 'manutencao' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-cogs"></i> <span>Manutenção</span>
@@ -457,17 +461,17 @@
                         <li class="{{ request()->routeIs('manutencao.index') ? 'active' : '' }}"><a
                                 href="{{ route('manutencao.index') }}"><i class="fa fa-ticket "></i>Chamados</a>
                         </li>
-                        
+
                         <li class="{{ request()->routeIs('manutencao.machines') ? 'active' : '' }}"><a
                                 href="{{ route('manutencao.machines') }}"><i class="fa fa-puzzle-piece"></i>Cadastro de
                                 Maquinas</a>
-                        </li>                        
+                        </li>
                         <li class="{{ request()->routeIs('manutencao-report') ? 'active' : '' }}"><a
                                 href="{{ route('manutencao-report') }}"><i class="fa fa-flag"></i>Relatório</a>
                         </li>
-                        
+
                     </ul>
-                </li>           
+                </li>
             @endcanany
             @unlessrole('acesso-cliente')
                 <li class="header">Links Publicos</li>

@@ -38,15 +38,20 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
-        
+
         $this->renderable(function (Exception $e, $request) {
-            
+
             if ($e->getPrevious() instanceof \Illuminate\Session\TokenMismatchException) {
                 return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['Sua sessão expirou, tente novamente!']);
+                    ->back()
+                    ->withInput()
+                    ->withErrors(['Sua sessão expirou, tente novamente!']);
             }
+        });
+        $this->renderable(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, $request) {
+            return redirect()
+                ->back()
+                ->with('warning', 'Voce não tem permissão para entrar nesse módulo!');
         });
     }
 }

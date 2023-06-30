@@ -76,7 +76,7 @@ class PowerBiEmbeddedController extends Controller
             $uri         = $this->request->route()->uri();
             $variableValue = "teste";
             return view(
-                'admin.diretoria.powerbi',
+                'admin.diretoria.diretoria-norte',
                 compact(
                     'content',
                     'title_page',

@@ -54,7 +54,7 @@
     <!-- iCheck for checkboxes and radio inputs -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/iCheck/all.css') }}">
     <!-- Template Main CSS File -->
-    <link href="{{ asset('css/styleAdmin.css?v=1') }}" rel="stylesheet">
+    <link href="{{ asset('css/styleAdmin.css?v=3') }}" rel="stylesheet">
 
     @yield('style')    
 </head>

@@ -188,9 +188,6 @@ Route::middleware(['auth', 'role:admin|portaria'])->group(function () {
     });
 });
 Route::middleware(['auth'])->group(function () {
-    Route::prefix('powerbi')->group(function () {
-        Route::get('index', [PowerBiEmbeddedController::class, 'index'])->name('powerbi.index');
-    });
     Route::prefix('comercial')->group(function () {
         Route::middleware(['auth', 'permission:ver-comercial-norte'])->group(function () {
             Route::get('ivorecap-norte', [ComercialController::class, 'ivoComercialNorte'])->name('comercial.ivo-norte');
@@ -241,9 +238,15 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 Route::middleware(['auth'])->group(function () {
+    Route::prefix('powerbi')->group(function () {
+        Route::get('index', [PowerBiEmbeddedController::class, 'index'])->name('powerbi.index');
+    });
     Route::prefix('diretoria')->group(function () {
+        Route::middleware(['auth'])->group(function () {
+            Route::get('index', [ComercialController::class, 'index'])->name('diretoria.index');
+        });
         Route::middleware(['auth', 'permission:ver-diretoria-norte'])->group(function () {
-            Route::get('ivorecap-norte', [ComercialController::class, 'ivoDiretoriaNorte'])->name('diretoria.ivo-norte');
+            Route::get('ivorecap-norte', [PowerBiEmbeddedController::class, 'index'])->name('diretoria.ivo-norte');
         });
         Route::middleware(['auth', 'permission:ver-diretoria-sul'])->group(function () {
             Route::get('ivorecap-sul', [ComercialController::class, 'ivoDiretoriaSul'])->name('diretoria.ivo-sul');

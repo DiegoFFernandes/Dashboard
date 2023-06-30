@@ -36,7 +36,7 @@ class PowerbiHelper
             'username'      => env('POWERBI_USERNAME'), // Usuario e senha com permissão a acessar o relatório
             'password'      => env('POWERBI_PASSWORD'), // Password do usuario acima    
             'tenant_id'     => env('TENANT_ID'), //Tenant ID Azure Not necessary
-            'authentication_mode' => 'ServicePrincipal'
+            'authentication_mode' => 'MasterUser'
         ], '', '&');
         $header = [
             "Content-Type:application/x-www-form-urlencoded",

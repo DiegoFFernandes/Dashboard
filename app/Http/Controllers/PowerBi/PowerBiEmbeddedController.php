@@ -30,9 +30,10 @@ class PowerBiEmbeddedController extends Controller
 
 
 
-    public function index(Request $request)
-    {       
-        $permissions = $this->user->getAllPermissions();            
+    public function index($id)
+    {
+        $regiao = decrypt($id);
+        $permissions = $this->user->getAllPermissions();
         $permissionPower = [];
         foreach ($permissions as $p) {
             if ($p->tp_permission == 'powerbi') {
@@ -47,7 +48,13 @@ class PowerBiEmbeddedController extends Controller
 
         $office360token = PowerbiHelper::getOffice360AccessToken();
         $groupID = env('GROUP_ID');
-        $reportID = env('REPORT_ID_NORTE');
+        if ($regiao == 'norte') {
+            $reportID = env('REPORT_ID_NORTE');
+            $datasetID = env('DATASET_ID_NORTE');
+        } else {
+           $reportID = env('REPORT_ID_SUL');
+           $datasetID = env('DATASET_ID_SUL');
+        }
 
         if (!is_null($office360token)) {
 
@@ -66,14 +73,15 @@ class PowerBiEmbeddedController extends Controller
                 "identities": [{
                     "username": "' . $this->user['email'] . '",
                     "roles": ' . $permissionPower . ',
-                    "datasets": ["5dedec2a-a509-4e70-bbd5-6d19a549054f"]
+                    "datasets": ["' . $datasetID . '"]
                 }]
             }';
             $content = PowerbiHelper::processPowerbiHttpRequest($url, $header, $data, 'POST');
 
-            $title_page   = 'Rede Ivorecap - Norte';
+            $title_page   = 'Rede Ivorecap';
             $user_auth    = $this->user;
-            $uri         = $this->request->route()->uri();
+            $exploder     = explode("/", $this->request->route()->uri());
+            $uri = $exploder[0] . "/" . $exploder[1];
             $variableValue = "teste";
             return view(
                 'admin.diretoria.diretoria-norte',
@@ -82,7 +90,7 @@ class PowerBiEmbeddedController extends Controller
                     'title_page',
                     'uri',
                     'groupID',
-                    'reportID', 
+                    'reportID',
                     'user_auth',
                     'title_page',
                     'uri',

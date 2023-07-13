@@ -17,16 +17,19 @@ class ExecutorEtapa extends Model
         $this->connection = 'mysql';
     }
 
-    public function setConnet()
+    public function setConnet($local)
     {
-        return $this->connection = Auth::user()->conexao;
+        if ($local == 'SUL') {
+            return $this->connection = 'firebird_campina';
+        }
+        return $this->connection = 'firebird_paranavai';
     }
-    public function searchExecutorEtapaJunsoft()
+    public function searchExecutorEtapaJunsoft($local)
     {
         $query = 'select e.id matricula, cast(e.nmexecutor as varchar(60) character set utf8) nmexecutor, e.idempresa, e.stativo
                   from executoretapa e
                   where e.stativo = 1';
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection($this->setConnet($local))->select($query);
     }
     public function StoreExecutorEtapa($executores, $localizacao)
     {
@@ -36,11 +39,11 @@ class ExecutorEtapa extends Model
                 ExecutorEtapa::updateOrInsert(
                     [
                         'matricula' => $e->MATRICULA,
-                        'localizacao' => $localizacao
+                        'localizacao' => $localizacao,
                     ],
                     [
                         'matricula' => $e->MATRICULA,
-                        'nmexecutor' => $e->NMEXECUTOR,
+                        'nmexecutor' => strtoupper($e->NMEXECUTOR),
                         'cd_empresa' => $e->IDEMPRESA,
                         'localizacao' => $localizacao,
                         'stativo' => $e->STATIVO,
@@ -56,7 +59,9 @@ class ExecutorEtapa extends Model
     }
     public function ListExecutor($local){
         $this->connection = 'mysql';
-        return ExecutorEtapa::where('localizacao', $local)->orderBy('nmexecutor')->get();
+        return ExecutorEtapa::
+        // where('localizacao', $local)->
+        orderBy('nmexecutor')->get();
     }
     
 }

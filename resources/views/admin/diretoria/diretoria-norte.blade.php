@@ -67,16 +67,17 @@
                         pageNavigation: {
                             visible: false
                         }
-                    }
+                    },
+                    // zoomLevel: 0.5
                 }
 
-            };
+            };            
 
             // Get a reference to the embedded report HTML element
             let embedContainer = $('#reportContainer')[0];
-
             // Embed the report and display it within the div container.
             powerbi.embed(embedContainer, config);
+            
         }
         embedPowerBIReport();
     </script>

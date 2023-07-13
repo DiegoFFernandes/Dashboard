@@ -70,6 +70,6 @@ class Empresa extends Model
         return Empresa::select([
             'CD_EMPRESA',
             DB::raw("CONCAT(cd_empresa,' - ',ds_local) NM_EMPRESA"), 'CONEXAO'
-        ])->where('cd_loja', 1)->get();
+        ])->where('cd_loja', 1)->orderBy('cd_empresa')->get();
     }
 }

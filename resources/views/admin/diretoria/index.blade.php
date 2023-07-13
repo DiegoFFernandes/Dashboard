@@ -10,7 +10,8 @@
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="text-center">
-                                <a class="btn btn-lg btn-primary"href="{{ route('diretoria.ivo-norte') }}"></i>Indicadores
+
+                                <a class="btn btn-lg btn-primary" href="{{ route('diretoria.ivo-norte', Crypt::encrypt('norte')) }}"></i>Indicadores
                                     Norte</a>
                             </div>
                         </div>
@@ -23,7 +24,7 @@
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="text-center">
-                                <a class="btn btn-lg btn-primary"href="{{ route('diretoria.ivo-sul') }}"></i>Indicadores
+                                <a class="btn btn-lg btn-primary" href="{{ route('diretoria.ivo-sul', Crypt::encrypt('sul')) }}"></i>Indicadores
                                     Sul</a>
 
                             </div>

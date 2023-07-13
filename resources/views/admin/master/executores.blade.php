@@ -3,7 +3,7 @@
     <select class="form-control select executor" name="" style="width: 100%;">
         <option value="0">Selecione um operador</option>
         @foreach ($executor as $e)
-            <option value="{{ $e->id }}">{{ $e->nmexecutor }}</option>
+            <option value="{{ $e->id }}">{{ strtoupper($e->nmexecutor) }}</option>
         @endforeach
     </select>
 </div>

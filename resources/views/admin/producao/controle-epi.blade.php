@@ -15,6 +15,12 @@
                         <h4 class="box-title">Atualizar Executores</h4>
                     </div>
                     <div class="box-body">
+                        <div class="form-group">
+                            <select class="form-control" name="local" id="local">
+                                <option value="NORTE">Funcionarios Norte</option>
+                                <option value="SUL">Funcionarios Sul</option>
+                            </select>
+                        </div>
                         <button type="button" class="btn btn-success mb-2 pull-right"
                             id="btn-search-executores">Atualizar</button>
                     </div>
@@ -74,6 +80,15 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label for="empresa">Empresa:</label>
+                                    <select class="form-control" id="empresa" style="width: 100%;">
+                                        <option selected="selected" value="0">TODOS</option>
+                                        @foreach ($empresas as $e)
+                                            <option value="{{ $e->CD_EMPRESA}}">{{ $e->NM_EMPRESA }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="periodo">Periodo:</label>
                                     <input type="text" class="form-control pull-right" id="daterange" value=""
                                         autocomplete="off">
@@ -97,6 +112,7 @@
                             <thead>
                                 <tr>
                                     <th>Sq</th>
+                                    <th>Empresa</th>
                                     <th>Executor</th>
                                     <th>Epi</th>
                                     <th>Etapa</th>
@@ -122,6 +138,7 @@
             var executor, etapa;
             $('.executor').select2();
             $('.etapas').select2();
+            $('#empresa').select2();
             $('#list-epis').select2();
             // $('option[value=0]').text('teste');
             var inicioData = 0;
@@ -180,8 +197,12 @@
                 $('input[name="epis[]"]:checked').each(function() {
                     epis.push($(this).val());
                 });
+
+                // let executor = $('.executor').val();
+                // alert(executor);
+                // return false;
                 $.ajax({
-                    url: '{{ route('save-epi-etapas-operador') }}',
+                    url: '{{ route("save-epi-etapas-operador") }}',
                     method: 'GET',
                     data: {
                         executor: $('.executor').val(),
@@ -203,12 +224,13 @@
             $('#btn-search').click(function() {
                 $('#table-controle-epi').DataTable().destroy();
                 $('#relatorio').removeClass('hidden');
-                var etapa, epis, uso;
+                var etapa, epis, uso, empresa;
                 etapa = $('#relatorio-epi .etapas').val();
                 epis = $('#list-epis').val();
                 executor = $('#relatorio-epi .executor').val();
                 uso = $('#uso-epis').val();
                 localizacao = $('#localizacao').val();
+                empresa = $('#empresa').val();
                 $('#table-controle-epi').DataTable({
                     responsive: true,
                     language: {
@@ -227,12 +249,17 @@
                             'uso': uso,
                             'localizacao': localizacao,
                             'data_ini': inicioData,
-                            'data_fim': fimData
+                            'data_fim': fimData,
+                            'empresa': empresa
                         }
                     },
                     columns: [{
                             data: 'id',
                             name: 'id'
+                        },
+                        {
+                            data: 'ds_local',
+                            name: 'ds_local',
                         },
                         {
                             data: 'nmexecutor',
@@ -275,13 +302,17 @@
                 });
             });
             $('#btn-search-executores').click(function() {
+
+                let local = $('#local').val();               
+                var url = "{{ route('get-buscar-executor', ':local') }}";
+                url = url.replace(':local', local);                
                 $.ajax({
                     method: "GET",
-                    url: "{{ route('get-buscar-executor') }}",
+                    url: url,
                     beforeSend: function() {
                         $('#loading').removeClass('hidden');
                     },
-                    success: function(result) {                     
+                    success: function(result) {
                         $('#loading').addClass('hidden');
                         msgToastr(result.success, 'success');
                     }

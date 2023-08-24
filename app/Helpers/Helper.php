@@ -76,7 +76,7 @@ class Helper
     }
     public static function RemoveSpecialChar($str)
     {
-        return preg_replace('/[@\.\;\&\/\-\(\)]+/', '', $str);
+        return preg_replace('/[@\.\;\_\&\/\-\(\)]+/', '', $str);
     }
     public static function is_empty_object($object)
     {

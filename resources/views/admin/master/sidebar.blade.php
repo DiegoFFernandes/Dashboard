@@ -329,14 +329,14 @@
             @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
                 <li class="treeview {{ request()->segment(1) == 'diretoria' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
-                        <i class="fa fa-suitcase"></i> <span>Diretoria</span>
+                        <i class="fa fa-suitcase"></i> <span>Indicadores</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
                         <li class=""><a href="{{ route('diretoria.index') }}"><i
-                                    class="fa fa-arrow-up"></i>Indicadores</a>
+                                    class="fa fa-arrow-up"></i>Indicador</a>
                         </li>
 
                         {{-- @can('ver-diretoria-norte')

@@ -58,6 +58,7 @@ class ComercialController extends Controller
         return view('admin.diretoria.diretoria-norte', compact('title_page', 'user_auth', 'uri'));
     }
     public function ivoDiretoriaSul(){
+        
         $title_page   = 'Rede Ivorecap - Sul';
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();

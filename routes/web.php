@@ -249,7 +249,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('ivorecap-norte/{id}', [PowerBiEmbeddedController::class, 'index'])->name('diretoria.ivo-norte');
         });
         Route::middleware(['auth', 'permission:ver-diretoria-sul'])->group(function () {
-            Route::get('ivorecap-sul/{id}', [PowerBiEmbeddedController::class, 'index'])->name('diretoria.ivo-sul');
+            Route::get('ivorecap-sul/{id}', [ComercialController::class, 'ivoDiretoriaSul'])->name('diretoria.ivo-sul');
         });
     });
 });

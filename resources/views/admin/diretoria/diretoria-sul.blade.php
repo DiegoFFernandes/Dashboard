@@ -29,7 +29,7 @@
     <script type="text/javascript" defer>
         if ($(window).width() < 960) {
             let div = '<div class="iframe-embed-wrapper iframe-embed-responsive-16by9">' +
-                '<iframe src="https://app.powerbi.com/view?r=eyJrIjoiMTJlMDc3ZTUtYjYwNS00MGIwLWFiODgtNjAwNDc5MjU3N2U3IiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9&pageName=ReportSection88a54e23b3034a6e6937" frameborder="0">' +
+                '<iframe src="https://app.powerbi.com/view?r=eyJrIjoiM2ZkNGIwYWItOWNkNy00MzI5LWJiNTEtYzM2NGViZWI5MjA3IiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9" frameborder="0">' +
                 '</iframe>' +
                 '</div>';
             $('#iframe-mobile').html(div);

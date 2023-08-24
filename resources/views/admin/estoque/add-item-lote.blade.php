@@ -217,7 +217,7 @@
         let token = $("meta[name='csrf-token']").attr("content");
         $(document).ready(function() {
             $("#cd_barras").inputmask({
-                mask: ['A9999999', '9999999999999']
+                mask: ['A99999999','9999999999999']
             });
             $("#cd_barras_peso").inputmask({
                 mask: ['99.99', '9Q99.99']

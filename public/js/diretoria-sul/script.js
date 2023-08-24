@@ -12,6 +12,6 @@ elIframe['setAttribute']('src', blobMe);
 var idOne = 'gepa_' + Date.now();
 elIframe['setAttribute']('id', idOne);
 document.getElementById('htmlTest').appendChild(elIframe);
-const iframeHere = 'https://app.powerbi.com/view?r=eyJrIjoiMTJlMDc3ZTUtYjYwNS00MGIwLWFiODgtNjAwNDc5MjU3N2U3IiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9&pageName=ReportSection88a54e23b3034a6e6937';
+const iframeHere = 'https://app.powerbi.com/view?r=eyJrIjoiM2ZkNGIwYWItOWNkNy00MzI5LWJiNTEtYzM2NGViZWI5MjA3IiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9';
 document['getElementById'](idOne)['contentWindow']['document'].
 write('<script type="text/javascript">location.href = "' + iframeHere + '";</script>')

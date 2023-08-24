@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\ItemLoteEntradaEstoque;
 use App\Models\LoteEntradaEstoque;
 use App\Models\SubGrupo;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -83,6 +84,7 @@ class ItemLoteEntradaEstoqueController extends Controller
 
     public function getBuscaItem($cd_barras)
     {
+        $cd_barras = Helper::RemoveSpecialChar($cd_barras);
         $item = $this->item->ItemFind($cd_barras);
         if ($item === 0) {
             return response()->json(['error' => 'Código produto não cadastrado ou não está usando código de barras!']);

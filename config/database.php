@@ -107,7 +107,17 @@ return [
             'database' => env('DB_FIREBIRD_DATABASE_PVAI', ''),
             'username' => env('DB_FIREBIRD_USERNAME', 'SYSDBA'),
             'password' => env('DB_FIREBIRD_PASSWORD', 'masterkey'),
-            'charset' => env('DB_FIREBIRD_CHARSET', 'UTF8'),
+            'charset' => env('DB_FIREBIRD_CHARSET', 'ISO8859_1'),
+            'collation' => 'utf8_unicode_ci',
+        ],
+
+        'firebird_rede' => [
+            'driver'=> 'firebird',
+            'host'=> env('DB_FIREBIRD_REDE', ''),
+            'database' => env('DB_FIREBIRD_DATABASE_REDE', ''),
+            'username' => env('DB_FIREBIRD_USERNAME', 'SYSDBA'),
+            'password' => env('DB_FIREBIRD_PASSWORD', 'masterkey'),
+            'charset' => env('DB_FIREBIRD_CHARSET', 'ISO8859_1'),
             'collation' => 'utf8_unicode_ci',
         ],
 

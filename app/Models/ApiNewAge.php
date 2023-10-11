@@ -21,9 +21,9 @@ class ApiNewAge extends Model
     public function setConnet()
     {
         if (Auth::user() == null) {
-            return $this->connection = 'firebird_campina';
+            return $this->connection = 'firebird_rede';
         };
-        return $this->connection = Auth::user()->conexao;
+        return $this->connection = 'firebird_rede';
     }
     public function pneusEnviar($exportado, $empresa)
     {

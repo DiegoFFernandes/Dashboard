@@ -64,6 +64,9 @@ Route::get('/painel', [LoginController::class, 'dashboard'])->name('admin.dashbo
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 Route::get('webhook', [WebHookController::class, 'index'])->name('webhook');
 
+
+Route::get('/importa-vendedor', [EmpresaController::class, 'ImportVendedor'])->name('importa-vendedor.index');
+
 Route::middleware(['auth'])->group(function () {
     /**Rota Perfil usuario*/
     Route::get('perfil-usuario', [UserController::class, 'profileUser'])->name('profile-user');

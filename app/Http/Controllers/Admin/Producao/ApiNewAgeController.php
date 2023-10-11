@@ -19,6 +19,8 @@ class ApiNewAgeController extends Controller
 {
     protected $soapWrapper;
 
+    public $request, $empresa, $logNewAge, $modelo, $medida, $apiNewAge, $modelopneu, $user;
+
     public function __construct(
         ApiNewAge $api,
         Request $request,
@@ -67,7 +69,7 @@ class ApiNewAgeController extends Controller
         ));
     }
     public function GetPneusEnviarBandag()
-    {
+    {        
         $data = $this->apiNewAge->pneusEnviar($this->request->exportado, $this->user->empresa);
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
@@ -114,7 +116,7 @@ class ApiNewAgeController extends Controller
     }
     public function callXmlProcess()
     {
-        if ($this->user->empresa == 3) {
+        if ($this->user->empresa == 108) {
             $custumerid = env('CUSTUMERID_NEWAGE_SUL');
             $username = env('USERNAME_NEWAGE_SUL');
             $password = env('PASSWORD_NEWAGE_SUL');
@@ -124,7 +126,7 @@ class ApiNewAgeController extends Controller
             $username = env('USERNAME_NEWAGE_PVAI');
             $password = env('PASSWORD_NEWAGE_PVAI');
             $cod_emp =  env('COD_I_EMP_PVAI');
-        } elseif ($this->user->empresa == 304) {
+        } elseif ($this->user->empresa == 104) {
             $custumerid = env('CUSTUMERID_NEWAGE_ASSIS');
             $username = env('USERNAME_NEWAGE_ASSIS');
             $password = env('PASSWORD_NEWAGE_ASSIS');

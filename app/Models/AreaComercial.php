@@ -32,11 +32,11 @@ class AreaComercial extends Model
     {
         $query = "select ac.cd_areacomercial, cast(ac.ds_areacomercial as varchar(40) character set utf8) ds_areacomercial
         from areacomercial ac";
-        $key = "area_comercial". Auth::user()->id;
+        $key = "area_comercial" . Auth::user()->id;
 
-        return Cache::remember($key, now()->addMinutes(60), function () use($query){
+        return Cache::remember($key, now()->addMinutes(60), function () use ($query) {
             return DB::connection($this->setConnet())->select($query);
-        });        
+        });
     }
     public function showUserArea($cd_empresa)
     {
@@ -102,5 +102,24 @@ class AreaComercial extends Model
     {
         $this->connection = 'mysql';
         return AreaComercial::select('cd_areacomercial')->where('cd_usuario', $cd_usuario)->get();
+    }
+
+    public function ImportaVendedor()
+    {
+        return $this->connection = 'firebird_rede';
+
+        $contas = ['1007', '1040', '1043', '1044', '1045', '10746', '10745', '10716', '10717', '10718', '10719', '10722', '10723', '10724', '10726', '10728', '10729', '10730', '10731', '10732', '10733', '10734', '10735', '10738', '10739', '10740', '10137', '2468', '2470', '2471', '1406', '1408', '1414', '1415', '1416', '1417', '1421', '1422', '1423', '1424', '1425', '1426', '1427', '1428', '1429', '1430', '1431', '1432', '1436', '1437', '1438', '1439', '1445', '1446', '1447', '1448', '1449', '1452', '1454', '1455', '1457', '1460', '1461', '94', '97', '98', '99', '1400', '1401', '1403', '1404', '1405'];
+        $array = ['11001', '11002', '11003', '11012', '11015', '11019', '11032', '11035', '20000', '20001', '20002', '20003', '30001', '60001', '7', 'TI03', 'TI10'];
+
+        foreach ($contas as $c) {
+            foreach ($array as $a) {
+                echo $query = "
+                    UPDATE OR INSERT INTO USUARIOCONTASALDO (CD_EMPRESA,CD_USUARIO,CD_EMPRCONTA,CD_CONTA,DT_REGISTRO) VALUES ('208','$a','208','$c','07/09/2023 00:00');                    
+            ";
+                DB::connection($this->connection)->select($query);
+                echo "Finalizado:" . $a . "Conta: " .  $c .  "</br>";
+            }
+        }
+        return true;
     }
 }

@@ -56,9 +56,9 @@ class Empresa extends Model
     }
     public function EmpresaFiscalAll()
     {
-        $key = "Empresas_" . Auth::user()->id;
+        $key = "Empresas_new" . Auth::user()->id;
         return Cache::remember($key, now()->addMinutes(120), function () {
-            return Empresa::select('cd_empresa', DB::raw('CONCAT(ds_local,"-",regiao) AS ds_local'))
+            return Empresa::select(DB::raw('CONCAT(ds_local,"-",regiao) AS ds_local', 'cd_empresa_new as cd_empresa'))
                 ->where('cd_loja', 1)
                 ->whereIn('regiao', ['norte', 'sul'])
                 ->whereIn('cd_empresa', [3,21,101])

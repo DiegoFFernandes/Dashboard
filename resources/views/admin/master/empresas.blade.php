@@ -4,7 +4,7 @@
         <select class="form-control empresas" style="width: 100%;">
             <option selected="selected" value="0">Selecione uma empresa</option>
             @foreach ($empresas as $e)                
-                <option value="{{ $e->cd_empresa }}">{{ $e->ds_local }}</option>                
+                <option value="{{ $e->cd_empresa_new }}">{{ $e->ds_local }}</option>                
             @endforeach
         </select>
     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Financeiro;
 
 use App\Exports\ConciliacaoFinanceiraExport;
 use App\Http\Controllers\Controller;
+use App\Models\Empresa;
 use App\Models\Financeiro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,11 +13,13 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class FinanceiroController extends Controller
 {
-    public $request, $financeiro, $user;
+    public $request, $financeiro, $user, $empresa;
     public function __construct(
         Request $request,
-        Financeiro $financeiro
+        Financeiro $financeiro, 
+        Empresa $empresa,
     ) {
+        $this->empresa = $empresa;
         $this->request = $request;
         $this->financeiro = $financeiro;
         $this->middleware(function ($request, $next) {
@@ -29,12 +32,13 @@ class FinanceiroController extends Controller
         $title_page   = 'Fechamento Mensal - Empresas';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
-        
+        $empresas =  $this->empresa->EmpresaFiscalAll();
 
         return view('admin.financeiro.index', compact(
             'title_page',
             'user_auth',
             'uri',
+            'empresas'
             
         ));
     }

@@ -18,9 +18,9 @@ class Financeiro extends Model
     public function setConnet()
     {
         if (Auth::user() == null) {
-            return $this->connection = 'firebird_campina';
+            return $this->connection = 'firebird_rede';
         };
-        return $this->connection = Auth::user()->conexao;
+        return $this->connection = 'firebird_rede';
     }
     public static function Conciliacao($cd_empresa, $dt_ini, $dt_fim)
     {
@@ -67,7 +67,7 @@ class Financeiro extends Model
             ORDER BY MC.NR_LANCCAIXA, MC.NR_PROCESSO, MC.DT_LANCAMENTO
             ";
 
-        $conciliacao = DB::connection(Auth::user()->conexao)->select($query);
+        $conciliacao = DB::connection('firebird_rede')->select($query);
 
         $conc = collect($conciliacao)->map(function ($c) {
             $c->DT_LANCAMENTO = \Carbon\Carbon::parse($c->DT_LANCAMENTO)->format('d/m/Y');

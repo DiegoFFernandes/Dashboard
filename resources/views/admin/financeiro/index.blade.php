@@ -12,13 +12,7 @@
                     <div class="box-body">
                         <div class="col-md-5">
                             <div class="form-group">                                
-                                <select class="form-control select2" name="cd_empresa" id="cd_empresa" style="width: 100%;">
-                                    <option value="0" selected="selected">Selecione a empresa</option>
-                                    <option value="1">AM MORENO PNEUS LTDA</option>
-                                    <option value="21">EMAX RECAPAGENS EIRELI</option>
-                                    <option value="3">SUPER RODAS - CAMPINA</option>
-                                    <option value="4">SUPER RODAS - GUARAPUAVA</option>
-                                </select>
+                                @includeIf('admin.master.empresas')
                             </div>
                         </div>
                         <div class="col-md-5">
@@ -61,14 +55,14 @@
                 fimData = 0;
             });
             $('#submit-seach').click(function() {
-                let cd_empresa = $("#cd_empresa").val();
+                let cd_empresa = $("#cd_empresa").val();              
                 let nm_empresa = $("#cd_empresa :selected").text();
 
                 if (cd_empresa == 0) {
                     $('#cd_empresa').attr('title', 'Empresa é obrigatório!').tooltip('show');
                     return false;
                 } else if (inicioData == "") {
-                    alert('Período deve ser preenchida!');
+                    msgToastr('Período deve ser preenchida!', 'warning');                    
                     $('#daterange').attr('title', 'Período é obrigatório!').tooltip('show');
                     return false;
                 }

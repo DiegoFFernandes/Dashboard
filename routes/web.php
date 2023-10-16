@@ -254,6 +254,9 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware(['auth', 'permission:ver-diretoria-sul'])->group(function () {
             Route::get('ivorecap-sul/{id}', [ComercialController::class, 'ivoDiretoriaSul'])->name('diretoria.ivo-sul');
         });
+        Route::middleware(['auth', 'permission:ver-diretoria-rede'])->group(function () {
+            Route::get('ivorecap-rede/{id}', [ComercialController::class, 'ivoDiretoriaRede'])->name('diretoria.rede');
+        });
     });
 });
 

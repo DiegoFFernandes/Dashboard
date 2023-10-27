@@ -109,6 +109,6 @@ class LoteEntradaEstoqueController extends Controller
         $title_page   = 'Saldo Estoque';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
-        return view('admin.estoque.saldo-estoque-sul', compact('title_page', 'user_auth', 'uri'));
+        return view('admin.estoque.saldo-estoque', compact('title_page', 'user_auth', 'uri'));
     }
 }

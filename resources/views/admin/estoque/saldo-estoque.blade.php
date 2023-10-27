@@ -25,7 +25,7 @@
     <script type="text/javascript" defer>
         if ($(window).width() < 960) {
             let div = '<div class="iframe-embed-wrapper iframe-embed-responsive-16by9">'
-                +'<iframe src="https://app.powerbi.com/view?r=eyJrIjoiOTgzMzc3YjQtODA4MC00YmZhLTljNWEtZTJmZjUxYzE0NDQ5IiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9" frameborder="0">'
+                +'<iframe src="https://app.powerbi.com/view?r=eyJrIjoiYjIzYTc0NjctYzI1Zi00ZjMwLWI2ZjEtMmQ2M2RjZmI0NzlkIiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9" frameborder="0">'
                 +'</iframe>'
                 +'</div>';
             $('#iframe-mobile').html(div);
@@ -34,5 +34,5 @@
             $('#iframe-mobile').html(div);
         }        
     </script>
-    <script src="{{ asset('js/saldo-estoque-sul/script.js?v=2') }}"></script>
+    <script src="{{ asset('js/saldo-estoque/script.js?v=2') }}"></script>
 @endsection

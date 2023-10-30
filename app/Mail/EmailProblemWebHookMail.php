@@ -9,6 +9,8 @@ use Illuminate\Queue\SerializesModels;
 
 class EmailProblemWebHookMail extends Mailable
 {
+    public $request;
+    
     use Queueable, SerializesModels;
 
     /**

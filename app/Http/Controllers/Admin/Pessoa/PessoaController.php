@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Pessoa;
 
 use App\Http\Controllers\Controller;
+use App\Mail\EmailUpdateTipoPessoa;
 use App\Models\Email;
 use App\Models\Empresa;
 use App\Models\MotoristaVeiculo;
@@ -10,10 +11,13 @@ use App\Models\Pessoa;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 
 class PessoaController extends Controller
 {
+    public $empresa, $resposta, $pessoas, $motorista, $email, $user;
+
     public function __construct(
         Request $request,
         Empresa $empresa,
@@ -144,5 +148,12 @@ class PessoaController extends Controller
 
             ]
         );
+    }
+    public function updateTeste(){
+        $pessoas = $this->pessoas->findTipoPessoaVencimento();
+        // $this->pessoas->UpdateTipoPessoa($pessoas);
+
+        // return (new EmailUpdateTipoPessoa($pessoas));
+        return Mail::send(new EmailUpdateTipoPessoa($pessoas));
     }
 }

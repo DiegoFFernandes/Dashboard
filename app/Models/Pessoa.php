@@ -117,7 +117,8 @@ class Pessoa extends Model
 
         return DB::connection($this->setConnet())->select($query);
     }
-    public function listClientFormPgto($fp, $dti, $dtf){
+    public function listClientFormPgto($fp, $dti, $dtf)
+    {
         $query = "select cast(p.cd_pessoa||' - '|| p.nm_pessoa as varchar(100) character set utf8) nm_pessoa, p.nr_cnpjcpf, p.cd_nmusuariocad, p.dt_cadastro
                     from enderecopessoa ep
                     inner join pessoa p on (p.cd_pessoa = ep.cd_pessoa)
@@ -130,5 +131,67 @@ class Pessoa extends Model
                     group by p.cd_pessoa, p.nm_pessoa, p.nr_cnpjcpf, p.cd_nmusuariocad, p.dt_cadastro";
 
         return DB::connection($this->setConnet())->select($query);
+    }
+    public function findTipoPessoaVencimento()
+    {
+        $query = "SELECT
+        --C.CD_EMPRESA,
+        C.CD_PESSOA,        
+        CAST(P.NM_PESSOA AS VARCHAR(100) CHARACTER SET UTF8) NM_PESSOA,
+        --C.NR_DOCUMENTO || '/' || C.NR_PARCELA NR_DOCUMENTO,
+        --C.DT_VENCIMENTO,
+        --C.CD_COBRADOR,
+        --CD.VL_CREDITOACUM,
+        SUM(C.VL_SALDO) VL_TOTAL,
+        SUM(IIF(C.DT_VENCIMENTO < CURRENT_DATE - 5, C.VL_SALDO, 0)) VL_VENCIDO
+        --C.CD_FORMAPAGTO,
+        --C.cd_serie,
+        --TC.CD_TIPOCONTA
+        --P.CD_TIPOPESSOA
+    
+    FROM CONTAS C
+    INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
+          --INNER JOIN tipopessoa TP ON (TP.cd_tipopessoa = P.cd_tipopessoa)
+    
+    INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = C.CD_TIPOCONTA)   
+    WHERE C.ST_CONTAS IN ('T', 'P') AND
+          C.ST_INCOBRAVEL = 'N'
+          --AND C.CD_EMPRESA IN (1003)
+          AND
+          TC.CD_TIPOCONTA IN (2, 5, 10, 12, 16, 17, 23, 28, 32, 37,
+                              38, 60, 70, 71, 95, 99, 100, 1004, 1005, 1010,
+                              1012)
+          --AND (C.CD_COBRADOR <> 6 OR (C.CD_COBRADOR IS NULL))
+          AND
+          P.CD_TIPOPESSOA IN (4, 1, 3, 6, 7, 11, 14, 9, 13) AND
+          C.CD_PESSOA NOT IN (1, 1000001, 1000005, 1000009, 1000010, 1003389, 1008922, 1013289, 1011617, 1014318,
+                              1014319, 1018122, 1019426, 2017816, 2000001, 2000005, 2000364, 2002893, 2017209, 2017814,
+                              2017815, 2017818, 2018986, 2020860, 1036590, 1036787, 1036788, 1103336) AND
+          C.DT_VENCIMENTO <= CURRENT_DATE-366
+         -- AND C.CD_PESSOA = 1006272
+    GROUP BY
+        --C.CD_EMPRESA,
+        NM_PESSOA,
+        C.CD_PESSOA
+        --P.NM_PESSOA,
+        --NR_DOCUMENTO,
+        --C.DT_VENCIMENTO,
+        --C.CD_FORMAPAGTO,
+        --C.CD_COBRADOR,
+        --C.cd_serie,
+        --TP.ds_tipopessoa,
+        --TC.CD_TIPOCONTA
+        --P.CD_TIPOPESSOA
+        --, CD.VL_CREDITOACUM
+    ";
+        return DB::connection('firebird_rede')->select($query);
+    }
+
+    public function UpdateTipoPessoa($pessoas)
+    {
+        foreach ($pessoas as $p) {
+            $query = 'update pessoa p set p.cd_tipopessoa = 10 where p.cd_pessoa = ' . $p->CD_PESSOA . '';
+            return DB::connection('firebird_rede')->select($query);
+        }
     }
 }

@@ -271,6 +271,10 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     //Rotas Pessoa
     Route::prefix('pessoa')->group(function () {
+
+        Route::get('update-teste', [PessoaController::class, 'updateTeste'])->name('update.teste');
+        
+
         Route::get('listar', [PessoaController::class, 'index'])->name('pessoa.index');
         Route::get('get-pessoa', [PessoaController::class, 'getpessoa'])->name('get-pessoa');
         Route::post('store', [PessoaController::class, 'store'])->name('pessoa.store');

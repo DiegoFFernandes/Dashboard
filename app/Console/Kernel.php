@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();send:updatetipopessoa
         $schedule->command('send:updatetipopessoa')->everyMinute();
+        $schedule->command('send:updatelicenca')->everyMinute();
     }
 
     /**

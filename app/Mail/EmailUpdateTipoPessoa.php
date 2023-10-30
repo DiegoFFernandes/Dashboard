@@ -34,7 +34,7 @@ class EmailUpdateTipoPessoa extends Mailable
         $this->subject("Alteração de Cliente para ZDD");
         $this->to('cobranca@ivorecap.com.br', 'Rafael Cazante')
             ->to('juridico@ivorecap.com.br', 'Maria Vitoria')
-            ->cc('ti.campina@ivorecap.com.br', 'Diego Ferreira');
+            ->cc('ti.paranavai@ivorecap.com.br', 'Diego Ferreira');
 
         return $this->markdown('admin.mail.updatetipopessoa', compact('pessoas'));
     }

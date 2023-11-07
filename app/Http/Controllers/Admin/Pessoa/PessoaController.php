@@ -149,11 +149,14 @@ class PessoaController extends Controller
             ]
         );
     }
-    public function updateTeste(){
+    public function updateTeste()
+    {
         $pessoas = $this->pessoas->findTipoPessoaVencimento();
-        // $this->pessoas->UpdateTipoPessoa($pessoas);
+        $this->pessoas->UpdateTipoPessoa($pessoas);
 
-        // return (new EmailUpdateTipoPessoa($pessoas));
-        return Mail::send(new EmailUpdateTipoPessoa($pessoas));
+        if (!empty($pessoas)) {
+            // return (new EmailUpdateTipoPessoa($pessoas));
+            return Mail::send(new EmailUpdateTipoPessoa($pessoas));
+        }
     }
 }

@@ -43,9 +43,9 @@ class UpdateTipoPessoaVencimento extends Command
      */
     public function handle()
     {
-        // $pessoas = $this->pessoas->findTipoPessoaVencimento();
-        // $this->pessoas->UpdateTipoPessoa($pessoas);
-        // Mail::send(new EmailUpdateTipoPessoa($pessoas));       
+        $pessoas = $this->pessoas->findTipoPessoaVencimento();        
+        $this->pessoas->UpdateTipoPessoa($pessoas);
+        Mail::send(new EmailUpdateTipoPessoa($pessoas));       
         
     }
 }

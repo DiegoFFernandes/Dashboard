@@ -12,6 +12,7 @@ class ParmSistema extends Model
 
     public function UpdateLicencaColeta(){
         $query = 'update parmsistema p set p.nrlicencacoleta = 120';
-        return DB::connection('firebird_campina')->select($query);
+        DB::connection('firebird_campina')->select($query);
+        return DB::connection('firebird_paranavai')->select($query);
     }
 }

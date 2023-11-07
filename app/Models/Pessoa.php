@@ -191,7 +191,8 @@ class Pessoa extends Model
     {
         foreach ($pessoas as $p) {
             $query = 'update pessoa p set p.cd_tipopessoa = 10 where p.cd_pessoa = ' . $p->CD_PESSOA . '';
-            return DB::connection('firebird_rede')->select($query);
+            DB::connection('firebird_rede')->select($query);
         }
+        return true;
     }
 }

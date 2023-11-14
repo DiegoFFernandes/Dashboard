@@ -33,6 +33,7 @@ class FinanceiroController extends Controller
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
         $empresas =  $this->empresa->EmpresaFiscalAll();
+        
 
         return view('admin.financeiro.index', compact(
             'title_page',
@@ -51,7 +52,7 @@ class FinanceiroController extends Controller
         $dt_fim = $this->request->dt_fim;  
         $nm_empresa = $this->request->nm_empresa;    
         
-        // return $this->financeiro->Conciliacao($cd_empresa, $dt_ini, $dt_fim);
+        return $this->financeiro->Conciliacao($cd_empresa, $dt_ini, $dt_fim);
         $myFile = Excel::raw(new ConciliacaoFinanceiraExport(
             $cd_empresa,
             $dt_ini,

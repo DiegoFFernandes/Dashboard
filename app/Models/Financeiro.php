@@ -67,7 +67,14 @@ class Financeiro extends Model
             ORDER BY MC.NR_LANCCAIXA, MC.NR_PROCESSO, MC.DT_LANCAMENTO
             ";
 
-        $conciliacao = DB::connection('firebird_rede')->select($query);
+        if ($cd_empresa == 1) {
+            $conciliacao = DB::connection('firebird_campina')->select($query);
+        } elseif ($cd_empresa == 309) {  
+            $conciliacao = DB::connection('firebird_paranavai')->select($query);
+        } else {
+            $conciliacao = DB::connection('firebird_rede')->select($query);
+        }
+
 
         $conc = collect($conciliacao)->map(function ($c) {
             $c->DT_LANCAMENTO = \Carbon\Carbon::parse($c->DT_LANCAMENTO)->format('d/m/Y');

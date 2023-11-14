@@ -34,6 +34,7 @@ use App\Http\Controllers\admin\ProdutividadeController;
 use App\Http\Controllers\Admin\Produto\ImportaItemJunsoftController;
 use App\Http\Controllers\Admin\Produto\ItemController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\Trucks\TruckController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VeiculoController;
 use App\Http\Controllers\admin\WebHook\WebHookController;
@@ -64,7 +65,7 @@ Route::get('/painel', [LoginController::class, 'dashboard'])->name('admin.dashbo
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 Route::get('webhook', [WebHookController::class, 'index'])->name('webhook');
 
-
+Route::get('/truck-send-wpp', [TruckController::class, 'MsgTrucksWpp'])->name('truck-send-wpp');
 Route::get('/importa-vendedor', [EmpresaController::class, 'ImportVendedor'])->name('importa-vendedor.index');
 
 Route::middleware(['auth'])->group(function () {

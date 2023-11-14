@@ -51,7 +51,7 @@ class ProcedimentoController extends Controller
     }
     public function index()
     {
-        $title_page   = 'Processo de Procedimentos';
+        $title_page   = 'Sgi - Documentos';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
         $users        = User::where('id', '<>', 1)->get();
@@ -63,7 +63,7 @@ class ProcedimentoController extends Controller
             ProcedimentoHelper::verifyIfRealeased($l);
         }
 
-        return view('admin.qualidade.index', compact(
+        return view('admin.sgi.index', compact(
             'title_page',
             'user_auth',
             'uri',

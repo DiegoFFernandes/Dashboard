@@ -32,6 +32,11 @@ class solutekWpp
             $mensagem = "Olá, foi aberto um chamado cód. *" . $input[0]->id . "* pelo responsavel, *" . $input[0]->name . "*, para a maquina *" . $input[0]->maquina . "*, com o problema *" . $input[0]->tp_problema . "*, a maquina *" . $input[0]->parada . "* está parada.\nEntre no portal para mais detalhes.\nNão e necessario responder está mensagem.";
         }
 
+        self::SendSolutekWpp($phones, $mensagem);
+
+    }
+    static function SendSolutekWpp($phones, $mensagem)
+    {
         $email = env('EMAIL_SOLUTEK');
         $token = env('TOKEN_SOLUTEK');
         $idapp = env('IDAPP_SOLUTEK');
@@ -62,13 +67,14 @@ class solutekWpp
             $retorno = self::SendWpp($dados, 'https://www.solutek.online/api/whatsapp/gateway/json/' . $funcao . '');
         }
 
-        // $erro = $retorno->erro;
-        // $sobre_o_erro = $retorno->sobre_o_erro;
+        $erro = $retorno->erro;
+        return $sobre_o_erro = $retorno->sobre_o_erro;
         // $whatsapp_retorno = $retorno->whatsapp;
         // $mensagem_retorno = $retorno->mensagem;
         // $status = $retorno->status;
         // $idlog = $retorno->idlog;
     }
+
     static function SendWpp($dados, $link)
     {
         $endpoint = $link;

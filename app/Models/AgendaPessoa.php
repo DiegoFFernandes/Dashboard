@@ -61,11 +61,11 @@ class AgendaPessoa extends Model
              ) x
            group by x.cd_usuario, x.nm_usuario";
 
-        return DB::connection($banco)->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function AgendaOperadorMes($operadores)
     {
-        $banco = $this->setConnet();
+        $banco = 'firebird_rede';
         foreach ($operadores as $o) {
             $query = "with recursive dt as (
                 select cast('$this->p_dia' as date) as dt
@@ -82,7 +82,7 @@ class AgendaPessoa extends Model
               --inner join usuario u on (u.cd_usuario = ap.cd_usuario)
               group by dt.dt, ap.cd_usuario, u.nm_usuario";
 
-            $operador[] = DB::connection($banco)->select($query);
+            $operador[] = DB::connection('firebird_rede')->select($query);
         }
 
         return $operador;
@@ -97,7 +97,7 @@ class AgendaPessoa extends Model
         where ap.dt_registro between '$this->dti30dias' and current_date
         group by ap.cd_usuario, u.nm_usuario";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function Detalhe($cdusuario, $data)
     {
@@ -114,12 +114,12 @@ class AgendaPessoa extends Model
         inner join pessoa p on (p.cd_pessoa = ap.cd_pessoa)
         where cast(ap.dt_registro as date) = '$data' and ap.cd_usuario = '$cdusuario'";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function CadastroNovos()
     {
         $query = "select x.cd_usuariocad, 
-        DECODE(POSITION(' ',x.nm_usuario),0,x.nm_usuario, SUBSTRING(x.nm_usuario FROM 1 FOR POSITION(' ',x.nm_usuario))) nm_usuario,
+        CAST(DECODE(POSITION(' ', X.NM_USUARIO), 0, X.NM_USUARIO, SUBSTRING(X.NM_USUARIO FROM 1 FOR POSITION(' ', X.NM_USUARIO))) as varchar(200) character set utf8) NM_USUARIO,
         sum(x.mes1) mes1, sum(x.mes2) mes2, sum(x.mes3) mes3
         from
         (select p.cd_usuariocad, u.nm_usuario, count(p.cd_usuariocad) mes1, 0 mes2, 0 mes3
@@ -127,7 +127,7 @@ class AgendaPessoa extends Model
         inner join usuario u on (u.cd_usuario = p.cd_usuariocad)
         where p.dt_cadastro between '$this->dti30dias' and '$this->dtf30dias'
             and p.cd_usuariocad not in ('ti02', 'ti04')
-            and u.cd_emprpadrao = '3'
+            --and u.cd_emprpadrao = '3'
             and p.cd_tipopessoa in (1,3)
         group by p.cd_usuariocad, u.nm_usuario
         
@@ -138,7 +138,7 @@ class AgendaPessoa extends Model
         inner join usuario u on (u.cd_usuario = p.cd_usuariocad)
         where p.dt_cadastro between '$this->dti60dias' and '$this->dtf60dias'
             and p.cd_usuariocad not in ('ti02', 'ti04')
-            and u.cd_emprpadrao = '3'
+            --and u.cd_emprpadrao = '3'
             and p.cd_tipopessoa in (1,3)
         group by p.cd_usuariocad, u.nm_usuario
         
@@ -149,13 +149,13 @@ class AgendaPessoa extends Model
         inner join usuario u on (u.cd_usuario = p.cd_usuariocad)
         where p.dt_cadastro between '$this->dti90dias' and '$this->dtf90dias'
             and p.cd_usuariocad not in ('ti02', 'ti04')
-            and u.cd_emprpadrao = '3'
+            --and u.cd_emprpadrao = '3'
             and p.cd_tipopessoa in (1,3)
         group by p.cd_usuariocad, u.nm_usuario
         )x
         group by x.cd_usuariocad, x.nm_usuario";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     //Clientes novos diario 
     public function ClientesNovos3Mes($operadores){
@@ -175,7 +175,7 @@ class AgendaPessoa extends Model
             --inner join usuario u on (u.cd_usuario = ap.cd_usuario)
             group by dt.dt, ap.cd_usuariocad, u.nm_usuario";
 
-            $operador[] = DB::connection($this->setConnet())->select($query);
+            $operador[] = DB::connection('firebird_rede')->select($query);
         }
         return $operador;
         
@@ -188,11 +188,11 @@ class AgendaPessoa extends Model
         inner join usuario u on (u.cd_usuario = p.cd_usuariocad)
         where p.dt_cadastro between '$dti' and '$dtf'
         and p.cd_usuariocad not in ('ti02', 'ti04')
-        and u.cd_emprpadrao = '3'
+        --and u.cd_emprpadrao = '3'
         and p.cd_tipopessoa =  1
         group by p.cd_usuariocad, u.nm_usuario";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function AgendaMes($dti, $dtf){
         $query = "select ap.cd_usuario,
@@ -203,7 +203,7 @@ class AgendaPessoa extends Model
         where ap.dt_registro between '$dti 00:00:00' and '$dtf 23:59:59'
         group by ap.cd_usuario, u.nm_usuario";
 
-       return DB::connection($this->setConnet())->select($query);       
+       return DB::connection('firebird_rede')->select($query);       
     }
     //Detalhe de clientes novos por operador
     public function DetalheCadastroClienteOperador($dt, $operador){
@@ -213,6 +213,6 @@ class AgendaPessoa extends Model
                     and p.dt_cadastro between '$dt' and '$dt'
                     and p.cd_tipopessoa = 1";
 
-        return DB::connection($this->setConnet())->select($query);        
+        return DB::connection('firebird_rede')->select($query);        
     }
 }

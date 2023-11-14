@@ -97,8 +97,8 @@ class Pessoa extends Model
                     inner join usuario u on (u.cd_usuario = p.cd_usuariocad)
                     where p.dt_cadastro between '$dti' and '$dtf'
                     and p.cd_usuariocad not in ('ti02', 'ti04')
-                    and u.cd_emprpadrao = 3
-                    and p.cd_tipopessoa = 1";
+                    --and u.cd_emprpadrao = 3
+                    --and p.cd_tipopessoa = 1";
 
         return DB::connection($this->setConnet())->select($query);
     }
@@ -111,8 +111,8 @@ class Pessoa extends Model
                     inner join formapagto fp on (fp.cd_formapagto = ep.cd_formapagto)
                     where p.dt_cadastro between '$dti' and '$dtf'
                     and p.cd_usuariocad not in ('ti02', 'ti04')
-                    and u.cd_emprpadrao = 3
-                    and p.cd_tipopessoa = 1
+                    --and u.cd_emprpadrao = 3
+                    --and p.cd_tipopessoa = 1
                     group by ep.cd_formapagto, fp.ds_formapagto";
 
         return DB::connection($this->setConnet())->select($query);
@@ -125,8 +125,8 @@ class Pessoa extends Model
                     inner join usuario u on (u.cd_usuario = p.cd_usuariocad)
                     where p.dt_cadastro between '$dti' and '$dtf'
                     and p.cd_usuariocad not in ('ti02', 'ti04')
-                    and u.cd_emprpadrao = 3
-                    and p.cd_tipopessoa in (1,3)
+                    --and u.cd_emprpadrao = 3
+                    --and p.cd_tipopessoa in (1,3)
                     and ep.cd_formapagto = '$fp'
                     group by p.cd_pessoa, p.nm_pessoa, p.nr_cnpjcpf, p.cd_nmusuariocad, p.dt_cadastro";
 

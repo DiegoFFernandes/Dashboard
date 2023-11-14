@@ -12,6 +12,7 @@ class ProdutividadeController extends Controller
 {
   protected $escareacao;
 
+  public $produtividade, $resposta, $user;
   public function __construct(Produtividade $prod, Request $request)
   {
     $this->produtividade = $prod;

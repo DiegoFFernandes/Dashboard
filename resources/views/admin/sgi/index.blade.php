@@ -11,75 +11,30 @@
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li class="active">
-                            <a href="#criados" data-toggle="tab" aria-expanded="true">Aguardando Analise</a>
+                            <a href="#criados" data-toggle="tab" aria-expanded="true">Criar</a>
                         </li>
                         <li class="">
-                            <a href="#pendentes" data-toggle="tab" aria-expanded="false">Pendentes</a>
-                        </li>
-                        <li class="">
-                            <a href="#recusados" data-toggle="tab" aria-expanded="false">Recusados</a>
-                        </li>
-                        <li class="">
-                            <a href="#liberados" data-toggle="tab" aria-expanded="false">Liberados</a>
+                            <a href="#liberados" data-toggle="tab" aria-expanded="false">Publicar</a>
                         </li>
 
                         <li class="pull-right">
                             <button style="float: right; font-weight: 900;" class="btn btn-info btn-sm" type="button"
-                                data-toggle="modal" data-target="#modal-procedimento">
+                                data-toggle="modal" data-target="#modal-sgi">
                                 Incluir Documentos
                             </button>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="criados">
-                            <table id="table-procedimento" class="table">
+                            <table id="table-sgi" class="table">
                                 <thead>
                                     <th>Cód.</th>
-                                    <th>Setor</th>
-                                    <th>Titulo</th>
+                                    <th>Unidade</th>
+                                    <th>Nome Documento</th>
                                     <th>Descrição</th>
+                                    <th>Validade</th>
                                     <th>Status</th>
-                                    <th>Criador</th>
-                                    <th>Ações</th>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="tab-pane" id="pendentes">
-                            <table id="table-procedimento-pendentes" class="table">
-                                <thead>
-                                    <th>Cód.</th>
-                                    <th>Setor</th>
-                                    <th>Titulo</th>
-                                    <th>Descrição</th>
-                                    <th>Status</th>
-                                    <th>Criador</th>
-                                    <th>Ações</th>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="tab-pane" id="recusados">
-                            <table id="table-procedimento-recusados" class="table">
-                                <thead>
-                                    <th>Cód.</th>
-                                    <th>Setor</th>
-                                    <th>Titulo</th>
-                                    <th>Descrição</th>
-                                    <th>Status</th>
-                                    <th>Criador</th>
-                                    <th>Ações</th>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="tab-pane" id="liberados">
-                            <table id="table-procedimento-liberados" class="table">
-                                <thead>
-                                    <th>Cód.</th>
-                                    <th>Setor</th>
-                                    <th>Titulo</th>
-                                    <th>Descrição</th>
-                                    <th>Status</th>
-                                    <th>Criador</th>
-                                    <th>Ações</th>
+                                    <th>Ação</th>
                                 </thead>
                             </table>
                         </div>
@@ -88,8 +43,8 @@
 
             </div>
 
-            {{-- Modal Criar Procedimento --}}
-            <div class="modal modal-procedimento fade" id="modal-procedimento">
+            {{-- Modal Criar SGI --}}
+            <div class="modal modal-procedimento fade" id="modal-sgi">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -98,30 +53,19 @@
                             <h4 class="modal-title">Procedimento</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('procedimento.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('sgi.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="arquivo">Setor designado</label>
-                                        <select name="setor" id="setor" class="form-control select2"
+                                        <label for="arquivo">Unidade Designada</label>
+                                        <select name="unidade" id="unidade" class="form-control select2"
                                             style="width: 100%">
-                                            @foreach ($setors as $s)
-                                                <option value="{{ $s->id }}">
-                                                    {{ $s->nm_setor . ' - ' . $s->nm_area }}
+                                            @foreach ($unidades as $u)
+                                                <option value="{{ $u->cd_empresa_new }}">
+                                                    {{ $u->ds_local }}
                                                 </option>
                                             @endforeach
 
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="users">Usuarios Responsaveis</label>
-                                        <select class="form-control users" id="" name="users[]" multiple="multiple"
-                                            data-placeholder="Selecione os usuarios" style="width: 100%;">
-                                            @foreach ($users as $u)
-                                                <option value="{{ $u->id }}">{{ $u->name }}</option>
-                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -140,6 +84,12 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="arquivo">Data Validade</label>
+                                        <input type="date" name="dt_validade" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
                                     <label for="arquivo">Buscar arquivo</label>
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-file-pdf-o"></i></span>
@@ -152,59 +102,46 @@
                                 <div class="col-md-12" align="center" style="padding-top: 24px">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-success btn-block">
-                                            <i class="fa fa-download"></i> Enviar Procedimento</button>
+                                            <i class="fa fa-download"></i> Enviar Documento</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
 
-
                         </div>
                     </div>
                 </div>
             </div>
-            {{-- Modal Editar Procedimento --}}
-            <div class="modal modal-procedimento fade" id="modal-edit-procedimento">
+            {{-- Modal Editar SGI --}}
+            <div class="modal modal-procedimento fade" id="modal-edit-sgi">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title">Editar Procedimento</h4>
+                            <h4 class="modal-title">Editar SGI</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('procedimento.update') }}" method="post"
-                                enctype="multipart/form-data">
+                            <form action="{{ route('sgi.update') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" id="op-table" name="op_table">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="id_procedimento">Cód.</label>
-                                        <input class="form-control" type="number" id="id_procedimento"
-                                            name="id_procedimento" readonly>
+                                        <label for="id_sgi">Cód.</label>
+                                        <input class="form-control" type="number" id="id_sgi" name="id_sgi"
+                                            readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-9">
                                     <div class="form-group">
-                                        <label for="arquivo">Setor designado</label>
-                                        <select name="setor" id="edit_setor" class="form-control select2"
+                                        <label for="arquivo">Unidade Designada</label>
+                                        <select name="unidade" id="edit_unidade" class="form-control select2"
                                             style="width: 100%">
-                                            @foreach ($setors as $s)
-                                                <option value="{{ $s->id }}">
-                                                    {{ $s->nm_setor . ' - ' . $s->nm_area }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="users">Usuarios Responsaveis</label>
-                                        <select class="form-control users" id="" name="users[]"
-                                            multiple="multiple" data-placeholder="Selecione os usuarios"
-                                            style="width: 100%;" required>
-                                            @foreach ($users as $u)
-                                                <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                            @foreach ($unidades as $u)
+                                                <option value="{{ $u->cd_empresa_new }}">
+                                                    {{ $u->ds_local }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -213,14 +150,21 @@
                                     <div class="form-group">
                                         <label for="arquivo">Titulo</label>
                                         <input id="title" type="text" class="form-control" name='title'
-                                            placeholder="Titulo Procedimento" required>
+                                            placeholder="Titulo SGI" required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="arquivo">Descrição</label>
                                         <textarea id="description" name="description" class="form-control" rows="4" cols="50"
-                                            placeholder="Descreva um pequeno resumo do Procedimento"></textarea>
+                                            placeholder="Descreva um pequeno resumo do SGI"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="arquivo">Data Validade</label>
+                                        <input type="date" id="dt_validade" name="dt_validade" class="form-control"
+                                            required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -237,7 +181,7 @@
                                 <div class="col-md-12" align="center" style="padding-top: 24px">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-success btn-block">
-                                            <i class="fa fa-download"></i> Atualizar Procedimento</button>
+                                            <i class="fa fa-download"></i> Atualizar SGI</button>
                                     </div>
                                 </div>
                             </form>
@@ -322,59 +266,6 @@
                     </div>
                 </div>
             </div>
-            {{-- Modal Submit File Edit --}}
-            <div class="modal  fade" id="modal-edit-file">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title">Salvar Arquivo Editavel</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ route('procedimento.store-update') }}" method="post"
-                                enctype="multipart/form-data">
-                                @csrf
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="id_procedimento">Cód.</label>
-                                        <input class="form-control id_procedimento" type="number" id=""
-                                            name="id_procedimento" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-10">
-                                    <div class="form-group">
-                                        <label for="arquivo">Titulo</label>
-                                        <input type="text" class="form-control title" name='title'
-                                            placeholder="Titulo Procedimento" required>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label for="arquivo">Buscar arquivos</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-file-word-o"></i></span>
-                                        <input type="file" name="file" class="form-control"
-                                            placeholder="Clique/Arraste e Solte aqui" accept=".xlsx,.xls,.doc,.docx">
-
-                                    </div>
-                                    <p class="help-block">Somente arquivos em Word ou Excel.</p>
-                                </div>
-                                <div class="col-md-12" align="center" style="padding-top: 24px">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-success btn-block">
-                                            <i class="fa fa-download"></i> Enviar Documento</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </section>
@@ -387,9 +278,9 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $(".users").select2();
-            var dataTable = initTable('table-procedimento', 'A');
+            var dataTable = initTable('table-sgi', 'A');
 
-            $('body').on('click', '#getEditProcedimento', function(e) {
+            $('body').on('click', '#getEditSgi', function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
                 var table = $(this).data('table');
@@ -399,36 +290,23 @@
                     if (selected_row.hasClass('child')) {
                         selected_row = selected_row.prev();
                     }
-                    rowData = $('#table-procedimento').DataTable().row(selected_row).data();
+                    rowData = $('#table-sgi').DataTable().row(selected_row).data();
                 }
-                $.ajax({
-                    url: "{{ route('procedimento.edit') }}",
-                    method: 'GET',
-                    data: {
-                        id: id,
-                    },
-                    beforeSend: function() {
-                        $("#loading").removeClass('hidden');
-                    },
-                    success: function(response) {
-                        $("#loading").addClass('hidden');
-                        var users_aprov = response;
-                        $('#id_procedimento').val(rowData.id);
-                        $('#edit_setor').val(rowData.id_setor).trigger('change');
-                        $('#title').val(rowData.title);
-                        $('#description').val(rowData.description);
-                        $('.users').val(users_aprov).trigger('change');
-                        $('#op-table').val(table);
-                        $('#modal-edit-procedimento').modal('show');
-                    }
-                });
+
+                $('#id_sgi').val(rowData.id);
+                $('#edit_unidade').val(rowData.cd_empresa).trigger('change');
+                $('#title').val(rowData.title);
+                $('#description').val(rowData.description);
+                $('#dt_validade').val(moment(rowData.dt_validade).format("YYYY-DD-MM"));
+                $('#modal-edit-sgi').modal('show');
+
             });
             $('body').on('click', '#getDeleteId', function(e) {
                 e.preventDefault();
                 deleteId = $(this).data('id');
                 if (!confirm('Deseja realmente excluir o procedimento ' + deleteId + ' ?')) return;
                 $.ajax({
-                    url: "delete",
+                    url: "{{ route('sgi.delete') }}",
                     method: 'DELETE',
                     data: {
                         "id": deleteId,
@@ -440,97 +318,21 @@
                     success: function(result) {
                         if (result.alert) {
                             $("#loading").addClass('hidden');
-                            msg(result.alert, 'alert-warning', 'fa-warning');
+                            msgToastr(result.alert, 'warning');
                         } else {
                             $("#loading").addClass('hidden');
-                            msg(result.success, 'alert-success', 'fa fa-check');
-                            $('#table-procedimento').DataTable().ajax.reload();
+                            msgToastr(result.success, 'success');
+                            $('#table-sgi').DataTable().ajax.reload();
                         }
                     }
                 });
 
             });
-            $('body').on('click', '#getViewReason', function(e) {
-                e.preventDefault();
-                id = $(this).data('id');
-                $("#table-motivo-reprovados").DataTable().destroy();
-                $("#table-motivo-reprovados").DataTable({
-                    language: {
-                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
-                    },
-                    pagingType: "simple",
-                    processing: false,
-                    responsive: true,
-                    serverSide: false,
-                    autoWidth: false,
-                    order: [
-                        [0, "desc"]
-                    ],
-                    "pageLength": 10,
-                    ajax: {
-                        url: "{{ route('procedimento.reprovados') }}",
-                        data: {
-                            id: id
-                        }
-                    },
-                    columns: [{
-                            data: 'id_procedimento',
-                            name: 'id_procedimento'
-                        },
-                        {
-                            data: 'id_user_create',
-                            name: 'id_user_create',
-                            visible: false
-                        },
-                        {
-                            data: 'nm_create',
-                            name: 'nm_create'
-                        },
-                        {
-                            data: 'id_user_approver',
-                            name: 'id_user_approver',
-                            visible: false
-                        },
-                        {
-                            data: 'nm_approver',
-                            name: 'nm_approver'
-                        },
-                        {
-                            data: 'actions',
-                            name: 'actions',
-                            orderable: false,
-                            serachable: false,
-                            sClass: 'text-center'
-                        }
-                    ]
-                });
-                $('#modal-reason-procedimento').modal('show');
-            });
-            $('body').on('click', '#view-motivo-procedimento', function(e) {
-                e.preventDefault();
-                var rowData = $('#table-motivo-reprovados').DataTable().row($(this).parents('tr')).data();
-                $('.description').val('');
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('procedimento.chat') }}",
-                    data: {
-                        data: rowData
-                    },
-                    success: function(response) {
-                        $('.direct-chat-messages').remove();
-                        $('#id').val(rowData.id_procedimento);
-                        $('#user_approver').val(rowData.id_user_approver);
-                        $('#user_created').val(rowData.id_user_create);
-                        $('#box-chat').append(response.html);
-                    }
-                });
-                $('#modal-recuse-procedimento').modal('show');
-            });
             $('body').on('click', '#btnPublish', function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
                 $.ajax({
-                    url: "{{ route('procedimento.store.publish') }}",
+                    url: "{{ route('sgi.store.publish') }}",
                     method: 'GET',
                     data: {
                         id: id,
@@ -542,107 +344,30 @@
                         $("#loading").addClass('hidden');
                         if (response.alert) {
                             $("#loading").addClass('hidden');
-                            msg(response.alert, 'alert-warning', 'fa-warning');
+                            msgToastr(response.alert, 'warning');
                         } else {
                             $("#loading").addClass('hidden');
-                            msg(response.success, 'alert-success', 'fa fa-check');
-                            $('#table-procedimento-liberados').DataTable().ajax.reload();
+                            msgToastr(response.success, 'success');
+                            $('#table-sgi').DataTable().ajax.reload();
                         }
                     }
                 });
             });
-            $('body').on('click', '#btnReleaseNotApprover', function(e) {
-                e.preventDefault();
-                var id = $(this).data('id');
-                $.ajax({
-                    url: "{{ route('procedimento.store.noapprover') }}",
-                    method: 'GET',
-                    data: {
-                        id: id,
-                    },
-                    beforeSend: function() {
-                        $("#loading").removeClass('hidden');
-                    },
-                    success: function(response) {
-                        $("#loading").addClass('hidden');
-                        if (response.alert) {
-                            $("#loading").addClass('hidden');
-                            msg(response.alert, 'alert-warning', 'fa-warning');
-                        } else {
-                            $("#loading").addClass('hidden');
-                            msg(response.success, 'alert-success', 'fa fa-check');
-                            $('#table-procedimento').DataTable().ajax.reload();
-                        }
-                    }
-                });
-            });
-            $('body').on('click', '#btnOutstandind', function(e) {
-                $("#table-procedimentos-outstanding").DataTable().destroy();
-                e.preventDefault();
-                var id = $(this).data('id');
-                $('#modal-outstanding-procedimento').modal('show');
-                $("#table-procedimentos-outstanding").DataTable({
-                    language: {
-                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
-                    },
-                    pagingType: "simple",
-                    processing: false,
-                    responsive: true,
-                    serverSide: false,
-                    autoWidth: false,
-                    order: [
-                        [0, "desc"]
-                    ],
-                    "pageLength": 10,
-                    ajax: {
-                        url: "{{ route('procedimento.outstanding') }}",
-                        data: {
-                            id: id
-                        }
-                    },
-                    columns: [{
-                            data: 'id_procedimento',
-                            name: 'id_procedimento'
-                        },
-                        {
-                            data: 'name',
-                            name: 'name'
-                        },
-                        {
-                            data: 'status',
-                            name: 'status'
-                        },
-                        {
-                            data: 'updated_at',
-                            name: 'updated_at'
-                        }
-                    ],
-                    columnDefs: [{
-                        width: '1%',
-                        targets: 0
-                    }],
-                });
-            });
+
             //Cliques nas tabs
-            $('.nav-tabs a[href="#recusados"]').on('click', function() {
-                $('#table-procedimento-recusados').DataTable().destroy();
-                initTable('table-procedimento-recusados', 'R');
-            });
-            $('.nav-tabs a[href="#pendentes"]').on('click', function() {
-                $('#table-procedimento-pendentes').DataTable().destroy();
-                initTable('table-procedimento-pendentes', 'P');
-            });
-            $('.nav-tabs a[href="#liberados"]').on('click', function() {
+
+            $('.nav-tabs a[href="#publicar"]').on('click', function() {
                 $('#table-procedimento-liberados').DataTable().destroy();
                 initTable('table-procedimento-liberados', 'L');
             });
+
             $('body').on('click', '#btnCancelPublish', function(e) {
-                var deleteId = $(this).data('id');
+                var id = $(this).data('id');
                 $.ajax({
-                    url: "{{ route('procedimento.delete-publish') }}",
-                    method: 'DELETE',
+                    url: "{{ route('sgi.delete-publish') }}",
+                    method: 'POST',
                     data: {
-                        "id": deleteId,
+                        "id": id,
                         "_token": $("[name=csrf-token]").attr("content"),
                     },
                     beforeSend: function() {
@@ -651,15 +376,16 @@
                     success: function(result) {
                         if (result.alert) {
                             $("#loading").addClass('hidden');
-                            msg(result.success, 'alert-warning', 'fa-warning');
+                            msgToastr(result.success, 'danger');
                         } else {
                             $("#loading").addClass('hidden');
-                            msg(result.success, 'alert-success', 'fa fa-check');
-                            $('#table-procedimento-liberados').DataTable().ajax.reload();
+                            msgToastr(result.success, 'warning');
+                            $('#table-sgi').DataTable().ajax.reload();
                         }
                     }
                 });
             });
+
             $('body').on('click', '#EditFile', function(e) {
                 e.preventDefault();
                 var id = $(this).data('id');
@@ -672,9 +398,7 @@
                     }
                     rowData = $('#table-procedimento-liberados').DataTable().row(selected_row).data();
                 }
-
-                console.log(rowData);
-                $('.id_procedimento').val(rowData.id);
+                $('.id_sgi').val(rowData.id);
                 $('.title').val(rowData.title);
                 $('#modal-edit-file').modal('show');
             });
@@ -694,18 +418,20 @@
                     ],
                     "pageLength": 10,
                     ajax: {
-                        url: "{{ route('procedimento.get-procedimento') }}",
+                        url: "{{ route('sgi.get-procedimento') }}",
                         data: {
                             status: data
                         }
                     },
+
+
                     columns: [{
                             data: 'id',
                             name: 'id'
                         },
                         {
-                            data: 'nm_setor',
-                            name: 'nm_setor'
+                            data: 'ds_local',
+                            name: 'ds_local'
                         },
                         {
                             data: 'title',
@@ -716,12 +442,13 @@
                             name: 'description'
                         },
                         {
+                            data: 'dt_validade',
+                            name: 'dt_validade'
+                        },
+
+                        {
                             data: 'status',
                             name: 'status'
-                        },
-                        {
-                            data: 'name',
-                            name: 'name'
                         },
                         {
                             data: 'Actions',

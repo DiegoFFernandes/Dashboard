@@ -56,7 +56,7 @@ class Empresa extends Model
     }
     public function EmpresaFiscalAll()
     {
-        return Empresa::select('cd_empresa_new', DB::raw('CONCAT(ds_local,"-",regiao) AS ds_local'))
+        return Empresa::select('cd_empresa_new', DB::raw('CONCAT(ds_local," - ",regiao) AS ds_local'))
                 ->where('cd_loja', 1)
                 ->whereIn('regiao', ['norte', 'sul'])
                 ->whereIn('cd_empresa_new', [101,102,103,104,108,109,105,106,107,108,1,309])

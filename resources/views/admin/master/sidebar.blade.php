@@ -326,7 +326,7 @@
                     </ul>
                 </li>
             @endcanany
-            @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
+            @canany(['ver-diretoria-norte', 'ver-diretoria-sul', 'ver-diretoria-rede'])
                 <li class="treeview {{ request()->segment(1) == 'diretoria' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-suitcase"></i> <span>Indicadores</span>
@@ -386,6 +386,27 @@
                                 </li>
                             </ul>
                         </li>
+                        @canany(['ver-sgi'])
+                            <li class="treeview">
+                                <a href="#"><i class="fa fa-circle-o"></i><span>SGI</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    @role(['admin|sgi'])
+                                        <li class="{{ $uri == 'sgi/index' ? 'active' : '' }}"><a
+                                                href="{{ route('sgi.index') }}">
+                                                <i class="fa fa-lock"></i>Movimentações</a>
+                                        </li>
+                                    @endrole
+                                    <li class="{{ $uri == 'sgi/publicos' ? 'active' : '' }}"><a
+                                            href="{{ route('sgi.publish') }}">
+                                            <i class="fa fa-book"></i>Publicos</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endcanany
                     </ul>
                 </li>
             @endunlessrole

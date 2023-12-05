@@ -44,7 +44,7 @@
                             <th>Nome Documento</th>
                             <th>Descrição</th>
                             <th>Validade</th>
-                            <th>Status</th>
+                            <th>Resp.</th>
                             <th>Acões</th>
                         </thead>
                     </table>

@@ -58,7 +58,7 @@ class CobrancaController extends Controller
         $clientesNovos = $this->agenda->CadastroNovos();
         $chartClienteNovos = $this->CarregaVariavel($clientesNovos);
         $chart = $this->CarregaVariavel($meses);
-        return $agenda = $this->agenda->AgendaOperadorMes($operadores);
+        $agenda = $this->agenda->AgendaOperadorMes($operadores);
         $clientesNovosDia = $this->agenda->ClientesNovos3Mes($operadores);
         $qtdClientesNovosMes = $this->pessoa->QtdClientesNovosMes($dti, $dtf);
         $qtdClientesFormaPagamento  = $this->pessoa->QtdClientesFormaPagamento($dti, $dtf);

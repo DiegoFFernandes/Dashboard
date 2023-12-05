@@ -5,80 +5,39 @@
     <section class="content">
         <!-- Small boxes (Stat box) -->
         <div class="row">
-            <div class="col-md-12">
-                <div class="box box-list-client">
-                    <div class="box-body">
-                        <div class="iframe-embed-wrapper iframe-embed-responsive-16by9">
-                            <div id="reportContainer">
-
-                            </div>
-                        </div>
-                    </div>
+            <div class="iframebox">
+                <div class="col-md-12">
+                    <div id="htmlTest" class="iframe-embed-wrapper iframe-embed-responsive-16by9"></div>
+                </div>
+                {{-- <div class="blueborder">&nbsp;</div> --}}
+                <div class="iframefooter">
+                    <br>
+                    <br>
+                    <br>
                 </div>
             </div>
+
         </div>
         <!-- /.row -->
+
+
 
     </section>
     <!-- /.content -->
 @endsection
 
 @section('scripts')
-    <script type="text/javascript">
-        // Embed a Power BI report in the given HTML element with the given configurations        
-        // Read more about how to embed a Power BI report in your application here: https://go.microsoft.com/fwlink/?linkid=2153590
-
-        let models = window['powerbi-client'].models;
-        // Read embed application token
-        let accessToken = "{{ $content->token }}";
-        // Read embed URL
-        let embedUrl =
-            "https://app.powerbi.com/reportEmbed?reportId={{ $reportID }}";
-        // Read report Id
-        let embedReportId = "{{ $reportID }}";
-
-        function embedPowerBIReport() {
-
-            // Read embed type from radio
-            let tokenType = '1';
-
-            // We give All permissions to demonstrate switching between View and Edit mode and saving report.
-            let permissions = models.Permissions.All;
-
-            // Create the embed configuration object for the report
-            // For more information see https://go.microsoft.com/fwlink/?linkid=2153590
-            let config = {
-                type: 'report',
-                tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
-                accessToken: accessToken,
-                embedUrl: embedUrl,
-                contrastMode: 0,
-                // viewMode: models.ViewMode.View,
-                id: embedReportId,
-                permissions: permissions,
-                // viewMode: models.ViewMode.Edit,
-                // autoAuth: true,
-                settings: {
-                    optimizeForPerformance: false,
-                    panes: {
-                        filters: {
-                            visible: false
-                        },
-                        pageNavigation: {
-                            visible: false
-                        }
-                    },
-                    // zoomLevel: 0.5
-                }
-
-            };            
-
-            // Get a reference to the embedded report HTML element
-            let embedContainer = $('#reportContainer')[0];
-            // Embed the report and display it within the div container.
-            powerbi.embed(embedContainer, config);
-            
-        }
-        embedPowerBIReport();
+    <script type="text/javascript" defer>
+        if ($(window).width() < 960) {
+            let div = '<div class="iframe-embed-wrapper iframe-embed-responsive-16by9">' +
+                '<iframe src="https://app.powerbi.com/view?r=eyJrIjoiNzc3YzMxZjUtNmNjZi00N2RkLWIyNTctNzliMDY3MTI1OGFmIiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9" frameborder="0">' +
+                '</iframe>' +
+                '</div>';
+            $('#iframe-mobile').html(div);
+        } else {
+            let div = '<div id="htmlTest" class="iframe-embed-wrapper iframe-embed-responsive-16by9"></div>';
+            $('#iframe-mobile').html(div);
+        }        
     </script>
+    <script src="{{ asset('js/diretoria-norte/script.js?v=2') }}"></script>
 @endsection

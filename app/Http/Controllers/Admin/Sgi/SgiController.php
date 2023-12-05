@@ -47,16 +47,15 @@ class SgiController extends Controller
         ));
     }
     public function store()
-    {
-        // return $this->request;
+    {        
         $data = $this->__validate($this->request);
         $file = $this->__validateFile($this->request);
+
         $empresa = Empresa::select('cd_empresa_new')->where('cd_empresa_new', $data['unidade'])->count();
 
         if (!$empresa >= 1) {
             redirect()->route('sgi.index')->with('info', 'Empresa não existe, favor informar outra!');
         }
-
         $sgi = $this->sgi->storeData($data, $file);
 
         return redirect()->route('sgi.index')->with('status', 'Procedimento criado com sucesso!');
@@ -157,7 +156,7 @@ class SgiController extends Controller
             if (File::exists($sgi->path)) {
                 File::delete($sgi->path);
             }
-            $file = $this->request->file('file')->store('procedimentos');
+            $file = $this->request->file('file')->store('sgi');
             $sgi->path = $file;
         }
         $sgi->save();
@@ -169,8 +168,8 @@ class SgiController extends Controller
         return $request->validate(
             [
                 'unidade' => 'required|integer',
-                'title' => 'required|string',
-                'description' => 'required|string',
+                'title' => 'required|string|max:200',
+                'description' => 'required|string|max:600',
                 'dt_validade' => 'required|date'
             ],
             [
@@ -188,12 +187,12 @@ class SgiController extends Controller
     {
         return $request->validate(
             [
-                'file' => 'required|mimes:pdf|max:4096'
+                'file' => 'required|mimes:pdf|max:10240'
             ],
             [
                 'file.required' => 'Favor informar uma arquivo PDF!',
                 'file.mimes' => 'Arquivo deve ser somente PDF, outro formato não e aceito!',
-                'file.max' => 'Arquivo deve ser menor de 4MB'
+                'file.max' => 'Arquivo deve ser menor de 10MB'
             ]
         );
     }

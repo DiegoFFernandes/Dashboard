@@ -59,9 +59,9 @@ class Empresa extends Model
         return Empresa::select('cd_empresa_new', DB::raw('CONCAT(ds_local," - ",regiao) AS ds_local'))
                 ->where('cd_loja', 1)
                 ->whereIn('regiao', ['norte', 'sul'])
-                ->whereIn('cd_empresa_new', [101,102,103,104,108,109,105,106,107,108,1,309])
+                ->whereIn('cd_empresa_new', [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 105, 106, 107, 108, 1, 309])
                 ->get();
-        $key = "Empresas_7" . Auth::user()->id;
+        $key = "Empresas_9" . Auth::user()->id;
         return Cache::remember($key, now()->addMinutes(120), function () {
             
         });

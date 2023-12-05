@@ -250,13 +250,17 @@ Route::middleware(['auth'])->group(function () {
             Route::get('index', [ComercialController::class, 'index'])->name('diretoria.index');
         });
         Route::middleware(['auth', 'permission:ver-diretoria-norte'])->group(function () {
-            Route::get('ivorecap-norte/{id}', [PowerBiEmbeddedController::class, 'index'])->name('diretoria.ivo-norte');
+            Route::get('ivorecap-norte/{id}', [ComercialController::class, 'ivoDiretoriaNorte'])->name('diretoria.ivo-norte');
         });
         Route::middleware(['auth', 'permission:ver-diretoria-sul'])->group(function () {
             Route::get('ivorecap-sul/{id}', [ComercialController::class, 'ivoDiretoriaSul'])->name('diretoria.ivo-sul');
         });
+        // Route::middleware(['auth', 'permission:ver-diretoria-rede'])->group(function () {
+        //     Route::get('ivorecap-rede/{id}', [ComercialController::class, 'ivoDiretoriaRede'])->name('diretoria.rede');
+        // });
+
         Route::middleware(['auth', 'permission:ver-diretoria-rede'])->group(function () {
-            Route::get('ivorecap-rede/{id}', [ComercialController::class, 'ivoDiretoriaRede'])->name('diretoria.rede');
+            Route::get('ivorecap-rede/{id}', [PowerBiEmbeddedController::class, 'index'])->name('diretoria.rede');
         });
     });
 });

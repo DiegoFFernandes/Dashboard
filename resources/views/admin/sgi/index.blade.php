@@ -97,7 +97,7 @@
                                             placeholder="Clique/Arraste e Solte aqui" accept="application/pdf" required>
 
                                     </div>
-                                    <p class="help-block">Somente arquivos em PDF.</p>
+                                    <p class="help-block">Somente arquivos em PDF até 10MB.</p>
                                 </div>
                                 <div class="col-md-12" align="center" style="padding-top: 24px">
                                     <div class="form-group">
@@ -175,7 +175,7 @@
                                             placeholder="Clique/Arraste e Solte aqui" accept="application/pdf">
 
                                     </div>
-                                    <p class="help-block">Somente arquivos em PDF, caso não selecione nenhum, sistema
+                                    <p class="help-block">Somente arquivos em PDF até 10MB, caso não selecione nenhum, sistema
                                         irá manter o mesmo arquivo.</p>
                                 </div>
                                 <div class="col-md-12" align="center" style="padding-top: 24px">

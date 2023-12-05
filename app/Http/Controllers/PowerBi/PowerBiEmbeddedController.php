@@ -47,10 +47,11 @@ class PowerBiEmbeddedController extends Controller
         $permissionPower = json_encode($permissionPower);
 
         $office360token = PowerbiHelper::getOffice360AccessToken();
+
         $groupID = env('GROUP_ID');
-        if ($regiao == 'norte') {
-            $reportID = env('REPORT_ID_NORTE');
-            $datasetID = env('DATASET_ID_NORTE');
+        if ($regiao == 'rede') {
+            $reportID = env('REPORT_ID_REDE');
+            $datasetID = env('DATASET_ID_REDE');
         } else {
            $reportID = env('REPORT_ID_SUL');
            $datasetID = env('DATASET_ID_SUL');
@@ -78,13 +79,13 @@ class PowerBiEmbeddedController extends Controller
             }';
             $content = PowerbiHelper::processPowerbiHttpRequest($url, $header, $data, 'POST');
 
-            $title_page   = 'Rede Ivorecap';
+            $title_page   = 'Ivorecap - Rede';
             $user_auth    = $this->user;
             $exploder     = explode("/", $this->request->route()->uri());
             $uri = $exploder[0] . "/" . $exploder[1];
             $variableValue = "teste";
             return view(
-                'admin.diretoria.diretoria-norte',
+                'admin.diretoria.diretoria-rede',
                 compact(
                     'content',
                     'title_page',

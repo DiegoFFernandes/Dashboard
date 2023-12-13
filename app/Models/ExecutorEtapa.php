@@ -29,7 +29,7 @@ class ExecutorEtapa extends Model
         $query = 'select e.id matricula, cast(e.nmexecutor as varchar(60) character set utf8) nmexecutor, e.idempresa, e.stativo
                   from executoretapa e
                   where e.stativo = 1';
-        return DB::connection($this->setConnet($local))->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function StoreExecutorEtapa($executores, $localizacao)
     {
@@ -38,14 +38,14 @@ class ExecutorEtapa extends Model
             foreach ($executores as $e) {
                 ExecutorEtapa::updateOrInsert(
                     [
-                        'matricula' => $e->MATRICULA,
-                        'localizacao' => $localizacao,
+                        'matricula' => $e->MATRICULA
+                        // 'localizacao' => $localizacao,
                     ],
                     [
                         'matricula' => $e->MATRICULA,
                         'nmexecutor' => strtoupper($e->NMEXECUTOR),
                         'cd_empresa' => $e->IDEMPRESA,
-                        'localizacao' => $localizacao,
+                        'localizacao' => 'REDE',
                         'stativo' => $e->STATIVO,
                         "created_at"    =>  \Carbon\Carbon::now(), # new \Datetime()
                         "updated_at"    => \Carbon\Carbon::now(),  # new \Datetime()

@@ -134,7 +134,7 @@ class EpisController extends Controller
         $local = strtoupper($local);
         $execJunsoft = $this->executor->searchExecutorEtapaJunsoft($local);
 
-        $this->executor->StoreExecutorEtapa($execJunsoft, $local);
+        return $this->executor->StoreExecutorEtapa($execJunsoft, $local);
 
         return response()->json(['success' => 'Executores rede ' . $local . ' sincronizados com sucesso, atualize a página para visualizar novos!']);
     }

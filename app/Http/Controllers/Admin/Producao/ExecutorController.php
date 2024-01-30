@@ -28,7 +28,7 @@ class ExecutorController extends Controller
             }
             $executor = ExecutorEtapa::
                         where('matricula', $this->request->cd_executor)
-                        ->where('localizacao', $local)
+                        // ->where('localizacao', $local)
                         ->firstOrFail();
 
         } catch (\Throwable $th) {

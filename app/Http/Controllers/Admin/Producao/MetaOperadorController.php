@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 
 class MetaOperadorController extends Controller
 {
+    public $request, $empresa, $executor, $etapas, $meta, $user;
+
     public function __construct(
         Request $request,
         Empresa $empresa,
@@ -40,7 +42,9 @@ class MetaOperadorController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Etapa não encontrado!']);
         }
-        $meta_operador = $this->meta->MetaOperadorSetor($this->request->cd_executor, $etapa);    
+
+        $meta_operador = $this->meta->MetaOperadorSetor($this->request->cd_executor, $etapa); 
+
         if(empty($meta_operador))  {
             return response()->json(['error' => 'Não existe meta de Operador no setor indicado!']);
         }  

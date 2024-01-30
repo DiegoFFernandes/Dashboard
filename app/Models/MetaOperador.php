@@ -34,7 +34,7 @@ class MetaOperador extends Model
            INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
            WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE
             AND I.ST_ETAPA = 'F'
-            AND PP.IDEMPRESA IN (3)
+            AND PP.IDEMPRESA IN (108)
            GROUP BY E.id, E.NMEXECUTOR
            HAVING COUNT(I.ID) > 5
            
@@ -50,7 +50,7 @@ class MetaOperador extends Model
            INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
           WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-1
             AND I.ST_ETAPA = 'F'
-            AND PP.IDEMPRESA IN (3)
+            AND PP.IDEMPRESA IN (108)
            GROUP BY  E.id, E.NMEXECUTOR
            HAVING COUNT(I.ID) > 5
            
@@ -66,7 +66,7 @@ class MetaOperador extends Model
            INNER JOIN PEDIDOPNEU PP ON (PP.ID = IPP.IDPEDIDOPNEU)
            WHERE CAST(I.DTFIM AS DATE) = CURRENT_DATE-2
             AND I.ST_ETAPA = 'F'
-            AND PP.IDEMPRESA IN (3)
+            AND PP.IDEMPRESA IN (108)
            GROUP BY  E.id, E.NMEXECUTOR
            HAVING COUNT(I.ID) > 5
         ) X
@@ -77,6 +77,6 @@ class MetaOperador extends Model
         GROUP BY X.ID, X.NMEXECUTOR, meta
         ORDER BY DIAATUAL DESC";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
 }

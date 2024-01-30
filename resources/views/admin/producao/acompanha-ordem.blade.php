@@ -219,9 +219,8 @@
                 cd_etapa = $('.etapas').val();
                 nm_executor = $('#nm_executor').val();
                 cd_executor = $('#cd_executor').val();
-                if (nm_executor == '' || cd_executor == '' || cd_etapa == 0) {
-                    msg('Favor insira uma etapa / código de executor e clique na lupa!', 'alert-warning',
-                        'fa fa-warning')
+                if (nm_executor == '' || cd_executor == '' || cd_etapa == 0) {                    
+                        msgToastr('Favor insira uma etapa / código de executor e clique na lupa!', 'warning');
                 } else {
                     $.ajax({
                         method: 'GET',
@@ -234,8 +233,8 @@
 
                         },
                         success: function(response) {
-                            if (response.error) {
-                                msg(response.error, 'alert-warning');
+                            if (response.error) {                                
+                                msgToastr(response.error, 'info');
                                 return false;
                             } else {
                                 $('.meta-hoje').text(response.hoje);

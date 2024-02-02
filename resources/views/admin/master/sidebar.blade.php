@@ -518,41 +518,58 @@
                                                 <i class="fa fa-angle-left pull-right"></i>
                                             </span>
                                         </a>
-                                        <ul class="treeview-menu">
-                                            @can('ver-diretoria-norte')
+                                        <ul class="treeview-menu">                                            
                                                 <li class="">
-                                                    <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/Ebg3VQY5BIVMiLwGrmYzun8BmxWKCKMVXBoc_pu_7fnX2A?e=j2jucg"
+                                                    <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/ES-q_nxYzM5JmiJZ-Xu6DZ0BgzU3W1lutDSv3TdAy28b4g?e=T30aEG"
                                                         target="_blank">
-                                                        <i class="fa fa-circle-o"></i>Norte</a>
-                                                </li>
-                                            @endcan
-                                            @can('ver-diretoria-sul')
-                                                <li class="">
-                                                    <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWK_gdmcsfpBhXJ02SifaccBIBfgTuKgEROpL70aclH_og?e=IOQYSy"
-                                                        target="_blank">
-                                                        <i class="fa fa-circle-o"></i>Sul</a>
-                                                </li>
-                                            @endcan
+                                                        <i class="fa fa-circle-o"></i>N1 - Diretoria</a>
+                                                </li>                                           
                                         </ul>
                                     </li>
                                 @endcanany
-                                @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca'])
+                                @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca', 'ver-recursos-humanos'])
                                     <li class="treeview">
-                                        <a href="#"><i class="fa fa-circle-o"></i>Administrativo
+                                        <a href="#"><i class="fa fa-circle-o"></i>Suporte
                                             <span class="pull-right-container">
                                                 <i class="fa fa-angle-left pull-right"></i>
                                             </span>
                                         </a>
                                         <ul class="treeview-menu">
                                             <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EZxYA4dnnMVBinAVF5zqtIABd6X5ZXV9RkOHY6oeuCSoRw?e=puzc72"
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EbzOjGTDZIFFrPpZ1kLFgpkB-sR0q-d7SjmeH-wWz0OMWw?e=4nDru8"
                                                     target="_blank">
-                                                    <i class="fa fa-circle-o"></i>Norte</a>
+                                                    <i class="fa fa-circle-o"></i>N2 - Administrativo</a>
                                             </li>
                                             <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EXytz3uwropCst-EK_vBu2YB-q4j2ZYF2sOyLaNfbl_Xbg?e=xnQlBd"
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EeMQInoqjkpDtDaylykMZ_8BQPk1rNsicCMYmzd00_H6Sw?e=tjc4Mr"
                                                     target="_blank">
-                                                    <i class="fa fa-circle-o"></i>Sul</a>
+                                                    <i class="fa fa-circle-o"></i>N3 - Controladoria</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Edo6Y5_x0Q1HuZ-qVi1mdNsBXBzJlMk9A8N4er3M7Yi73Q?e=Jr8GDb"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N3 - Gestão Financeira</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EV7ilh-R4xNJiAmhXFyb_VkBbuWu27U06dIdmj31VKSrjw?e=DiiW0F"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N3 - T.I Suporte</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-producao'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Produto
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EUXAsbNwuuBLoiG1fS50feABcCorAPeTu4lyBgl4NucDRQ?e=Z2Fde4"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N2 - Operações</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -565,102 +582,70 @@
                                             </span>
                                         </a>
                                         <ul class="treeview-menu">
-                                            @role('admin|coordenador|gerencia')
-                                                <li class="treeview">
-                                                    <a href="#"><i class="fa fa-circle-o"></i>Coordenador
-                                                        <span class="pull-right-container">
-                                                            <i class="fa fa-angle-left pull-right"></i>
-                                                        </span>
-                                                    </a>
-                                                    <ul class="treeview-menu">
-                                                        <li class="">
-                                                            <a href="https://superrodas-my.sharepoint.com/:f:/g/personal/admin_superrodas_onmicrosoft_com/Empj1e8uWJtIkWl9se59XfoB2UGs3k-CZhpwQWbHYUEahw?e=xPKPoY"
-                                                                target="_blank">
-                                                                <i class="fa fa-circle-o"></i>Norte</a>
-                                                        </li>
-                                                        <li class="">
-                                                            <a href="https://superrodas-my.sharepoint.com/:f:/g/personal/admin_superrodas_onmicrosoft_com/EgmsKd6v3RNOicUa9vBU6nEBsTJM8h5Juzt5OR6DqrbLpg?e=6v3eKg"
-                                                                target="_blank">
-                                                                <i class="fa fa-circle-o"></i>Sul</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            @endrole
-                                            <li class="treeview">
-                                                <a href="#"><i class="fa fa-circle-o"></i>Geral
-                                                    <span class="pull-right-container">
-                                                        <i class="fa fa-angle-left pull-right"></i>
-                                                    </span>
-                                                </a>
-                                                <ul class="treeview-menu">
-                                                    @can('ver-comercial-norte')
-                                                        <li class="">
-                                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EWv71bwBXHJBkU-OARyDPD0BKPh35ZsHp8Mvwrgdf6JN5g?e=p59EpC"
-                                                                target="_blank">
-                                                                <i class="fa fa-circle-o"></i>Norte</a>
-                                                        </li>
-                                                    @endcan
-                                                    @can('ver-comercial-sul')
-                                                        <li class="">
-                                                            <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EfAVFr6kqUtMs121cRy0NzIBnNvkEX2opxJ9BtAQqZUZNw?e=bEqHpU"
-                                                                target="_blank">
-                                                                <i class="fa fa-circle-o"></i>Sul</a>
-                                                        </li>
-                                                    @endcan
-                                                </ul>
-                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EW8-tRPmiaFBrQs3PmTVHxkBD4WIkdW7TPZAudEhQlCC_w?e=xHIxDf"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N2 - Comercial</a>
+                                            </li>                                            
                                         </ul>
                                     </li>
                                 @endcanany
-                                @canany(['ver-producao'])
+                                @role('admin|coordenador|gerencia')
                                     <li class="treeview">
-                                        <a href="#"><i class="fa fa-circle-o"></i>Produção
+                                        <a href="#"><i class="fa fa-circle-o"></i>Gestão de Unidade
                                             <span class="pull-right-container">
                                                 <i class="fa fa-angle-left pull-right"></i>
                                             </span>
                                         </a>
                                         <ul class="treeview-menu">
                                             <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EaN0co-wSzVMls0RzKbquNwBRSSgV49Hyh1YqqPhUqn3gg?e=87RB7p"
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EnvQd5J0IrNOn0OqTxwq85QBcfC2DqEUMEkz1YlRSYMQJg?e=OobLsP"
                                                     target="_blank">
-                                                    <i class="fa fa-circle-o"></i>Norte</a>
+                                                    <i class="fa fa-circle-o"></i>Alto Paraná</a>
                                             </li>
                                             <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/ESpx5kwIDhxEh50hlwVyDS0BXrhqnZpizouqmWPNIdfcMQ?e=0STEqc"
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EmVfLSenLtFIu2uWb9nmvQYBsqKlrIEkmQ5G5Ks1-M95zg?e=pJSN3e"
                                                     target="_blank">
-                                                    <i class="fa fa-circle-o"></i>Sul</a>
+                                                    <i class="fa fa-circle-o"></i>Assis</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EhPatQ9dnK1JtEIdoT7sjeIB3nNA5VEhkSCNBYwuwuxPug?e=RFtu4i"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Bauru</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eudb18YPTk9ApZFAEohL7oUBZPXXKpkkJ2hSNIku0zAR_A?e=58d4hW"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Campina Grande Do Sul</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eg20RFsMN51JtR6jvSHJ9uMBN_f8LHCRiId-t_7RCn7YSQ?e=dSUsfP"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Campo Largo</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eq9u42k95c9HsD-VF0nKVDkBaoS6aDQsMwkH1fNmZ1cA-A?e=rKBcmm"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Campo Largo - Renovat</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En7ATiBH_mRAm98qNULbGd8BdtQokUCOaJSfT0g91gykoA?e=PLy7mc"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Itapeva</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EsxZO4RB5SJPoCPTQyxocFoBHkW3nl8I7XT314uc06VJ5g?e=nDaZA7"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Paranavai</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En15XSUjMN5BhPcGtDQNUugB7nuHKN67bJOwvZti_36DDA?e=ylP0eu"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Vitorino</a>
                                             </li>
                                         </ul>
                                     </li>
-                                @endcanany
-                                @canany(['ver-recursos-humanos'])
-                                    <li class="">
-                                        <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EW8KQ2lTSuxLtX1k34_X9qsB8nZH28BvD6kdZ1o5PugFxw?e=0429uh"
-                                            target="_blank">
-                                            <i class="fa fa-circle-o"></i>Recursos Humanos</a>
-                                    </li>
-                                @endcanany
-                                @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca'])
-                                    <li class="treeview">
-                                        <a href="#"><i class="fa fa-circle-o"></i>Apoio
-                                            <span class="pull-right-container">
-                                                <i class="fa fa-angle-left pull-right"></i>
-                                            </span>
-                                        </a>
-                                        <ul class="treeview-menu">
-                                            <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EZTB2rs_zzRKu9vOkTViQIYBCr_93QfkOGXZawzlXTV5ZA?e=Xf5Rr0"
-                                                    target="_blank">
-                                                    <i class="fa fa-circle-o"></i>Norte</a>
-                                            </li>
-                                            <li class="">
-                                                <a href="https://superrodas-my.sharepoint.com/:x:/g/personal/admin_superrodas_onmicrosoft_com/EY1477cThWlHhpATFh1jtk4BMrhZaBsH9NzpeRhyVaiDng?e=m8A4y1"
-                                                    target="_blank">
-                                                    <i class="fa fa-circle-o"></i>Sul</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                @endcanany
+                                @endrole                                                           
                             </ul>
                         </li>
                     </ul>

@@ -518,12 +518,12 @@
                                                 <i class="fa fa-angle-left pull-right"></i>
                                             </span>
                                         </a>
-                                        <ul class="treeview-menu">                                            
-                                                <li class="">
-                                                    <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/ES-q_nxYzM5JmiJZ-Xu6DZ0BgzU3W1lutDSv3TdAy28b4g?e=T30aEG"
-                                                        target="_blank">
-                                                        <i class="fa fa-circle-o"></i>N1 - Diretoria</a>
-                                                </li>                                           
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/ES-q_nxYzM5JmiJZ-Xu6DZ0BgzU3W1lutDSv3TdAy28b4g?e=T30aEG"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N1 - Diretoria</a>
+                                            </li>
                                         </ul>
                                     </li>
                                 @endcanany
@@ -539,6 +539,11 @@
                                                 <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EbzOjGTDZIFFrPpZ1kLFgpkB-sR0q-d7SjmeH-wWz0OMWw?e=4nDru8"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>N2 - Administrativo</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EeMQInoqjkpDtDaylykMZ_8BQPk1rNsicCMYmzd00_H6Sw?e=tjc4Mr"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N3 - Administrativo</a>
                                             </li>
                                             <li class="">
                                                 <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EY-9-0_gkJdEnRVQait1NscBvpk0oyCStkdCbZjTm3JWMg?e=2BtGhw"
@@ -586,7 +591,7 @@
                                                 <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EW8-tRPmiaFBrQs3PmTVHxkBD4WIkdW7TPZAudEhQlCC_w?e=xHIxDf"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>N2 - Comercial</a>
-                                            </li>                                            
+                                            </li>
                                         </ul>
                                     </li>
                                 @endcanany
@@ -647,10 +652,10 @@
                                                 <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En15XSUjMN5BhPcGtDQNUugB7nuHKN67bJOwvZti_36DDA?e=ylP0eu"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>Vitorino</a>
-                                            </li>                                            
+                                            </li>
                                         </ul>
                                     </li>
-                                @endrole                                                           
+                                @endrole
                             </ul>
                         </li>
                     </ul>

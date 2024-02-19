@@ -541,7 +541,7 @@
                                                     <i class="fa fa-circle-o"></i>N2 - Administrativo</a>
                                             </li>
                                             <li class="">
-                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EeMQInoqjkpDtDaylykMZ_8BQPk1rNsicCMYmzd00_H6Sw?e=tjc4Mr"
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EY-9-0_gkJdEnRVQait1NscBvpk0oyCStkdCbZjTm3JWMg?e=2BtGhw"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>N3 - Controladoria</a>
                                             </li>
@@ -629,6 +629,11 @@
                                                     <i class="fa fa-circle-o"></i>Campo Largo - Renovat</a>
                                             </li>
                                             <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EsEhRZdsYYRKpbxwLJuo4SwBLlFN-2cvKg9UoNjjYNzTxA?e=0nT99L"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Dourados</a>
+                                            </li>
+                                            <li class="">
                                                 <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En7ATiBH_mRAm98qNULbGd8BdtQokUCOaJSfT0g91gykoA?e=PLy7mc"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>Itapeva</a>
@@ -642,7 +647,7 @@
                                                 <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En15XSUjMN5BhPcGtDQNUugB7nuHKN67bJOwvZti_36DDA?e=ylP0eu"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>Vitorino</a>
-                                            </li>
+                                            </li>                                            
                                         </ul>
                                     </li>
                                 @endrole                                                           

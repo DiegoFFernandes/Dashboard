@@ -43,7 +43,7 @@ class Item extends Model
                 and i.cd_subgrupo in (101,308,103)
                 and i.st_ativo = 'S'
                 --and i.cd_item in ('3107','1001904')";
-        $itens = DB::connection($this->setConnet())->select($query);
+        $itens = DB::connection('firebird_rede')->select($query);
 
         $status = $this->InsertItem($itens);
         if ($status == 1) {

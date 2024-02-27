@@ -6,6 +6,22 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h4 class="box-title">Atualizar Executores</h4>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <select class="form-control" name="local" id="local">
+                                <option value="NORTE">Funcionarios Norte</option>
+                                <option value="SUL">Funcionarios Sul</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-success mb-2" id="btn-search-executores">Atualizar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-info">
                     <div class="box-header">
                         <h3 class="box-title">{{ $title_page }}</h3>
                     </div>
@@ -20,8 +36,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-
                     </div>
                     {{-- <div class="box-body">
                         <div class="form-group">
@@ -53,6 +67,7 @@
                     </div>
                 </div>
             </div>
+
             {{-- Icon loading --}}
             <div class="hidden" id="loading">
                 <img id="loading-image" class="mb-4" src="{{ Asset('img/loader.gif') }}" alt="Loading...">
@@ -63,9 +78,8 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('js/scripts.js') }}"></script>    
-    <script type="text/javascript">        
-
+    <script src="{{ asset('js/scripts.js') }}"></script>
+    <script type="text/javascript">
         $(document).ready(function() {
             $('#importa-produto').select2();
             $('#submit-importa').click(function() {
@@ -81,13 +95,13 @@
                     },
                     success: function(response) {
                         $("#loading").addClass('hidden');
-                        
+
                         if (response.success) {
                             msgToastr(response.success, 'success');
                         } else {
                             msgToastr(response.error, 'warning');
                         }
-                        
+
                     }
                 });
             });
@@ -108,6 +122,22 @@
                         } else {
                             msgToastr(response.error, 'danger');
                         }
+                    }
+                });
+            });
+            $('#btn-search-executores').click(function() {
+                let local = $('#local').val();
+                var url = "{{ route('get-buscar-executor', ':local') }}";
+                url = url.replace(':local', local);
+                $.ajax({
+                    method: "GET",
+                    url: url,
+                    beforeSend: function() {
+                        $('#loading').removeClass('hidden');
+                    },
+                    success: function(result) {
+                        $('#loading').addClass('hidden');
+                        msgToastr(result.success, 'success');
                     }
                 });
             });

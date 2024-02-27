@@ -255,9 +255,9 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware(['auth', 'permission:ver-diretoria-sul'])->group(function () {
             Route::get('ivorecap-sul/{id}', [ComercialController::class, 'ivoDiretoriaSul'])->name('diretoria.ivo-sul');
         });
-        // Route::middleware(['auth', 'permission:ver-diretoria-rede'])->group(function () {
-        //     Route::get('ivorecap-rede/{id}', [ComercialController::class, 'ivoDiretoriaRede'])->name('diretoria.rede');
-        // });
+        Route::middleware(['auth', 'permission:ver-diretoria-rede'])->group(function () {
+            Route::get('ivorecap-rede-fluxo/7hJZN5WaCnyIr79btkwo', [ComercialController::class, 'ivoDiretoriaRedeFluxo'])->name('diretoria.rede-fluxo');
+        });
 
         Route::middleware(['auth', 'permission:ver-diretoria-rede'])->group(function () {
             Route::get('ivorecap-rede/{id}', [PowerBiEmbeddedController::class, 'index'])->name('diretoria.rede');
@@ -325,7 +325,7 @@ Route::middleware(['auth', 'role:admin|cobranca'])->group(function () {
     });
 });
 Route::middleware(['auth', 'role:admin|producao'])->group(function () {
-    Route::prefix('importa-item-junsoft')->group(function () {
+    Route::prefix('importa-junsoft')->group(function () {
         Route::get('index', [ImportaItemJunsoftController::class, 'index'])->name('importa.index');
         Route::post('id-marca-ajax', [ImportaItemJunsoftController::class, 'AjaxImportaItem'])->name('importa-item.index');
         Route::post('importa-motivo-pneu-ajax', [ImportaItemJunsoftController::class, 'AjaxImportaMotivoPneu'])->name('importa-motivo-pneu');

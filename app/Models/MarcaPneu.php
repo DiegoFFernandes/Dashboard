@@ -23,7 +23,7 @@ class MarcaPneu extends Model
 
         $query = "select cd_marca, ds_marca from marca";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
         
     }
 }

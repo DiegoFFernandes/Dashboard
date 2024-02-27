@@ -57,6 +57,15 @@ class ComercialController extends Controller
         $uri          = $exploder[0] . '/' . $exploder[1];
         return view('admin.diretoria.diretoria-norte', compact('title_page', 'user_auth', 'uri'));
     }
+
+    public function ivoDiretoriaRedeFluxo(){
+        $title_page   = 'Rede Fluxo Caixa';
+        $user_auth    = $this->user;
+        $exploder = explode('/', $this->request->route()->uri());
+        $uri          = $exploder[0] . '/' . $exploder[1];
+        return view('admin.diretoria.diretoria-fluxo', compact('title_page', 'user_auth', 'uri'));
+    }
+
     public function ivoDiretoriaSul(){
         
         $title_page   = 'Rede Ivorecap - Sul';

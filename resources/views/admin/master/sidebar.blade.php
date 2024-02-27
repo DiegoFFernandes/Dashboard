@@ -438,10 +438,7 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        @can('ver-producao')
-                            <li class="active"><a href="{{ route('importa.index') }}"><i class="fa fa-archive"></i>Importa
-                                    Item Junsoft</a>
-                            </li>
+                        @can('ver-producao')                            
                             <li class="active"><a href="{{ route('estoque.index') }}"><i class="fa fa-archive"></i>Criar
                                     Lote Estoque</a>
                             </li>
@@ -467,6 +464,23 @@
                                 href="{{ route('financeiro.index') }}"><i class="fa fa-file-excel-o"></i>Conciliação
                                 Empresas</a>
                         </li>
+                    </ul>
+                </li>
+            @endrole
+            @role('admin')
+                <li class="treeview {{ request()->segment(1) == 'financeiro' ? 'active' : '' }}" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-arrow-down"></i> <span>Junsoft</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="{{ request()->routeIs('cobranca.index') ? 'active' : '' }}"><a
+                                href="{{ route('importa.index') }}"><i class="fa fa-scissors"></i>Importar P/ Portal
+                                </a>
+                        </li>                        
+                    </li>
                     </ul>
                 </li>
             @endrole

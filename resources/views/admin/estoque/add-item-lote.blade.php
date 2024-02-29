@@ -73,7 +73,7 @@
                                 <input type="text" class="form-control" id="ds_produto" disabled>
                             </div>
                         </div>
-                        @if ($lote->id_subgrupo == 101 && $lote->id_marca == 30)
+                        @if ($lote->id_subgrupo == 101 && $lote->id_marca == 3)
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="cd_barras_peso">Cód. Barras Peso</label>
@@ -118,7 +118,7 @@
                                     <tr>
                                         <th>Cód. Item</th>
                                         <th>Descrição</th>
-                                        <th>{{ $lote->id_subgrupo == 101 && $lote->id_marca == 30 ? 'Kg' : 'Unid.' }}</th>
+                                        <th>{{ $lote->id_subgrupo == 101 && $lote->id_marca == 3 ? 'Kg' : 'Unid.' }}</th>
                                         <th>Úsuario</th>
                                         <th>Entrada em</th>
                                         <th>Deletar</th>
@@ -136,7 +136,7 @@
                                         <th>Cód. Item</th>
                                         <th>Descrição</th>
                                         <th>Qtd.</th>
-                                        <th>{{ $lote->id_subgrupo == 101 && $lote->id_marca == 30 ? 'Soma Kg' : 'Unid.' }}
+                                        <th>{{ $lote->id_subgrupo == 101 && $lote->id_marca == 3 ? 'Soma Kg' : 'Unid.' }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -278,7 +278,7 @@
                     return false;
                 }
 
-                if (subgrupo == 101 && marca == 30) {
+                if (subgrupo == 101 && marca == 3) {
                     if (cd_peso == "") {
                         $("#cd_item").tooltip('hide');
                         $('#cd_barras_peso').attr('title', 'Código peso ou kg obrigatório!').tooltip(

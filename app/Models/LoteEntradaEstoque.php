@@ -36,13 +36,17 @@ class LoteEntradaEstoque extends Model
             'lote_entrada_estoques.status',
             'lote_entrada_estoques.tp_lote',
             'lote_entrada_estoques.id_subgrupo',
+            's.ds_marca as ds_subgrupo',
             'lote_entrada_estoques.id_marca',
+            'm.ds_marca',
             'lote_entrada_estoques.cd_usuario',
             'lote_entrada_estoques.created_at',
             'lote_entrada_estoques.updated_at'
         )
 
             ->leftJoin('item_lote_entrada_estoques as i', 'i.cd_lote', 'lote_entrada_estoques.id')
+            ->leftJoin('marca_pneus as m', 'm.id', 'lote_entrada_estoques.id_marca')
+            ->leftJoin('sub_grupos as s', 's.id', 'lote_entrada_estoques.id_subgrupo')
             ->where('cd_empresa', Auth::user()->empresa)
             ->groupBy(
                 'lote_entrada_estoques.id',

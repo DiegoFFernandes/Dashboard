@@ -96,12 +96,12 @@ class ItemLoteEntradaEstoqueController extends Controller
         $this->request['cd_usuario'] = Auth::user()->id;
         $item = $this->item->where('cd_item', $this->request->cd_produto)->firstOrFail();
 
-        if ($this->request->id_marca <> 30 && $item->cd_marca == 30) {
+        if ($this->request->id_marca <> 3 && $item->cd_marca == 3) {
             if (!$this->request->has('peso')) {
                 return response()->json(['errors' => 'Você selecionou uma marca diferente da Bandag ao criar o lote, não pode incluir esse item!']);
             }
         }
-        if ($this->request->id_subgrupo == 101 && $this->request->id_marca == 30) {
+        if ($this->request->id_subgrupo == 101 && $this->request->id_marca == 3) {
             $this->request['peso'] = str_replace(",", ".", $this->request->peso);
         } else {
             $this->request['peso'] = 1;

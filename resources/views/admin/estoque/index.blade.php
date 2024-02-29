@@ -63,13 +63,15 @@
                         <table id="table-lote" class="table nowrap" cellspacing="0" width="100%">
                             <thead>
                                 <tr class="info">
-                                    <th style="width: 10px">Cód.</th>
-                                    <th>Descrição</th>
+                                    <th style="width: 10px">Cód.</th>                                    
+                                    <th>Tipo Produto</th>
+                                    <th>Marca</th>
                                     <th>Qtda Items</th>
                                     <th>Peso Liquido</th>
                                     <th>Status</th>
                                     <th>Tipo Lote</th>
                                     <th>Usúario</th>
+                                    <th>Descrição</th>
                                     <th>Criado em</th>
                                     <th>Ações</th>
                                 </tr>
@@ -110,10 +112,14 @@
                 columns: [{
                         data: 'id',
                         name: 'id'
+                    },                    
+                    {
+                        data: 'ds_subgrupo',
+                        name: 'ds_subgrupo'
                     },
                     {
-                        data: 'descricao',
-                        name: 'descricao'
+                        data: 'ds_marca',
+                        name: 'ds_marca'
                     },
                     {
                         data: 'qtd_itens',
@@ -142,6 +148,10 @@
                         data: 'cd_usuario',
                         name: 'cd_usuario',
                         visible: false
+                    },
+                    {
+                        data: 'descricao',
+                        name: 'descricao'
                     },
                     {
                         data: 'created_at',

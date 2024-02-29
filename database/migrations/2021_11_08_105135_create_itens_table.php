@@ -23,6 +23,7 @@ class CreateItensTable extends Migration
             $table->unsignedBigInteger('cd_subgrupo');
             $table->unsignedBigInteger('cd_marca');
             $table->unsignedBigInteger('cd_usuario');
+            $table->string('st_ativo', 1);
             $table->timestamps();
 
             $table->foreign('cd_usuario')->references('id')->on('users');

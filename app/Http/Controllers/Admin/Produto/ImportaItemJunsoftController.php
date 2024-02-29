@@ -8,8 +8,10 @@ use App\Models\Item;
 use App\Models\MarcaPneu;
 use App\Models\ModeloPneu;
 use App\Models\MotivoPneu;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 
 class ImportaItemJunsoftController extends Controller
 {
@@ -38,7 +40,8 @@ class ImportaItemJunsoftController extends Controller
         $title_page   = 'Importa/Atualiza produtos cadastrados Junsoft(TPO001)';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
-        $marcas        = $this->marca->MarcaAll();        
+        $marcas        = $this->marca->MarcaAll();      
+        
         return view('admin.importa_junsoft.index', compact(
             'title_page', 'user_auth', 'uri', 'marcas'));
     }

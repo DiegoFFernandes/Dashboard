@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,8 @@ class Item extends Model
                     i.sg_unidmed,
                     i.cd_subgrupo,
                     i.cd_marca,
-                    i.dt_registro
+                    i.dt_registro,
+                    i.st_ativo
                 from item i
                 where i.cd_marca = $cd_marca
                 and i.tp_item in ('I','S','P')
@@ -67,8 +69,10 @@ class Item extends Model
                         'sg_unidmed' => $i->SG_UNIDMED,
                         'cd_subgrupo' => $i->CD_SUBGRUPO,
                         'cd_marca' => $i->CD_MARCA,
+                        'st_ativo' => $i->ST_ATIVO,
                         'cd_usuario' => Auth::user()->id,
-                        'created_at' => $i->DT_REGISTRO
+                        'created_at' => $i->DT_REGISTRO,
+                        'updated_at' => Carbon::now()->format('Y-m-d H:m:s')
                     ]
                 );
             } catch (\Illuminate\Database\QueryException $ex) {
@@ -87,7 +91,7 @@ class Item extends Model
     public function FindProdutoAll($term){
         $this->connection = 'mysql';
 
-        return Item::where('ds_item','like', '%'.$term.'%')
+        return Item::where('ds_item','like', '%'.$term.'%')->where('st_ativo', 'S')
 		->limit(10)->get();
     }
 }

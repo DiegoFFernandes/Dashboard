@@ -217,10 +217,10 @@
         let token = $("meta[name='csrf-token']").attr("content");
         $(document).ready(function() {
             $("#cd_barras").inputmask({
-                mask: ['A99999999','9999999999999']
+                mask: ['A99999999', '9999999999999']
             });
             $("#cd_barras_peso").inputmask({
-                mask: ['99.99', '9Q99.99']
+                mask: ['99.99', 'Q99.99', '9Q99.99']
             });
             $("#cd_barras").on("keypress focusout", function(event) {
                 var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -233,7 +233,8 @@
                         method: "GET",
                         success: function(result) {
                             if (result.error) {
-                                alert("Cód: " + cd_barras + " - " + result.error);
+                                msgToastr("Cód: " + cd_barras + " - " + result.error,
+                                    "warning");
                                 location.reload();
                             } else {
                                 $("#ds_produto").val(result.ds_item);
@@ -248,29 +249,36 @@
             $("#cd_barras_peso").on("keydown focusout", function(event) {
                 if ($("#cd_item").val() == "") {
                     $('#cd_barras').attr('title', 'Código produto obrigatório!').tooltip('show');
-                    return false;
                 }
                 var keycode = (event.keyCode ? event.keyCode : event.which);
                 var str = $("#cd_barras_peso").val();
                 if (keycode == '9' || keycode == '13' || event.type == "focusout") {
+                    if (str.slice(0, 1) == 'Q') {
+                        msgToastr(
+                            'Voce acabou de ler o codigo de barras do peso em libras, leia o codigo correto!',
+                            'warning');
+                        $("#cd_barras_peso").val("");
+                        return false;
+                    }
                     var peso = str.replace('1Q', '');
                     peso_ = peso.toString().replace(",", ".")
                     peso = parseFloat(peso);
-                    if (peso <= (pesoitem - (pesoitem * 10 / 100)) || peso >= (pesoitem + (pesoitem * 10 /
-                            100))) {
-                        // $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!')
-                        //     .tooltip('show');
-                        if (confirm(
-                                'Peso está fora dos parâmetros para esse item! Deseja lançar mesmo assim?'
-                            )) {
-                            $("#peso").val(peso_);
-                            return true;
-                        }
-                    }
+                    // if (peso <= (pesoitem - (pesoitem * 10 / 100)) || peso >= (pesoitem + (pesoitem * 10 /
+                    //         100))) {
+                    //     // $('#cd_barras_peso').attr('title', 'Peso está fora dos parâmetros para esse item!')
+                    //     //     .tooltip('show');
+                    //     if (confirm(
+                    //             'Peso está fora dos parâmetros para esse item! Deseja lançar mesmo assim?'
+                    //         )) {
+                    //         $("#peso").val(peso_);
+                    //         return true;
+                    //     }
+                    // }
                     $("#peso").val(peso_);
                 }
             });
             $("#submit-add-item").on('click', function() {
+
                 let cd_produto = $("#cd_item").val();
                 let cd_peso = $("#peso").val();
                 if (cd_produto == "") {
@@ -334,7 +342,7 @@
                     },
                     success: function(result) {
                         $("#loading").addClass('hidden');
-                        alert(result.success);
+                        msgToastr(result.success, "success");
                         window.location.replace("{{ route('estoque.index') }}");
                     }
                 });
@@ -404,24 +412,32 @@
             });
             $("#table-add-item").on('click', '.delete', function() {
                 let rowId = $(this).data();
-                if (confirm('Deseja excluir o item: ' + rowId['id'] + '')) {
-                    $.ajax({
-                        method: "DELETE",
-                        url: "{{ route('delete-item-lote') }}",
-                        data: {
-                            id: rowId['id'],
-                            _token: token
-                        },
-                        beforeSend: function() {
-                            $("#loading").removeClass('hidden');
-                        },
-                        success: function(result) {
-                            $("#loading").addClass('hidden');
-                            alert(result.success);
-                            location.reload()
+                toastr.error(
+                    "<button type='button' id='confirmationButtonYes' class='btn btn-danger'>Sim</button><button type='button' id='confirmationButtonNo' class='btn btn-warning'>Não</button>",
+                    'Deletar item?', {
+                        closeButton: false,
+                        allowHtml: true,
+                        onShown: function(toast) {
+                            $("#confirmationButtonYes").click(function() {
+                                $.ajax({
+                                    method: "DELETE",
+                                    url: "{{ route('delete-item-lote') }}",
+                                    data: {
+                                        id: rowId['id'],
+                                        _token: token
+                                    },
+                                    beforeSend: function() {
+                                        $("#loading").removeClass('hidden');
+                                    },
+                                    success: function(result) {
+                                        $("#loading").addClass('hidden');
+                                        msgToastr(result.success, "success");
+                                        location.reload()
+                                    }
+                                });
+                            });
                         }
                     });
-                }
             });
             $('.nav-tabs a[href="#table-resumo"]').on('click', function() {
                 $('#table-item-group').DataTable().destroy();

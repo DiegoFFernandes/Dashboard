@@ -338,6 +338,9 @@
                         <li class=""><a href="{{ route('diretoria.index') }}"><i
                                     class="fa fa-arrow-up"></i>Indicador</a>
                         </li>
+                        <li class="{{ request()->routeIs('diretoria.rede-fluxo') ? 'active' : '' }}"><a href="{{ route('diretoria.rede-fluxo') }}"><i
+                                    class="fa fa-cube"></i>Fluxo de Caixa</a>
+                        </li>
 
                         {{-- @can('ver-diretoria-norte')
                             <li class="{{ request()->routeIs('diretoria.ivo-norte') ? 'active' : '' }}"><a

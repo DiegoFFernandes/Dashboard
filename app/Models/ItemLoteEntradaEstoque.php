@@ -44,7 +44,7 @@ class ItemLoteEntradaEstoque extends Model
         return ItemLoteEntradaEstoque::select(
             'item_lote_entrada_estoques.cd_produto',
             'itens.ds_item',
-            DB::raw('count(*) qtditem, sum(item_lote_entrada_estoques.peso) peso')
+            DB::raw('count(*) qtditem, ROUND(sum(item_lote_entrada_estoques.peso),2) peso')
         )
             ->join('itens', 'itens.cd_item', 'item_lote_entrada_estoques.cd_produto')
             ->where('cd_lote', $id)

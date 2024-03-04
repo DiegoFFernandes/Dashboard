@@ -220,7 +220,7 @@
                 mask: ['A99999999', '9999999999999']
             });
             $("#cd_barras_peso").inputmask({
-                mask: ['99.99', 'Q99.99', '9Q99.99']
+                mask: ['99.99', 'Q99.99', '9Q99.99', '999999']
             });
             $("#cd_barras").on("keypress focusout", function(event) {
                 var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -256,6 +256,13 @@
                     if (str.slice(0, 1) == 'Q') {
                         msgToastr(
                             'Voce acabou de ler o codigo de barras do peso em libras, leia o codigo correto!',
+                            'warning');
+                        $("#cd_barras_peso").val("");
+                        return false;
+                    }
+                    if (str.length == 6) {
+                        msgToastr(
+                            'Voce acabou de ler o codigo de barras da Data, leia o codigo correto!',
                             'warning');
                         $("#cd_barras_peso").val("");
                         return false;

@@ -15,7 +15,12 @@
 
         <div class="navbar-custom-menu">
             @if (isset($user_auth->name))
-                <ul class="nav navbar-nav">                    
+                <ul class="nav navbar-nav">
+                    <li class="">
+                        <a href="https://forms.office.com/pages/responsepage.aspx?id=ynbm4KZUrUmngr-8ypnus6a66-S0qZdPnS7tWXCtkupURVQwNTk1MDhOTVYwNDlCVjY1RTE3MEY0Si4u">
+                            <i class="fa fa-flag-o" style="color: yellow"></i> Não Conformidades                                                       
+                        </a>
+                    </li>
                     @role('portaria|admin')
                         <li class="">
                             <a href="{{ route('admin.portaria.entrada') }}">
@@ -33,8 +38,7 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="{{ asset('adminlte/dist/img/avatar5.png') }}" class="user-image"
-                                alt="User Image">
+                            <img src="{{ asset('adminlte/dist/img/avatar5.png') }}" class="user-image" alt="User Image">
                             <span class="hidden-xs">
                                 {{ $user_auth->name }}
                             </span>

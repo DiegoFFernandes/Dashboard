@@ -37,7 +37,7 @@ class Pessoa extends Model
                     where p.st_ativa = 'S'
                         --and p.cd_tipopessoa in (1,3)
                         and p.nm_pessoa like '%$search%'";
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function PessoasAll()
     {

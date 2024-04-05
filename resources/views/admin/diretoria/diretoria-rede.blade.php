@@ -79,6 +79,7 @@
             powerbi.embed(embedContainer, config);
             
         }
+        
         embedPowerBIReport();
     </script>
 @endsection

@@ -58,7 +58,7 @@ class User extends Authenticatable
     public function getData($cd_empresa)
     {
         return static::where('id','!=','1')
-        ->whereIn('empresa', $cd_empresa)
+        // ->whereIn('empresa', $cd_empresa)
         ->orderBy('name','asc')->get();
     }
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class BloqueioPedido extends Model
@@ -66,5 +67,11 @@ class BloqueioPedido extends Model
         PP.TP_BLOQUEIO, PE.ST_ATIVA, PE.ST_SCPC, (PP.IDVENDEDOR||' - '||PV.NM_PESSOA), PP.DSBLOQUEIO, EP.cd_regiaocomercial, AC.cd_areacomercial
         order by PP.idempresa, PP.DTEMISSAO";
         return DB::connection('firebird_rede')->select($query);
+
+        $key = "pedidos_bloqueados" . Auth::user()->id;
+        return Cache::remember($key, now()->addMinutes(2), function () use ($query) {
+            return DB::connection('firebird_rede')->select($query);
+        });
+
     }
 }

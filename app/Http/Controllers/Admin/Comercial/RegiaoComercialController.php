@@ -12,6 +12,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class RegiaoComercialController extends Controller
 {
+    public $request, $regiao, $empresa, $user;
     public function __construct(
         Request $request,
         RegiaoComercial $regiao,

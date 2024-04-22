@@ -128,7 +128,7 @@
                 inicioData = 0;
                 fimData = 0;
             });
-            $('.empresas').select2({
+            $('#empresas').select2({
                 placeholder: "Selecione uma empresa",
                 allowClear: true,
                 ajax: {
@@ -138,9 +138,10 @@
                     processResults: function(data) {
                         return {
                             results: $.map(data, function(item) {
+                                console.log(item);
                                 return {
                                     text: item.ds_local,
-                                    id: item.cd_empresa,
+                                    id: item.cd_empresa_new,
                                 }
                             })
                         };

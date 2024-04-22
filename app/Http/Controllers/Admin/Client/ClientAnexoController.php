@@ -32,6 +32,7 @@ class ClientAnexoController extends Controller
     protected static $pagador;
     protected static $beneficiario;
 
+    public $empresa, $request, $grupo, $envio, $contas, $boleto, $tickets, $user;
     public function __construct(
         Request $request,
         Empresa $empresa,
@@ -111,7 +112,7 @@ class ClientAnexoController extends Controller
         try {
             $nr_doc = Crypt::decryptString($this->request->id);
             $emp = Crypt::decryptString($this->request->emp);
-            $empresa = Empresa::where('cd_empresa', $emp)->firstOrFail();
+            $empresa = Empresa::where('cd_empresa_new', $emp)->firstOrFail();
         } catch (\Throwable $th) {
             return abort(404);
         }
@@ -120,6 +121,7 @@ class ClientAnexoController extends Controller
         if (Helper::is_empty_object($dados)) {
             return redirect()->route('cliente.dados-gerados-empresa.index')->with('warning', 'Boleto não encontrado, favor contactar setor de TI!');
         }
+
         $beneficiario = new \Eduardokum\LaravelBoleto\Pessoa(
             [
                 'nome'      => $dados[0]->NMBENF,
@@ -254,7 +256,7 @@ class ClientAnexoController extends Controller
             }
             $cnpjs = implode("' , '", $cnpjs);
         }
-        $empresa = Empresa::where('cd_empresa', $this->request->emp)->firstOrFail();
+        $empresa = Empresa::where('cd_empresa_new', $this->request->emp)->firstOrFail();
 
         if ($this->request->has('dt_ini')) {
             if ($this->request->dt_ini == 0) {
@@ -280,7 +282,7 @@ class ClientAnexoController extends Controller
         $data = $this->tickets->InvoiceClient($empresa, $dt_ini, $dt_fim, $cnpjs);
         return DataTables::of($data)
             ->addColumn('action', function ($d) {
-                if ($d->CD_EMPRESA == 3) {
+                if ($d->CD_EMPRESA == 108) {
                     return '<a href="' . env('URL_PREF_CAMP') . '?cpfCnpjPrestador=' . Helper::RemoveSpecialChar($d->NR_CNPJ_EMI) . '&numeroNFSe=' . $d->NR_NOTASERVICO . '&codigoAutenticidade=' . $d->CD_AUTENTICACAO . '&dataEmissao=' . $d->DS_DTEMISSAO . '" class="btn btn-xs btn-primary" target="_blank">NFs-e</button>';
                 } elseif ($d->CD_EMPRESA == 1 || $d->CD_EMPRESA == 101) {
                     return '<a href="' . $d->DS_ENDERECOIMP . '" class="btn btn-xs btn-primary" target="_blank">NFs-e</button>';

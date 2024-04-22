@@ -203,12 +203,11 @@ class BoletoImpresso extends Model
         bi.nr_cnpjcpfavalista,
         bi.nr_nossonumero";
 
-        
-        $key = "Boleto_". $nr_doc .'_'. Auth::user()->id;            
+        return DB::connection('firebird_rede')->select($query);
+
+        $key = "Boleto_" . $nr_doc . '_' . Auth::user()->id;
         return Cache::remember($key, now()->addMinutes(15), function () use ($query, $empresa) {
             return DB::connection($this->setConnet($empresa->regiao))->select($query);
         });
-        
-        
     }
 }

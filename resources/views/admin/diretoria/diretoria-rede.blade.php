@@ -28,6 +28,45 @@
         // Embed a Power BI report in the given HTML element with the given configurations        
         // Read more about how to embed a Power BI report in your application here: https://go.microsoft.com/fwlink/?linkid=2153590
 
+        // Read embed application token    
+
+        // var horarioAlvo = new Date();
+        // horarioAlvo.setMinutes(horarioAlvo.getMinutes() + 10);
+
+        // // Função para verificar se estamos dentro de 5 minutos do horário alvo
+        // function verificarTempoAlvo(callback) {
+        //     console.log(horarioAlvo);
+        //     // Verificar se o horário atual está dentro de 5 minutos do horário alvo
+        //     if (new Date() >= horarioAlvo) {
+        //         // Adiciona mais 5 minutos do horario atual
+        //         horarioAlvo.setMinutes(horarioAlvo.getMinutes() + 10);
+        //         // clearInterval(verificacaoInterval);
+        //         //Aciona a requisição AJAX
+        //         $.ajax({
+        //             type: "GET",
+        //             url: "{{ route('diretoria.rede', [Crypt::encrypt('rede'), 1]) }}",
+        //             success: function(response) {
+        //                 callback(response);
+        //             }
+        //         });
+        //     }
+        // }
+        // // Função de callback para lidar com a resposta da requisição AJAX
+        // function handleResponse(response) { 
+        //     console.log("Recebido", response);          
+        //     getNewAccessToken(response);           
+        // }
+
+        // // Verificar o tempo alvo a cada minuto (ou em intervalos menores)
+        // var verificacaoInterval = setInterval(function(){
+        //     verificarTempoAlvo(handleResponse)
+        // }, 60000);
+
+
+        // let getNewAccessToken = async function(token) {            
+        //     return token;
+        // };
+
         let models = window['powerbi-client'].models;
         // Read embed application token
         let accessToken = "{{ $content->token }}";
@@ -51,7 +90,7 @@
                 type: 'report',
                 tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
                 accessToken: accessToken,
-                embedUrl: embedUrl,
+                embedUrl: embedUrl,                
                 contrastMode: 0,
                 // viewMode: models.ViewMode.View,
                 id: embedReportId,
@@ -71,15 +110,21 @@
                     // zoomLevel: 0.5
                 }
 
-            };            
+            };
 
             // Get a reference to the embedded report HTML element
             let embedContainer = $('#reportContainer')[0];
             // Embed the report and display it within the div container.
-            powerbi.embed(embedContainer, config);
-            
+            let report =  powerbi.embed(embedContainer, config);
+
+            // await report.setAccessToken(newAccessToken);
+
         }
-        
+
         embedPowerBIReport();
+
+        
+
+        
     </script>
 @endsection

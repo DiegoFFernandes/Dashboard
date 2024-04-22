@@ -38,7 +38,7 @@
                     <div class="box-body">
                         <div class="col-md-12">
                             <div class="text-center">
-                                <a class="btn btn-lg btn-success" href="{{ route('diretoria.rede', Crypt::encrypt('rede')) }}"></i>Indicadores
+                                <a class="btn btn-lg btn-success" href="{{ route('diretoria.rede', [Crypt::encrypt('rede'), 0]) }}"></i>Indicadores
                                     Rede</a>
                             </div>
                         </div>

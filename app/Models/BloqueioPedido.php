@@ -65,6 +65,6 @@ class BloqueioPedido extends Model
         GROUP BY PP.STPEDIDO, PP.idempresa, PP.DTEMISSAO, PP.ID, PP.IDPEDIDOMOVEL, PP.IDPESSOA, PE.NM_PESSOA,
         PP.TP_BLOQUEIO, PE.ST_ATIVA, PE.ST_SCPC, (PP.IDVENDEDOR||' - '||PV.NM_PESSOA), PP.DSBLOQUEIO, EP.cd_regiaocomercial, AC.cd_areacomercial
         order by PP.idempresa, PP.DTEMISSAO";
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
 }

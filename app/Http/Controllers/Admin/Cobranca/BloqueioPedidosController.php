@@ -15,6 +15,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class BloqueioPedidosController extends Controller
 {
+    public $request, $bloqueio, $regiao, $area, $acompanha, $user;
+
     public function __construct(
         Request $request,
         BloqueioPedido $bloqueio,
@@ -46,7 +48,7 @@ class BloqueioPedidosController extends Controller
             if (empty($array)) {
                 return Redirect::route('admin.dashboard')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
             }
-        } elseif(!$this->user->hasRole('admin|gerencia')) {
+        } elseif (!$this->user->hasRole('admin|gerencia')) {
             $regiaoUsuario = $this->regiao->regiaoPorUsuario($this->user->id);
             foreach ($regiaoUsuario as $r) {
                 $cd_regiao[] = $r->cd_regiaocomercial;
@@ -155,8 +157,10 @@ class BloqueioPedidosController extends Controller
             })
             ->make();
     }
+    
     public function getDetalheItemPedidoAcompanhar($nrordem)
     {
+        // return $nrordem;
         $detalhe_ordem = $this->acompanha->BuscaSetores($nrordem);
         return DataTables::of($detalhe_ordem)
             ->addColumn('entrada', function ($d) {

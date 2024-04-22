@@ -260,7 +260,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::middleware(['auth', 'permission:ver-diretoria-rede'])->group(function () {
-            Route::get('ivorecap-rede/{id}', [PowerBiEmbeddedController::class, 'index'])->name('diretoria.rede');
+            Route::get('ivorecap-rede/{id}/{updateToken}', [PowerBiEmbeddedController::class, 'index'])->name('diretoria.rede');
         });
     });
 });

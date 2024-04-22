@@ -28,10 +28,9 @@ class PowerBiEmbeddedController extends Controller
         });
     }
 
+    public function index($id, $updatetoken)
+    {      
 
-
-    public function index($id)
-    {
         $regiao = decrypt($id);
         $permissions = $this->user->getAllPermissions();
         $permissionPower = [];
@@ -79,6 +78,11 @@ class PowerBiEmbeddedController extends Controller
             }';
             $content = PowerbiHelper::processPowerbiHttpRequest($url, $header, $data, 'POST');
 
+            
+            if($updatetoken == 1){
+                return json_encode($content->token);
+            }
+            
             $title_page   = 'Ivorecap - Rede';
             $user_auth    = $this->user;
             $exploder     = explode("/", $this->request->route()->uri());
@@ -100,4 +104,5 @@ class PowerBiEmbeddedController extends Controller
             );
         }
     }
+    
 }

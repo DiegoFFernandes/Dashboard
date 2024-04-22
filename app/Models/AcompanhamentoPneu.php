@@ -29,18 +29,18 @@ class AcompanhamentoPneu extends Model
     public function IdOrdemProducao($consulta)
     {
         $query = "select IDITEMPEDIDOPNEU from ordemproducaorecap where id = $consulta";
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function BuscaSetores($nr_ordem)
     {
-        $query = "SELECT CAST(O_DS_ETAPA AS VARCHAR(20) character SET UTF8) as O_DS_ETAPA,
+        $query = "SELECT CAST(O_DS_ETAPA AS VARCHAR(200) character SET UTF8) as O_DS_ETAPA,
         O_HR_ENTRADA, O_HR_SAIDA, O_NM_USUARIO, 
-        CAST(O_DS_COMPLEMENTOETAPA AS VARCHAR(100) character SET UTF8) as O_DS_COMPLEMENTOETAPA, 
+        CAST(O_DS_COMPLEMENTOETAPA AS VARCHAR(1000) character SET UTF8) as O_DS_COMPLEMENTOETAPA, 
         O_DT_ENTRADA, O_DT_SAIDA, (case O_ST_RETRABALHO WHEN 'N' THEN 'NAO' ELSE 'SIM' END) O_ST_RETRABALHO
         FROM RETORNA_ACOMPANHAMENTOPNEU ($nr_ordem) R
         ORDER BY CAST(R.O_DT_ENTRADA||' '||R.O_HR_ENTRADA AS DOM_TIMESTAMP)";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function showDataPneus($nr_ordem)
     {
@@ -63,7 +63,7 @@ class AcompanhamentoPneu extends Model
         group by IPP.idpedidopneu, OPR.id, PP.idpessoa, P.NM_PESSOA, SP.dsservico, MODELO, MD.dsmedidapneu,
         PN.nrserie, PN.nrfogo, PN.nrdot, LOPR.idmontagemlotepcp, OPR.stalterando";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function ListPedidoPneu($cd_regiao)
     {
@@ -84,15 +84,15 @@ class AcompanhamentoPneu extends Model
         INNER JOIN PESSOA PC ON (PC.CD_PESSOA = PP.IDPESSOA)
         LEFT JOIN ENDERECOPESSOA EP ON (EP.cd_pessoa = PC.cd_pessoa)
         LEFT JOIN PEDIDOPNEUMOVEL PPM ON(PPM.ID = PP.ID)
-        WHERE PP.IDEMPRESA in (3,4,1,101,102,103,104,304)
+        WHERE PP.IDEMPRESA in (101,102,103,104,105,106,107,108,109,110)
         AND PP.dtemissao between current_date-30 and current_date        
         " . (($cd_regiao != "") ? "AND EP.cd_regiaocomercial IN ($cd_regiao)" : "") . " 
         ORDER BY PP.IDEMPRESA";
 
-        //return DB::connection($this->setConnet())->select($query);
+        //return DB::connection('firebird_rede')->select($query);
         $key = "PedidoAll_" . Auth::user()->id;
         return Cache::remember($key, now()->addMinutes(15), function () use ($query) {
-            return DB::connection($this->setConnet())->select($query);
+            return DB::connection('firebird_rede')->select($query);
         });
     }
     public function ItemPedidoPneu($pedido)
@@ -118,6 +118,6 @@ class AcompanhamentoPneu extends Model
         MAC.DSMARCA, MOP.DSMODELO, P.NRDOT, P.NRSERIE, DP.DSDESENHO, IPP.VLUNITARIO,
         IPP.ID, PP.IDVENDEDOR, PP.DTEMISSAO 
         ORDER BY PP.IDEMPRESA, IPP.ID";
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
 }

@@ -432,7 +432,7 @@
                     </ul>
                 </li>
             @endrole
-            @canany(['ver-comercial-sul', 'ver-diretoria-sul', 'ver-producao'])
+            @canany(['ver-comercial-sul', 'ver-diretoria-sul', 'ver-producao', 'ver-diretoria-rede'])
                 <li class="treeview" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-industry"></i> <span>Estoque</span>
@@ -446,7 +446,7 @@
                                     Lote Estoque</a>
                             </li>
                         @endcan
-                        @canany(['ver-comercial-sul', 'ver-diretoria-sul'])
+                        @canany(['ver-comercial-sul', 'ver-diretoria-sul', 'ver-diretoria-rede'])
                             <li class="active"><a href="{{ route('estoque.saldo-estoque') }}"><i
                                         class="fa fa-balance-scale"></i>Saldo Estoque</a>
                             </li>

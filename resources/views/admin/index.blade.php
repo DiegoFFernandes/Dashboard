@@ -29,6 +29,12 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+            const currentTime = Date.now();
+            const minutosAdicionais = 13500000;
+            const nova =  currentTime + minutosAdicionais;
+
+            console.log(nova);
+            
         });
     </script>
 @endsection

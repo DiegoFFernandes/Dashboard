@@ -29,7 +29,7 @@ class PowerBiEmbeddedController extends Controller
     }
 
     public function index($id, $updatetoken)
-    {      
+    {
 
         $regiao = decrypt($id);
         $permissions = $this->user->getAllPermissions();
@@ -52,8 +52,8 @@ class PowerBiEmbeddedController extends Controller
             $reportID = env('REPORT_ID_REDE');
             $datasetID = env('DATASET_ID_REDE');
         } else {
-           $reportID = env('REPORT_ID_SUL');
-           $datasetID = env('DATASET_ID_SUL');
+            $reportID = env('REPORT_ID_SUL');
+            $datasetID = env('DATASET_ID_SUL');
         }
 
         if (!is_null($office360token)) {
@@ -77,17 +77,15 @@ class PowerBiEmbeddedController extends Controller
                 }]
             }';
             $content = PowerbiHelper::processPowerbiHttpRequest($url, $header, $data, 'POST');
-
             
-            if($updatetoken == 1){
-                return json_encode($content->token);
+            if ($updatetoken == 1) {
+                return response()->json($content);
             }
-            
+
             $title_page   = 'Ivorecap - Rede';
             $user_auth    = $this->user;
             $exploder     = explode("/", $this->request->route()->uri());
             $uri = $exploder[0] . "/" . $exploder[1];
-            $variableValue = "teste";
             return view(
                 'admin.diretoria.diretoria-rede',
                 compact(
@@ -98,11 +96,10 @@ class PowerBiEmbeddedController extends Controller
                     'reportID',
                     'user_auth',
                     'title_page',
-                    'uri',
-                    'variableValue'
+                    'uri'
+
                 )
             );
         }
     }
-    
 }

@@ -30,43 +30,7 @@
 
         // Read embed application token    
 
-        // var horarioAlvo = new Date();
-        // horarioAlvo.setMinutes(horarioAlvo.getMinutes() + 10);
-
-        // // Função para verificar se estamos dentro de 5 minutos do horário alvo
-        // function verificarTempoAlvo(callback) {
-        //     console.log(horarioAlvo);
-        //     // Verificar se o horário atual está dentro de 5 minutos do horário alvo
-        //     if (new Date() >= horarioAlvo) {
-        //         // Adiciona mais 5 minutos do horario atual
-        //         horarioAlvo.setMinutes(horarioAlvo.getMinutes() + 10);
-        //         // clearInterval(verificacaoInterval);
-        //         //Aciona a requisição AJAX
-        //         $.ajax({
-        //             type: "GET",
-        //             url: "{{ route('diretoria.rede', [Crypt::encrypt('rede'), 1]) }}",
-        //             success: function(response) {
-        //                 callback(response);
-        //             }
-        //         });
-        //     }
-        // }
-        // // Função de callback para lidar com a resposta da requisição AJAX
-        // function handleResponse(response) { 
-        //     console.log("Recebido", response);          
-        //     getNewAccessToken(response);           
-        // }
-
-        // // Verificar o tempo alvo a cada minuto (ou em intervalos menores)
-        // var verificacaoInterval = setInterval(function(){
-        //     verificarTempoAlvo(handleResponse)
-        // }, 60000);
-
-
-        // let getNewAccessToken = async function(token) {            
-        //     return token;
-        // };
-
+        var newAccessToken;
         let models = window['powerbi-client'].models;
         // Read embed application token
         let accessToken = "{{ $content->token }}";
@@ -75,6 +39,7 @@
             "https://app.powerbi.com/reportEmbed?reportId={{ $reportID }}";
         // Read report Id
         let embedReportId = "{{ $reportID }}";
+        let embedGroupID = "{{ $groupID }}";
 
         function embedPowerBIReport() {
 
@@ -90,7 +55,7 @@
                 type: 'report',
                 tokenType: tokenType == '0' ? models.TokenType.Aad : models.TokenType.Embed,
                 accessToken: accessToken,
-                embedUrl: embedUrl,                
+                embedUrl: embedUrl,
                 contrastMode: 0,
                 // viewMode: models.ViewMode.View,
                 id: embedReportId,
@@ -115,16 +80,76 @@
             // Get a reference to the embedded report HTML element
             let embedContainer = $('#reportContainer')[0];
             // Embed the report and display it within the div container.
-            let report =  powerbi.embed(embedContainer, config);
-
-            // await report.setAccessToken(newAccessToken);
+            let report = powerbi.embed(embedContainer, config);
 
         }
 
+        const MINUTES_BEFORE_EXPIRATION = 10;
+
+        // Set the refresh interval time to 30 seconds
+        const INTERVAL_TIME = 60000;
+
+        // Get the token expiration from the access token
+        var tokenExpiration = "{{ $content->expiration }}"
+
+        // Set an interval to check the access token expiration, and update if needed
+        setInterval(() => checkTokenAndUpdate(embedReportId, embedGroupID), INTERVAL_TIME);
+
+        function checkTokenAndUpdate(reportId, groupId) {
+            // Get the current time
+            const currentTime = Date.now();
+            const milisegundosAdicionais = 13500000 ;
+
+            // const currentTime = currentTime_old + milisegundosAdicionais;
+            console.log(currentTime);
+
+            const expiration = Date.parse(tokenExpiration);
+            console.log(expiration);
+
+            // Time until token expiration in milliseconds
+            const timeUntilExpiration = expiration - currentTime;
+
+            const timeToUpdate = MINUTES_BEFORE_EXPIRATION * 60 * 1000;
+
+            // Update the token if it is about to expired
+            if (timeUntilExpiration <= timeToUpdate) {
+                console.log("Updating report access token");
+                updateToken(reportId, groupId);
+            }
+        }
+
+        async function updateToken(reportId, groupId) {
+
+            // Generate a new embed token or refresh the user Azure AD access token
+            $.ajax({
+                type: "GET",
+                url: "{{ route('diretoria.rede', [Crypt::encrypt('rede'), 1]) }}",
+                success: function(response) {
+                    newAccessToken = response;
+                }
+            });
+            // Update the new token expiration time
+            tokenExpiration = newAccessToken.expiration;
+
+            // Get a reference to the embedded report HTML element
+            let embedContainer = $('#reportContainer')[0];
+
+            // Get a reference to the embedded report.
+            let report = powerbi.get(embedContainer);
+
+            // Set the new access token
+            await report.setAccessToken(newAccessToken.token);
+
+        }
+
+        // Add a listener to make sure token is updated after tab was inactive
+        document.addEventListener("visibilitychange", function() {
+            // Check the access token when the tab is visible
+            if (!document.hidden) {
+                checkTokenAndUpdate(embedReportId, embedGroupID)
+            }
+        });
+
         embedPowerBIReport();
-
-        
-
-        
     </script>
 @endsection

@@ -11,7 +11,7 @@
             <div class="col-md-12">
                 <div class="box box-solid">                    
                     <div class="box-body">                        
-                        <h2>Olá EVandro seja bem vindo(a), {{$user_auth->name}}!</h2>                        
+                        <h2>Olá seja bem vindo(a), {{$user_auth->name}}!</h2>                        
                     </div>
                 </div>
             </div>           

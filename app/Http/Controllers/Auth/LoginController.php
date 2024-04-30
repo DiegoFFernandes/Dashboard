@@ -18,6 +18,7 @@ use Spatie\Permission\Contracts\Role;
 
 class LoginController extends Controller
 {
+    public $resposta, $movimento, $vendedor, $producao, $user;
 
     public function __construct(
         Request $request,
@@ -37,7 +38,7 @@ class LoginController extends Controller
     }
 
     public function dashboard()
-    {
+    {       
         //Fazer alterações na rotina abaixo tbm        
         if (Auth::check() === true) {
             if ($this->user->ds_tipopessoa == "Cliente") {

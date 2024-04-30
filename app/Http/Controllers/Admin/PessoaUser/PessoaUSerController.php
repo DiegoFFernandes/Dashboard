@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 
 class PessoaUSerController extends Controller
 {
+    public $empresa, $request, $pessoa, $user, $tipo, $tipopessoa, $grupo;
+    
     public function __construct(
         Empresa $empresa,
         Request $request,

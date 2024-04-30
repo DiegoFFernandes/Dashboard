@@ -112,6 +112,7 @@
             const timeToUpdate = MINUTES_BEFORE_EXPIRATION * 60 * 1000;
 
             // Update the token if it is about to expired
+
             if (timeUntilExpiration <= timeToUpdate) {
                 console.log("Updating report access token");
                 updateToken(reportId, groupId);

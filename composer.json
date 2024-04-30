@@ -48,7 +48,8 @@
             "app/Helpers/PowerBIEmbedded.php",
             "app/Helpers/Helper.php",
             "app/Helpers/SolutekWpp.php",
-            "app/Helpers/Procedimento.php"
+            "app/Helpers/Procedimento.php",
+            "app/Helpers/Digisac.php"
         ]
     },
     "autoload-dev": {

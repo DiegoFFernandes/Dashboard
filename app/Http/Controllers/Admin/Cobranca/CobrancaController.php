@@ -288,7 +288,7 @@ class CobrancaController extends Controller
                     <tbody>';
         foreach ($search as $s) {
             $exploder        = explode('\\', $s->BI_ANEXORELAT);
-            $anexo = is_null($s->BI_ANEXORELAT) ? '<button class="btn btn-danger btn-xs">Não Existe</button>' : '<a href="file:///\\172.29.0.2/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '" class="btn btn-xs btn-primary">Anexo</a>';
+            $anexo = is_null($s->BI_ANEXORELAT) ? '<button class="btn btn-danger btn-xs">Não Existe</button>' : '<a href="file:///\\172.29.0.9/' . $exploder[2] . '/' . $exploder[3] . '/' . $exploder[4] . '/' . $exploder[5] . '/' . $exploder[6] . '" class="btn btn-xs btn-primary">Anexo</a>';
             $email = '<button class="btn btn-default btn-xs ver-email" data-id="' . $s->NR_ENVIO . '" aria-hidden="true"> Ver E-mail </button>';
             $reenviar = '<button class="btn btn-warning btn-xs reenviar-email" data-id="' . $s->NR_ENVIO . '" aria-hidden="true"> Reenviar </button>';
             //var_dump($exploder);
@@ -312,8 +312,9 @@ class CobrancaController extends Controller
         return $email;
     }
     public function reenviaFollow()
-    {        
+    {
         $reenvio = $this->envio->reenviaFollow($this->request->nr_envio, $this->request->email);
+
         if ($reenvio) {
             return response()->json(['success' => 'Reenviado com sucesso, pode demorar até 5 minutos para chegar ao destinatario!']);
         } else {
@@ -336,10 +337,12 @@ class CobrancaController extends Controller
             ->rawColumns(['action'])
             ->make(true);
     }
+
     public function DeleteEmailWebhookIagente()
     {
         try {
             $email = WebHook::where('email', $this->request->email)->firstOrFail();
+
             $email->delete();
             // Mail::send(new ValidateDeleteEmailWebhook($this->user, $this->request));
             return response()->json(['success' => 'Email validado, não irá aparecer na lista, até que haja um novo problema!']);

@@ -14,8 +14,8 @@ class DigiSacController extends Controller
     }
     public function index(){
         $oauth = Digisac::OAuthToken();
-
-
         return Digisac::SendMessage($oauth);
     }
+
+    
 }

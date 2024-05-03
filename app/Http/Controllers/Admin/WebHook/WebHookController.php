@@ -17,6 +17,7 @@ class WebHookController extends Controller
     }
     public function index()
     {
+        return $this->request;
         if (empty($this->request->Descricao)) {
             $descricao = $this->request->Tipo;
         } else {

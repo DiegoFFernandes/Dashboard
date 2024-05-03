@@ -35,6 +35,6 @@ class WebHook extends Model
                     FROM contatopessoa cp ) X
                 where X.ds_email IN ('$arryEmail')";
 
-        return DB::connection($this->setConnet())->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
 }

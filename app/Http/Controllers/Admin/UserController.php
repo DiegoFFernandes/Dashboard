@@ -9,6 +9,7 @@ use App\Models\EmpresasGrupoPessoa;
 use App\Models\Pessoa;
 use App\Models\TipoPessoa;
 use App\Models\User;
+use App\Services\UserServices;
 use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,7 +46,7 @@ class UserController extends Controller
         $empresas  = $this->empresa->EmpresaAll();
         $tipopessoa = $this->tipopessoa->tipoPessoaAll();
         $cargos = Cargo::all();
-        
+
         return view('admin.usuarios.usuarios', compact(
             'users',
             'user_auth',
@@ -55,35 +56,15 @@ class UserController extends Controller
             'cargos'
         ));
     }
-    public function create(Request $request)
+    public function create(Request $request, UserServices $userServices)
     {
-        // return $this->request;       
-        $data = User::where('email', $request->email)->exists();
-        if ($data) {
+        $create = $userServices->create($request);
+        if ($create == 1) {
+            return redirect()->route('admin.usuarios.listar')->with('message', 'Usuário criado com sucesso!');
+        } elseif ($create == 3){
             return redirect()->route('admin.usuarios.listar')->with('warning', 'Email já existe, favor cadastrar outro!');
+        
         }
-        $empresas  = $this->empresa->EmpresaAll();
-        // $empresas  = $this->empresa->empresa();
-
-        foreach ($empresas as $empresa) {
-            if ($empresa->CD_EMPRESA == $request->empresa) {
-                $request['conexao'] = $empresa->CONEXAO;
-            }
-        }
-
-        $request['password'] = Hash::make($request['password']);
-        $request['ds_tipopessoa'] = $this->verifyTipoPessoa($this->request->ds_tipopessoa);
-        $request['email'] = strtolower($this->request->email);
-        $request['name'] = mb_convert_case($this->request->name, MB_CASE_TITLE, 'UTF-8');
-        $request['phone'] = Helper::RemoveSpecialChar($this->request->phone);
-
-        $user                = $this->_validade($request);
-        $user                = User::create($user);
-        if ($user->ds_tipopessoa == 'Cliente' || $user->ds_tipopessoa == 'Cliente e fornecedor') {
-            $user->assignRole('acesso-cliente');
-        }
-
-        return redirect()->route('admin.usuarios.listar')->with('message', 'Usuário criado com sucesso!');
     }
     public function edit(Request $request)
     {

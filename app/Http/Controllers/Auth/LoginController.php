@@ -47,27 +47,27 @@ class LoginController extends Controller
                 return view('admin.index', compact('user_auth', 'uri'));
             }
 
-            $vendedor = $this->vendedor->qtdVendedores();
+            // $vendedor = $this->vendedor->qtdVendedores();
             $user_auth = Auth::user();
             $uri       = $this->resposta->route()->uri();
 
-            $dt_final = Config::get('constants.options.dtf');
-            $dt_inicial = Config::get('constants.options.dti360dias');
-            $recapMounth = array_reverse($this->producao->recapMounth($dt_inicial, $dt_final));
+            // $dt_final = Config::get('constants.options.dtf');
+            // $dt_inicial = Config::get('constants.options.dti360dias');
+            // $recapMounth = array_reverse($this->producao->recapMounth($dt_inicial, $dt_final));
 
-            foreach ($recapMounth as $r) {
-                $mes[] = $r->MES_NOME . ' - ' . $r->ANO;
-                $qtd[] = $r->QTDE;
-                $meta[] = 10000;
-            }
+            // foreach ($recapMounth as $r) {
+            //     $mes[] = $r->MES_NOME . ' - ' . $r->ANO;
+            //     $qtd[] = $r->QTDE;
+            //     $meta[] = 10000;
+            // }
             // return $mes;
-            $chart = $this->loadChart($mes, $qtd, $meta);
+            // $chart = $this->loadChart($mes, $qtd, $meta);
             return view('admin.index', compact(
                 'user_auth',
-                'uri',
-                'vendedor',
-                'chart',
-                'recapMounth'
+                'uri'
+                // 'vendedor',
+                // 'chart',
+                // 'recapMounth'
             ));
         }
         return redirect()->route('admin.login');
@@ -95,26 +95,26 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check() === true) {
-            $vendedor = $this->vendedor->qtdVendedores();
+            // $vendedor = $this->vendedor->qtdVendedores();
             $user_auth = Auth::user();
             $uri       = $this->resposta->route()->uri();
-            $dt_final = Config::get('constants.options.dtf');
-            $dt_inicial = Config::get('constants.options.dti360dias');
-            $recapMounth = array_reverse($this->producao->recapMounth($dt_inicial, $dt_final));
+            // $dt_final = Config::get('constants.options.dtf');
+            // $dt_inicial = Config::get('constants.options.dti360dias');
+            // $recapMounth = array_reverse($this->producao->recapMounth($dt_inicial, $dt_final));
 
-            foreach ($recapMounth as $r) {
-                $mes[] = $r->MES_NOME . ' - ' . $r->ANO;
-                $qtd[] = $r->QTDE;
-                $meta[] = 10000;
-            }
-            $chart = $this->loadChart($mes, $qtd, $meta);
+            // foreach ($recapMounth as $r) {
+            //     $mes[] = $r->MES_NOME . ' - ' . $r->ANO;
+            //     $qtd[] = $r->QTDE;
+            //     $meta[] = 10000;
+            // }
+            // $chart = $this->loadChart($mes, $qtd, $meta);
 
             return view('admin.index', compact(
                 'user_auth',
-                'uri',
-                'vendedor',
-                'chart',
-                'recapMounth'
+                'uri'
+                // 'vendedor',
+                // 'chart',
+                // 'recapMounth'
             ));
         }
         return view('auth.login');

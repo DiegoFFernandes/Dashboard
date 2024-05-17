@@ -195,4 +195,16 @@ class Pessoa extends Model
         }
         return true;
     }
+    static function findPessoa()
+    {
+        $query = "SELECT
+                    P.CD_PESSOA,
+                    P.NM_PESSOA,
+                    coalesce(EP.NR_CELULAR, EP.nr_fone) NR_CELULAR
+                FROM PESSOA P
+                INNER JOIN ENDERECOPESSOA EP ON (P.CD_PESSOA = EP.CD_PESSOA)
+                WHERE P.CD_PESSOA = 1021483";
+
+        return DB::connection('firebird_rede')->select($query);
+    }
 }

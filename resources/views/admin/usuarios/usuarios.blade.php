@@ -15,9 +15,7 @@
                     <form role="form" method="post"
                         action="{{ isset($user_id) ? route('admin.usuarios.update') : route('admin.usuarios.create') }}">
                         @csrf
-                        <div class="box-body">
-                            @includeIf('admin.master.messages')
-
+                        <div class="box-body">                            
                             <div class="form-group">
                                 @if (isset($user_id->name))
                                     <input type="hidden" name="id" value="{{ $user_id->id }}">

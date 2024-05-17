@@ -14,7 +14,7 @@
                         <h2>Olá seja bem vindo(a), {{$user_auth->name}}!</h2>                        
                     </div>
                 </div>
-            </div>           
+            </div>         
             
         </div>
         <!-- /.row -->
@@ -27,14 +27,7 @@
         {!! $chart->script() !!}
     @endisset
     <script type="text/javascript">
-        $(document).ready(function() {
-
-            const currentTime = Date.now();
-            const minutosAdicionais = 13500000;
-            const nova =  currentTime + minutosAdicionais;
-
-            console.log(nova);
-            
+        $(document).ready(function() {            
         });
     </script>
 @endsection

@@ -30,8 +30,8 @@
     <script type="text/javascript" defer>
         if ($(window).width() < 960) {
             let div = '<div class="iframe-embed-wrapper iframe-embed-responsive-16by9">' +
-                '<iframe src="https://app.powerbi.com/view?r=eyJrIjoiMGQ4MzcwNDgtMGJjYy00N2YzLWE3NzMtYmMwMGJiZjg4ZGYxIiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9" frameborder="0">' +
-                '</iframe>' +
+                '<iframe src="https://app.powerbi.com/view?r=eyJrIjoiNzc3YzMxZjUtNmNjZi00N2RkLWIyNTctNzliMDY3MTI1OGFmIiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9" frameborder="0">' +
+                              '</iframe>' +
                 '</div>';
             $('#iframe-mobile').html(div);
         } else {
@@ -39,5 +39,5 @@
             $('#iframe-mobile').html(div);
         }
     </script>
-    <script src="{{ asset('js/comercial-norte/script.js?v=2') }}"></script>
+    <script src="{{ asset('js/comercial-norte/script.js?v=2.1') }}"></script>
 @endsection

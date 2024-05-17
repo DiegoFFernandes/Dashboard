@@ -37,4 +37,5 @@ class EmpresaController extends Controller
        return $this->area->ImportaVendedor();
         
     }
+    
 }

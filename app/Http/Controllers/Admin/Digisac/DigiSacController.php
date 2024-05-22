@@ -30,43 +30,71 @@ class DigiSacController extends Controller
         });
     }
 
-    public function index(UserServices $userServices)
+    public function notafiscal(UserServices $userServices)
     {
-        $title_page   = 'Item Análise de Frota';
+        $title_page   = 'Nota Fiscal de serviço';
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
         // $uri          = $exploder[0] . '/' . $exploder[1];
 
 
 
-         return $data = $this->nota->NotasEmitidas();
+          $nota = $this->nota->NotasEmitidas();
 
-        $groupedData = array_values(array_reduce($data, function ($carry, $item) {
-            $nrLancamento = $item['NR_LANCAMENTO'];
+        //  $nota_agrupado
+    //     return $nota = array_values(array_reduce($data, function ($carry, $item) {
+    //         $nrLancamento = $item['NR_LANCAMENTO'];
 
-            if (!isset($carry[$nrLancamento])) {
-                $carry[$nrLancamento] = [
-                    'CD_EMPRESA' => $item['CD_EMPRESA'],
-                    'NR_LANCAMENTO' => $item['NR_LANCAMENTO'],
-                    'TP_NOTA' => $item['TP_NOTA'],
-                    'CD_SERIE' => $item['CD_SERIE'],
-                    'NM_USUARIO' => $item['NM_USUARIO'],                    
-                    'ITEMS' => []
-                ];
-            }
+    //         if (!isset($carry[$nrLancamento])) {
+    //             $carry[$nrLancamento] = [
+    //                 'CD_EMPRESA' => $item['CD_EMPRESA'],
+    //                 'NR_LANCAMENTO' => $item['NR_LANCAMENTO'],
+    //                 'NM_EMPRESA' => $item['NM_EMPRESA'],
+    //                 'NR_CNPJINSCEST' => $item['NR_CNPJINSCEST'],
+    //                 'NR_INSCMUNEMPRESA' => $item['NR_INSCMUNEMPRESA'],
+    //                 'DS_ENDERECOEMPRESA' => $item['DS_ENDERECOEMPRESA'],
+    //                 'NR_FONEEMPRESA' => $item['NR_FONEEMPRESA'],
+    //                 'NR_CEPEMPRESA' => $item['NR_CEPEMPRESA'],
+    //                 'TP_NOTA' => $item['TP_NOTA'],
+    //                 'CD_SERIE' => $item['CD_SERIE'],
+    //                 'NR_NOTA' => $item['NR_NOTA'],
+    //                 'NR_RPS' => $item['NR_RPS'],
+    //                 'CD_AUTENTICACAO' => $item['CD_AUTENTICACAO'],
+    //                 'DS_DTEMISSAO' => $item['DS_DTEMISSAO'],
+    //                 'NM_USUARIO' => $item['NM_USUARIO'],
+    //                 'NM_PESSOA' => $item['NM_PESSOA'],
+    //                 'NR_CNPJCPF' => $item['NR_CNPJCPF'],
+    //                 'DS_ENDERECOPESSOA' => $item['DS_ENDERECOPESSOA'],
+    //                 'DS_MUNPESSOA' => $item['DS_MUNPESSOA'],
+    //                 'NR_CEPPESSOA' => $item['NR_CEPPESSOA'],
+    //                 'DS_EMAIL' => $item['DS_EMAIL'],
+    //                 'NR_FONE' => $item['NR_FONE'],
+    //                 'NR_INSCESTPESSOA' => $item['NR_INSCESTPESSOA'],
+    //                 'NR_INSCMUN' => $item['NR_INSCMUN'],
+    //                 'O_DS_CONDPAGTO' => $item['O_DS_CONDPAGTO'],
+    //                 'DS_FORMAPAGTO' => $item['DS_FORMAPAGTO'],
+    //                 'DS_CONDPAGTO' => $item['DS_CONDPAGTO'],
+    //                 'ITEMS' => []
+    //             ];
+    //         }
 
-            $carry[$nrLancamento]['ITEMS']['O_DS_ITEM'] = $item['O_DS_ITEM'];
-            $carry[$nrLancamento]['ITEMS']['O_VL_UNITARIO'] = $item['O_VL_UNITARIO'];
-            $carry[$nrLancamento]['ITEMS']['O_NR_DOT'] = $item['O_NR_DOT'];
-            $carry[$nrLancamento]['ITEMS']['O_NR_SERIE'] = $item['O_NR_SERIE'];
-            $carry[$nrLancamento]['ITEMS']['O_QT_DESCONTADA']  = $item['O_QT_DESCONTADA'];
+    //         $carry[$nrLancamento]['ITEMS']['O_DS_ITEM'] = $item['O_DS_ITEM'];
+    //         $carry[$nrLancamento]['ITEMS']['O_VL_UNITARIO'] = $item['O_VL_UNITARIO'];
+    //         $carry[$nrLancamento]['ITEMS']['O_NR_DOT'] = $item['O_NR_DOT'];
+    //         $carry[$nrLancamento]['ITEMS']['O_NR_SERIE'] = $item['O_NR_SERIE'];
+    //         $carry[$nrLancamento]['ITEMS']['O_QT_DESCONTADA']  = $item['O_QT_DESCONTADA'];
+    //         $carry[$nrLancamento]['ITEMS']['O_DS_MARCA']  = $item['O_DS_MARCA'];
+    //         $carry[$nrLancamento]['ITEMS']['O_NR_FOGO']  = $item['O_NR_FOGO'];
+    //         $carry[$nrLancamento]['ITEMS']['O_QTDE']  = $item['O_QTDE'];
+    //         $carry[$nrLancamento]['ITEMS']['O_VL_TOTAL']  = $item['O_VL_TOTAL'];
 
-            return $carry;
-        }, []));
+    //         return $carry;
+    //     }, []));
 
-        return $groupedData;
 
-        return view('admin.teste.index', compact(
+    //    $nota; //= $nota_agrupado[0];
+
+        return view('admin.nota_boleto.notafiscal', compact(
             'nota',
             'uri',
             'user_auth',
@@ -83,7 +111,7 @@ class DigiSacController extends Controller
 
         // // foreach ($list['data'] as $l) {
         // //     echo $l['name'] . '</br>';
-        // //     echo 'contactId: ' . $l['id'] . '</br>';            
+        // //     echo 'contactId: ' . $l['id'] . '</br>';
         // //     echo $l['data']['number'] . '</br>';
         // //     echo '----------' . '<br>';
         // // }

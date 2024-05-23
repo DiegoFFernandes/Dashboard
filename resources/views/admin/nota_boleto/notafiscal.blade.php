@@ -201,34 +201,73 @@
                                         <strong>Qtde Total: {{ $nota[0]['O_QTDE'] }}</strong>
                                     </div>
                                 </div>
+                                <div class="col-md-12 col-xs-12 borda totais">
+                                    <div class="col-md-12 col-xs-12">
 
-                                <div class="col-md-12 col-xs-12 borda">
+                                        <div class="col-md-2 col-xs-2 borda"
+                                            style="margin-top: 10px; margin-bottom: 1px; height:45px">
+                                            <Strong>Outros: 0,00</Strong>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda"
+                                            style="margin-top: 10px; margin-bottom: 1px; height:45px">
+                                            <Strong>Pis: 0,00</Strong>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda"
+                                            style="margin-top: 10px; margin-bottom: 1px; height:45px">
+                                            <Strong>Cofins: 0,00</Strong>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda"
+                                            style="margin-top: 10px; margin-bottom: 1px; height:45px">
+                                            <Strong>INSS: 0,00</Strong>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda"
+                                            style=" margin-top: 10px; margin-bottom: 1px; height:45px">
+                                            <Strong>IR: 0,00</Strong>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda"
+                                            style=" margin-top: 10px; margin-bottom: 1px; height:45px">
+                                            <Strong>CSLL: 0,00</Strong>
+                                        </div>
+                                    </div>
+                                    {{--  --}}
+                                    <div class="col-md-12 col-xs-12">
+                                        <div class="col-md-6 col-xs-6 borda" style="margin-bottom: 1px; height: 45px;">
+                                            <strong>Código dos Serviços: 1404 - Recauchutagem ou regeneração de Pneus </br>
+                                                CNAE: 2212-9/00 Reforma de Pneumáticos Usados</strong>
+                                        </div>
 
-                                    <div class="col-md-2 col-xs-2 borda" style="margin-right: 10px; margin-top: 10px">
-                                        <Strong>Pis: 0,00</Strong>
+                                        <div class="col-md-3 col-xs-3 borda" style="height: 45px;">
+                                            <Strong>Descto Incondicionado: 0,00</Strong> {{-- inserir campo na query --}}
+                                        </div>
+                                        <div class="col-md-3 col-xs-3 borda" style="height: 45px;">
+                                            <Strong>Valor Total da Nota: {{ $nota[0]['O_VL_TOTAL'] }}</Strong>
+                                        </div>
                                     </div>
-                                    <div class="col-md-2 col-xs-2 borda" style="margin: 10px">
-                                        <Strong>Cofins: 0,00</Strong>
+                                    {{--  --}}
+                                    <div class="col-md-12 col-xs-12">
+                                        <div class="col-md-2 col-xs-2 borda" style="margin-bottom: 10px; height:45px">
+                                            <Strong>Total Descto: 0,00</Strong> {{-- inserir campo na query --}}
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                            <Strong>Base de Calculo: {{ $nota[0]['VL_CONTABIL'] }}</Strong>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                            <Strong>Aliquota: 4%</Strong> {{-- inserir campo na query --}}
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                            <Strong>Valor ISS: {{ $nota[0]['VL_ISSQN'] }}</Strong>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                            <Strong>ISS Retido: {{ $nota[0]['VL_ISSQN_RETIDO'] }}</Strong>
+                                        </div>
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                            <Strong>Valor Liquido: {{ $nota[0]['VL_CONTABIL'] }}</Strong>
+                                        </div>
                                     </div>
-                                    <div class="col-md-2 col-xs-2 borda" style="margin: 10px">
-                                        <Strong>INSS: 0,00</Strong>
-                                    </div>
-                                    <div class="col-md-2 col-xs-2 borda" style="margin: 10px">
-                                        <Strong>IR: 0,00</Strong>
-                                    </div>
-                                    <div class="col-md-2 col-xs-2 borda" style="margin: 10px">
-                                        <Strong>CSLL: 0,00</Strong>
-                                    </div>
-
-                                    <div class="col-md-6 col-xs-6 borda">
-                                       <strong>Código dos Serviços: 1404 - Recauchutagem ou regeneração de Pneus </br>
-                                        CNAE: 2212-9/00 Reforma de Pneumáticos Usados</strong>
-                                    </div>
-
                                 </div>
-
-
-
+                                <div class="col-md-12 col-xs-12 borda" style="height: 200px">
+                                    <strong>{{ $nota[0]['DS_OBSNOTA'] }}</strong>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-@extends('admin.master.master')
+@extends('admin.master.simple')
 
 @section('content')
     <!-- Main content -->
@@ -6,7 +6,7 @@
     <section class="content">
         <div class="row">
             <div class="col-md-12">
-                <div class="box box-solid borda" style="margin-top: 10px;">
+                <div class="box borda">
                     <div class="box-body ">
                         <div class="col-md-12 col-xs-12" style="height: 100px; padding-left :0 !important ">
                             <div class="col-md-10 col-xs-10 "
@@ -41,29 +41,29 @@
                         <div class="col-md-12 col-xs-12">
                             <div class="nota" style=" padding:0">
                                 <div class="col-md-12 col-xs-12" style="height: 100px; padding:3px !important ">
-                                    <div class="col-md-2 col-xs-2 borda" style="padding:3px; height: 92px">
+                                    <div class="col-md-2 col-xs-2 borda" style="padding:3px; height: 120px">
                                         <div style="display:flex; justify-content: center; align-items: center"><img
-                                                src="{{ asset('img/logos/brasaopvai.png') }}" style="width:60px"></div>
+                                                src="{{ asset('img/logos-empresa/brasaopvai.png') }}" style="width:60px"></div>
                                     </div>
-                                    <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 92px">
+                                    <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 120px">
                                         <div class="title_nfse">
                                             <p>Nota Fiscal de Serviço Eletrônica</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-xs-6" style="padding:0px; height: 92px">
-                                        <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 40px">
+                                    <div class="col-md-6 col-xs-6" style="padding:0px; height: 120px">
+                                        <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 50px">
                                             <strong>Numero RPS:
                                             </strong>{{ $nota[0]['NR_RPS'] }}
                                         </div>
-                                        <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 40px">
+                                        <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 50px">
                                             <strong>Numero Nota:
                                             </strong>{{ $nota[0]['NR_NOTA'] }}
                                         </div>
-                                        <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 40px"><strong>Data
+                                        <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 50px"><strong>Data
                                                 Emissão:
                                             </strong>{{ $nota[0]['DS_DTEMISSAO'] }}</div>
-                                        <div class="col-md-12 col-xs-12 borda" style="height: 52px;">
-                                            <strong>Codigo de Verificação:</strong>
+                                        <div class="col-md-12 col-xs-12 borda" style="height: 70px;">
+                                            <strong>Codigo de Verificação: </strong>
                                             <div class="codigobarras">
                                                 {{-- <svg id="barcode"></svg>
                                                 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
@@ -85,20 +85,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- aquiiiiii --}}
-                                <div class="col-md-12 col-xs-12">
+
+                                <div class="col-md-12 col-xs-12" style="margin-top: 30px;">
                                     <div class="title_prestador"> Prestador de Serviços</div>
                                 </div>
 
 
                                 <div class="col-md-12 col-xs-12" style="padding:3px !important">
-                                    <div class="col-md-2 col-xs-2 borda" style="padding:3px; height: 92px">
+                                    <div class="col-md-2 col-xs-2 borda" style="padding:3px; height: 120px">
                                         <div class="logo_ivo"><img src="{{ asset('img/logo-ivo.png') }}" alt="IVO RECAP"
                                                 style="width:90px; margin: 10px; margin-left: 35px"></div>
                                     </div>
-                                    <div class="col-md-10 col-xs-10" style="padding:3px; height: 92px">
-                                        <div class="col-md-12 col-xs-12 borda">
-                                            <div class="col-md-9 col-xs-9 dados_prestador">
+                                    <div class="col-md-10 col-xs-10 borda" style="padding:3px; height: 120px">
+                                        <div class="col-md-12 col-xs-12">
+                                            <div class="col-md-8 col-xs-8 dados_prestador">
                                                 <div><strong>Nome: </strong>{{ $nota[0]['NM_EMPRESA'] }}</div>
                                                 <div><strong>CNPJ: </strong>{{ $nota[0]['NR_CNPJINSCEST'] }}</div>
                                                 <div><strong>Insc Municipal: </strong>{{ $nota[0]['NR_INSCMUNEMPRESA'] }}
@@ -106,7 +106,7 @@
                                                 <div><strong>Endereço:</strong>{{ $nota[0]['DS_ENDERECOEMPRESA'] }}</div>
                                             </div>
 
-                                            <div class="col-md-3 col-xs-3"><strong>Telefone:
+                                            <div class="col-md-4 col-xs-4"><strong>Telefone:
                                                 </strong>{{ $nota[0]['NR_FONEEMPRESA'] }}
                                             </div>
                                         </div>
@@ -114,8 +114,9 @@
                                 </div>
 
                                 <div class="col-md-12 col-xs-12">
-                                    <div class="title_prestador"> Tomador de Serviços</div>
+                                    <div class="title_prestador" style="margin-top: 10px;"> Tomador de Serviços</div>
                                 </div>
+
                                 <div class="col-md-12 col-xs-12 borda" style="padding:3px !important">
                                     <div class="col-md-12 col-xs-12">
                                         <div class="col-md-5 col-xs-4"><strong>Nome: </strong>{{ $nota[0]['NM_PESSOA'] }}
@@ -149,19 +150,17 @@
 
 
                                 </div>
-                                <div class="col-md-12 col-xs-12 borda">
-                                    <div class="col-md-12 col-xs-12">
-                                        <div class="col-md-6 col-xs-6"><strong>Forma Pagto:
-                                            </strong>{{ $nota[0]['DS_FORMAPAGTO'] }}</div>
-                                        <div class="col-md-6 col-xs-6">{{ $nota[0]['DS_CONDPAGTO'] }}</div>
+                                <div class="col-md-12 col-xs-12 borda" style="height: 70px">
+                                    <div class="col-md-6 col-xs-6" style="padding-top: 10px">
+                                        <strong>Forma Pagto: </strong>{{ $nota[0]['DS_FORMAPAGTO'] }}
                                     </div>
-                                    <div class="col-md-12 col-xs-12"><strong>Parcelas:
-                                        </strong>{{ $nota[0]['O_DS_CONDPAGTO'] }}</div>
-
+                                    <div class="col-md-6 col-xs-6" style="padding-top: 10px">{{ $nota[0]['DS_CONDPAGTO'] }}
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <strong>Parcelas: </strong>{{ $nota[0]['O_DS_CONDPAGTO'] }}
+                                    </div>
                                 </div>
-
-                                {{-- TABELA --}}
-                                <div class="col-md-12 col-xs-12 invoice-col borda" style="height: 600px">
+                                <div class="col-md-12 col-xs-12 borda" style="height: auto">
                                     <div class="col-xs-12">
                                         <table class="table table-sm" style="font-size: 14px">
                                             <thead>
@@ -173,12 +172,16 @@
                                                     <th>DOT</th>
                                                     <th>Qtde</th>
                                                     <th>Vlr. Unitário</th>
-                                                    <th>Dscto</th>
+                                                    <th>Descto</th>
                                                     <th>Vlr. Total</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($nota as $n)
+                                                @php
+                                                    $VL_TOTAL = 0;
+                                                    $QT_TOTAL = 0;
+                                                @endphp
+                                                @foreach ($nota[0]['ITEMS'] as $n)
                                                     <tr>
                                                         <td>{{ $n['O_DS_ITEM'] }}</td>
                                                         <td>{{ $n['O_DS_MARCA'] }}</td>
@@ -186,11 +189,14 @@
                                                         <td>{{ $n['O_NR_FOGO'] }}</td>
                                                         <td>{{ $n['O_NR_DOT'] }}</td>
                                                         <td>{{ $n['O_QTDE'] }}</td>
-                                                        <td>{{ $n['O_VL_UNITARIO'] }}</td>
+                                                        <td>{{ number_format($n['O_VL_UNITARIO'], 2, ',', '.') }}</td>
                                                         <td>{{ $n['O_QT_DESCONTADA'] }}</td>
-                                                        <td>{{ $n['O_VL_TOTAL'] }}</td>
-
+                                                        <td>{{ number_format($n['O_VL_TOTAL'], 2, ',', '.') }}</td>
                                                     </tr>
+                                                    @php
+                                                        $VL_TOTAL += $n['O_VL_TOTAL'];
+                                                        $QT_TOTAL += $n['O_QTDE'];
+                                                    @endphp
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -198,7 +204,7 @@
                                 </div>
                                 <div class="col-md-12 col-xs-12 ">
                                     <div class="totais_itens" style="margin-left: 60%">
-                                        <strong>Qtde Total: {{ $nota[0]['O_QTDE'] }}</strong>
+                                        <strong>Qtde Total: {{ $QT_TOTAL }}</strong>
                                     </div>
                                 </div>
                                 <div class="col-md-12 col-xs-12 borda totais">
@@ -231,36 +237,36 @@
                                     </div>
                                     {{--  --}}
                                     <div class="col-md-12 col-xs-12">
-                                        <div class="col-md-6 col-xs-6 borda" style="margin-bottom: 1px; height: 45px;">
+                                        <div class="col-md-6 col-xs-6 borda" style="margin-bottom: 1px; height: 70px;">
                                             <strong>Código dos Serviços: 1404 - Recauchutagem ou regeneração de Pneus </br>
                                                 CNAE: 2212-9/00 Reforma de Pneumáticos Usados</strong>
                                         </div>
-
-                                        <div class="col-md-3 col-xs-3 borda" style="height: 45px;">
+                                        <div class="col-md-3 col-xs-3 borda" style="height: 70px;">
                                             <Strong>Descto Incondicionado: 0,00</Strong> {{-- inserir campo na query --}}
                                         </div>
-                                        <div class="col-md-3 col-xs-3 borda" style="height: 45px;">
-                                            <Strong>Valor Total da Nota: {{ $nota[0]['O_VL_TOTAL'] }}</Strong>
+                                        <div class="col-md-3 col-xs-3 borda" style="height: 70px;">
+                                            <Strong>Valor Total da Nota:
+                                                {{ number_format($VL_TOTAL, 2, ',', '.') }}</Strong>
                                         </div>
                                     </div>
                                     {{--  --}}
                                     <div class="col-md-12 col-xs-12">
-                                        <div class="col-md-2 col-xs-2 borda" style="margin-bottom: 10px; height:45px">
+                                        <div class="col-md-2 col-xs-2 borda" style="margin-bottom: 10px; height:60px">
                                             <Strong>Total Descto: 0,00</Strong> {{-- inserir campo na query --}}
                                         </div>
-                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
-                                            <Strong>Base de Calculo: {{ $nota[0]['VL_CONTABIL'] }}</Strong>
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
+                                            <Strong>Base Calculo: {{ $nota[0]['VL_CONTABIL'] }}</Strong>
                                         </div>
-                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
                                             <Strong>Aliquota: 4%</Strong> {{-- inserir campo na query --}}
                                         </div>
-                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
                                             <Strong>Valor ISS: {{ $nota[0]['VL_ISSQN'] }}</Strong>
                                         </div>
-                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
                                             <Strong>ISS Retido: {{ $nota[0]['VL_ISSQN_RETIDO'] }}</Strong>
                                         </div>
-                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:45px">
+                                        <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
                                             <Strong>Valor Liquido: {{ $nota[0]['VL_CONTABIL'] }}</Strong>
                                         </div>
                                     </div>
@@ -271,11 +277,7 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-
-
     </section>
 @endsection
 

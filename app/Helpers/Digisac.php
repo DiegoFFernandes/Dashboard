@@ -24,23 +24,23 @@ class Digisac
         // Retornando a resposta
         return json_decode($response->body());
     }
-    static function SendMessage($oauth, $contact)
+    static function SendMessage($oauth, $contact, $file)
     {
         $baarer_token = $oauth->token_type . ' ' . $oauth->access_token;
         $url = env("URL_API_DIGISAC");
 
         $data = [
 
-            'text' => 'Olá envio de pdf',
-            'number' => 'chat',
+            'text' => 'Olá foi emitida uma nota fiscal para seu CPNJ, Esse e um atendimento automatico não e necessario responder',
+            'number' => '41985227055',
             'contactId' => 'c62377c8-12da-4a29-ae99-a124029cf03a',
-            'serviceId' => '3c3011aa-88d4-43ba-83dd-64b79be73b0b',
+            'serviceId' => 'db615bbe-ddf0-438b-b2f3-6c05e5a13eb0',
             'origin' => 'bot', // bot or user, 
-            // 'file' => [
-            //     'base64' => '',
-            //     'mimetype' => 'application/pdf',
-            // "name" => "Teste"
-            // ],          
+            'file' => [
+                'base64' => $file,
+                'mimetype' => 'application/pdf',
+            "name" => "Nota Fiscal"
+            ],          
         ];
 
         $reponse = HTTP::withHeaders([

@@ -195,17 +195,5 @@ class UserController extends Controller
         }
     }
 
-    public function notafiscal()
-    {   
-        $title_page   = 'Nota Fiscal';
-        $user_auth    = $this->user;
-        // $exploder = explode('/', $this->request->route()->uri());
-        $uri          = $this->request->route()->uri();
-
-        return view('admin.nota_boleto.notafiscal', compact(
-            'title_page',
-            'user_auth',
-            'uri',
-        ));
-    }
+    
 }

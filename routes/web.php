@@ -64,7 +64,6 @@ Route::get('/painel', [LoginController::class, 'dashboard'])->name('admin.dashbo
 
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 Route::get('webhook', [WebHookController::class, 'index'])->name('webhook');
-Route::get('/notafiscal', [UserController::class, 'notafiscal'])->name('admin.notafiscal');
 
 Route::get('/truck-send-wpp', [TruckController::class, 'MsgTrucksWpp'])->name('truck-send-wpp');
 Route::get('/importa-vendedor', [EmpresaController::class, 'ImportVendedor'])->name('importa-vendedor.index');

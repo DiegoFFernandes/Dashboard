@@ -43,15 +43,16 @@ class ApiNewAgeController extends Controller
     }
 
     public function index()
-    {
+    {        
         $title_page   = 'Exportação Automatica';
         $modelo = $this->modelopneu->list();
         $medida = $this->medida->list();
         $ultima_transmissao = $this->apiNewAge->UltimaTransmissao($this->user->empresa);
         if (count($ultima_transmissao) == 0) {
-            $dt_inicial = Config::get('constants.options.dt1_h_m_days');
+            $dt_inicial = Config::get('constants.options.dti30dias');
         } else {
-            $dt_inicial = $ultima_transmissao[0]->ULTIMA_TRASNMISSAO;
+            // $dt_inicial = $ultima_transmissao[0]->ULTIMA_TRASNMISSAO;
+            $dt_inicial = Config::get('constants.options.dti30dias');
         }
         $dt_final = date('m-d-Y H:i');
         $saveOrdens = $this->searchPneusJunsoft($this->user->empresa, $dt_inicial, $dt_final);

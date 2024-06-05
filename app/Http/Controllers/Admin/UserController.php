@@ -194,6 +194,11 @@ class UserController extends Controller
             return "Funcionario";
         }
     }
+    public function listAll(){
+
+        $users = User::all();
+        return response()->json($users);
+    }
 
     
 }

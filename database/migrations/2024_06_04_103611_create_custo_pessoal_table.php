@@ -22,7 +22,7 @@ class CreateCustoPessoalTable extends Migration
             $table->decimal('pro_labore', total: 8, places: 2)->nullable();
             $table->decimal('comissoes', total: 8, places: 2)->nullable();
             $table->decimal('hr_extras', total: 8, places: 2)->nullable();
-            $table->decimal('recicoes_indenizacoes', total: 8, places: 2)->nullable();
+            $table->decimal('rescisoes_indenizacoes', total: 8, places: 2)->nullable();
             $table->decimal('beneficios', total: 8, places: 2)->nullable();
             $table->decimal('comissoes_pj', total: 8, places: 2)->nullable();
             $table->decimal('farmacia', total: 8, places: 2)->nullable();

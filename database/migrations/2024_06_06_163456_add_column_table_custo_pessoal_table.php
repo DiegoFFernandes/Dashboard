@@ -14,10 +14,12 @@ class AddColumnTableCustoPessoalTable extends Migration
     public function up()
     {
         Schema::table('custo_pessoal', function (Blueprint $table) {
+            $table->decimal('bonificacao', total: 8, places: 2)->nullable();
             $table->decimal('vale_transporte', total: 8, places: 2)->nullable();
             $table->decimal('plano_saude', total: 8, places: 2)->nullable();
             $table->decimal('vale_alimentacao', total: 8, places: 2)->nullable();
             $table->decimal('plano_odonto', total: 8, places: 2)->nullable();
+            $table->decimal('fgts', total: 8, places: 2)->nullable();
             $table->decimal('seguro_vida', total: 8, places: 2)->nullable();
         });
     }
@@ -30,10 +32,12 @@ class AddColumnTableCustoPessoalTable extends Migration
     public function down()
     {
         Schema::table('custo_pessoal', function (Blueprint $table) {
+            $table->dropColumn('bonificacao');
             $table->dropColumn('vale_transporte');
             $table->dropColumn('plano_saude');
             $table->dropColumn('vale_alimentacao');
             $table->dropColumn('plano_odonto');
+            $table->dropColumn('fgts');
             $table->dropColumn('seguro_vida');            
         });
     }

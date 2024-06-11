@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\RhGestor\RhGestorController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
@@ -23,5 +24,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/login', [AuthController::class, 'login'])->name('api_auth');
 
 Route::middleware(['ApiJwt'])->group(function () {
-    Route::get('/store/employee', [UserController::class, 'listAll'])->name('list_user_api');
+    Route::post('/store/custo-pessoal', [RhGestorController::class, 'IndicadorFinanceiroAgrupado'])->name('rh-gestor-financeiro');
+    Route::get('/list-custo-pessoal', [RhGestorController::class, 'ListFinanceiroAgrupado'])->name('rh-gestor-list');
+    Route::post('/sum-custo-pessoal', [RhGestorController::class, 'SumFinanceiroAgrupado'])->name('rh-gestor-sum');
 });

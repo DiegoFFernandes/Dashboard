@@ -64,22 +64,8 @@
                                             </strong>{{ $nota[0]['DS_DTEMISSAO'] }}</div>
                                         <div class="col-md-12 col-xs-12 borda" style="height: 70px;">
                                             <strong>Codigo de Verificação: </strong>
-                                            <div class="codigobarras">
-                                                {{-- <svg id="barcode"></svg>
-                                                <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
-                                                <script>
-                                                    document.addEventListener("DOMContentLoaded", function() {
-                                                        JsBarcode("#barcode", "{{ $nota[0]['CD_AUTENTICACAO'] }}", {
-                                                            format: "CODE128",
-                                                            lineColor: "#000",
-                                                            width: 2,
-                                                            height: 30,
-                                                            displayValue: true
-                                                        });
-                                                    });
-                                                </script> --}}
-                                                {{-- {!! QrCode::generate($nota[0]['CD_AUTENTICACAO']) !!} --}}
-                                                {{ $nota[0]['CD_AUTENTICACAO'] }}
+                                            <div class="col-md-12 col-xs-12" style="display:flex; justify-content: center; align-items: center">
+                                                {!! DNS1D::getBarcodeHTML($nota[0]['CD_AUTENTICACAO'], 'C128', 1,33, 'black', true) !!}                                                
                                             </div>
 
                                         </div>
@@ -195,7 +181,11 @@
                                                     </tr>
                                                     @php
                                                         $VL_TOTAL += $n['O_VL_TOTAL'];
-                                                        $QT_TOTAL += $n['O_QTDE'];
+                                                        if($n['CD_SUBGRUPO'] == 304){
+                                                            $QT_TOTAL += 0;
+                                                        }else{
+                                                            $QT_TOTAL += $n['O_QTDE'];
+                                                        }                                                        
                                                     @endphp
                                                 @endforeach
                                             </tbody>

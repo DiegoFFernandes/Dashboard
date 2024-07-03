@@ -105,6 +105,7 @@ class Nota extends Model
                 R.O_CD_ITEM,
                 R.O_DS_ITEM,
                 R.O_QTDE,
+                I.CD_SUBGRUPO,
                 R.O_VL_UNITARIO,
                 R.O_VL_TOTAL,
                 R.O_QT_DESCONTADA,
@@ -178,7 +179,7 @@ class Nota extends Model
                     --AND N.DT_EMISSAO = CURRENT_DATE
                     --AND N.HR_NOTA BETWEEN CURRENT_TIME - 14400 AND CURRENT_TIME
                     --and N.NR_NOTAFISCAL IN (35224,35229)                     
-                    " . ($nr_lancamento == 0 ? "AND N.NR_NOTAFISCAL IN (35224,35229)" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "                 
+                    " . ($nr_lancamento == 0 ? "AND N.NR_NOTAFISCAL IN (37632)" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "                 
                     
                     AND P.DS_EMAIL IS NOT NULL
                     AND P.DS_EMAIL NOT IN ('TESTE@IVORECAP.COM.BR', 'TESTE@TESTE.COM.BR', 'FNE@IVORECAP.COM.BR', 'NFE@IVORECAP.COM.BR')

@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();send:updatetipopessoa
         $schedule->command('send:updatetipopessoa')->everyMinute();
         $schedule->command('send:updatelicenca')->everyMinute();
+        $schedule->command('send:update_fechamento_contabil')->everyFiveMinutes();
     }
 
     /**

@@ -76,7 +76,7 @@ class PowerBiEmbeddedController extends Controller
                     "datasets": ["' . $datasetID . '"]
                 }]
             }';
-            $content = PowerbiHelper::processPowerbiHttpRequest($url, $header, $data, 'POST');
+           $content = PowerbiHelper::processPowerbiHttpRequest($url, $header, $data, 'POST');
             
             if ($updatetoken == 1) {
                 return response()->json($content);

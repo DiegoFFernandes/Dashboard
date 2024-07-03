@@ -22,12 +22,5 @@
     <!-- /.content -->
 @endsection
 @section('scripts')
-    @includeIf('admin.master.datatables')
-    @isset($chart)
-        {!! $chart->script() !!}
-    @endisset
-    <script type="text/javascript">
-        $(document).ready(function() {            
-        });
-    </script>
+    
 @endsection

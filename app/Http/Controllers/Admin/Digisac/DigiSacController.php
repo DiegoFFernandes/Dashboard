@@ -38,12 +38,12 @@ class DigiSacController extends Controller
         $uri         = $this->request->route()->uri();
         // $uri          = $exploder[0] . '/' . $exploder[1];
 
-        // $nota = $this->nota->NotasEmitidas(0,0);
+        $nota = $this->nota->NotasEmitidas(0,0);
 
 
-        // $nota_agrupada = $this->AgruparNota($nota);
+        $nota_agrupada = $this->AgruparNota($nota);
 
-        // $this->nota->StoreNota($nota_agrupada);
+        $this->nota->StoreNota($nota_agrupada);
 
 
         $notas_para_enviar = $this->nota->listNotaSend();
@@ -207,6 +207,7 @@ class DigiSacController extends Controller
                 "O_CD_ITEM" => $item["O_CD_ITEM"],
                 "O_DS_ITEM" => $item["O_DS_ITEM"],
                 "O_QTDE" => $item["O_QTDE"],
+                "CD_SUBGRUPO" => $item["CD_SUBGRUPO"],
                 "O_VL_UNITARIO" => $item["O_VL_UNITARIO"],
                 "O_VL_TOTAL" => $item["O_VL_TOTAL"],
                 "O_QT_DESCONTADA" => $item["O_QT_DESCONTADA"],

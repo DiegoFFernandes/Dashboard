@@ -338,8 +338,8 @@
                         <li class=""><a href="{{ route('diretoria.index') }}"><i
                                     class="fa fa-arrow-up"></i>Indicador</a>
                         </li>
-                        <li class="{{ request()->routeIs('diretoria.rede-fluxo') ? 'active' : '' }}"><a href="{{ route('diretoria.rede-fluxo') }}"><i
-                                    class="fa fa-cube"></i>Fluxo de Caixa</a>
+                        <li class="{{ request()->routeIs('diretoria.rede-fluxo') ? 'active' : '' }}"><a
+                                href="{{ route('diretoria.rede-fluxo') }}"><i class="fa fa-cube"></i>Fluxo de Caixa</a>
                         </li>
 
                         {{-- @can('ver-diretoria-norte')
@@ -483,201 +483,204 @@
                                 href="{{ route('importa.index') }}"><i class="fa fa-scissors"></i>Importar P/ Portal
                             </a>
                         </li>
-                </li>
-            </ul>
-            </li>
-        @endrole
-        @canany(['ver-manutencao'])
-            <li class="treeview {{ request()->segment(1) == 'manutencao' ? 'active' : '' }}" style="height: auto;">
-                <a href="#">
-                    <i class="fa fa-cogs"></i> <span>Manutenção</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu" style="display: none;">
-                    <li class="{{ request()->routeIs('manutencao.index') ? 'active' : '' }}"><a
-                            href="{{ route('manutencao.index') }}"><i class="fa fa-ticket "></i>Chamados</a>
-                    </li>
-
-                    <li class="{{ request()->routeIs('manutencao.machines') ? 'active' : '' }}"><a
-                            href="{{ route('manutencao.machines') }}"><i class="fa fa-puzzle-piece"></i>Cadastro de
-                            Maquinas</a>
-                    </li>
-                    <li class="{{ request()->routeIs('manutencao-report') ? 'active' : '' }}"><a
-                            href="{{ route('manutencao-report') }}"><i class="fa fa-flag"></i>Relatório</a>
-                    </li>
-
-                </ul>
-            </li>
-        @endcanany
-        @unlessrole('acesso-cliente')
-            <li class="header">Links Publicos</li>
-            <li class="treeview" style="height: auto;">
-                <a href="#">
-                    <i class="fa fa-circle-o text-yellow"></i><span>Aquila</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu" style="display: none;">
-                    <li class="treeview">
-                        <a href="#"><i class="fa fa-line-chart"></i> Indicadores
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
+                        <li class="{{ request()->routeIs('parm-contabilidade.index') ? 'active' : '' }}"><a
+                            href="{{ route('parm-contabilidade.index') }}"><i class="fa fa-scissors"></i>Gerenciador Contabilidade
                         </a>
-                        <ul class="treeview-menu">
-                            @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Diretoria
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/ES-q_nxYzM5JmiJZ-Xu6DZ0BgzU3W1lutDSv3TdAy28b4g?e=T30aEG"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>N1 - Diretoria</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endcanany
-                            @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca', 'ver-recursos-humanos'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Suporte
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EbzOjGTDZIFFrPpZ1kLFgpkB-sR0q-d7SjmeH-wWz0OMWw?e=4nDru8"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>N2 - Administrativo</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EeMQInoqjkpDtDaylykMZ_8BQPk1rNsicCMYmzd00_H6Sw?e=tjc4Mr"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>N3 - Administrativo</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EY-9-0_gkJdEnRVQait1NscBvpk0oyCStkdCbZjTm3JWMg?e=2BtGhw"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>N3 - Controladoria</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Edo6Y5_x0Q1HuZ-qVi1mdNsBXBzJlMk9A8N4er3M7Yi73Q?e=Jr8GDb"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>N3 - Gestão Financeira</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EV7ilh-R4xNJiAmhXFyb_VkBbuWu27U06dIdmj31VKSrjw?e=DiiW0F"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>N3 - T.I Suporte</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endcanany
-                            @canany(['ver-producao'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Produto
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EUXAsbNwuuBLoiG1fS50feABcCorAPeTu4lyBgl4NucDRQ?e=Z2Fde4"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>N2 - Operações</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endcanany
-                            @canany(['ver-comercial-norte', 'ver-comercial-sul'])
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Comercial
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EW8-tRPmiaFBrQs3PmTVHxkBD4WIkdW7TPZAudEhQlCC_w?e=xHIxDf"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>N2 - Comercial</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endcanany
-                            @role('admin|coordenador|gerencia')
-                                <li class="treeview">
-                                    <a href="#"><i class="fa fa-circle-o"></i>Gestão de Unidade
-                                        <span class="pull-right-container">
-                                            <i class="fa fa-angle-left pull-right"></i>
-                                        </span>
-                                    </a>
-                                    <ul class="treeview-menu">
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EnvQd5J0IrNOn0OqTxwq85QBcfC2DqEUMEkz1YlRSYMQJg?e=OobLsP"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Alto Paraná</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EmVfLSenLtFIu2uWb9nmvQYBsqKlrIEkmQ5G5Ks1-M95zg?e=pJSN3e"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Assis</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EhPatQ9dnK1JtEIdoT7sjeIB3nNA5VEhkSCNBYwuwuxPug?e=RFtu4i"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Bauru</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eudb18YPTk9ApZFAEohL7oUBZPXXKpkkJ2hSNIku0zAR_A?e=58d4hW"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Campina Grande Do Sul</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eg20RFsMN51JtR6jvSHJ9uMBN_f8LHCRiId-t_7RCn7YSQ?e=dSUsfP"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Campo Largo</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eq9u42k95c9HsD-VF0nKVDkBaoS6aDQsMwkH1fNmZ1cA-A?e=rKBcmm"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Campo Largo - Renovat</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EsEhRZdsYYRKpbxwLJuo4SwBLlFN-2cvKg9UoNjjYNzTxA?e=0nT99L"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Dourados</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En7ATiBH_mRAm98qNULbGd8BdtQokUCOaJSfT0g91gykoA?e=PLy7mc"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Itapeva</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EsxZO4RB5SJPoCPTQyxocFoBHkW3nl8I7XT314uc06VJ5g?e=nDaZA7"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Paranavai</a>
-                                        </li>
-                                        <li class="">
-                                            <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En15XSUjMN5BhPcGtDQNUugB7nuHKN67bJOwvZti_36DDA?e=ylP0eu"
-                                                target="_blank">
-                                                <i class="fa fa-circle-o"></i>Vitorino</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            @endrole
-                        </ul>
                     </li>
-                </ul>
-            </li>
-        @endunlessrole
+                    </ul>
+                </li>
+            @endrole
+            @canany(['ver-manutencao'])
+                <li class="treeview {{ request()->segment(1) == 'manutencao' ? 'active' : '' }}" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-cogs"></i> <span>Manutenção</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="{{ request()->routeIs('manutencao.index') ? 'active' : '' }}"><a
+                                href="{{ route('manutencao.index') }}"><i class="fa fa-ticket "></i>Chamados</a>
+                        </li>
+
+                        <li class="{{ request()->routeIs('manutencao.machines') ? 'active' : '' }}"><a
+                                href="{{ route('manutencao.machines') }}"><i class="fa fa-puzzle-piece"></i>Cadastro de
+                                Maquinas</a>
+                        </li>
+                        <li class="{{ request()->routeIs('manutencao-report') ? 'active' : '' }}"><a
+                                href="{{ route('manutencao-report') }}"><i class="fa fa-flag"></i>Relatório</a>
+                        </li>
+
+                    </ul>
+                </li>
+            @endcanany
+            @unlessrole('acesso-cliente')
+                <li class="header">Links Publicos</li>
+                <li class="treeview" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-circle-o text-yellow"></i><span>Aquila</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="treeview">
+                            <a href="#"><i class="fa fa-line-chart"></i> Indicadores
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                @canany(['ver-diretoria-norte', 'ver-diretoria-sul'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Diretoria
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/ES-q_nxYzM5JmiJZ-Xu6DZ0BgzU3W1lutDSv3TdAy28b4g?e=T30aEG"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N1 - Diretoria</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-financeiro', 'ver-faturamento', 'ver-cobranca', 'ver-recursos-humanos'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Suporte
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EbzOjGTDZIFFrPpZ1kLFgpkB-sR0q-d7SjmeH-wWz0OMWw?e=4nDru8"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N2 - Administrativo</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EeMQInoqjkpDtDaylykMZ_8BQPk1rNsicCMYmzd00_H6Sw?e=tjc4Mr"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N3 - Administrativo</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EY-9-0_gkJdEnRVQait1NscBvpk0oyCStkdCbZjTm3JWMg?e=2BtGhw"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N3 - Controladoria</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Edo6Y5_x0Q1HuZ-qVi1mdNsBXBzJlMk9A8N4er3M7Yi73Q?e=Jr8GDb"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N3 - Gestão Financeira</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EV7ilh-R4xNJiAmhXFyb_VkBbuWu27U06dIdmj31VKSrjw?e=DiiW0F"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N3 - T.I Suporte</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-producao'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Produto
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:x:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EUXAsbNwuuBLoiG1fS50feABcCorAPeTu4lyBgl4NucDRQ?e=Z2Fde4"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N2 - Operações</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @canany(['ver-comercial-norte', 'ver-comercial-sul'])
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Comercial
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EkoR6O9ShalMg7n_zXD3KlwBONhN4UnnMjjyNJHuFwm7Dg?e=RKRMl8"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>N2 - Comercial</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endcanany
+                                @role('admin|coordenador|gerencia')
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Gestão de Unidade
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EnvQd5J0IrNOn0OqTxwq85QBcfC2DqEUMEkz1YlRSYMQJg?e=OobLsP"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Alto Paraná</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EmVfLSenLtFIu2uWb9nmvQYBsqKlrIEkmQ5G5Ks1-M95zg?e=pJSN3e"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Assis</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EhPatQ9dnK1JtEIdoT7sjeIB3nNA5VEhkSCNBYwuwuxPug?e=RFtu4i"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Bauru</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eudb18YPTk9ApZFAEohL7oUBZPXXKpkkJ2hSNIku0zAR_A?e=58d4hW"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Campina Grande Do Sul</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eg20RFsMN51JtR6jvSHJ9uMBN_f8LHCRiId-t_7RCn7YSQ?e=dSUsfP"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Campo Largo</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/Eq9u42k95c9HsD-VF0nKVDkBaoS6aDQsMwkH1fNmZ1cA-A?e=rKBcmm"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Campo Largo - Renovat</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EsEhRZdsYYRKpbxwLJuo4SwBLlFN-2cvKg9UoNjjYNzTxA?e=0nT99L"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Dourados</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En7ATiBH_mRAm98qNULbGd8BdtQokUCOaJSfT0g91gykoA?e=PLy7mc"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Itapeva</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EsxZO4RB5SJPoCPTQyxocFoBHkW3nl8I7XT314uc06VJ5g?e=nDaZA7"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Paranavai</a>
+                                            </li>
+                                            <li class="">
+                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/En15XSUjMN5BhPcGtDQNUugB7nuHKN67bJOwvZti_36DDA?e=ylP0eu"
+                                                    target="_blank">
+                                                    <i class="fa fa-circle-o"></i>Vitorino</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endrole
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            @endunlessrole
         </ul>
     </section>
     <!-- /.sidebar -->

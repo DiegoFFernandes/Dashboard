@@ -104,6 +104,7 @@
     @includeIf('admin.master.datatables')
     <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
+        var status = 'S';
         $.ajax({
             type: "get",
             url: "{{ route('status-gerenciador-contabil') }}",

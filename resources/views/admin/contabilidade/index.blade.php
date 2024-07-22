@@ -108,11 +108,12 @@
         $.ajax({
             type: "get",
             url: "{{ route('status-gerenciador-contabil') }}",
-            success: function(response) {
+            success: function(response) {           
                 if (response.status == 'N') {
                     $('input[name="r1"][value="N"]').iCheck('check');
-                }
+                }else{
                 $('input[name="r1"][value="S"]').iCheck('check');
+                }
             }
         });
 

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin\RhGestor;
 
 use App\Http\Controllers\Controller;
 use App\Models\RhGestor;
+use DateTime;
 use Exception;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,22 +30,27 @@ class RhGestorController extends Controller
     }
     public function IndicadorFinanceiroAgrupado()
     {
-        $data = $this->request->json()->all();
+       $data = $this->request->json()->all();
 
         $errors = [];
 
         foreach ($data as $index => $item) {
             //Faz a divisão da lotação pegando somente o codigo do Area ex: 11011 - Administração - CGS
-            $cd_area_lotacao = array_map('trim', explode('-', $item['DsLotacaoArea']));
+            $cd_area_lotacao = array_map('trim', explode('-', $item['DsLotacao_Area']));
+            
+            $dateTime = DateTime::createFromFormat('n/j/Y g:i:s A', $item['Competencia']);
+            $data[$index]['cpf'] = Helper::RemoveSpecialChar($data[$index]['cpf']);
+            $data[$index]['Competencia'] = $dateTime->format('m/Y');
             // Troca a informação no Array, somente para 11011
-            $data[$index]['DsLotacaoArea'] = $cd_area_lotacao[0];
+            $data[$index]['DsLotacao_Area'] = $cd_area_lotacao[0];
 
             $validator = $this->__validate($item);
+
             if ($validator->fails()) {
                 $errors[$index] = [
                     'corrigir' => $validator->errors(),
                     'competencia' => $item['Competencia'],
-                    'ds_lotacao_area' => $item['DsLotacaoArea'],
+                    'ds_lotacao_area' => $item['DsLotacao_Area'],
                     'cd_indicador' => $item['CodIndicador']
                 ];
             }
@@ -51,7 +58,7 @@ class RhGestorController extends Controller
         if (!empty($errors)) {
             return response()->json(['errors' => $errors], 422);
         }
-
+        // return $data;
         foreach ($data as $index => $item) {
             try {
                 $this->rh->store($item);
@@ -74,15 +81,15 @@ class RhGestorController extends Controller
             [
                 'Competencia'  => 'string|required',
                 'CodIndicador'  => 'integer|required',
-                'DsLotacaoArea' => 'string|required',
-                'Valor'  => 'numeric|required'
+                'DsLotacao_Area' => 'string|required',
+                'valor'  => 'numeric|required'
             ],
             [
                 'Competencia.required'  => 'Competencia deve ser preenchida',
                 'CodIndicador.required' => 'Codigo indicador deve ser informado',
-                'DsLotacaoArea.required'   => 'Codigo da lotação deve ser informado',
-                'DsLotacaoArea.integer'   => 'Codigo da lotação deve ser inteiro',
-                'Valor.required' => 'valor deve ser informador'
+                'DsLotacao_Area.required'   => 'Codigo da lotação deve ser informado',
+                'DsLotacao_Area.integer'   => 'Codigo da lotação deve ser inteiro',
+                'valor.required' => 'Valor deve ser informador'
             ]
         );
     }
@@ -94,7 +101,7 @@ class RhGestorController extends Controller
     public function SumFinanceiroAgrupado()
     {
         $data = $this->request->all();
-       
+
         $list = RhGestor::where('comp', $data['Competencia'])->where('cd_indicador', $data['CodIndicador'])->sum('valor');
         return response()->json($list, 200);
     }

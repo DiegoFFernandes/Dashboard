@@ -21,6 +21,54 @@ class Nota extends Model
         'NR_CNPJCPF',
         'STATUS',
     ];
+    public function NotasEmitidasResumo($nr_lancamento, $cd_empresa)
+    {
+
+        $query = "
+            SELECT DISTINCT
+                N.CD_EMPRESA,
+                N.NR_LANCAMENTO,
+                N.TP_NOTA,
+                N.CD_SERIE,
+                DATETOSTR(N.DT_EMISSAO, '%d/%m/%Y') DS_DTEMISSAO,
+                N.HR_NOTA,
+                --NOTA--
+                COALESCE(NFSE.NR_RPS, NFSE.NR_NOTASERVICO, N.NR_NOTAFISCAL) NR_NOTA,
+                N.DT_EMISSAO DT_EMISSAONOTA,
+                --CLIENTE--
+                P.CD_PESSOA,
+                P.NM_PESSOA,
+                P.NR_CNPJCPF
+            FROM NOTA N
+            INNER JOIN PESSOA P ON (P.CD_PESSOA = N.CD_PESSOA)
+            INNER JOIN NFSE ON (NFSE.CD_EMPRESA = N.CD_EMPRESA
+                AND NFSE.NR_LANCAMENTO = N.NR_LANCAMENTO
+                AND NFSE.CD_SERIE = N.CD_SERIE
+                AND NFSE.TP_NOTA = N.TP_NOTA)
+            WHERE N.TP_NOTA = 'S'
+                AND N.CD_SERIE IN ('F', 'E')
+                AND N.ST_NOTA = 'V'
+                AND N.DT_EMISSAO >= CURRENT_DATE
+                --AND N.HR_NOTA BETWEEN CURRENT_TIME - 3600 AND CURRENT_TIME
+                --and N.NR_NOTAFISCAL IN (35224,35229)
+                --" . ($nr_lancamento == 0 ? "" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "
+
+                AND P.DS_EMAIL IS NOT NULL
+                AND P.DS_EMAIL NOT IN ('TESTE@IVORECAP.COM.BR', 'TESTE@TESTE.COM.BR', 'FNE@IVORECAP.COM.BR', 'NFE@IVORECAP.COM.BR')
+                --" . ($cd_empresa == 0 ? "" : "AND N.CD_EMPRESA IN ($cd_empresa)") . "
+                
+        ";
+        $results =  DB::connection('firebird_rede')->select($query);
+
+        // Garantir que os dados estejam em UTF-8
+        $results = array_map(function ($result) {
+            return array_map(function ($value) {
+                return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
+            }, (array) $result);
+        }, $results);
+        return $results;
+        return response()->json($results, 200, [], JSON_UNESCAPED_UNICODE);
+    }
 
     public function NotasEmitidas($nr_lancamento, $cd_empresa)
     {
@@ -174,16 +222,16 @@ class Nota extends Model
                 INNER JOIN ITEM I ON (I.CD_ITEM = R.O_CD_ITEM)
                 WHERE
                     N.TP_NOTA = 'S'
-                    AND N.CD_SERIE = 'E'
+                    AND N.CD_SERIE IN ('F', 'E')
                     AND N.ST_NOTA = 'V'
-                    --AND N.DT_EMISSAO = CURRENT_DATE
-                    --AND N.HR_NOTA BETWEEN CURRENT_TIME - 14400 AND CURRENT_TIME
+                    --AND N.DT_EMISSAO >= CURRENT_DATE
+                    --AND N.HR_NOTA BETWEEN CURRENT_TIME - 1800 AND CURRENT_TIME
                     --and N.NR_NOTAFISCAL IN (35224,35229)                     
-                    " . ($nr_lancamento == 0 ? "AND N.NR_NOTAFISCAL IN (37632)" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "                 
+                    " . ($nr_lancamento == 0 ? "" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "                 
                     
                     AND P.DS_EMAIL IS NOT NULL
                     AND P.DS_EMAIL NOT IN ('TESTE@IVORECAP.COM.BR', 'TESTE@TESTE.COM.BR', 'FNE@IVORECAP.COM.BR', 'NFE@IVORECAP.COM.BR')
-                    " . ($cd_empresa == 0 ? "AND N.CD_EMPRESA IN (101)" : "AND N.CD_EMPRESA IN ($cd_empresa)") . " 
+                    " . ($cd_empresa == 0 ? "" : "AND N.CD_EMPRESA IN ($cd_empresa)") . " 
                     --AND N.CD_EMPRESA = 101
                 ORDER BY O_IDORDEMPRODUCAORECAP";
 
@@ -221,14 +269,15 @@ class Nota extends Model
                     'NM_PESSOA' => $i['NM_PESSOA'],
                     'NR_CNPJCPF' => $i['NR_CNPJCPF'],
                     'STATUS' => 'A',
-                    'created_at' => \Carbon\Carbon::now()                    
+                    'created_at' => \Carbon\Carbon::now()
                 ]
             );
         }
         return true;
     }
 
-    public function listNotaSend(){
+    public function listNotaSend()
+    {
         return Nota::where('STATUS', 'A')->get();
     }
 }

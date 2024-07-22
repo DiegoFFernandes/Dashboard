@@ -115,7 +115,6 @@
                     </ul>
                 </li>
             @endunlessrole
-
             @canany(['ver-usuario'])
                 <li class="treeview {{ request()->segment(1) == 'usuario' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
@@ -337,11 +336,7 @@
                     <ul class="treeview-menu" style="display: none;">
                         <li class=""><a href="{{ route('diretoria.index') }}"><i
                                     class="fa fa-arrow-up"></i>Indicador</a>
-                        </li>
-                        <li class="{{ request()->routeIs('diretoria.rede-fluxo') ? 'active' : '' }}"><a
-                                href="{{ route('diretoria.rede-fluxo') }}"><i class="fa fa-cube"></i>Fluxo de Caixa</a>
-                        </li>
-
+                        </li>                       
                         {{-- @can('ver-diretoria-norte')
                             <li class="{{ request()->routeIs('diretoria.ivo-norte') ? 'active' : '' }}"><a
                                     href="{{ route('diretoria.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
@@ -483,9 +478,11 @@
                                 href="{{ route('importa.index') }}"><i class="fa fa-scissors"></i>Importar P/ Portal
                             </a>
                         </li>
+                        @can('ver-gerenciador-contabil')
                         <li class="{{ request()->routeIs('parm-contabilidade.index') ? 'active' : '' }}"><a
                             href="{{ route('parm-contabilidade.index') }}"><i class="fa fa-scissors"></i>Gerenciador Contabilidade
                         </a>
+                        @endcan
                     </li>
                     </ul>
                 </li>

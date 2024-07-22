@@ -13,7 +13,7 @@ class UpdateDtFechamentoContabil extends Command
      *
      * @var string
      */
-    protected $signature = 'command:update_fechamento_contabil';
+    protected $signature = 'send:update_fechamento_contabil';
 
     /**
      * The console command description.
@@ -40,7 +40,7 @@ class UpdateDtFechamentoContabil extends Command
      */
     public function handle()
     {
-        $aberta = $this->VerificaContabilAberta();
+        $aberta = $this->contabil->VerificaContabilAberta();
         
         if ($aberta[0]->QTD > 0) {
             $parm_contabil = ParmContabil::select('dt_fechamento', 'status')->first();

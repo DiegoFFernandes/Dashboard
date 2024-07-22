@@ -36,14 +36,10 @@ class DigiSacController extends Controller
         $title_page   = 'Item Análise de Frota';
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
-        // $uri          = $exploder[0] . '/' . $exploder[1];
 
-        $nota = $this->nota->NotasEmitidas(0,0);
+        // $nota = $this->nota->NotasEmitidasResumo(0,0);
 
-
-        $nota_agrupada = $this->AgruparNota($nota);
-
-        $this->nota->StoreNota($nota_agrupada);
+        // $this->nota->StoreNota($nota);
 
 
         $notas_para_enviar = $this->nota->listNotaSend();
@@ -58,11 +54,11 @@ class DigiSacController extends Controller
                 'user_auth',
                 'title_page'
             ));
-            return $html = $view->render();
+            $html = $view->render();
 
             $options = [
                 'no-images' => false,
-                'disable-javascript' => true,
+                'disable-javascript' => false,
                 // outras opções de otimização...
             ];
 

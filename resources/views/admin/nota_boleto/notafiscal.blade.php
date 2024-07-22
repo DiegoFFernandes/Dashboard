@@ -9,13 +9,12 @@
                 <div class="box borda">
                     <div class="box-body ">
                         <div class="col-md-12 col-xs-12" style="height: 100px; padding-left :0 !important ">
-                            <div class="col-md-10 col-xs-10 "
+                            <div class="col-md-10 col-xs-10"
                                 style="margin-bottom: 3px; height: 45px; padding-right: 0 !important;">
                                 <div class="col-md-12 col-xs-12 borda" style="margin-top: 3px; margin-bottom: 3px;">
                                     <strong>Prezado:
-                                    </strong>Evandro Leonardo dos Santos <br> Recebi de {{ $nota[0]['NM_EMPRESA'] }}
-                                    os
-                                    serviços indicados no RPS ao lado
+                                    </strong>{{ $nota[0]['NM_PESSOA'] }} <br> Recebi de {{ $nota[0]['NM_EMPRESA'] }}
+                                    os serviços indicados no RPS ao lado
                                 </div>
 
 
@@ -39,18 +38,33 @@
                             <hr size="1" style="border:1px dashed; margin: 10px; margin-top: 10px;">
                         </div>
                         <div class="col-md-12 col-xs-12">
-                            <div class="nota" style=" padding:0">
+                            <div class="" style=" padding:0">
                                 <div class="col-md-12 col-xs-12" style="height: 100px; padding:3px !important ">
-                                    <div class="col-md-2 col-xs-2 borda" style="padding:3px; height: 120px">
-                                        <div style="display:flex; justify-content: center; align-items: center"><img
-                                                src="{{ asset('img/logos-empresa/brasaopvai.png') }}" style="width:60px"></div>
+                                    <div class="col-md-2 col-xs-2 borda" style="padding:3px; height: 130px">
+                                        <div
+                                            style="display:flex; justify-content: center; align-items: center; height: 100%;">
+                                            <img src="
+                                                    @if ($nota[0]['CD_EMPRESA'] == 101) {{ asset('img/logos-empresa/brasaopvai.png') }}
+                                                    @elseif($nota[0]['CD_EMPRESA'] == 108)
+                                                        {{ asset('img/logos-empresa/brasaocampina.jpg') }} 
+                                                    @elseif($nota[0]['CD_EMPRESA'] == 104)
+                                                        {{ asset('img/logos-empresa/brasaoassis.jpg') }} 
+                                                    @elseif($nota[0]['CD_EMPRESA'] == 102)
+                                                        {{ asset('img/logos-empresa/brasaodourados.jpg') }}      
+                                                    @elseif($nota[0]['CD_EMPRESA'] == 103)
+                                                        {{ asset('img/logos-empresa/brasaoapucarana.jpg') }}    
+                                                        
+                                                    @endif"
+                                                class="img-fluid"
+                                                style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 120px">
+                                    <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 130px">
                                         <div class="title_nfse">
                                             <p>Nota Fiscal de Serviço Eletrônica</p>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-xs-6" style="padding:0px; height: 120px">
+                                    <div class="col-md-6 col-xs-6" style="padding:0px; height: 130px">
                                         <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 50px">
                                             <strong>Numero RPS:
                                             </strong>{{ $nota[0]['NR_RPS'] }}
@@ -62,25 +76,32 @@
                                         <div class="col-md-4 col-xs-4 borda" style="padding:3px; height: 50px"><strong>Data
                                                 Emissão:
                                             </strong>{{ $nota[0]['DS_DTEMISSAO'] }}</div>
-                                        <div class="col-md-12 col-xs-12 borda" style="height: 70px;">
+                                        <div class="col-md-12 col-xs-12 borda" style="height: 80px;">
                                             <strong>Codigo de Verificação: </strong>
-                                            <div class="col-md-12 col-xs-12" style="display:flex; justify-content: center; align-items: center">
-                                                {!! DNS1D::getBarcodeHTML($nota[0]['CD_AUTENTICACAO'], 'C128', 1,33, 'black', true) !!}                                                
+                                            <div class="col-md-12 col-xs-12"
+                                                style="display:flex; justify-content: center; align-items: center; text: center">
+                                                <div class="col-md-12 col-xs-12">
+                                                    {!! DNS1D::getBarcodeHTML($nota[0]['CD_AUTENTICACAO'], 'C128', 1, 33, 'black') !!}
+                                                </div>
                                             </div>
-
+                                            <div class="col-md-12 col-xs-12"
+                                                style="display:flex; justify-content: center; align-items: center; font-size: 12px">
+                                                {{ $nota[0]['CD_AUTENTICACAO'] }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-md-12 col-xs-12" style="margin-top: 30px;">
+                                <div class="col-md-12 col-xs-12" style="margin-top: 15px;">
                                     <div class="title_prestador"> Prestador de Serviços</div>
                                 </div>
 
 
                                 <div class="col-md-12 col-xs-12" style="padding:3px !important">
                                     <div class="col-md-2 col-xs-2 borda" style="padding:3px; height: 120px">
-                                        <div class="logo_ivo"><img src="{{ asset('img/logo-ivo.png') }}" alt="IVO RECAP"
-                                                style="width:90px; margin: 10px; margin-left: 35px"></div>
+                                        <div style="display:flex; justify-content: center; align-items: center">
+                                            <img src="{{ asset('img/logo-ivo.png') }}" class="img-fluid" style="">
+                                        </div>
                                     </div>
                                     <div class="col-md-10 col-xs-10 borda" style="padding:3px; height: 120px">
                                         <div class="col-md-12 col-xs-12">
@@ -100,7 +121,7 @@
                                 </div>
 
                                 <div class="col-md-12 col-xs-12">
-                                    <div class="title_prestador" style="margin-top: 10px;"> Tomador de Serviços</div>
+                                    <div class="title_prestador" style="margin-top: 0px;"> Tomador de Serviços</div>
                                 </div>
 
                                 <div class="col-md-12 col-xs-12 borda" style="padding:3px !important">
@@ -181,11 +202,11 @@
                                                     </tr>
                                                     @php
                                                         $VL_TOTAL += $n['O_VL_TOTAL'];
-                                                        if($n['CD_SUBGRUPO'] == 304){
+                                                        if ($n['CD_SUBGRUPO'] == 304) {
                                                             $QT_TOTAL += 0;
-                                                        }else{
+                                                        } else {
                                                             $QT_TOTAL += $n['O_QTDE'];
-                                                        }                                                        
+                                                        }
                                                     @endphp
                                                 @endforeach
                                             </tbody>
@@ -245,19 +266,23 @@
                                             <Strong>Total Descto: 0,00</Strong> {{-- inserir campo na query --}}
                                         </div>
                                         <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
-                                            <Strong>Base Calculo: {{ $nota[0]['VL_CONTABIL'] }}</Strong>
+                                            <Strong>Base Calculo:
+                                                {{ number_format($nota[0]['VL_CONTABIL'], 2, ',', '.') }}</Strong>
                                         </div>
                                         <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
                                             <Strong>Aliquota: 4%</Strong> {{-- inserir campo na query --}}
                                         </div>
                                         <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
-                                            <Strong>Valor ISS: {{ $nota[0]['VL_ISSQN'] }}</Strong>
+                                            <Strong>Valor ISS:
+                                                {{ number_format($nota[0]['VL_ISSQN'], 2, ',', '.') }}</Strong>
                                         </div>
                                         <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
-                                            <Strong>ISS Retido: {{ $nota[0]['VL_ISSQN_RETIDO'] }}</Strong>
+                                            <Strong>ISS Retido:
+                                                {{ number_format($nota[0]['VL_ISSQN_RETIDO'], 2, ',', '.') }}</Strong>
                                         </div>
                                         <div class="col-md-2 col-xs-2 borda" style=" margin-bottom: 10px; height:60px">
-                                            <Strong>Valor Liquido: {{ $nota[0]['VL_CONTABIL'] }}</Strong>
+                                            <Strong>Valor Liquido:
+                                                {{ number_format($nota[0]['VL_CONTABIL'], 2, ',', '.') }}</Strong>
                                         </div>
                                     </div>
                                 </div>

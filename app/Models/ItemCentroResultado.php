@@ -54,7 +54,8 @@ class ItemCentroResultado extends Model
                     CC.DS_CENTROCUSTO
                 FROM CENTROCUSTO CC
                 where CC.CD_EMPRESA NOT IN (1)
-                   " . ($input == 0 ? "AND CC.DT_REGISTRO >= CURRENT_DATE - 30" : "") . "                          
+                   " . ($input == 0 ? "AND CC.DT_REGISTRO >= CURRENT_DATE - 30" : "") . "  
+                   --AND CC.CD_CENTROCUSTO = 1010299999                        
                 GROUP BY CC.CD_EMPRESA,
                     CC.CD_CENTROCUSTO,
                     CC.DS_CENTROCUSTO";
@@ -92,7 +93,7 @@ class ItemCentroResultado extends Model
 
                 if (!$record->wasRecentlyCreates) {
                     $record->update([
-                        'alterado' => 'N',
+                        'alterado' => 'S',
                         'ds_centroresultado' => $i['DS_CENTROCUSTO'],
                         "updated_at"    => \Carbon\Carbon::now(),
                     ]);

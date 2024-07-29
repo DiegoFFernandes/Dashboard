@@ -105,6 +105,8 @@
     <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
         var status = 'S';
+        var ultimoDiaMesPassado = moment().subtract(1, 'months').endOf('month');
+
         $.ajax({
             type: "get",
             url: "{{ route('status-gerenciador-contabil') }}",
@@ -132,16 +134,18 @@
             showDropdowns: true,
             minYear: 2023,
             maxYear: parseInt(moment().format('YYYY'), 10),
+            maxDate: moment(),
             locale: {
                 format: 'DD/MM/YYYY'
-            }
+            },
+            startDate: ultimoDiaMesPassado,
         });
         var date = $('#datepicker').val();
 
         $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
             date = picker.startDate.format('DD/MM/YYYY');
         });
-        $("#submit-save").click(function(e) {
+        $("#submit-save").click(function(e) {            
             $.ajax({
                 url: "{{ route('parm-contabilidade.store-date') }}",
                 method: "get",

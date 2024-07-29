@@ -16,6 +16,7 @@ class CreateRhgestorIndicadorFinanceiroTable extends Migration
         Schema::create('rhgestor_indicador_financeiro', function (Blueprint $table) {
             $table->id();
             $table->string('comp', 8);
+            $table->string('cpf', 45);
             $table->BigInteger('cd_indicador');
             $table->unsignedBigInteger('cd_area_lotacao');
             $table->decimal('valor', total: 12, places: 2)->nullable();

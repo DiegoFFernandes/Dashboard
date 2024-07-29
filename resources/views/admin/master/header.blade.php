@@ -17,8 +17,9 @@
             @if (isset($user_auth->name))
                 <ul class="nav navbar-nav">
                     <li class="">
-                        <a href="https://forms.office.com/pages/responsepage.aspx?id=ynbm4KZUrUmngr-8ypnus6a66-S0qZdPnS7tWXCtkupURVQwNTk1MDhOTVYwNDlCVjY1RTE3MEY0Si4u">
-                            <i class="fa fa-flag-o" style="color: yellow"></i> Não Conformidades                                                       
+                        <a
+                            href="https://forms.office.com/pages/responsepage.aspx?id=ynbm4KZUrUmngr-8ypnus6a66-S0qZdPnS7tWXCtkupURVQwNTk1MDhOTVYwNDlCVjY1RTE3MEY0Si4u">
+                            <i class="fa fa-flag-o" style="color: yellow"></i> Não Conformidades
                         </a>
                     </li>
                     @role('portaria|admin')
@@ -63,6 +64,9 @@
                                 </div>
                             </li>
                         </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                     </li>
                 </ul>
             @endif

@@ -3,10 +3,11 @@
 
 @includeIf('admin.master.head')
 
-<body class="hold-transition skin-blue sidebar-mini sidebar-collapse fixed">
+<body class="skin-blue sidebar-mini sidebar-collapse" id="body">
     <div class="wrapper">
         @includeIf('admin.master.header')
         @includeIf('admin.master.sidebar')
+        @includeIf('admin.master.control-sidebar')
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
@@ -48,7 +49,15 @@
     @includeIf('admin.master.scripts')
 
     @yield('scripts')
-
+    <script>
+        $('#control-sidebar-collapsed').change(function(){
+            if(this.checked){
+                $("#body").removeClass('sidebar-collapse');
+            }else{
+                $("#body").addClass('sidebar-collapse');
+            }
+        });
+    </script>
 </body>
 
 </html>

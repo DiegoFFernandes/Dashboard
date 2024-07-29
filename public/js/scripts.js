@@ -1,6 +1,9 @@
 //Initialize Select2 Elements
 $(function() {
-    $('.select2').select2();
+    $('.select2').select2({
+        placeholder: "Selecione",
+        allowClear: true
+    })
     $('.empresas').select2();
     $('.etapas').select2();
 });
@@ -14,6 +17,7 @@ $(document).ready(function() {
     $("#peso").inputmask("99,99");
     $("#cpf_cnpj").inputmask({ mask: ['999.999.999-99', '99.999.999/9999-99'] });
     $('#phone').inputmask({mask:['(99)9999-9999', '(99)99999-9999']});
+    $('#valor').inputmask("99999,99");
 
     $(".alert-geral").fadeTo(2000, 500).slideUp(500, function() {
         $(".alert-geral").slideUp(500);

@@ -336,7 +336,7 @@
                     <ul class="treeview-menu" style="display: none;">
                         <li class=""><a href="{{ route('diretoria.index') }}"><i
                                     class="fa fa-arrow-up"></i>Indicador</a>
-                        </li>                       
+                        </li>
                         {{-- @can('ver-diretoria-norte')
                             <li class="{{ request()->routeIs('diretoria.ivo-norte') ? 'active' : '' }}"><a
                                     href="{{ route('diretoria.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo Recap -
@@ -466,7 +466,7 @@
                 </li>
             @endrole
             @role('admin|controladoria')
-                <li class="treeview {{ request()->segment(1) == 'financeiro' ? 'active' : '' }}" style="height: auto;">
+                <li class="treeview {{ request()->segment(1) == 'junsoft' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-arrow-down"></i> <span>Junsoft</span>
                         <span class="pull-right-container">
@@ -474,16 +474,21 @@
                         </span>
                     </a>
                     <ul class="treeview-menu" style="display: none;">
-                        <li class="{{ request()->routeIs('cobranca.index') ? 'active' : '' }}"><a
+                        <li class="{{ request()->routeIs('importa.index') ? 'active' : '' }}"><a
                                 href="{{ route('importa.index') }}"><i class="fa fa-scissors"></i>Importar P/ Portal
                             </a>
                         </li>
+                        <li class="{{ request()->routeIs('item-centro-resultado.index') ? 'active' : '' }}"><a
+                                href="{{ route('item-centro-resultado.index') }}"><i class="fa fa-scissors"></i>Centro de Resultado
+                            </a>
+                        </li>
                         @can('ver-gerenciador-contabil')
-                        <li class="{{ request()->routeIs('parm-contabilidade.index') ? 'active' : '' }}"><a
-                            href="{{ route('parm-contabilidade.index') }}"><i class="fa fa-scissors"></i>Gerenciador Contabilidade
-                        </a>
-                        @endcan
-                    </li>
+                            <li class="{{ request()->routeIs('parm-contabilidade.index') ? 'active' : '' }}"><a
+                                    href="{{ route('parm-contabilidade.index') }}"><i class="fa fa-scissors"></i>Gerenciador
+                                    Contabilidade
+                                </a>
+                            @endcan
+                        </li>
                     </ul>
                 </li>
             @endrole

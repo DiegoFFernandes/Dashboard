@@ -45,8 +45,8 @@ class ItemCentroResultadoController extends Controller
         $grupo = GrupoCentroResultado::all();
         $ds_tipo = $this->sub->listDsTipo();
 
-        //Faz o insert automaticamente dos ultimos 30 dias de cadastro de centro de custo do junsoft
-        // $this->item->ListCentroResultadoJunsoft(0);
+        // Faz o insert automaticamente dos ultimos 30 dias de cadastro de centro de custo do junsoft
+        $this->item->ListCentroResultadoJunsoft(0);
 
         return view('admin.centro_resultado.index', compact(
             'title_page',

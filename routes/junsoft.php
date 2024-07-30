@@ -13,15 +13,13 @@ Route::middleware(['auth', 'permission:ver-gerenciador-contabil'])->group(functi
     });
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin|controladoria'])->group(function () {
     Route::prefix('junsoft')->group(function () {
         Route::get('item-centro-resultado', [ItemCentroResultadoController::class, 'index'])->name('item-centro-resultado.index');
         Route::get('ajax-item-centro-resultado', [ItemCentroResultadoController::class, 'listItemCentroResultado'])->name('ajax-item-centro-resultado.list');
         Route::post('ajax-edit-item-centro-resultado', [ItemCentroResultadoController::class, 'EditItemCentroResultado'])->name('ajax-item-centro-resultado.edit');
         Route::post('ajax-store-sub-centro-resultado', [SubgrupoCentroResultadoController::class, 'StoreSubCentroResultado'])->name('ajax-sub-centro-resultado.store');
         Route::post('ajax-delete-sub-centro-resultado', [SubgrupoCentroResultadoController::class, 'DeleteSubCentroResultado'])->name('ajax-sub-centro-resultado.delete');
-        
-
         Route::get('ajax-list-sub-centro-resultado', [SubgrupoCentroResultadoController::class, 'listSubgrupoCentroResultado'])->name('ajax-sub-centro-resultado.list');
         
     });

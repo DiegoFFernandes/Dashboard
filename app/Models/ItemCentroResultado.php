@@ -21,6 +21,7 @@ class ItemCentroResultado extends Model
         'cd_subgrupo',
         'orcamento',
         'alterado',
+        'expurgar',
         'created_at',
         'updated_at'
     ];
@@ -35,6 +36,7 @@ class ItemCentroResultado extends Model
             'item_centro_resultado.cd_subgrupo',  
             DB::raw("concat(s.ds_subgrupo,' - ', g.ds_grupo) as ds_subgrupo"),
             DB::raw("case when item_centro_resultado.alterado = 'S' then 'SIM' else 'NÃO' end alterado"),
+            DB::raw("case when item_centro_resultado.expurgar = 'S' then 'SIM' else 'NÃO' end expurgar"),
             's.ds_tipo',
             'item_centro_resultado.orcamento',
             's.cd_grupo',
@@ -87,13 +89,15 @@ class ItemCentroResultado extends Model
                         'cd_subgrupo' => 0,
                         'orcamento' => 0,
                         'alterado' => 'N',
+                        'expurgar' => 'N',
                         "created_at"    =>  \Carbon\Carbon::now(), # new \Datetime()
                     ]
                 );
 
                 if (!$record->wasRecentlyCreates) {
                     $record->update([
-                        'alterado' => 'S',
+                        'alterado' => 'S',   
+                        'expurgar' => 'N',                     
                         'ds_centroresultado' => $i['DS_CENTROCUSTO'],
                         "updated_at"    => \Carbon\Carbon::now(),
                     ]);
@@ -112,6 +116,7 @@ class ItemCentroResultado extends Model
                 'cd_centroresultado' => $input['cd_centroresultado'],
                 'cd_subgrupo' => $input['cd_subgrupo'],
                 'orcamento' => $input['orcamento'],
+                'expurgar' => $input['expurgar'],
                 'alterado' => 'S',
                 "updated_at" => \Carbon\Carbon::now(), # new \Datetime()
             ]);

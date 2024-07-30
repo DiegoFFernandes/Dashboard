@@ -21,6 +21,7 @@ class ItemCentroResultado extends Migration
             $table->unsignedBigInteger('cd_subgrupo');            
             $table->decimal('orcamento', total: 12, places: 2)->nullable();
             $table->char('alterado', 1);
+            $table->char('expurgo', 1);
             
             $table->foreign('cd_subgrupo')->references('id')->on('subgrupo_centro_resultado');
 

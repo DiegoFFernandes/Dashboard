@@ -33,6 +33,7 @@
                                         <th>Ds Sub Grupo</th>
                                         <th>Orçamento</th>
                                         <th>Alterado</th>
+                                        <th>Expurgar</th>
                                         <th>#</th>
                                     </tr>
                                 </thead>
@@ -43,9 +44,6 @@
                 </div>
                 <!-- /.box -->
             </div>
-
-
-
             {{-- Edit Item Centro de Resultado --}}
             <div class="modal" id="CreateItemCentroResultadoModal">
                 <div class="modal-dialog">
@@ -101,10 +99,20 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="valor">Orçamento</label>
                                         <input type="number" class="form-control" name="valor" id="valor">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="expurgar">Expurgar</label>
+                                        <select class="form-control select2" name="expurgar" id="expurgar"
+                                            style="width: 100%">                                                                                       
+                                                <option value="N">Não</option>
+                                                <option value="S">Sim</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -284,6 +292,10 @@
                         name: 'alterado'
                     },
                     {
+                        data: 'expurgar',
+                        name: 'expurgar'
+                    },
+                    {
                         data: 'Actions',
                         name: 'Actions',
                         orderable: false,
@@ -317,6 +329,11 @@
                 $('#cd_empresa_desp').val(rowData.cd_empresa_desp).trigger('change');
                 $('#cd_subgrupo').val(rowData.cd_subgrupo).trigger('change');
                 $('#valor').val(rowData.orcamento);
+                if(rowData.expurgar == "NÃO"){
+                    $('#expurgar').val('N').trigger('change');
+                }else{
+                    $('#expurgar').val('S').trigger('change');
+                }
                 CreateItemCentroResultadoModal.modal();
             })
 
@@ -330,7 +347,8 @@
                         cd_centroresultado: $('#cd_centroresultado').val(),
                         cd_subgrupo: $('#cd_subgrupo').val(),
                         cd_empresa_desp: $('#cd_empresa_desp').val(),
-                        orcamento: $('#valor').val()
+                        orcamento: $('#valor').val(),
+                        expurgar: $('#expurgar').val()
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');

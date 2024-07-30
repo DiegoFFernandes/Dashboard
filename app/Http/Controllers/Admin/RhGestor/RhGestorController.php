@@ -32,7 +32,7 @@ class RhGestorController extends Controller
     {
        $data = $this->request->json()->all();
 
-        $errors = [];
+       $errors = [];
 
         foreach ($data as $index => $item) {
             //Faz a divisão da lotação pegando somente o codigo do Area ex: 11011 - Administração - CGS

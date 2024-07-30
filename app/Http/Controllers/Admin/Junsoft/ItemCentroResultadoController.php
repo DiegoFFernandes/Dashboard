@@ -11,6 +11,7 @@ use App\Models\SubgrupoCentroResultado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 
 class ItemCentroResultadoController extends Controller
@@ -75,10 +76,11 @@ class ItemCentroResultadoController extends Controller
     public function EditItemCentroResultado()
     {        
         $validator = $this->__validator();
+        // return $validator->validated();
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-        $update = $this->item->updateItemCentroResultado($this->request);
+        $update = $this->item->updateItemCentroResultado($validator->validated());
 
         if ($update) {
             return response()->json(['success' => 'Dados atualizados com sucesso!']);
@@ -93,6 +95,7 @@ class ItemCentroResultadoController extends Controller
                 'cd_centroresultado' => 'integer|required',
                 'cd_subgrupo'  => 'integer|required',
                 'orcamento'  => 'regex:/^\d+(\.\d{1,2})?$/|required',
+                'expurgar'  => ['required', Rule::in(['N','S'])],
 
             ],
             [

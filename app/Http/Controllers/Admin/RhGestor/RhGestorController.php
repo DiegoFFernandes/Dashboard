@@ -39,12 +39,15 @@ class RhGestorController extends Controller
             $cd_area_lotacao = array_map('trim', explode('-', $item['DsLotacao_Area']));
             
             $dateTime = DateTime::createFromFormat('n/j/Y g:i:s A', $item['Competencia']);
-            $data[$index]['cpf'] = Helper::RemoveSpecialChar($data[$index]['cpf']);
-            $data[$index]['Competencia'] = $dateTime->format('m/Y');
+            $dateTime->modify('+1 month');
+
+            $data[$index]['Competencia'] = $dateTime->format('m/Y');            
+
+            $data[$index]['cpf'] = Helper::RemoveSpecialChar($data[$index]['cpf']);            
             // Troca a informação no Array, somente para 11011
             $data[$index]['DsLotacao_Area'] = $cd_area_lotacao[0];
 
-            $validator = $this->__validate($item);
+            $validator = $this->__validate($item); 
 
             if ($validator->fails()) {
                 $errors[$index] = [
@@ -58,7 +61,7 @@ class RhGestorController extends Controller
         if (!empty($errors)) {
             return response()->json(['errors' => $errors], 422);
         }
-        // return $data;
+        return $data;
         foreach ($data as $index => $item) {
             try {
                 $this->rh->store($item);

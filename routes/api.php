@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login'])->name('api_auth');
 
-Route::middleware(['ApiJwt'])->group(function () {
+Route::middleware(['ApiJwt', 'log.api.requests'])->group(function () {
     Route::prefix('rhgestor')->group(function () {
         Route::post('store/custo-pessoal', [RhGestorController::class, 'IndicadorFinanceiroAgrupado'])->name('rh-gestor-financeiro');
         Route::get('list-custo-pessoal', [RhGestorController::class, 'ListFinanceiroAgrupado'])->name('rh-gestor-list');

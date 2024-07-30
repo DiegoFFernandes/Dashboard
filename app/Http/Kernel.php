@@ -40,7 +40,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\UserActivity::class,
         ],
 
-        'api' => [
+        'api' => [           
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
-        'ApiJwt' => \App\Http\Middleware\apiProtectedRoute::class
+        'ApiJwt' => \App\Http\Middleware\apiProtectedRoute::class,
+        'log.api.requests' => \App\Http\Middleware\LogApiRequest::class,
     ];
 }

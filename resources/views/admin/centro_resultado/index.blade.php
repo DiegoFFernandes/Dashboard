@@ -11,12 +11,29 @@
                 <div class="box box-info">
                     <!-- box-header -->
                     <div class="box-header with-border">
-                        <h3 class="box-title">Cadastros</h3>
-                        <div style="float: right; font-weight: 900;">
-                            <button class="btn btn-info btn-sm add" type="button" data-toggle="modal"
-                                data-target="#SubGrupoCentroResultadoModal" data-backdrop="static" data-keyboard="false">
-                                Adicionar Subgrupo
-                            </button>
+                        <button class="btn btn-info btn-sm add" type="button" data-toggle="modal"
+                            data-target="#SubGrupoCentroResultadoModal" data-backdrop="static" data-keyboard="false">
+                            Adicionar Subgrupo
+                        </button>
+                        {{-- <div style="font-weight: 900;">
+                            
+                        </div> --}}
+                        <div class="box-tools pull-right">
+                            <div class="form-group form-check-inline">
+                                <label class="">Alterado: </label>
+                                <label class="form-check-label mr-3">
+                                    <input type="checkbox" class="form-check-input minimal" name="status" value="S">
+                                    Sim
+                                </label>
+                                <label class="form-check-label mr-3">
+                                    <input type="checkbox" class="form-check-input minimal" name="status" value="N">
+                                    Não
+                                </label>
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input minimal" name="status" value="T"
+                                        checked> Todos
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <!-- /.box-header -->
@@ -109,9 +126,9 @@
                                     <div class="form-group">
                                         <label for="expurgar">Expurgar</label>
                                         <select class="form-control select2" name="expurgar" id="expurgar"
-                                            style="width: 100%">                                                                                       
-                                                <option value="N">Não</option>
-                                                <option value="S">Sim</option>
+                                            style="width: 100%">
+                                            <option value="N">Não</option>
+                                            <option value="S">Sim</option>
                                         </select>
                                     </div>
                                 </div>
@@ -252,12 +269,12 @@
                 },
                 processing: true,
                 serverSide: true,
-                autoWidth: false,
-                pageLength: 5,
+                autoWidth: true,
+                pageLength: 3,
                 dom: 'Blfrtip',
-                    buttons: [
-                        'copy', 'csv', 'excel', 'pdf', 'print'
-                    ],
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 // scrollX: true,
                 //"order": [[0, "asc"]],
                 "pageLength": 50,
@@ -329,9 +346,9 @@
                 $('#cd_empresa_desp').val(rowData.cd_empresa_desp).trigger('change');
                 $('#cd_subgrupo').val(rowData.cd_subgrupo).trigger('change');
                 $('#valor').val(rowData.orcamento);
-                if(rowData.expurgar == "NÃO"){
+                if (rowData.expurgar == "NÃO") {
                     $('#expurgar').val('N').trigger('change');
-                }else{
+                } else {
                     $('#expurgar').val('S').trigger('change');
                 }
                 CreateItemCentroResultadoModal.modal();
@@ -436,7 +453,7 @@
                 // Verifique se a tabela já está inicializada como DataTable
                 if ($.fn.DataTable.isDataTable('#table-subgrupo')) {
                     // Destrua a instância existente
-                    $('#table-subgrupo').DataTable().clear().destroy();                   
+                    $('#table-subgrupo').DataTable().clear().destroy();
 
                 }
                 // $('#table-item').DataTable().ajax.reload();
@@ -535,6 +552,15 @@
                     ]
                 });
             }
+
+            // Adiciona filtros por coluna
+            $('#table-item thead tr:eq(1) th').each(function(i) {
+                $('input', this).on('keyup change', function() {
+                    if (dataTable.column(i).search() !== this.value) {
+                        dataTable.column(i).search(this.value).draw();
+                    }
+                });
+            });
 
         });
     </script>

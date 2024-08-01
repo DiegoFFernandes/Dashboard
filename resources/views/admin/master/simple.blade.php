@@ -44,9 +44,8 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="" style="min-height: 346px;">
             <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1 id="title-page">
-                </h1>
+            <section class="content-header">                
+                {!! isset($title_page) ? '<h1 id="title-page">' . $title_page . '</h1>' : '' !!}
             </section>
             @yield('content')
 

@@ -60,8 +60,7 @@ class RhGestorController extends Controller
         }
         if (!empty($errors)) {
             return response()->json(['errors' => $errors], 422);
-        }
-        return $data;
+        }        
         foreach ($data as $index => $item) {
             try {
                 $this->rh->store($item);

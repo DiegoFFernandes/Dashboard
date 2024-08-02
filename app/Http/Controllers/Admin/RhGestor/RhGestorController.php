@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\RhGestor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Pessoa;
 use App\Models\RhGestor;
 use DateTime;
 use Exception;
@@ -13,10 +14,11 @@ use Illuminate\Support\Facades\Validator;
 class RhGestorController extends Controller
 
 {
-    public $request, $rh;
-    public function __construct(Request $request, RhGestor $rh)
+    public $request, $rh, $pessoa;
+    public function __construct(Request $request, RhGestor $rh, Pessoa $pessoa)
     {
         $this->request = $request;
+        $this->pessoa = $pessoa;
         $this->rh = $rh;
     }
     public function list()
@@ -47,7 +49,11 @@ class RhGestorController extends Controller
             // Troca a informação no Array, somente para 11011
             $data[$index]['DsLotacao_Area'] = $cd_area_lotacao[0];
 
-            $validator = $this->__validate($item); 
+            
+            $validator = $this->__validate($item);           
+
+            $this->pessoa->UpdateOrInsert($data[$index]);           
+
 
             if ($validator->fails()) {
                 $errors[$index] = [
@@ -84,6 +90,7 @@ class RhGestorController extends Controller
                 'Competencia'  => 'string|required',
                 'CodIndicador'  => 'integer|required',
                 'DsLotacao_Area' => 'string|required',
+                'NomeColaborador' => 'string|required',
                 'valor'  => 'numeric|required'
             ],
             [

@@ -143,7 +143,6 @@ class PowerBiEmbeddedController extends Controller
                 'user_auth',
                 'title_page',
                 'uri'
-
             )
         );
     }

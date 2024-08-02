@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Exceptions\Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,7 @@ class Pessoa extends Model
         'name',
         'cpf',
         'cd_email',
+        'cd_area_lotacao',
         'phone',
         'endereco',
         'numero',
@@ -206,5 +208,34 @@ class Pessoa extends Model
                 WHERE P.CD_PESSOA = 1021483";
 
         return DB::connection('firebird_rede')->select($query);
+    }
+    public function UpdateOrInsert($input)
+    {      
+        $record = Pessoa::firstOrCreate(
+            [
+                'cpf' => $input['cpf']
+            ],
+            [
+                'cd_empresa' => 101,
+                'name' => $input['NomeColaborador'],
+                'cpf' => $input['cpf'],
+                'cd_email' => 1,
+                'phone' => '9999999999',
+                'cd_usuario' => 1,
+                'cd_area_lotacao' => $input['DsLotacao_Area'],
+                "created_at"    =>  \Carbon\Carbon::now(), # new \Datetime()
+                "updated_at"    => \Carbon\Carbon::now(),  # new \Datetime()
+            ]
+        );
+
+        if (!$record->wasRecentlyCreates) {
+            $record->update([
+                'name' => $input['NomeColaborador'],
+                'cd_area_lotacao' => $input['DsLotacao_Area'],
+                "updated_at"    => \Carbon\Carbon::now(),
+            ]);
+        }
+
+        return $record;
     }
 }

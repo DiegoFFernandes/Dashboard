@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Http;
 
 class Digisac
 {
-    private $url;    
+    private $url;
 
     static function OAuthToken()
     {
@@ -24,23 +24,23 @@ class Digisac
         // Retornando a resposta
         return json_decode($response->body());
     }
-    static function SendMessage($oauth, $contact, $file)
+    static function SendMessage($oauth, $nota, $file,)
     {
         $baarer_token = $oauth->token_type . ' ' . $oauth->access_token;
         $url = env("URL_API_DIGISAC");
 
         $data = [
 
-            'text' => 'Olá foi emitida uma nota fiscal para seu CPNJ, Esse e um atendimento automatico não e necessario responder',
-            'number' => '41985227055',
+            'text' => 'Olá, ' . $nota['NM_PESSOA'] . ', foi emitida uma nota fiscal para seu CPNJ, ' . $nota['NR_NOTA'] . ', Esse e um atendimento automatico não e necessario responder',
+            'number' => $nota['NR_CELULAR'],
             'contactId' => 'c62377c8-12da-4a29-ae99-a124029cf03a',
             'serviceId' => 'db615bbe-ddf0-438b-b2f3-6c05e5a13eb0',
             'origin' => 'bot', // bot or user, 
             'file' => [
                 'base64' => $file,
                 'mimetype' => 'application/pdf',
-            "name" => "Nota Fiscal"
-            ],          
+                "name" => $nota['NR_NOTA'] . ".pdf"
+            ],
         ];
 
         $reponse = HTTP::withHeaders([
@@ -55,16 +55,17 @@ class Digisac
         $baarer_token = $oauth->token_type . ' ' . $oauth->access_token;
         $url = env("URL_API_DIGISAC");
 
-        $response = HTTP::withHeaders([           
+        $response = HTTP::withHeaders([
             'Authorization' => $baarer_token,
-        ])->get($url.'/contacts/exists', [
+        ])->get($url . '/contacts/exists', [
             'numbers' => [$number],
             'serviceId' => 'db615bbe-ddf0-438b-b2f3-6c05e5a13eb0'
-        ] );
+        ]);
 
         return $response;
     }
-    static function AddContact($oauth, $contact){
+    static function AddContact($oauth, $contact)
+    {
 
         // return  $contact[0]->NM_PESSOA;
         $baarer_token = $oauth->token_type . ' ' . $oauth->access_token;
@@ -90,11 +91,12 @@ class Digisac
 
         return $reponse;
     }
-    static function ListContacts($oauth){
+    static function ListContacts($oauth)
+    {
         $baarer_token = $oauth->token_type . ' ' . $oauth->access_token;
-        $url = env("URL_API_DIGISAC").'/contacts?where[serviceId]=db615bbe-ddf0-438b-b2f3-6c05e5a13eb0&perPage=3000';
+        $url = env("URL_API_DIGISAC") . '/contacts?where[serviceId]=db615bbe-ddf0-438b-b2f3-6c05e5a13eb0&perPage=3000';
 
-        return $response = HTTP::withHeaders([           
+        return $response = HTTP::withHeaders([
             'Authorization' => $baarer_token,
         ])->get($url);
     }

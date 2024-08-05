@@ -57,6 +57,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/api_requests.log'),
             'level' => 'info',
+            'tap' => [App\Logging\CustomizeFormatter::class],
         ],
 
         'slack' => [

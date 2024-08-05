@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
+
 class DigiSacController extends Controller
 {
     public $pessoa, $nota, $user, $request;
@@ -32,8 +33,7 @@ class DigiSacController extends Controller
     }
 
     public function notafiscal(UserServices $userServices)
-    {
-        $title_page   = 'Item Análise de Frota';
+    {        
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
 
@@ -41,18 +41,28 @@ class DigiSacController extends Controller
 
         // $this->nota->StoreNota($nota);
 
+        // die();
 
-        $notas_para_enviar = $this->nota->listNotaSend();
+       $notas_para_enviar = $this->nota->listNotaSend();
 
-        foreach ($notas_para_enviar as $nota) {
+        foreach ($notas_para_enviar as $index => $nota) {
             $search_send = $this->nota->NotasEmitidas($nota['NR_LANCAMENTO'], $nota['CD_EMPRESA']);
-            $nota = $this->AgruparNota($search_send);
 
+            if(empty($search_send[$index]['CD_AUTENTICACAO'])){                
+                continue;
+            };
+            if(empty($search_send[$index]['NR_CELULAR'])){
+                $this->nota->UpdateNotaSend($search_send[$index]['NR_LANCAMENTO'], 'N');
+                continue;
+            };
+            
+            $nota = $this->AgruparNota($search_send);  
+            
             $view = View::make('admin.nota_boleto.notafiscal', compact(
                 'nota',
                 'uri',
                 'user_auth',
-                'title_page'
+                'index'
             ));
             $html = $view->render();
 
@@ -76,9 +86,18 @@ class DigiSacController extends Controller
            
             // return $pdf->download('notafiscal.pdf');
             $oauth = Digisac::OAuthToken();
-            Digisac::SendMessage($oauth, 'Diego', $base64Pdf);
+
+            $envio = Digisac::SendMessage($oauth, $nota[0], $base64Pdf );
+            
             unlink($filePath);
-            die();
+
+            if(!empty($envio->sent)){
+                $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'E');                
+            }
+            if(!empty($envio->error)){
+                $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'B');                
+            }
+            echo "Enviou";
 
         }
 
@@ -181,7 +200,7 @@ class DigiSacController extends Controller
                     "NR_FONE" => $item["NR_FONE"],
                     "NR_FAX" => $item["NR_FAX"],
                     "DS_CONTATO" => $item["DS_CONTATO"],
-                    "NR_CELULAR" => $item["NR_CELULAR"],
+                    "NR_CELULAR" => Helper::RemoveSpecialChar($item["NR_CELULAR"]),
                     "DS_ENDERECOPESSOA" => $item["DS_ENDERECOPESSOA"],
                     "DS_ENDPESSOA" => $item["DS_ENDPESSOA"],
                     "NR_INSCESTPESSOA" => $item["NR_INSCESTPESSOA"],

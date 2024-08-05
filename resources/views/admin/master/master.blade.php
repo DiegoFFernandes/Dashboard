@@ -14,7 +14,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1 id="title-page">
-                    {{ isset($title_page) ? $title_page : 'Dashboard' }}
+                    {{ isset($title_page) ? $title_page : 'Portal' }}
                     @if (isset($uri))
                         <small>{{ $uri }}</small>
                     @else
@@ -27,7 +27,7 @@
                         @if (isset($uriAtual))
                             {{ $uriAtual }}
                         @else
-                            Dashboard
+                            Portal
                         @endif
                     </li>
                 </ol>

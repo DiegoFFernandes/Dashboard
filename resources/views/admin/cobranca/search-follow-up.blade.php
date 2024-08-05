@@ -13,6 +13,9 @@
                         <li class="">
                             <a href="#iagente" data-toggle="tab" aria-expanded="false">Iagente</a>
                         </li>
+                        <li class="">
+                            <a href="#digisac" data-toggle="tab" aria-expanded="false">Digisac(ChatBot)</a>
+                        </li>
                     </ul>
                     <div class="tab-content no-padding">
                         <div class="tab-pane active" id="follow-up">
@@ -136,6 +139,25 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="tab-pane" id="digisac">
+                            {{-- <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}"> --}}
+                            <div class="box-body">
+                                <div class="col-md-12" style="background-color: #ecf0f5">
+                                    <div style="padding-bottom: 15px">
+                                        <div class="box-header with-border" style="border-bottom: 1px solid #d1d1d1;">
+                                            <h3 class="box-title" style="text-align: center;">Envio ChatBot</h3>
+                                        </div>
+                                    </div>
+                                    <table class="table compact" id="table-digsac">
+                                        <thead>
+                                            <th>Ações</th>
+                                            <th>Cod.</th>
+                                            <th>Cliente</th>                                            
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -241,6 +263,8 @@
                         $("#table-search").remove();
                         $("#search").append(result);
                         $("#table-search").DataTable({
+                            pagingType: "simple",
+                            pageLength: 10,
                             language: {
                                 url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                             },

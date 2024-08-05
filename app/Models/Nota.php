@@ -48,7 +48,8 @@ class Nota extends Model
             WHERE N.TP_NOTA = 'S'
                 AND N.CD_SERIE IN ('F', 'E')
                 AND N.ST_NOTA = 'V'
-                AND N.DT_EMISSAO >= CURRENT_DATE
+                AND N.DT_EMISSAO = CURRENT_DATE-1
+               
                 --AND N.HR_NOTA BETWEEN CURRENT_TIME - 3600 AND CURRENT_TIME
                 --and N.NR_NOTAFISCAL IN (35224,35229)
                 --" . ($nr_lancamento == 0 ? "" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "
@@ -278,6 +279,14 @@ class Nota extends Model
 
     public function listNotaSend()
     {
-        return Nota::where('STATUS', 'A')->get();
+        return Nota::where('STATUS', 'A')->whereIn('NR_LANCAMENTO', ['35753', '35752', '35751', '35750', '35749'])->get();
+    }
+
+    public function UpdateNotaSend($input, $status)
+    {        
+        return Nota::where('NR_LANCAMENTO', $input)->update([
+            'STATUS' => $status,
+            'updated_at' => \Carbon\Carbon::now()        
+        ]);
     }
 }

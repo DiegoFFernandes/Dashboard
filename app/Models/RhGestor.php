@@ -12,7 +12,7 @@ class RhGestor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'comp', 'cd_indicador', 'cd_area_lotacao', 'valor', 'cpf'
+        'comp', 'cd_indicador', 'cd_area_lotacao', 'valor', 'cpf', 'ds_lotacao_empresa'
     ];
     protected $table = "rhgestor_indicador_financeiro";
 
@@ -24,12 +24,12 @@ class RhGestor extends Model
                     'comp' => $input['Competencia'],
                     'cd_indicador' => $input['CodIndicador'],
                     'cpf' => $input['cpf'],
+                    'ds_lotacao_empresa' => $input['DsLotacao_Empresa'],
                     'cd_area_lotacao' => $input['DsLotacao_Area']
                 ],
                 [
                     'valor' => $input['valor'],
-                    "created_at"    =>  \Carbon\Carbon::now(), # new \Datetime()
-                    "updated_at"    => \Carbon\Carbon::now(),  # new \Datetime()
+                    "created_at"    =>  \Carbon\Carbon::now() # new \Datetime()                    
                 ]
             );
 

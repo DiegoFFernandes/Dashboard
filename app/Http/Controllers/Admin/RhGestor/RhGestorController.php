@@ -60,13 +60,15 @@ class RhGestorController extends Controller
                     'corrigir' => $validator->errors(),
                     'competencia' => $item['Competencia'],
                     'ds_lotacao_area' => $item['DsLotacao_Area'],
+                    'ds_lotacao_empresa' => $item['DsLotacao_Empresa'],
                     'cd_indicador' => $item['CodIndicador']
                 ];
             }
         }
         if (!empty($errors)) {
             return response()->json(['errors' => $errors], 422);
-        }        
+        }      
+      
         foreach ($data as $index => $item) {
             try {
                 $this->rh->store($item);
@@ -91,6 +93,7 @@ class RhGestorController extends Controller
                 'CodIndicador'  => 'integer|required',
                 'DsLotacao_Area' => 'string|required',
                 'NomeColaborador' => 'string|required',
+                'DsLotacao_Empresa' => 'string|required',
                 'valor'  => 'numeric|required'
             ],
             [

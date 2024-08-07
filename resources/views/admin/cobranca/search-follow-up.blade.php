@@ -132,7 +132,7 @@
                                             <th>Ações</th>
                                             <th>Cod.</th>
                                             <th>Cliente</th>
-                                            <th>Email</th>                                            
+                                            <th>Email</th>
                                             <th>Modulo</th>
                                         </thead>
                                     </table>
@@ -148,11 +148,16 @@
                                             <h3 class="box-title" style="text-align: center;">Envio ChatBot</h3>
                                         </div>
                                     </div>
-                                    <table class="table compact" id="table-digsac">
+                                    <table class="table compact" id="table-digisac">
                                         <thead>
-                                            <th>Ações</th>
-                                            <th>Cod.</th>
-                                            <th>Cliente</th>                                            
+                                            <th>Emp</th>
+                                            <th>Lancamento</th>
+                                            <th>Nota</th>
+                                            <th>Cnpj/Cpf</th>
+                                            <th>Cliente</th>
+                                            <th>Status</th>
+                                            <th>Disparo</th>
+                                            <th>#</th>
                                         </thead>
                                     </table>
                                 </div>
@@ -313,8 +318,8 @@
                 });
             });
             $(document).on('click', '.reenviar-email', function(e) {
-                let nr_envio = $(this).data('id');    
-                
+                let nr_envio = $(this).data('id');
+
                 toastr.warning(
                     "<button type='button' id='confirmationButtonYes' class='btn btn-success clear'>Sim</button> " +
                     "<button type='button' id='confirmationButtonNo' class='btn btn-primary clear'>Não</button>",
@@ -326,18 +331,18 @@
                         positionClass: "toast-top-center",
                         onShown: function(toast) {
                             $("#confirmationButtonYes").click(function() {
-                                update_email = 1;   
-                                ReenviaFollow(nr_envio, update_email);                            
+                                update_email = 1;
+                                ReenviaFollow(nr_envio, update_email);
                             });
                             $("#confirmationButtonNo").click(function() {
-                                update_email = 0;   
-                                ReenviaFollow(nr_envio, update_email);                              
+                                update_email = 0;
+                                ReenviaFollow(nr_envio, update_email);
 
                             });
                         }
                     });
-                   
-                
+
+
             });
             $(document).on('click', '#validar-email', function(e) {
                 let email = $(this).data('cdpessoa');
@@ -416,11 +421,11 @@
                 });
             });
 
-            function ReenviaFollow(nr_envio, update_email){
+            function ReenviaFollow(nr_envio, update_email) {
                 $.ajax({
                     url: "{{ route('reenvia-follow') }}",
                     method: 'POST',
-                    data:{
+                    data: {
                         _token: $("[name=csrf-token]").attr("content"),
                         nr_envio: nr_envio,
                         email: update_email
@@ -430,14 +435,91 @@
                     },
                     success: function(response) {
                         $("#loading").addClass('hidden');
-                        if(response.error){
+                        if (response.error) {
                             msgToastr(response.error, 'warning');
-                        }else{
+                        } else {
                             msgToastr(response.success, 'success');
                         }
                     }
                 });
             }
+
+            //Cliques nas tabs
+            $('.nav-tabs a[href="#digisac"]').on('click', function() {
+                $('#table-digisac').DataTable().destroy();
+                $('#table-digisac').DataTable({
+                    language: {
+                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    },
+                    pagingType: "simple",
+                    processing: false,
+                    dom: 'Blfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
+                    ajax: {
+                        url: "{{ route('list-envio-nota-digisac') }}"
+                    },
+                    columns: [{
+                            data: 'cd_empresa',
+                            name: 'cd_empresa'
+                        },
+                        {
+                            data: 'nr_lancamento',
+                            name: 'nr_lancamento'
+                        },
+                        {
+                            data: 'nr_nota',
+                            name: 'nr_nota'
+                        },
+                        {
+                            data: 'nr_cnpjcpf',
+                            name: 'nr_cnpjcpf'
+                        },
+                        {
+                            data: 'nm_pessoa',
+                            name: 'nm_pessoa'
+                        },
+                        {
+                            data: 'STATUS',
+                            name: 'STATUS'
+                        },
+                        {
+                            data: 'updated_at',
+                            name: 'updated_at'
+                        },
+                        {
+                            data: 'actions',
+                            name: 'actions'
+                        }
+                    ],
+                    columnDefs: [{
+                            width: '1%',
+                            targets: 0
+                        },
+                        {
+                            width: '2%',
+                            targets: 1
+                        },
+                        {
+                            width: '2%',
+                            targets: 2
+                        },
+                        {
+                            width: '10%',
+                            targets: 3
+                        },
+                        {
+                            width: '30%',
+                            targets: 4
+                        },
+                        {
+                            width: '2%',
+                            targets: 7
+                        }
+                    ],
+                });
+            });
 
         });
     </script>

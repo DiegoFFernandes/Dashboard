@@ -12,7 +12,7 @@ use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
-
+use Yajra\DataTables\Facades\DataTables;
 
 class DigiSacController extends Controller
 {
@@ -33,31 +33,30 @@ class DigiSacController extends Controller
     }
 
     public function notafiscal(UserServices $userServices)
-    {        
+    {
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
 
-        // $nota = $this->nota->NotasEmitidasResumo(0,0);
+        $nota = $this->nota->NotasEmitidasResumo(0, 0);
 
-        // $this->nota->StoreNota($nota);
+        $this->nota->StoreNota($nota);
 
-        // die();
-
-       $notas_para_enviar = $this->nota->listNotaSend();
+        $notas_para_enviar = $this->nota->listNotaSend();
 
         foreach ($notas_para_enviar as $index => $nota) {
+
             $search_send = $this->nota->NotasEmitidas($nota['NR_LANCAMENTO'], $nota['CD_EMPRESA']);
 
-            if(empty($search_send[$index]['CD_AUTENTICACAO'])){                
+            if (empty($search_send[0]['CD_AUTENTICACAO'])) {
                 continue;
             };
-            if(empty($search_send[$index]['NR_CELULAR'])){
-                $this->nota->UpdateNotaSend($search_send[$index]['NR_LANCAMENTO'], 'N');
+            if (empty($search_send[0]['NR_CELULAR'])) {
+                $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'N');
                 continue;
             };
-            
-            $nota = $this->AgruparNota($search_send);  
-            
+
+            $nota = $this->AgruparNota($search_send);
+
             $view = View::make('admin.nota_boleto.notafiscal', compact(
                 'nota',
                 'uri',
@@ -66,13 +65,18 @@ class DigiSacController extends Controller
             ));
             $html = $view->render();
 
+            // Configurando o Snappy
             $options = [
-                'no-images' => false,
-                'disable-javascript' => false,
-                // outras opções de otimização...
+                'page-size' => 'A4',
+                'no-stop-slow-scripts' => true,
+                'enable-javascript' => true,
+                'encoding' => 'UTF-8'
+
             ];
 
             $pdf = SnappyPdf::loadHTML($html)->setOptions($options);
+
+            // return $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.
 
             $filePath = storage_path('app/public/notas/' . rand(1, 100) . '.pdf');
 
@@ -83,22 +87,22 @@ class DigiSacController extends Controller
 
             // Converte o conteúdo do PDF para base64
             $base64Pdf = base64_encode($pdfContent);
-           
+
             // return $pdf->download('notafiscal.pdf');
+
             $oauth = Digisac::OAuthToken();
 
-            $envio = Digisac::SendMessage($oauth, $nota[0], $base64Pdf );
-            
+            $envio = Digisac::SendMessage($oauth, $nota[0], $base64Pdf);
+
             unlink($filePath);
 
-            if(!empty($envio->sent)){
-                $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'E');                
+            if (!empty($envio->sent)) {
+                $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'E');
             }
-            if(!empty($envio->error)){
-                $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'B');                
+            if (!empty($envio->error)) {
+                $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'B');
             }
             echo "Enviou";
-
         }
 
 
@@ -239,5 +243,20 @@ class DigiSacController extends Controller
 
             return $carry;
         }, []));
+    }
+    public function ListEnvioNotaDigisac()
+    {
+        $data = $this->nota->listNotaSendAll();
+
+        return DataTables::of($data)
+            ->addColumn('actions', function ($data) {
+                return '
+            <button class="btn btn-xs btn-primary EditSend" data-id=" ' . $data->id . ' ">Reenviar</button>            
+    
+    ';
+                // <button type="button" data-id="' . $data->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
     }
 }

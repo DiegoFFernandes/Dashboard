@@ -32,17 +32,34 @@
 
 }
 
-.dados_prestador{
-        /* display: flex;
+.dados_prestador {
+    /* display: flex;
         justify-content: center;
         align-items: center;
         font-weight: bolder;
         margin-top: 30px; */
 }
-.codigobarras{
+
+.codigobarras {
     width: 50px;
     height: 10px;
 }
-.totais{
+
+.totais {
     font-size: 12px;
+}
+
+
+thead {
+    display: table-header-group;
+}
+tfoot {
+    display: table-row-group;
+}
+tr {
+    page-break-inside: avoid;
+}
+
+.recuo {
+    padding-left: 20px; /* Ajuste o valor conforme necessário */
 }

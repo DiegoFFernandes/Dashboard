@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\RhGestor;
 
 use App\Http\Controllers\Controller;
+use App\Models\AreaLotacao;
 use App\Models\Pessoa;
 use App\Models\RhGestor;
 use DateTime;
@@ -14,12 +15,17 @@ use Illuminate\Support\Facades\Validator;
 class RhGestorController extends Controller
 
 {
-    public $request, $rh, $pessoa;
-    public function __construct(Request $request, RhGestor $rh, Pessoa $pessoa)
-    {
+    public $request, $rh, $pessoa, $area;
+    public function __construct(
+        Request $request,
+        RhGestor $rh,
+        Pessoa $pessoa,
+        AreaLotacao $area,
+    ) {
         $this->request = $request;
         $this->pessoa = $pessoa;
         $this->rh = $rh;
+        $this->area = $area;
     }
     public function list()
     {
@@ -32,27 +38,35 @@ class RhGestorController extends Controller
     }
     public function IndicadorFinanceiroAgrupado()
     {
-       $data = $this->request->json()->all();
+        $data = $this->request->json()->all();
 
-       $errors = [];
+        $errors = [];
 
         foreach ($data as $index => $item) {
             //Faz a divisão da lotação pegando somente o codigo do Area ex: 11011 - Administração - CGS
             $cd_area_lotacao = array_map('trim', explode('-', $item['DsLotacao_Area']));
-            
+
             $dateTime = DateTime::createFromFormat('n/j/Y g:i:s A', $item['Competencia']);
             $dateTime->modify('+1 month');
 
-            $data[$index]['Competencia'] = $dateTime->format('m/Y');            
+            $data[$index]['Competencia'] = $dateTime->format('m/Y');
 
-            $data[$index]['cpf'] = Helper::RemoveSpecialChar($data[$index]['cpf']);            
+            $data[$index]['cpf'] = Helper::RemoveSpecialChar($data[$index]['cpf']);
             // Troca a informação no Array, somente para 11011
+
+            //Quando não existe Lotação criada no RhGestor, por padrão o banco deles vem A Denifir, a rotina abaixo muda para 99998.
+            if ($cd_area_lotacao[0] === 'A definir') {
+                $cd_area_lotacao[0] = 99998;
+                $cd_area_lotacao[1] = 'A DEFENIR';
+            }
+
             $data[$index]['DsLotacao_Area'] = $cd_area_lotacao[0];
 
-            
-            $validator = $this->__validate($item);           
 
-            $this->pessoa->UpdateOrInsert($data[$index]);           
+            $validator = $this->__validate($item);
+
+            $this->pessoa->UpdateOrInsert($data[$index]);
+            $this->area->StoreAreaLotacao($cd_area_lotacao);
 
 
             if ($validator->fails()) {
@@ -67,8 +81,8 @@ class RhGestorController extends Controller
         }
         if (!empty($errors)) {
             return response()->json(['errors' => $errors], 422);
-        }      
-      
+        }
+
         foreach ($data as $index => $item) {
             try {
                 $this->rh->store($item);

@@ -21,6 +21,12 @@ class Nota extends Model
         'NR_CNPJCPF',
         'STATUS',
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime:d/m/Y',
+        'updated_at' => 'datetime:d/m/Y',
+    ];
+
     public function NotasEmitidasResumo($nr_lancamento, $cd_empresa)
     {
 
@@ -48,9 +54,9 @@ class Nota extends Model
             WHERE N.TP_NOTA = 'S'
                 AND N.CD_SERIE IN ('F', 'E')
                 AND N.ST_NOTA = 'V'
-                AND N.DT_EMISSAO = CURRENT_DATE-1
-               
-                --AND N.HR_NOTA BETWEEN CURRENT_TIME - 3600 AND CURRENT_TIME
+                AND N.DT_EMISSAO = CURRENT_DATE
+                AND NFSE.CD_AUTENTICACAO IS NOT NULL
+                AND N.HR_NOTA BETWEEN CURRENT_TIME - 3600 AND CURRENT_TIME
                 --and N.NR_NOTAFISCAL IN (35224,35229)
                 --" . ($nr_lancamento == 0 ? "" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "
 
@@ -225,7 +231,7 @@ class Nota extends Model
                     N.TP_NOTA = 'S'
                     AND N.CD_SERIE IN ('F', 'E')
                     AND N.ST_NOTA = 'V'
-                    --AND N.DT_EMISSAO >= CURRENT_DATE
+                    AND N.DT_EMISSAO >= CURRENT_DATE-1
                     --AND N.HR_NOTA BETWEEN CURRENT_TIME - 1800 AND CURRENT_TIME
                     --and N.NR_NOTAFISCAL IN (35224,35229)                     
                     " . ($nr_lancamento == 0 ? "" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "                 
@@ -234,7 +240,7 @@ class Nota extends Model
                     AND P.DS_EMAIL NOT IN ('TESTE@IVORECAP.COM.BR', 'TESTE@TESTE.COM.BR', 'FNE@IVORECAP.COM.BR', 'NFE@IVORECAP.COM.BR')
                     " . ($cd_empresa == 0 ? "" : "AND N.CD_EMPRESA IN ($cd_empresa)") . " 
                     --AND N.CD_EMPRESA = 101
-                ORDER BY O_IDORDEMPRODUCAORECAP";
+                ORDER BY O_IDORDEMPRODUCAORECAP, O_ORDEM";
 
         $results =  DB::connection('firebird_rede')->select($query);
 
@@ -253,7 +259,7 @@ class Nota extends Model
         $nota = new Nota;
         $nota->setConnection('mysql');
         foreach ($input as $i) {
-            $nota::updateOrInsert(
+            $nota::firstOrCreate(
                 [
                     'CD_EMPRESA' => $i['CD_EMPRESA'],
                     'NR_LANCAMENTO' => $i['NR_LANCAMENTO'],
@@ -279,14 +285,40 @@ class Nota extends Model
 
     public function listNotaSend()
     {
-        return Nota::where('STATUS', 'A')->whereIn('NR_LANCAMENTO', ['35753', '35752', '35751', '35750', '35749'])->get();
+        return Nota::where('STATUS', 'A')
+            // ->whereIn('NR_LANCAMENTO', ['3392'])
+            ->get();
     }
 
     public function UpdateNotaSend($input, $status)
-    {        
+    {
         return Nota::where('NR_LANCAMENTO', $input)->update([
             'STATUS' => $status,
-            'updated_at' => \Carbon\Carbon::now()        
+            'updated_at' => \Carbon\Carbon::now()
         ]);
+    }
+
+    public function listNotaSendAll()
+    {
+        return Nota::select(
+            'notas.id',
+            'notas.cd_empresa',
+            'notas.nr_lancamento',
+            'notas.nr_nota',
+            'notas.nm_pessoa',
+            'notas.nr_cnpjcpf',
+            'notas.updated_at',
+            DB::raw("CASE 
+                    when notas.status = 'E' THEN 'ENVIADO' 
+                    when notas.status = 'N' THEN 'SEM NÚMERO'
+                    when notas.status = 'I' THEN 'NÚMERO INVALIDO'
+                    when notas.status = 'A' THEN 'AGUARDANDO ENVIO'
+                    when notas.status = 'B' THEN 'NÃO USA WHATSAPP'
+                    END as STATUS                   
+                    ")
+
+        )->orderBy('updated_at','desc')
+            // ->whereIn('NR_LANCAMENTO', ['3392'])
+        ->get();
     }
 }

@@ -55,7 +55,7 @@
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/iCheck/all.css') }}">
     <!-- Template Main CSS File -->
     <link href="{{ asset('css/styleAdmin.css?v=9') }}" rel="stylesheet">
-    <link href="{{ asset('css/notafiscal.css?v=1') }}" rel="stylesheet">
+    <link href="{{ asset('css/notafiscal.css?v=5') }}" rel="stylesheet">
 
 
     @yield('style')    

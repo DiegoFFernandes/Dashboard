@@ -32,7 +32,6 @@
             margin-right: 14px;
             margin-top: -39px;
         }
-        }
     </style>
 @endsection
 
@@ -44,7 +43,7 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="" style="min-height: 346px;">
             <!-- Content Header (Page header) -->
-            <section class="content-header">                
+            <section class="content-header">
                 {!! isset($title_page) ? '<h1 id="title-page">' . $title_page . '</h1>' : '' !!}
             </section>
             @yield('content')

@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('send:updatetipopessoa')->everyMinute();
         $schedule->command('send:updatelicenca')->everyMinute();
         $schedule->command('send:update_fechamento_contabil')->everyFiveMinutes();
+        $schedule->command('send:send_wpp_nota_boleto')->everyFiveMinutes();
     }
 
     /**

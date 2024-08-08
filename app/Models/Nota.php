@@ -54,9 +54,9 @@ class Nota extends Model
             WHERE N.TP_NOTA = 'S'
                 AND N.CD_SERIE IN ('F', 'E')
                 AND N.ST_NOTA = 'V'
-                AND N.DT_EMISSAO = CURRENT_DATE
-                AND NFSE.CD_AUTENTICACAO IS NOT NULL
+                AND N.DT_EMISSAO = CURRENT_DATE                
                 AND N.HR_NOTA BETWEEN CURRENT_TIME - 3600 AND CURRENT_TIME
+                AND NFSE.CD_AUTENTICACAO IS NOT NULL
                 --and N.NR_NOTAFISCAL IN (35224,35229)
                 --" . ($nr_lancamento == 0 ? "" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "
 

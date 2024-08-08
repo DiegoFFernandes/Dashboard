@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Digisac;
 use App\Http\Controllers\Controller;
 use App\Models\Nota;
 use App\Models\Pessoa;
-use App\Services\UserServices;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Digisac;
 use Helper;
@@ -32,10 +31,8 @@ class DigiSacController extends Controller
         });
     }
 
-    public function notafiscal(UserServices $userServices)
-    {
-        $user_auth    = $this->user;
-        $uri         = $this->request->route()->uri();
+    public function notafiscal()
+    {       
 
         $nota = $this->nota->NotasEmitidasResumo(0, 0);
 
@@ -59,8 +56,6 @@ class DigiSacController extends Controller
 
             $view = View::make('admin.nota_boleto.notafiscal', compact(
                 'nota',
-                'uri',
-                'user_auth',
                 'index'
             ));
             $html = $view->render();
@@ -102,7 +97,7 @@ class DigiSacController extends Controller
             if (!empty($envio->error)) {
                 $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'B');
             }
-            echo "Enviou";
+            echo $nota[0]['NR_DOCUMENTO']." Processado. - ";
         }
 
 

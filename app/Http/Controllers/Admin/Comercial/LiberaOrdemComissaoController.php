@@ -162,7 +162,7 @@ class LiberaOrdemComissaoController extends Controller
 
         // $localizacao = Helper::VerifyRegion($this->user->conexao);
         $data = $this->libera->listOrdensBloqueadas("", $this->request->pedido);
-        $data[0]->DSLIBERACAO = $data[0]->DSLIBERACAO . ' / (Liberado pelo Dash - ' . $this->user->name . ') Obs: ' . $this->request->liberacao;
+        $data[0]->DSLIBERACAO = $data[0]->DSLIBERACAO . ' / (Dash - ' . $this->user->name . ') Obs: ' . $this->request->liberacao;
 
         if ($data[0]->TP_BLOQUEIO == "C") //Se bloqueio for igual a Comercial
         {

@@ -23,7 +23,7 @@ class PedidoPneu extends Model
     public function verifyIfExists($pedido)
     {
         $query = "select first 1 pp.id from pedidopneu pp where pp.id = $pedido";
-        $data = DB::connection($this->setConnet())->select($query);
+        $data = DB::connection('firebird_rede')->select($query);
         return empty($data) ? 0 : 1;
     }
     public function updateData($data, $stpedido, $tpbloqueio)
@@ -36,7 +36,7 @@ class PedidoPneu extends Model
 
         return DB::transaction(function () use ($data, $stpedido, $tpbloqueio) {
 
-            // DB::connection($this->setConnet())->select("EXECUTE PROCEDURE ACESSO_IVO");
+            DB::connection('firebird_rede')->select("EXECUTE PROCEDURE GERA_SESSAO");
 
             $query = "update pedidopneu pp
             set pp.dsliberacao = '$data->DSLIBERACAO'
@@ -44,7 +44,7 @@ class PedidoPneu extends Model
             " . (($tpbloqueio == "F") ? ", pp.tp_bloqueio = 'F' " : "") . " 
             where pp.id = $data->PEDIDO";
 
-            return DB::connection($this->setConnet())->statement($query);
+            return DB::connection('firebird_rede')->statement($query);
         });
     }
 }

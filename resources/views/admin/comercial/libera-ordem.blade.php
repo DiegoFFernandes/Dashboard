@@ -238,6 +238,8 @@
                         if (response.success) {
                             msgToastr(response.success,
                                 'success');
+                            $('#table-ordem-block').DataTable().ajax.reload();
+                            $('#modal-pedido').modal('hide');
                         } else {
                             msgToastr(response.error,
                                 'warning');

@@ -32,7 +32,7 @@ class DigiSacController extends Controller
     }
 
     public function notafiscal()
-    {       
+    {
 
         $nota = $this->nota->NotasEmitidasResumo(0, 0);
 
@@ -73,7 +73,7 @@ class DigiSacController extends Controller
 
             // return $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.
 
-            $filePath = storage_path('app/public/notas/' . rand(1, 100) . '.pdf');
+            $filePath = storage_path('app/public/notas/' . $nota[0]['NR_DOCUMENTO'] . '.pdf');
 
             $pdf->save($filePath);
 
@@ -97,7 +97,7 @@ class DigiSacController extends Controller
             if (!empty($envio->error)) {
                 $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'B');
             }
-            echo $nota[0]['NR_DOCUMENTO']." Processado. - ";
+            echo $nota[0]['NR_DOCUMENTO'] . " Processado / ";
         }
 
 
@@ -253,5 +253,12 @@ class DigiSacController extends Controller
             })
             ->rawColumns(['actions'])
             ->make(true);
+    }
+    public function reenvioNotafiscal()
+    {
+        $id = $this->request->id;
+        $this->nota->UpdateNotaReenvia($id);
+
+        return response()->json(['success' => 'Nova tentativa de disparo, aguarde processamento!']);
     }
 }

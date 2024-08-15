@@ -108,7 +108,7 @@ class Nota extends Model
                 COALESCE(CF.DS_LOGOTIPO, PA.DS_LOGOTIPO) DS_LOGOTIPO,
                 COALESCE(PU.NM_PESSOA, U.NM_USUARIO) NM_USUARIO,
                 EE.DS_ENDERECO || COALESCE(', Nº ' || EE.NR_ENDERECO, ' ') || COALESCE(', Bairro: ' || EE.DS_BAIRRO, ' ') || COALESCE(', ' || EE.DS_COMPLEMENTO, ' ') DS_ENDERECOEMP,
-                EE.DS_ENDERECO || COALESCE(' ' || EE.NR_ENDERECO, '') || COALESCE(' ' || EE.DS_BAIRRO, '') || COALESCE('' || ME.DS_MUNICIPIO, '') || COALESCE(' - ' || ESE.SG_ESTADO, '') DS_ENDERECOEMPRESA,
+                EE.DS_ENDERECO || COALESCE(' ' || EE.NR_ENDERECO, '') || COALESCE(' ' || EE.DS_BAIRRO, '') || COALESCE(', ' || ME.DS_MUNICIPIO, '') || COALESCE(' - ' || ESE.SG_ESTADO, '') DS_ENDERECOEMPRESA,
                 ME.DS_MUNICIPIO || ' - ' || ESE.SG_ESTADO DS_MUNEMPRESA,
                 'CNPJ: ' || PE.NR_CNPJCPF || COALESCE(' | IE: ' || EE.NR_INSCEST, '') NR_CNPJINSCEST,
                 'TELEFONE : ' || COALESCE(EE.NR_FONE, EE.NR_CELULAR, EE.NR_FAX) NR_TELEFONEEMPRESA,
@@ -271,7 +271,7 @@ class Nota extends Model
                     'NR_LANCAMENTO' => $i['NR_LANCAMENTO'],
                     'TP_NOTA' => $i['TP_NOTA'],
                     'CD_SERIE' => $i['CD_SERIE'],
-                    'NR_NOTA' => $i['NR_NOTA'],
+                    'NR_NOTA' => $i['NR_DOCUMENTO'],
                     'CD_PESSOA' => $i['CD_PESSOA'],
                     'NM_PESSOA' => $i['NM_PESSOA'],
                     'NR_CNPJCPF' => $i['NR_CNPJCPF'],
@@ -286,7 +286,7 @@ class Nota extends Model
     public function listNotaSend()
     {
         return Nota::where('STATUS', 'A')
-            // ->whereIn('NR_LANCAMENTO', ['3392'])
+            ->whereIn('NR_LANCAMENTO', ['17356'])
             ->get();
     }
 
@@ -320,5 +320,13 @@ class Nota extends Model
         )->orderBy('updated_at','desc')
             // ->whereIn('NR_LANCAMENTO', ['3392'])
         ->get();
+    }
+
+    public function UpdateNotaReenvia($input)
+    {
+        return Nota::where('id', $input)->update([
+            'STATUS' => 'A',
+            'updated_at' => \Carbon\Carbon::now()
+        ]);
     }
 }

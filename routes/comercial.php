@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\Comercial\LiberaOrdemComissaoController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:admin|coordenador|gerencia'])->group(function () {
+Route::middleware(['auth', 'permission:ver-libera-ordem'])->group(function () {
     Route::prefix('libera-ordem-comercial')->group(function () {
         Route::get('index', [LiberaOrdemComissaoController::class, 'index'])->name('libera-ordem-comissao.index');
         

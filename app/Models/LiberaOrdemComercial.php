@@ -24,7 +24,7 @@ class LiberaOrdemComercial extends Model
 
         // return $this->connection = Auth::user()->conexao;
     }
-    public function listOrdensBloqueadas($cd_regiao, $pedidos, $localizacao)
+    public function listOrdensBloqueadas($cd_regiao, $pedidos)
     {
         $query = "select
         pp.idempresa emp,
@@ -50,11 +50,11 @@ class LiberaOrdemComercial extends Model
         inner join enderecopessoa ep on (ep.cd_pessoa = p.cd_pessoa and ep.cd_endereco = 1)
         where ipb.dt_registro >= CURRENT_DATE-60
         and pp.stpedido in ('B')
-        and ipb.pc_comissao <= 3
+        --and ipb.pc_comissao <= 3
         and ipb.cd_tipo = 1
-        and pp.dtemissao >= CURRENT_DATE-30
+        --and pp.dtemissao >= CURRENT_DATE-30
         and pp.idpessoa not in ('9')
-        and i.cd_subgrupo not in (306,307,324,325)
+        --and i.cd_subgrupo not in (306,307,324,325)
         and pp.tp_bloqueio <> 'F'
         and itp.cd_tabpreco = 1
         " . (($cd_regiao != "") ? "and ep.cd_regiaocomercial in ($cd_regiao)" : "") . "  
@@ -72,7 +72,7 @@ class LiberaOrdemComercial extends Model
         ep.cd_regiaocomercial,
         pp.id,
         pp.idpedidomovel";
-        return DB::connection($this->setConnet($localizacao))->select($query);
+        return DB::connection('firebird_rede')->select($query);
     }
     public function listPneusOrdensBloqueadas($id, $localizacao)
     {
@@ -119,7 +119,7 @@ class LiberaOrdemComercial extends Model
                 --and ipb.iditempedidopneu = 466381
                 --and pp.id = 155723";
 
-        return DB::connection($this->setConnet($localizacao))->select($query);
+        return DB::connection('firebird_rede')->select($query);
 
         
     }

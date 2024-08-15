@@ -84,7 +84,7 @@ class LiberaOrdemComissaoController extends Controller
         $pedidos_coordenador = [];
 
         foreach ($result as $item) {
-            if (min($item['PC_DESCONTO']) > 20) {
+            if (min($item['PC_DESCONTO']) > 10) {
                 $pedidos_gerencia[] = $item['PEDIDO'];
             }else{
                 $pedidos_coordenador[] = $item['PEDIDO'];
@@ -160,8 +160,8 @@ class LiberaOrdemComissaoController extends Controller
         $pedido = $this->pedido->verifyIfExists($this->request->pedido);
         $pedido ? "True" : "False";
 
-        $localizacao = Helper::VerifyRegion($this->user->conexao);
-        $data = $this->libera->listOrdensBloqueadas("", $this->request->pedido, $localizacao);
+        // $localizacao = Helper::VerifyRegion($this->user->conexao);
+        $data = $this->libera->listOrdensBloqueadas("", $this->request->pedido);
         $data[0]->DSLIBERACAO = $data[0]->DSLIBERACAO . ' / (Liberado pelo Dash - ' . $this->user->name . ') Obs: ' . $this->request->liberacao;
 
         if ($data[0]->TP_BLOQUEIO == "C") //Se bloqueio for igual a Comercial

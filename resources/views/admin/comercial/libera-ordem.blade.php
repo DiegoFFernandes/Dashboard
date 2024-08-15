@@ -76,17 +76,18 @@
     <script src="{{ asset('js/scripts.js') }}"></script>
     <script id="details-template" type="text/x-handlebars-template">
         @verbatim
-            <div class="label label-info">{{ PESSOA }}</div>
-            <table class="table row-border" id="pedido-{{ PEDIDO }}" style="width:100%; font-size:12px" >
+            <div class="label label-info">{{ PESSOA }} - {{ PEDIDO}}</div>
+            <table class="table row-border" id="pedido-{{ PEDIDO }}" style="width:80%; font-size:12px" >
                 <thead>
                     <tr>                        
-                        <th style="width:5px">Sq</th>
+                        <th style="">Sq</th>
                         <th>Item</th>
-                        <th style="width:60px";>Vl Venda</th>
-                        <th style="width:60px">Vl Tabela</th>
-                        <th style="width:60px">%Desc</th>
+                        <th style="">Vl Venda</th>
+                        <th style="">Vl Tabela</th>
+                        <th style="">%Desc</th>                        
                     </tr>
-                </thead> 
+                </thead>
+                <tbody></tbody> 
                 <tfoot>
                     <tr style="">
                         <td colspan="5" id="tfooter" class="text-center" style="padding-top: 5px; padding-bottom: 15px;">
@@ -109,7 +110,7 @@
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                 },
-                "searching": false,
+                "searching": true,
                 "paging": false,
                 "bInfo": false,
                 processing: false,
@@ -128,7 +129,7 @@
                         data: 'EMP',
                         name: 'EMP',
                         "width": "1%",
-                        visible: false
+                        visible: true
                     },
                     {
                         data: 'PEDIDO',
@@ -140,7 +141,8 @@
                     },
                     {
                         data: 'VENDEDOR',
-                        name: 'VENDEDOR'
+                        name: 'VENDEDOR',
+                        visible: true
                     }
                 ],
                 order: [2, 'asc']
@@ -160,7 +162,7 @@
                     initTable(tableId, row.data());
                     tr.addClass('shown');
                     $(this).find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
-                    tr.next().find('td').addClass('no-padding bg-gray');
+                    tr.next().find('td').addClass('no-padding bg-gray-light');
                 }
             });
 
@@ -180,20 +182,23 @@
                     ajax: url,
                     columns: [{
                             data: 'SEQ',
-                            name: 'SEQ'
+                            name: 'SEQ',
+                            width: '1%'
                         },
                         {
                             data: 'DS_ITEM',
                             name: 'DS_ITEM',
-                            // width: '20%'
+                            width: '20%'
                         },
                         {
                             data: 'VL_VENDA',
-                            name: 'VL_VENDA'
+                            name: 'VL_VENDA',
+                            width: '1%'
                         },
                         {
                             data: 'VL_PRECO',
-                            name: 'VL_PRECO'
+                            name: 'VL_PRECO',
+                            width: '1%'
                         },
                         {
                             data: 'PC_DESCONTO',
@@ -221,15 +226,15 @@
                     url: "{{ route('save-libera-pedido') }}",
                     method: 'GET',
                     data: {
-                        pedido: $('#nr_pedido').val(),                        
-                        liberacao: $('#liberacao').val()                        
+                        pedido: $('#nr_pedido').val(),
+                        liberacao: $('#liberacao').val()
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');
                     },
                     success: function(response) {
                         $("#loading").addClass('hidden');
-                        
+
                         if (response.success) {
                             msgToastr(response.success,
                                 'success');

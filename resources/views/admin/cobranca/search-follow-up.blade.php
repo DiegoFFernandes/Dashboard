@@ -438,7 +438,7 @@
                         if (response.error) {
                             msgToastr(response.error, 'warning');
                         } else {
-                            msgToastr(response.success, 'success');
+                            msgToastr(response.success, 'success');                            
                         }
                     }
                 });
@@ -447,12 +447,22 @@
             //Cliques nas tabs
             $('.nav-tabs a[href="#digisac"]').on('click', function() {
                 $('#table-digisac').DataTable().destroy();
+                initTableDigisac();
+            });
+
+            function initTableDigisac() {
                 $('#table-digisac').DataTable({
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
-                    pagingType: "simple",
-                    processing: false,
+                    rowReorder: {
+                        selector: 'td:nth-child(2)'
+                    },
+                    processing: true,
+                    responsive: true,
+                    serverSide: true,
+                    autoWidth: false,
+                    pageLength: 50,
                     dom: 'Blfrtip',
                     buttons: [
                         'copy', 'csv', 'excel', 'pdf', 'print'
@@ -466,7 +476,8 @@
                         },
                         {
                             data: 'nr_lancamento',
-                            name: 'nr_lancamento'
+                            name: 'nr_lancamento',
+                            visible: false
                         },
                         {
                             data: 'nr_nota',
@@ -499,25 +510,32 @@
                         },
                         {
                             width: '2%',
-                            targets: 1
-                        },
-                        {
-                            width: '2%',
-                            targets: 2
-                        },
-                        {
-                            width: '10%',
-                            targets: 3
-                        },
-                        {
-                            width: '30%',
-                            targets: 4
-                        },
-                        {
-                            width: '2%',
-                            targets: 7
+                            targets: [1, 2]
                         }
                     ],
+                });
+            }
+            $(document).on('click', '.EditSend', function(e) {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: "{{ route('digisac.reenvia') }}",
+                    method: 'POST',
+                    data: {
+                        _token: $("[name=csrf-token]").attr("content"),
+                        id: id
+                    },
+                    beforeSend: function() {
+                        $("#loading").removeClass('hidden');
+                    },
+                    success: function(response) {
+                        $("#loading").addClass('hidden');
+                        if (response.error) {
+                            msgToastr(response.error, 'warning');
+                        } else {
+                            msgToastr(response.success, 'success');                            
+                            $('#table-digisac').DataTable().ajax.reload();
+                        }
+                    }
                 });
             });
 

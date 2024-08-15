@@ -287,19 +287,18 @@
                                             Recap -
                                             Sul</a>
                                     </li>
-                                    @can('ver-cancela-nota')
-                                        <li class="{{ request()->routeIs('comercial.cancela-nota') ? 'active' : '' }}">
-                                            <a href="{{ route('comercial.cancela-nota') }}"><i class="fa fa-ban"></i>Cancelar
-                                                Nota</a>
+                                    @can('ver-libera-ordem')
+                                        <li class="{{ request()->routeIs('libera-ordem-comissao.index') ? 'active' : '' }}">
+                                            <a href="{{ route('libera-ordem-comissao.index') }}"><i class="fa fa-thumbs-up"></i>Liberação Ordem Comercial</a>
                                         </li>
                                     @endcan
-                                    @role('controladoria|admin')
+                                    {{-- @role('controladoria|admin')
                                         <li class="{{ request()->routeIs('comercial.list-nota-all') ? 'active' : '' }}">
                                             <a href="{{ route('comercial.list-nota-all') }}">
                                                 <i class="fa fa-list"></i>Notas a cancelar
                                             </a>
                                         </li>
-                                    @endrole
+                                    @endrole --}}
                                 @endcan
                                 @can('ver-rel-cobranca-sul')
                                     <li class="{{ request()->routeIs('comercial.rel-cobranca-sul') ? 'active' : '' }}"><a

@@ -59,8 +59,8 @@ class LiberaOrdemComissaoController extends Controller
         $pedidos_coordenador = [];
         $pedidos_gerencia = [];
 
-        $localizacao = Helper::VerifyRegion($this->user->conexao);
-        $dados = $this->libera->listPneusOrdensBloqueadas($id, $localizacao);
+        // $localizacao = Helper::VerifyRegion($this->user->conexao);
+        $dados = $this->libera->listPneusOrdensBloqueadas($id);
 
         $result = [];
 
@@ -91,7 +91,7 @@ class LiberaOrdemComissaoController extends Controller
             }
         }
 
-        if ($this->user->hasRole('admin|gerencia')) {
+        if ($this->user->hasRole('admin|gerencia|controladoria')) {
             $pedidos = array_unique($pedidos_gerencia);
             //Serealize os pedidos separando em (,)
             $pedidos = implode(",", $pedidos);
@@ -110,7 +110,7 @@ class LiberaOrdemComissaoController extends Controller
             $pedidos = implode(",", $pedidos);
         }
 
-        $data = $this->libera->listOrdensBloqueadas($cd_regiao, $pedidos, $localizacao);
+       $data = $this->libera->listOrdensBloqueadas($cd_regiao, $pedidos);
 
         return DataTables::of($data)
             // ->addColumn('dsbloqueiopneu', function($d){

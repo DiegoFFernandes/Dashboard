@@ -239,7 +239,7 @@
                 </li>
             @endrole
             @canany(['ver-comercial-norte', 'ver-comercial-sul', 'ver-rel-cobranca-sul',
-                'ver-pedidos-coletados-acompanhamento', 'ver-analise-frota'])
+                'ver-pedidos-coletados-acompanhamento', 'ver-analise-frota', 'ver-libera-ordem'])
                 <li class="treeview {{ request()->segment(1) == 'comercial' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">
                         <i class="fa fa-map"></i> <span>Comercial</span>
@@ -287,11 +287,6 @@
                                             Recap -
                                             Sul</a>
                                     </li>
-                                    @can('ver-libera-ordem')
-                                        <li class="{{ request()->routeIs('libera-ordem-comissao.index') ? 'active' : '' }}">
-                                            <a href="{{ route('libera-ordem-comissao.index') }}"><i class="fa fa-thumbs-up"></i>Liberação Ordem Comercial</a>
-                                        </li>
-                                    @endcan
                                     {{-- @role('controladoria|admin')
                                         <li class="{{ request()->routeIs('comercial.list-nota-all') ? 'active' : '' }}">
                                             <a href="{{ route('comercial.list-nota-all') }}">
@@ -299,6 +294,12 @@
                                             </a>
                                         </li>
                                     @endrole --}}
+                                @endcan
+                                @can('ver-libera-ordem')
+                                    <li class="{{ request()->routeIs('libera-ordem-comissao.index') ? 'active' : '' }}">
+                                        <a href="{{ route('libera-ordem-comissao.index') }}"><i
+                                                class="fa fa-thumbs-up"></i>Liberação Ordem Comercial</a>
+                                    </li>
                                 @endcan
                                 @can('ver-rel-cobranca-sul')
                                     <li class="{{ request()->routeIs('comercial.rel-cobranca-sul') ? 'active' : '' }}"><a
@@ -478,7 +479,8 @@
                             </a>
                         </li>
                         <li class="{{ request()->routeIs('item-centro-resultado.index') ? 'active' : '' }}"><a
-                                href="{{ route('item-centro-resultado.index') }}"><i class="fa fa-scissors"></i>Centro de Resultado
+                                href="{{ route('item-centro-resultado.index') }}"><i class="fa fa-scissors"></i>Centro de
+                                Resultado
                             </a>
                         </li>
                         @can('ver-gerenciador-contabil')

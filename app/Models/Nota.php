@@ -39,7 +39,7 @@ class Nota extends Model
                 DATETOSTR(N.DT_EMISSAO, '%d/%m/%Y') DS_DTEMISSAO,
                 N.HR_NOTA,
                 --NOTA--
-                COALESCE(NFSE.NR_RPS, NFSE.NR_NOTASERVICO, N.NR_NOTAFISCAL) NR_NOTA,
+                COALESCE(NFSE.NR_RPS, NFSE.NR_NOTASERVICO, N.NR_NOTAFISCAL) NR_DOCUMENTO,
                 N.DT_EMISSAO DT_EMISSAONOTA,
                 --CLIENTE--
                 P.CD_PESSOA,
@@ -286,7 +286,7 @@ class Nota extends Model
     public function listNotaSend()
     {
         return Nota::where('STATUS', 'A')
-            ->whereIn('NR_LANCAMENTO', ['17356'])
+            // ->whereIn('NR_LANCAMENTO', ['17356'])
             ->get();
     }
 

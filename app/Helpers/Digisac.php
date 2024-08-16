@@ -31,7 +31,7 @@ class Digisac
 
         $data = [
 
-            'text' => 'Olá, ' . $nota['NM_PESSOA'] . ', foi emitida uma nota fiscal, ' . $nota['NR_DOCUMENTO'] . ', para seu CPNJ. Esse e um atendimento automatico não e necessario responder',
+            'text' => 'Olá, ' . $nota['NM_PESSOA'] . ', foi emitida uma nota fiscal, ' . $nota['NR_DOCUMENTO'] . ', para seu CNPJ. Esse e um atendimento automatico não e necessario responder',
             'number' => $nota['NR_CELULAR'],
             'contactId' => 'c62377c8-12da-4a29-ae99-a124029cf03a',
             'serviceId' => 'db615bbe-ddf0-438b-b2f3-6c05e5a13eb0',

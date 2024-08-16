@@ -84,11 +84,7 @@ class LiberaOrdemComissaoController extends Controller
         $pedidos_coordenador = [];
 
         foreach ($result as $item) {
-            if (min($item['PC_DESCONTO']) > 10) {
-                $pedidos_gerencia[] = $item['PEDIDO'];
-            }else{
-                $pedidos_coordenador[] = $item['PEDIDO'];
-            }
+            $pedidos_gerencia[] = $item['PEDIDO'];
         }
 
         if ($this->user->hasRole('admin|gerencia|controladoria')) {

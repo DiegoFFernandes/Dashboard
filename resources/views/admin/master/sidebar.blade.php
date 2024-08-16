@@ -274,7 +274,7 @@
                                 </span>
                             </a>
                             <ul class="treeview-menu">
-                                @can('ver-comercial-norte')
+                                {{-- @can('ver-comercial-norte')
                                     <li class="{{ request()->routeIs('comercial.ivo-norte') ? 'active' : '' }}"><a
                                             href="{{ route('comercial.ivo-norte') }}"><i class="fa fa-arrow-up"></i>Ivo
                                             Recap -
@@ -287,14 +287,14 @@
                                             Recap -
                                             Sul</a>
                                     </li>
-                                    {{-- @role('controladoria|admin')
+                                    @role('controladoria|admin')
                                         <li class="{{ request()->routeIs('comercial.list-nota-all') ? 'active' : '' }}">
                                             <a href="{{ route('comercial.list-nota-all') }}">
                                                 <i class="fa fa-list"></i>Notas a cancelar
                                             </a>
                                         </li>
-                                    @endrole --}}
-                                @endcan
+                                    @endrole
+                                @endcan --}}
                                 @can('ver-libera-ordem')
                                     <li class="{{ request()->routeIs('libera-ordem-comissao.index') ? 'active' : '' }}">
                                         <a href="{{ route('libera-ordem-comissao.index') }}"><i
@@ -462,6 +462,9 @@
                                 href="{{ route('financeiro.index') }}"><i class="fa fa-file-excel-o"></i>Conciliação
                                 Empresas</a>
                         </li>
+                        <li class="{{ request()->routeIs('libera-contas.index') ? 'active' : '' }}"><a
+                            href="{{ route('libera-contas.index') }}"><i class="fa fa-thumbs-up"></i>Liberação Contas a Pagar</a>
+                    </li>
                     </ul>
                 </li>
             @endrole

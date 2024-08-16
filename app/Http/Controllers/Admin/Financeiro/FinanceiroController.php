@@ -65,4 +65,19 @@ class FinanceiroController extends Controller
         );
         return response()->json($response);
     }
+
+    public function liberaContas(){
+        
+        $title_page   = 'Liberação de Contas a Pagar';
+        $user_auth    = $this->user;
+        $uri          = $this->request->route()->uri();        
+
+        return view('admin.financeiro.libera-contas', compact(
+            'title_page',
+            'user_auth',
+            'uri'
+            
+            
+        ));
+    }
 }

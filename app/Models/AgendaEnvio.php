@@ -44,7 +44,9 @@ class AgendaEnvio extends Model
                 " . (($request->ds_email != 0) ? "and ae.ds_emaildest like '%$request->ds_email%'" : "") . "    
                 " . (($request->nr_contexto != 0) ? "and ae.nr_contexto in ($request->nr_contexto)" : "");
 
-        $key = "anexo_" . $request->cd_number . "cliente_" . $request->cd_pessoa . "nr_contexto" . $request->nr_contexto;
+        return DB::connection('firebird_rede')->select($query);
+        
+        $key = "anexo_" . $request->cd_number . "cliente_1" . $request->cd_pessoa . "nr_contexto" . $request->nr_contexto;
         return Cache::remember($key, now()->addMinutes(60), function () use ($query) {
             return DB::connection('firebird_rede')->select($query);
         });

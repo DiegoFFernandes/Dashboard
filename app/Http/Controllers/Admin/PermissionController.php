@@ -7,6 +7,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use PowerbiHelper;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -97,5 +101,48 @@ class PermissionController extends Controller
     DB::table("model_has_permissions")->where('model_id', $id)->delete();
     return redirect()->route('admin.usuarios.permission')
       ->with('status', 'Permissões usuario deletadas com successo');
+  }
+
+  public function updatePermissionPowerBi()
+  {
+    $office360token = PowerbiHelper::getOffice360AccessToken();
+
+    $datasetID = env('DATASET_ID_REDE');
+
+    $url = "https://api.powerbi.com/v1.0/myorg/datasets/%s/refreshes";
+    $url = sprintf($url,   $datasetID);
+
+    $headers = [
+      'Content-Type' => 'application/json',
+      'Authorization' => $office360token->token_type . ' ' . $office360token->access_token,
+    ];
+    $body = [
+      "type" => "Full",
+      "objects" => [
+        [
+          "table" => "dRLS"
+        ]
+      ]
+    ];
+    $response = Http::withHeaders($headers)->post($url, $body);
+
+
+    // Verificando a resposta da API
+    // Verifica se a requisição foi bem-sucedida
+    if ($response->successful()) {
+      return Redirect::route('admin.usuarios.permission')->with(['info' => 'Atualizando permissões, aguarde processamento no servidor!']);
+    }
+
+    // Se a resposta contiver um erro, trata conforme necessário
+    if ($response->clientError()) {
+      $responseData = $response->json();
+
+      if (isset($responseData['error']['message']) && $responseData['error']['code'] === 'InvalidRequest') {
+
+        return Redirect::route('admin.usuarios.permission')->with(['warning' => 'Já existe uma solicitação de atualização em andamento. Tente novamente mais tarde.']);
+      }
+      return Redirect::route('admin.usuarios.permission')->with(['warning' => 'Erro ao atualizar as permissões do Power BI.']);     
+      
+    }
   }
 }

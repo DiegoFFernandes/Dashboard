@@ -103,4 +103,14 @@ class Helper
             $ipaddress = 'UNKNOWN';
         return $ipaddress;
     }
+    
+    public static function ConvertFormatText($results){
+        // Garantir que os dados estejam em UTF-8
+        $results = array_map(function ($result) {
+            return array_map(function ($value) {
+                return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
+            }, (array) $result);
+        }, $results);
+        return $results;
+    }
 }

@@ -28,43 +28,55 @@ class LiberaOrdemComercial extends Model
     {
         $query = "
                 SELECT
-                PP.IDEMPRESA EMP,
-                PP.DTEMISSAO,
-                PP.ID PEDIDO,
-                PP.STPEDIDO,
-                PP.TP_BLOQUEIO,
-                PP.IDPEDIDOMOVEL,
-                CAST(P.NM_PESSOA AS VARCHAR(1000) CHARACTER SET UTF8) PESSOA,
-                CAST(PP.DSBLOQUEIO AS VARCHAR(8100) CHARACTER SET UTF8) DSBLOQUEIO,
-                PP.DSLIBERACAO,
-                CAST(PV.NM_PESSOA AS VARCHAR(1000) CHARACTER SET UTF8) VENDEDOR,
-                EP.CD_REGIAOCOMERCIAL
-            FROM PEDIDOPNEU PP
-            INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.IDPEDIDOPNEU = PP.ID)
-            INNER JOIN ITEM I ON (IPP.IDSERVICOPNEU = I.CD_ITEM)
-            LEFT JOIN ITEMTABPRECO ITP ON (ITP.CD_TABPRECO = IPP.IDTABPRECO
-                AND ITP.CD_ITEM = IPP.IDSERVICOPNEU)
-            INNER JOIN PESSOA P ON (P.CD_PESSOA = PP.IDPESSOA)
-            INNER JOIN PESSOA PV ON (PV.CD_PESSOA = PP.IDVENDEDOR)
-            INNER JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA
-                AND EP.CD_ENDERECO = 1)
-            WHERE PP.STPEDIDO IN ('B')
-                AND PP.TP_BLOQUEIO <> 'F'
-                " . (($cd_regiao != "") ? "and ep.cd_regiaocomercial in ($cd_regiao)" : "") . "
-                " . (($pedidos != "") ? "and pp.id in ($pedidos)" : "and pp.id = 0") . "
-                --and ipb.iditempedidopneu = 466381
-                AND PP.idempresa <> 1
-            GROUP BY PP.STPEDIDO,
-                PP.TP_BLOQUEIO,
-                PP.IDEMPRESA,
-                PP.DTEMISSAO,
-                PESSOA,
-                PP.DSBLOQUEIO,
-                PP.DSLIBERACAO,
-                VENDEDOR,
-                EP.CD_REGIAOCOMERCIAL,
-                PP.ID,
-                PP.IDPEDIDOMOVEL  ";
+                    PP.IDEMPRESA EMP,
+                    PP.DTEMISSAO,
+                    PP.ID PEDIDO,
+                    PP.STPEDIDO,
+                    PP.TP_BLOQUEIO,
+                    PP.IDPEDIDOMOVEL,
+                    CAST(P.NM_PESSOA AS VARCHAR(1000) CHARACTER SET UTF8) PESSOA,
+                    CAST(PP.DSBLOQUEIO AS VARCHAR(8100) CHARACTER SET UTF8) DSBLOQUEIO,
+                    PP.DSLIBERACAO,
+                    CAST(PV.NM_PESSOA AS VARCHAR(1000) CHARACTER SET UTF8) VENDEDOR,
+                    EP.CD_REGIAOCOMERCIAL,
+                    CASE
+                    WHEN COALESCE(T.NR_SEQUENCIA, 1) = 1 THEN 'NÃO'
+                    ELSE 'SIM'
+                    END TABPRECO,
+                    TABPRECO.DS_TABPRECO,
+                    TABPRECO.DT_VALIDADE
+                FROM PEDIDOPNEU PP
+                INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.IDPEDIDOPNEU = PP.ID)
+                INNER JOIN ITEM I ON (IPP.IDSERVICOPNEU = I.CD_ITEM)
+                LEFT JOIN ITEMTABPRECO ITP ON (ITP.CD_TABPRECO = IPP.IDTABPRECO
+                    AND ITP.CD_ITEM = IPP.IDSERVICOPNEU)
+                INNER JOIN PESSOA P ON (P.CD_PESSOA = PP.IDPESSOA)
+                INNER JOIN PESSOA PV ON (PV.CD_PESSOA = PP.IDVENDEDOR)
+                INNER JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA
+                    AND EP.CD_ENDERECO = 1)
+                LEFT JOIN PARMTABPRECO T ON (T.CD_PESSOA = PP.IDPESSOA
+                    AND PP.IDEMPRESA = T.CD_EMPRESA)
+                LEFT JOIN TABPRECO ON (TABPRECO.CD_TABPRECO = T.CD_TABPRECO)
+                WHERE PP.STPEDIDO IN ('B')
+                    AND PP.TP_BLOQUEIO <> 'F'
+                    " . (($cd_regiao != "") ? "and ep.cd_regiaocomercial in ($cd_regiao)" : "") . "
+                    " . (($pedidos != "") ? "and pp.id in ($pedidos)" : "and pp.id = 0") . "
+                    --and ipb.iditempedidopneu = 466381
+                    AND PP.IDEMPRESA <> 1
+                GROUP BY PP.STPEDIDO,
+                    PP.TP_BLOQUEIO,
+                    PP.IDEMPRESA,
+                    PP.DTEMISSAO,
+                    PESSOA,
+                    PP.DSBLOQUEIO,
+                    PP.DSLIBERACAO,
+                    VENDEDOR,
+                    EP.CD_REGIAOCOMERCIAL,
+                    PP.ID,
+                    PP.IDPEDIDOMOVEL,
+                    T.NR_SEQUENCIA,
+                    TABPRECO.DS_TABPRECO,
+                    TABPRECO.DT_VALIDADE";
         return DB::connection('firebird_rede')->select($query);
     }
     public function listPneusOrdensBloqueadas($id)
@@ -94,7 +106,7 @@ class LiberaOrdemComercial extends Model
             INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.IDPEDIDOPNEU = PP.ID)
             --inner join itempedidopneuborracheiro ipb on (ipb.iditempedidopneu = ipp.id)
             INNER JOIN ITEM I ON (IPP.IDSERVICOPNEU = I.CD_ITEM)
-            LEFT JOIN ITEMTABPRECO ITP ON (ITP.CD_TABPRECO = IPP.IDTABPRECO
+            LEFT JOIN ITEMTABPRECO ITP ON (ITP.CD_TABPRECO = 1
                 AND ITP.CD_ITEM = IPP.IDSERVICOPNEU)
             INNER JOIN PESSOA P ON (P.CD_PESSOA = PP.IDPESSOA)
             INNER JOIN PESSOA PV ON (PV.CD_PESSOA = PP.IDVENDEDOR)

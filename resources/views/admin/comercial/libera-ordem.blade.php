@@ -20,6 +20,8 @@
                                     <th>Pedido</th>
                                     <th>Cliente</th>
                                     <th>Vendedor</th>
+                                    <th>Tabela S/N</th>
+                                    <th>Validade</th>
                                 </tr>
                             </thead>
                         </table>
@@ -142,6 +144,16 @@
                     {
                         data: 'VENDEDOR',
                         name: 'VENDEDOR',
+                        visible: true
+                    },
+                    {
+                        data: 'TABPRECO',
+                        name: 'TABPRECO',
+                        visible: true
+                    },
+                    {
+                        data: 'DT_VALIDADE',
+                        name: 'DT_VALIDADE',
                         visible: true
                     }
                 ],

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -68,7 +69,7 @@ class Financeiro extends Model
 
         if ($cd_empresa == 1) {
             $conciliacao = DB::connection('firebird_campina')->select($query);
-        } elseif ($cd_empresa == 309) {  
+        } elseif ($cd_empresa == 309) {
             $conciliacao = DB::connection('firebird_paranavai')->select($query);
         } else {
             $conciliacao = DB::connection('firebird_rede')->select($query);
@@ -81,5 +82,48 @@ class Financeiro extends Model
         });
 
         return $conc;
+    }
+
+    public function ContasBloqueadas()
+    {
+        $query = "
+                SELECT
+                    CONTAS.CD_EMPRESA,
+                    CONTAS.NR_LANCAMENTO,
+                    CONTAS.CD_PESSOA,
+                    CONTAS.CD_PESSOA || ' - ' || P.NM_PESSOA NM_PESSOA,
+                    CONTAS.CD_TIPOCONTA || ' ' || TC.DS_TIPOCONTA DS_TIPOCONTA,
+                    CONTAS.NR_DOCUMENTO, 
+                    RMAX.O_NR_MAIORPARCELA PARCELAS,
+                    contas.VL_DOCUMENTO,
+                    CONTAS.ds_observacao
+                FROM CONTAS
+                INNER JOIN RETORNA_MAIORPARCELACONTAS(CONTAS.CD_EMPRESA, CONTAS.NR_LANCAMENTO, CONTAS.CD_PESSOA, CONTAS.CD_TIPOCONTA) RMAX ON (1 = 1)
+                INNER JOIN PESSOA P ON (P.CD_PESSOA = CONTAS.CD_PESSOA)
+                INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = CONTAS.CD_TIPOCONTA)
+                WHERE CONTAS.ST_BLOQUEADA = 'S'
+                    AND CONTAS.ST_CONTAS NOT IN ('C')
+                    AND Contas.CD_PESSOA = 1003383";
+
+        $results = DB::connection('firebird_rede')->select($query);
+        return $results =  Helper::ConvertFormatText($results);
+    }
+
+    public function listHistoricoContasBloqueadas($cd_empresa, $nr_lancamento)
+    {
+        $query = "
+                SELECT
+                    CH.CD_EMPRESA,
+                    CH.NR_LANCAMENTO,
+                    CH.CD_PESSOA,
+                    CH.CD_HISTORICO || ' - ' || HISTORICO.DS_HISTORICO DS_HISTORICO,
+                    CH.VL_DOCUMENTO
+                FROM CONTASHISTORICO CH
+                INNER JOIN HISTORICO ON (HISTORICO.CD_HISTORICO = CH.CD_HISTORICO)
+                WHERE CH.NR_LANCAMENTO = 1076414
+                    AND CH.CD_EMPRESA = 102";
+
+        $results = DB::connection('firebird_rede')->select($query);
+        return $results =  Helper::ConvertFormatText($results);
     }
 }

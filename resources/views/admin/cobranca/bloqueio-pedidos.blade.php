@@ -77,7 +77,7 @@
                 </thead>
             </table>
         @endverbatim
-        </script>
+    </script>
     <script id="details-item-pedido" type="text/x-handlebars-template">
         @verbatim
             <div class="label label-info">{{ NRORDEM }} - {{DSSERVICO}}</div>
@@ -94,7 +94,7 @@
                 </thead>
             </table>
         @endverbatim
-        </script>
+    </script>
     <script type="text/javascript">
         var template = Handlebars.compile($("#details-template").html());
         var details_item_pedido = Handlebars.compile($("#details-item-pedido").html());
@@ -170,8 +170,8 @@
 
         });
 
-        $('#acompanhamento').click(function(){
-        $('#pedido-acompanhar').DataTable().ajax.reload();
+        $('#acompanhamento').click(function() {
+            $('#pedido-acompanhar').DataTable().ajax.reload();
         });
 
         $('#title-page').text('Acompanhameto Pedido');

@@ -108,6 +108,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('permissao/novo', [PermissionController::class, 'create'])->name('admin.usuarios.permission.create');
         Route::post('permissao/novo', [PermissionController::class, 'save'])->name('admin.usuarios.permission.create.do');
         Route::get('permissao/delete/{id}', [PermissionController::class, 'delete'])->name('admin.usuarios.permission.delete');
+
+        Route::get('permissao/atualizar-permissao-power-bi', [PermissionController::class, 'updatePermissionPowerBi'])->name('permission-powerbi.update');
     });
     Route::prefix('associar-pessoa-usuario')->group(function () {
         Route::get('vincular-pessoas-usuario', [PessoaUSerController::class, 'connectPeopleUser'])->name('connect-people-user');

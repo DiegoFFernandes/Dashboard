@@ -59,7 +59,7 @@ class PowerBiEmbeddedController extends Controller
             return redirect()->route('admin.dashboard')->with('warning', 'Houve algum problema ao carregar o token');
         }
 
-        $content = $this->initToken($groupID, $reportID, $office360token, $permissionPower, $datasetID);
+       $content = $this->initToken($groupID, $reportID, $office360token, $permissionPower, $datasetID);
 
         if ($updatetoken == 1) {
             return response()->json($content);
@@ -84,7 +84,6 @@ class PowerBiEmbeddedController extends Controller
             )
         );
     }
-
 
     public function initToken($groupID, $reportID, $office360token, $permissionPower, $datasetID)
     {        

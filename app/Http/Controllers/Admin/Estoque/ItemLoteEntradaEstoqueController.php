@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\ItemLoteEntradaEstoque;
 use App\Models\LoteEntradaEstoque;
-use App\Models\SubGrupo;
 use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

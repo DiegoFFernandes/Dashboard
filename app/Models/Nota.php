@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +40,7 @@ class Nota extends Model
                 DATETOSTR(N.DT_EMISSAO, '%d/%m/%Y') DS_DTEMISSAO,
                 N.HR_NOTA,
                 --NOTA--
-                COALESCE(NFSE.NR_RPS, NFSE.NR_NOTASERVICO, N.NR_NOTAFISCAL) NR_DOCUMENTO,
+                COALESCE(NFSE.NR_NOTASERVICO, N.NR_NOTAFISCAL) NR_DOCUMENTO,
                 N.DT_EMISSAO DT_EMISSAONOTA,
                 --CLIENTE--
                 P.CD_PESSOA,
@@ -68,12 +69,8 @@ class Nota extends Model
         $results =  DB::connection('firebird_rede')->select($query);
 
         // Garantir que os dados estejam em UTF-8
-        $results = array_map(function ($result) {
-            return array_map(function ($value) {
-                return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
-            }, (array) $result);
-        }, $results);
-        return $results;
+        $results = Helper::ConvertFormatText($results);
+
         return response()->json($results, 200, [], JSON_UNESCAPED_UNICODE);
     }
 

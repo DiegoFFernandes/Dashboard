@@ -299,6 +299,10 @@ iframe {
     color: green;
 }
 
+.fa-align-justify{
+    color: rgb(0, 77, 128);
+}
+
 .fa-minus-square-o {
     color: red;
 }
@@ -328,9 +332,9 @@ input[type='file'] {
 
 .img-box-indicador-left::before,
 .img-box-indicador-right::before,
-.img-box-indicador-down::before  {
+.img-box-indicador-down::before {
     content: "";
-    background-color:  rgb(0 48 91 / 30%);
+    background-color: rgb(0 48 91 / 30%);
     position: absolute;
     top: 0;
     left: 0;
@@ -368,4 +372,8 @@ input[type='file'] {
     align-items: center;
     justify-content: center;
     background: #d2d6de;
+}
+
+tfoot input {
+    width: 100%;
 }

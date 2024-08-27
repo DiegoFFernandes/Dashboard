@@ -11,6 +11,9 @@ Route::middleware(['auth', 'role:admin|financeiro'])->group(function () {
 
         Route::get('libera-contas', [FinanceiroController::class, 'liberaContas'])->name('libera-contas.index');
         Route::get('get-list-contas-bloqueadas', [FinanceiroController::class, 'listContasBloqueadas'])->name('contas-bloqueadas.list');
-        Route::get('get-list-contas-bloqueadas-historico', [FinanceiroController::class, 'listHistoricoContasBloqueadas'])->name('historico-contas-bloqueadas.list');
+        Route::post('get-list-contas-bloqueadas-historico', [FinanceiroController::class, 'listHistoricoContasBloqueadas'])->name('historico-contas-bloqueadas.list');
+        Route::get('update-status-contas-bloqueadas', [FinanceiroController::class, 'updateStatusContasBloqueadas'])->name('contas-bloqueadas.update');
+    
+   
     });
 });

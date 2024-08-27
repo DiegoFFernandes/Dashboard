@@ -20,6 +20,12 @@
 
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap.min.css">
+    
+    <link rel="stylesheet" href="{{ asset('adminlte/bower_components/datatables.net/css/select.dataTables.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.css">
+
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('adminlte/bower_components/font-awesome/css/font-awesome.min.css') }}">
     <!-- Ionicons
@@ -54,7 +60,7 @@
     <!-- iCheck for checkboxes and radio inputs -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/iCheck/all.css') }}">
     <!-- Template Main CSS File -->
-    <link href="{{ asset('css/styleAdmin.css?v=9') }}" rel="stylesheet">
+    <link href="{{ asset('css/styleAdmin.css?v=10') }}" rel="stylesheet">
     <link href="{{ asset('css/notafiscal.css?v=5') }}" rel="stylesheet">
 
 

@@ -82,22 +82,49 @@ class FinanceiroController extends Controller
     }
     public function listContasBloqueadas()
     {
-        $data = $this->financeiro->ContasBloqueadas();
+        $status = $this->request->st_visto;
+        $data = $this->financeiro->ContasBloqueadas($status);
 
         return DataTables::of($data)
             ->addColumn('actions', function ($d) {
-                return '<button class="delete fa fa-trash-o" aria-hidden="true"></button';
+                return '<button class="details-control fa fa-plus-circle" aria-hidden="true"></button>
+                        <button class="detais-centrocusto fa fa-align-justify" aria-hidden="true"></button>
+                                                
+                        ';
             })
             ->rawColumns(['actions'])
             ->make(true);
     }
-    public function listHistoricoContasBloqueadas(){        
-        $cd_empresa = 102;
-        $nr_lancamento = 1076414;
+    public function listHistoricoContasBloqueadas()
+    {
+        $cd_empresa = $this->request->cd_empresa;
+        $nr_lancamento = $this->request->nr_lancamento;
 
         $data = $this->financeiro->listHistoricoContasBloqueadas($cd_empresa, $nr_lancamento);
-        
-        return DataTables::of($data)->make(true);
 
+        return DataTables::of($data)->make(true);
+    }
+
+    public function updateStatusContasBloqueadas()
+    {
+        $data = $this->request->all();
+
+        foreach ($data['contas'] as $c) {                      
+            $this->financeiro->updateStatusContasBloqueadas(
+                $c['cd_empresa'],
+                $c['nr_lancamento'],
+                $c['status'],
+                mb_convert_encoding($c['ds_liberacao'].' / '.$data['ds_liberacao'], 'ISO-8859-1', 'UTF-8')
+                
+                
+            );
+            $status = $c['status'];
+        }           
+        if($status == 'S'){
+            return response()->json(['warning' => 'Contas ainda esta bloqueada, movidas para bloqueadas pendentes!']);            
+        }else{
+            return response()->json(['success' => 'Contas liberadas com sucesso!']); 
+        }
+        
     }
 }

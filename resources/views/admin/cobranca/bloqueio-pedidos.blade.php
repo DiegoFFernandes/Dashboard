@@ -60,8 +60,7 @@
 @endsection
 
 @section('scripts')
-    @includeIf('admin.master.datatables')
-    <script src="https://cdn.datatables.net/plug-ins/1.10.19/dataRender/datetime.js"></script>
+    @includeIf('admin.master.datatables')    
     <script id="details-template" type="text/x-handlebars-template">
         @verbatim
             <div class="label label-info">{{ PESSOA }}</div>

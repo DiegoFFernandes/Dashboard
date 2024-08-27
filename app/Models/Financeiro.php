@@ -84,7 +84,7 @@ class Financeiro extends Model
         return $conc;
     }
 
-    public function ContasBloqueadas()
+    public function ContasBloqueadas($status)
     {
         $query = "
                 SELECT
@@ -93,17 +93,36 @@ class Financeiro extends Model
                     CONTAS.CD_PESSOA,
                     CONTAS.CD_PESSOA || ' - ' || P.NM_PESSOA NM_PESSOA,
                     CONTAS.CD_TIPOCONTA || ' ' || TC.DS_TIPOCONTA DS_TIPOCONTA,
-                    CONTAS.NR_DOCUMENTO, 
+                    CONTAS.NR_DOCUMENTO||' / '||RMAX.O_NR_MAIORPARCELA NR_DOCUMENTO,
                     RMAX.O_NR_MAIORPARCELA PARCELAS,
-                    contas.VL_DOCUMENTO,
-                    CONTAS.ds_observacao
+                    SUM(CONTAS.VL_DOCUMENTO) VL_DOCUMENTO,
+                    CONTAS.DS_OBSERVACAO,
+                    CONTAS.DS_LIBERACAO,
+                    CONTAS.DT_LANCAMENTO,
+                    COALESCE(CONTAS.ST_VISTO, 'N') ST_VISTO
                 FROM CONTAS
                 INNER JOIN RETORNA_MAIORPARCELACONTAS(CONTAS.CD_EMPRESA, CONTAS.NR_LANCAMENTO, CONTAS.CD_PESSOA, CONTAS.CD_TIPOCONTA) RMAX ON (1 = 1)
                 INNER JOIN PESSOA P ON (P.CD_PESSOA = CONTAS.CD_PESSOA)
                 INNER JOIN TIPOCONTA TC ON (TC.CD_TIPOCONTA = CONTAS.CD_TIPOCONTA)
                 WHERE CONTAS.ST_BLOQUEADA = 'S'
-                    AND CONTAS.ST_CONTAS NOT IN ('C')
-                    AND Contas.CD_PESSOA = 1003383";
+                    AND CONTAS.ST_CONTAS NOT IN ('C', 'L')
+                    --AND CONTAS.CD_PESSOA = 1107927
+                    --AND CONTAS.NR_LANCAMENTO = 1334264
+                    AND COALESCE(CONTAS.ST_VISTO, 'N') = '$status'
+                GROUP BY
+                    CONTAS.CD_EMPRESA,
+                    CONTAS.NR_LANCAMENTO,
+                    CONTAS.CD_PESSOA,
+                    CONTAS.CD_PESSOA,
+                    P.NM_PESSOA,
+                    CONTAS.CD_TIPOCONTA,
+                    TC.DS_TIPOCONTA,
+                    CONTAS.NR_DOCUMENTO,
+                    CONTAS.DS_LIBERACAO,
+                    RMAX.O_NR_MAIORPARCELA,
+                    CONTAS.DS_OBSERVACAO,
+                    CONTAS.DT_LANCAMENTO,
+                    CONTAS.ST_VISTO  ";
 
         $results = DB::connection('firebird_rede')->select($query);
         return $results =  Helper::ConvertFormatText($results);
@@ -117,13 +136,40 @@ class Financeiro extends Model
                     CH.NR_LANCAMENTO,
                     CH.CD_PESSOA,
                     CH.CD_HISTORICO || ' - ' || HISTORICO.DS_HISTORICO DS_HISTORICO,
-                    CH.VL_DOCUMENTO
+                    CH.VL_DOCUMENTO,
+                    CH.NR_PARCELA,
+                    CONTAS.DT_LANCAMENTO,
+                    CONTAS.DT_VENCIMENTO
                 FROM CONTASHISTORICO CH
+                INNER JOIN CONTAS ON (CH.CD_EMPRESA = CONTAS.CD_EMPRESA
+                    AND CH.NR_LANCAMENTO = CONTAS.NR_LANCAMENTO
+                    AND CH.CD_PESSOA = CONTAS.CD_PESSOA
+                    AND CH.CD_TIPOCONTA = CONTAS.CD_TIPOCONTA
+                    AND CH.NR_PARCELA = CONTAS.NR_PARCELA)
                 INNER JOIN HISTORICO ON (HISTORICO.CD_HISTORICO = CH.CD_HISTORICO)
-                WHERE CH.NR_LANCAMENTO = 1076414
-                    AND CH.CD_EMPRESA = 102";
+                WHERE CH.NR_LANCAMENTO = $nr_lancamento
+                    AND CH.CD_EMPRESA = $cd_empresa
+                    ";
 
         $results = DB::connection('firebird_rede')->select($query);
         return $results =  Helper::ConvertFormatText($results);
+    }
+    public function updateStatusContasBloqueadas($cd_empresa, $nr_lancamento, $status, $ds_liberacao)
+    {
+        return DB::transaction(function () use ($cd_empresa, $nr_lancamento, $status, $ds_liberacao) {
+
+            DB::connection('firebird_rede')->select("EXECUTE PROCEDURE GERA_SESSAO");
+
+            $query = "
+                UPDATE CONTAS C
+                SET C.ST_BLOQUEADA = '$status',
+                    C.ST_VISTO = 'S',
+                    C.DS_LIBERACAO = '$ds_liberacao'
+                WHERE C.NR_LANCAMENTO = $nr_lancamento
+                    AND C.CD_EMPRESA = $cd_empresa
+                ";
+
+            return DB::connection('firebird_rede')->select($query);
+        });
     }
 }

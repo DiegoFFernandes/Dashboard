@@ -7,11 +7,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Pedidos</h3>
-                    </div>
                     <!-- /.box-header -->
-                    <div class="box-body">
+                    <div class="box-body" style="padding: 0 10px">
                         <table class="table stripe compact" style="width:100%" id="table-ordem-block">
                             <thead>
                                 <tr>
@@ -24,6 +21,18 @@
                                     <th>Validade</th>
                                 </tr>
                             </thead>
+                            <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th>Emp</th>
+                                    <th>Pedido</th>
+                                    <th>Cliente</th>
+                                    <th>Vendedor</th>
+                                    <th>Tabela S/N</th>
+                                    <th>Validade</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                     <!-- /.box-body -->
@@ -118,6 +127,24 @@
                 processing: false,
                 serverSide: false,
                 scrollX: true,
+                scrollY: '55vh',
+                initComplete: function() {
+                    this.api()
+                        .columns()
+                        .every(function() {
+                            var column = this;
+                            var title = column.footer().textContent;
+
+                            // Create input element and add event listener
+                            $('<input type="text" placeholder="' + title + '" />')
+                                .appendTo($(column.footer()).empty())
+                                .on('keyup change clear', function() {
+                                    if (column.search() !== this.value) {
+                                        column.search(this.value).draw();
+                                    }
+                                });
+                        });
+                },
                 ajax: "{{ route('get-ordens-bloqueadas-comercial') }}",
                 columns: [{
                         "className": 'details-control',

@@ -135,14 +135,17 @@
                             var column = this;
                             var title = column.footer().textContent;
 
-                            // Create input element and add event listener
-                            $('<input type="text" placeholder="' + title + '" />')
-                                .appendTo($(column.footer()).empty())
-                                .on('keyup change clear', function() {
-                                    if (column.search() !== this.value) {
-                                        column.search(this.value).draw();
-                                    }
-                                });
+                            if (title != '') {
+                                // Create input element and add event listener
+                                $('<input type="text" placeholder="' + title + '" />')
+                                    .appendTo($(column.footer()).empty())
+                                    .on('keyup change clear', function() {
+                                        if (column.search() !== this.value) {
+                                            column.search(this.value).draw();
+                                        }
+                                    });
+                            }
+
                         });
                 },
                 ajax: "{{ route('get-ordens-bloqueadas-comercial') }}",

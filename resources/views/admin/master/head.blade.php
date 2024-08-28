@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap.min.css">
     
-    <link rel="stylesheet" href="{{ asset('adminlte/bower_components/datatables.net/css/select.dataTables.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminlte/bower_components/datatables.net/css/select.dataTables.css?v=3') }}">
 
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.dataTables.css">
 

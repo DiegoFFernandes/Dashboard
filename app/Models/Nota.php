@@ -69,9 +69,9 @@ class Nota extends Model
         $results =  DB::connection('firebird_rede')->select($query);
 
         // Garantir que os dados estejam em UTF-8
-        $results = Helper::ConvertFormatText($results);
+        return $results = Helper::ConvertFormatText($results);
 
-        return response()->json($results, 200, [], JSON_UNESCAPED_UNICODE);
+        // return response()->json($results, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function NotasEmitidas($nr_lancamento, $cd_empresa)

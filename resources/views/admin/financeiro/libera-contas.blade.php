@@ -306,7 +306,7 @@
                 columns: [{
                         data: null,
                         "width": "1%",
-                        render: DataTable.render.select(),
+                        render: DataTable.render.select(),                        
                     },
                     {
                         data: 'actions',
@@ -360,7 +360,7 @@
                     render: $.fn.dataTable.render.number('.', ',', 2),
                 }],
                 order: [
-                    [6, 'asc']
+                    [2, 'asc']
                 ],
                 initComplete: function() {
                     this.api()
@@ -369,14 +369,17 @@
                             var column = this;
                             var title = column.footer().textContent;
 
-                            // Create input element and add event listener
-                            $('<input type="text" placeholder="' + title + '" />')
-                                .appendTo($(column.footer()).empty())
-                                .on('keyup change clear', function() {
-                                    if (column.search() !== this.value) {
-                                        column.search(this.value).draw();
-                                    }
-                                });
+                            if (title != '') {
+                                // Create input element and add event listener
+                                $('<input type="text" placeholder="' + title + '" />')
+                                    .appendTo($(column.footer()).empty())
+                                    .on('keyup change clear', function() {
+                                        if (column.search() !== this.value) {
+                                            column.search(this.value).draw();
+                                        }
+                                    });
+                            }
+
                         });
                 },
                 rowCallback: function(row, data) {

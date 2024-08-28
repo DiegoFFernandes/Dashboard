@@ -35,7 +35,7 @@ class DigiSacController extends Controller
     {
 
         $nota = $this->nota->NotasEmitidasResumo(0, 0);
-
+        
         $this->nota->StoreNota($nota);
 
         $notas_para_enviar = $this->nota->listNotaSend();

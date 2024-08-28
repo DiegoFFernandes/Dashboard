@@ -154,9 +154,19 @@
         @endverbatim
     </script>
 
+    <script id="details-motivo" type="text/x-handlebars-template">
+        @verbatim
+            <div class="label label-info">{{ NM_PESSOA }}</div>
+            <div class="col-md-12"><b>Observação:</b> {{ DS_OBSERVACAO }}</div> 
+            <div class="col-md-12"><b>Motivo Bloqueio:</b> {{ DS_LIBERACAO }}</div>            
+            
+        @endverbatim
+    </script>
+
     <script type="text/javascript">
         var tableContas;
         var template_historico = Handlebars.compile($("#details-item-historico").html());
+        var template_motivo = Handlebars.compile($("#details-motivo").html());
         var template_vencimento = Handlebars.compile($("#details-vencimento").html());
         var templatecentro_resultado = Handlebars.compile($("#details-centro-resultado").html());
 
@@ -174,7 +184,8 @@
             tableContas = initableContas('table-contas-bloqueadas-vistos', 'S');
         });
 
-        $('#table-contas-bloqueadas-pendentes tbody').on('click', '.details-control', function() {
+
+        $('tbody').on('click', '.details-control', function() {
             var tr = $(this).closest('tr');
             var row = tableContas.row(tr);
 
@@ -184,6 +195,7 @@
                 row.child.hide();
                 tr.removeClass('shown');
                 $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $('.details-motivo').removeClass('btn-close').addClass('btn-open');
             } else {
                 // Open this row
                 row.child(template_historico(row.data())).show();
@@ -192,27 +204,31 @@
                 tr.addClass('shown');
                 $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
                 tr.next().find('td').addClass('no-padding bg-gray-light')
+                $('.details-motivo').removeClass('btn-close').addClass('btn-open');
             }
         });
 
-        $('#table-contas-bloqueadas-vistos tbody').on('click', '.details-control', function() {
+        $('tbody').on('click', '.details-motivo', function() {
             var tr = $(this).closest('tr');
             var row = tableContas.row(tr);
 
-            var tableId = 'conta-' + row.data().NR_LANCAMENTO;
+            var nm_pessoa = row.data().NM_PESSOA;
+
             if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
                 tr.removeClass('shown');
-                $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $(this).removeClass('btn-close').addClass('btn-open');
+                $('.details-control').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+
             } else {
                 // Open this row
-                row.child(template_historico(row.data())).show();
-                initTableHistorico(tableId, row.data());
+                row.child(template_motivo(row.data())).show();
                 // console.log(row.data());
                 tr.addClass('shown');
-                $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
                 tr.next().find('td').addClass('no-padding bg-gray-light')
+                $('.details-control').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $(this).removeClass('btn-open').addClass('btn-close');
             }
         });
 
@@ -306,7 +322,7 @@
                 columns: [{
                         data: null,
                         "width": "1%",
-                        render: DataTable.render.select(),                        
+                        render: DataTable.render.select(),
                     },
                     {
                         data: 'actions',
@@ -314,7 +330,6 @@
                         orderable: false,
                         serachable: false,
                         sClass: 'text-center',
-                        "width": "5%",
                     }, {
                         data: 'CD_EMPRESA',
                         name: 'CD_EMPRESA',

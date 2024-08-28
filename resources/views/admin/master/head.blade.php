@@ -60,7 +60,7 @@
     <!-- iCheck for checkboxes and radio inputs -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/iCheck/all.css') }}">
     <!-- Template Main CSS File -->
-    <link href="{{ asset('css/styleAdmin.css?v=10') }}" rel="stylesheet">
+    <link href="{{ asset('css/styleAdmin.css?v=11') }}" rel="stylesheet">
     <link href="{{ asset('css/notafiscal.css?v=5') }}" rel="stylesheet">
 
 

@@ -88,7 +88,8 @@ class FinanceiroController extends Controller
         return DataTables::of($data)
             ->addColumn('actions', function ($d) {
                 return '<button class="details-control fa fa-plus-circle" aria-hidden="true"></button>
-                        <button class="detais-centrocusto fa fa-align-justify" aria-hidden="true"></button>
+                        <button class="details-centrocusto fa fa-align-justify btn-open" aria-hidden="true"></button>
+                        <button class="details-motivo fa fa-commenting-o btn-open" aria-hidden="true"></button>
                                                 
                         ';
             })

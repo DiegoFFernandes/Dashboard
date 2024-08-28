@@ -299,11 +299,11 @@ iframe {
     color: green;
 }
 
-.fa-align-justify{
+.btn-open{
     color: rgb(0, 77, 128);
 }
 
-.fa-minus-square-o {
+.btn-close {
     color: red;
 }
 

@@ -105,7 +105,6 @@ class FinanceiroController extends Controller
 
         return DataTables::of($data)->make(true);
     }
-
     public function updateStatusContasBloqueadas()
     {
         $data = $this->request->all();
@@ -127,5 +126,13 @@ class FinanceiroController extends Controller
             return response()->json(['success' => 'Contas liberadas com sucesso!']); 
         }
         
+    }
+    public function listCentroCustoContasBloqueadas(){
+        $cd_empresa = $this->request->cd_empresa; 
+        $nr_lancamento = $this->request->nr_lancamento;
+
+        $data = $this->financeiro->listCentroCustoContasBloqueadas($cd_empresa, $nr_lancamento);
+
+        return Datatables::of($data)->make(true);
     }
 }

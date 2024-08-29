@@ -127,7 +127,6 @@ class Financeiro extends Model
         $results = DB::connection('firebird_rede')->select($query);
         return $results =  Helper::ConvertFormatText($results);
     }
-
     public function listHistoricoContasBloqueadas($cd_empresa, $nr_lancamento)
     {
         $query = "
@@ -171,5 +170,55 @@ class Financeiro extends Model
 
             return DB::connection('firebird_rede')->select($query);
         });
+    }
+    public function listCentroCustoContasBloqueadas($cd_empresa, $nr_lancamento)
+    {
+        $query = "
+                    SELECT
+                        C.DT_LANCAMENTO,
+                        C.CD_EMPRESA,
+                        COALESCE(H.CD_CENTROCUSTO, N.CD_CENTROCUSTO) CD_CENTROCUSTO,
+                        COALESCE(H.VL_CENTROCUSTO, N.VL_CENTROCUSTO) VL_CENTROCUSTO,
+                        CC.DS_CENTROCUSTO,
+                        C.NR_DOCUMENTO,
+                        C.CD_PESSOA,
+                        C.NR_PARCELA,
+                        C.NR_LANCAMENTO
+                    FROM CONTAS C
+                    LEFT JOIN CONTASHISTORICOCC H ON (C.CD_EMPRESA = H.CD_EMPRESA
+                        AND C.NR_LANCAMENTO = H.NR_LANCAMENTO
+                        AND C.NR_PARCELA = H.NR_PARCELA
+                        AND C.CD_PESSOA = H.CD_PESSOA
+                        AND C.CD_TIPOCONTA = H.CD_TIPOCONTA)
+
+                    LEFT JOIN NOTA NT ON (NT.NR_LANCAMENTO = C.NR_LANCTONOTA
+                        AND NT.CD_EMPRESA = C.CD_EMPRESA
+                        AND NT.CD_SERIE = C.CD_SERIE
+                        AND NT.TP_NOTA = C.TP_CONTAS)
+                    LEFT JOIN ITEMNOTACC N ON (NT.CD_EMPRESA = N.CD_EMPRESA
+                        AND NT.NR_LANCAMENTO = N.NR_LANCAMENTO
+                        AND NT.TP_NOTA = N.TP_NOTA
+                        AND NT.CD_SERIE = N.CD_SERIE)
+
+                    LEFT JOIN CENTROCUSTO CC ON (CC.CD_EMPRESA = COALESCE(H.CD_EMPRESA, N.CD_EMPRESA)
+                        AND CC.CD_CENTROCUSTO = COALESCE(H.CD_CENTROCUSTO, N.CD_CENTROCUSTO))
+
+                    WHERE C.NR_LANCAMENTO = $nr_lancamento
+                        AND C.CD_EMPRESA = $cd_empresa
+                    GROUP BY C.DT_LANCAMENTO,
+                        C.CD_EMPRESA,
+                        H.CD_CENTROCUSTO,
+                        H.VL_CENTROCUSTO,
+                        N.CD_CENTROCUSTO,
+                        N.VL_CENTROCUSTO,
+                        C.NR_DOCUMENTO,
+                        C.CD_PESSOA,
+                        C.NR_PARCELA,
+                        C.NR_LANCAMENTO,
+                        CC.DS_CENTROCUSTO  
+                    ";
+
+        $results = DB::connection('firebird_rede')->select($query);
+        return $results =  Helper::ConvertFormatText($results);
     }
 }

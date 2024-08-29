@@ -130,8 +130,8 @@
             <table class="table row-border" id="conta-{{ NR_LANCAMENTO }}" style="width:80%; font-size:12px" >
                 <thead>
                     <tr>
-                        <th>Historico</th>
-                        <th>Valor</th>                       
+                        <th>Centro Resultado</th>
+                        <th>Vl Despesas</th>                       
                     </tr>
                 </thead>
                 
@@ -168,7 +168,7 @@
         var template_historico = Handlebars.compile($("#details-item-historico").html());
         var template_motivo = Handlebars.compile($("#details-motivo").html());
         var template_vencimento = Handlebars.compile($("#details-vencimento").html());
-        var templatecentro_resultado = Handlebars.compile($("#details-centro-resultado").html());
+        var template_centro_resultado = Handlebars.compile($("#details-centro-resultado").html());
 
         tableContas = initableContas('table-contas-bloqueadas-pendentes', 'N');
 
@@ -195,6 +195,7 @@
                 row.child.hide();
                 tr.removeClass('shown');
                 $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $('.details-centrocusto').removeClass('btn-close').addClass('btn-open');
                 $('.details-motivo').removeClass('btn-close').addClass('btn-open');
             } else {
                 // Open this row
@@ -204,6 +205,7 @@
                 tr.addClass('shown');
                 $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
                 tr.next().find('td').addClass('no-padding bg-gray-light')
+                $('.details-centrocusto').removeClass('btn-close').addClass('btn-open');
                 $('.details-motivo').removeClass('btn-close').addClass('btn-open');
             }
         });
@@ -219,6 +221,7 @@
                 row.child.hide();
                 tr.removeClass('shown');
                 $(this).removeClass('btn-close').addClass('btn-open');
+                $('.details-centrocusto').removeClass('btn-close').addClass('btn-open');
                 $('.details-control').removeClass('fa-minus-circle').addClass('fa-plus-circle');
 
             } else {
@@ -227,6 +230,35 @@
                 // console.log(row.data());
                 tr.addClass('shown');
                 tr.next().find('td').addClass('no-padding bg-gray-light')
+                $('.details-centrocusto').removeClass('btn-close').addClass('btn-open');
+                $('.details-control').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $(this).removeClass('btn-open').addClass('btn-close');
+            }
+        });
+
+        $('tbody').on('click', '.details-centrocusto', function() {
+            var tr = $(this).closest('tr');
+            var row = tableContas.row(tr);
+            var tableId = 'conta-' + row.data().NR_LANCAMENTO;
+
+            var nm_pessoa = row.data().NM_PESSOA;
+
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+                $(this).removeClass('btn-close').addClass('btn-open');
+                $('.details-motivo').removeClass('btn-close').addClass('btn-open');
+                $('.details-control').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+
+            } else {
+                // Open this row
+                row.child(template_centro_resultado(row.data())).show();
+                initTableCentroResultado(tableId, row.data());
+                
+                tr.addClass('shown');
+                tr.next().find('td').addClass('no-padding bg-gray-light')
+                $('.details-motivo').removeClass('btn-close').addClass('btn-open');
                 $('.details-control').removeClass('fa-minus-circle').addClass('fa-plus-circle');
                 $(this).removeClass('btn-open').addClass('btn-close');
             }
@@ -271,9 +303,10 @@
 
                 });
                 $.ajax({
-                    method: "get",
+                    method: "post",
                     url: "{{ route('contas-bloqueadas.update') }}",
                     data: {
+                        _token: $("[name=csrf-token]").attr("content"),
                         contas: contas,
                         ds_liberacao: dsLiberacao
                     },
@@ -295,7 +328,47 @@
             } else {
                 alert('Nenhuma conta foi selecionada!');
             }
-        }
+        };
+
+        function initTableCentroResultado(tableId, data) {
+            var tableHistorico = $('#' + tableId).DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                },
+                "searching": false,
+                "paging": false,
+                "bInfo": false,
+                processing: false,
+                serverSide: false,
+                ordering: false,
+                ajax: {
+                    method: "POST",
+                    url: " {{ route('centroresultado-contas-bloqueadas.list') }}",
+                    data: {
+                        _token: $("[name=csrf-token]").attr("content"),
+                        nr_lancamento: data.NR_LANCAMENTO,
+                        cd_empresa: data.CD_EMPRESA
+                    }
+                },
+                columns: [{
+                        data: 'DS_CENTROCUSTO',
+                        name: 'DS_CENTROCUSTO',
+                    },
+                    {
+                        data: 'VL_CENTROCUSTO',
+                        name: 'VL_CENTROCUSTO',
+                    }
+                ],
+                columnDefs: [{
+                    targets: [1],
+                    render: $.fn.dataTable.render.number('.', ',', 2),
+                }],
+                "footerCallback": function(tfoot, data, start, end, display) {
+                    $(tfoot).find('td').removeClass('no-padding');
+                }
+
+            });
+        };
 
         function initableContas(tableID, status) {
             tableContas = $('#' + tableID).DataTable({

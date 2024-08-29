@@ -48,6 +48,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
 
+<script src="{{ asset('adminlte/bower_components/html2canva/js/html2canvas.min.js?v=2') }}"></script>
+
 <script src="{{ asset('adminlte/bower_components/powerbi/powerbi.min.js') }}"></script>
 
 <script>

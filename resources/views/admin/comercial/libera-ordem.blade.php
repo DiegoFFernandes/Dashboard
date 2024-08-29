@@ -16,6 +16,7 @@
                                     <th>Emp</th>
                                     <th>Pedido</th>
                                     <th>Cliente</th>
+                                    <th>Qtd</th>
                                     <th>Vendedor</th>
                                     <th>Tabela S/N</th>
                                     <th>Validade</th>
@@ -28,6 +29,7 @@
                                     <th>Emp</th>
                                     <th>Pedido</th>
                                     <th>Cliente</th>
+                                    <th>Qtd</th>
                                     <th>Vendedor</th>
                                     <th>Tabela S/N</th>
                                     <th>Validade</th>
@@ -42,7 +44,8 @@
         </div>
     </section>
     <!-- /.row -->
-    <div class="modal modal-default fade" id="modal-pedido">
+    {{-- Modal de aprovação --}}
+    {{-- <div class="modal modal-default fade" id="modal-pedido">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -75,6 +78,62 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-alert pull-left" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-success" id="btn-save-confirm">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+    {{-- Modal de Itens --}}
+    <div class="modal modal-default fade" id="modal-table-pedido">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button> --}}
+                    <h4 class="modal-title">Itens
+                        <button type="button" class="btn btn-success pull-right" id="btn-print">Print</button>
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="nr_pedido">Pedido</label>
+                                <input id="nr_pedido" class="form-control" type="text" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="pessoa">Pessoa</label>
+                                <input id="pessoa" class="form-control" type="text" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table compact row-border" id="item-pedido" style="width:80%; font-size:12px">
+                        <thead>
+                            <tr>
+                                <th style="">Sq</th>
+                                <th>Item</th>
+                                <th style="">Vl Venda</th>
+                                <th style="">Vl Tabela</th>
+                                <th style="">%Desc</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <div class="col-md-12">
+                            <div class="form-group" style="text-align: left">
+                                <label for="liberacao">Motivo Liberação:</label>
+                                <textarea id="liberacao" class="form-control" rows="4" cols="50"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-alert pull-left" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btn-save-confirm">Salvar</button>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,6 +175,40 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
+
+            $('#btn-print').click(function() {
+                var modalElement = document.querySelector(
+                    '#modal-table-pedido'); // Seleciona o conteúdo do modal
+
+                html2canvas(modalElement, {
+                    scale: 2, // Aumenta a resolução da imagem capturada
+                    // useCORS: true, // Permite capturar imagens externas de outras origens (útil para evitar problemas de CORS)
+                    // logging: true, // Ativa o log no console para depuração
+                    backgroundColor: '#ffffff', // Captura com fundo transparente
+                    x: 500, // Ponto de partida no eixo X para capturar (corte horizontal)
+                    // y: 150, // Ponto de partida no eixo Y para capturar (corte vertical)
+                    width: modalElement.offsetWidth - 1000, // Largura da área a ser capturada
+                    height: modalElement.offsetHeight, // Altura da área a ser capturada
+                    // scrollX: 100, // Desconsidera o deslocamento horizontal da janela ao capturar
+                    // scrollY: 100, // Desconsidera o deslocamento vertical da janela ao capturar
+                }).then(canvas => {
+                    canvas.toBlob(function(blob) {
+                        navigator.clipboard.write([
+                            new ClipboardItem({
+                                'image/png': blob
+                            })
+                        ]).then(function() {
+                            msgToastr("Imagem copiada para area de transferência!",
+                                'success');
+                        }, function(error) {
+
+                            msgToastr("Falha ao copiar:", 'warning');
+
+                        });
+                    });
+                });
+            });
+
             var template = Handlebars.compile($("#details-template").html());
             var table = $('#table-ordem-block').DataTable({
                 language: {
@@ -127,7 +220,7 @@
                 processing: false,
                 serverSide: false,
                 scrollX: true,
-                scrollY: '55vh',
+                scrollY: '60vh',
                 initComplete: function() {
                     this.api()
                         .columns()
@@ -162,16 +255,17 @@
                         name: 'EMP',
                         "width": "1%",
                         visible: true
-                    },
-                    {
+                    }, {
                         data: 'PEDIDO',
                         name: 'PEDIDO'
                     },
                     {
                         data: 'PESSOA',
                         name: 'PESSOA'
-                    },
-                    {
+                    }, {
+                        data: 'QTDPNEUS',
+                        name: 'QTDPNEUS'
+                    }, {
                         data: 'VENDEDOR',
                         name: 'VENDEDOR',
                         visible: true
@@ -193,24 +287,34 @@
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
                 var tableId = 'pedido-' + row.data().PEDIDO;
-                if (row.child.isShown()) {
-                    // This row is already open - close it
-                    row.child.hide();
-                    tr.removeClass('shown');
-                    $(this).find('i').removeClass('fa-minus-circle').addClass('fa-plus-circle');
-                } else {
-                    // Open this row
-                    row.child(template(row.data())).show();
-                    initTable(tableId, row.data());
-                    tr.addClass('shown');
-                    $(this).find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
-                    tr.next().find('td').addClass('no-padding bg-gray-light');
-                }
+
+                $('#nr_pedido').val(row.data().PEDIDO);
+                $('#pessoa').val(row.data().PESSOA);
+
+                $('#modal-table-pedido').modal('show');
+                // if (row.child.isShown()) {
+                //     // This row is already open - close it
+                //     row.child.hide();
+                //     tr.removeClass('shown');
+                //     $(this).find('i').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                // } else {
+                //     // Open this row
+                //     row.child(template(row.data())).show();
+                //     initTable(tableId, row.data());
+                //     tr.addClass('shown');
+                //     $(this).find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
+                //     tr.next().find('td').addClass('no-padding bg-gray-light');
+                // }
+
+                initTable('item-pedido', row.data());
             });
 
             function initTable(tableId, data) {
                 var url = "{{ route('get-pneus-ordens-bloqueadas-comercial', ':pedido') }}";
                 url = url.replace(':pedido', data.PEDIDO);
+
+                $('#' + tableId).DataTable().destroy();
+
                 table_item_pedido = $('#' + tableId).DataTable({
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
@@ -256,6 +360,7 @@
 
 
             }
+
             $(document).on('click', '#btn-open-modal-aproover', function() {
                 var pessoa = $(this).data('pessoa');
                 var pedido = $(this).data('pedido');
@@ -281,7 +386,8 @@
                             msgToastr(response.success,
                                 'success');
                             $('#table-ordem-block').DataTable().ajax.reload();
-                            $('#modal-pedido').modal('hide');
+                            // $('#modal-pedido').modal('hide');
+                            $('#modal-table-pedido').modal('hide');
                         } else {
                             msgToastr(response.error,
                                 'warning');

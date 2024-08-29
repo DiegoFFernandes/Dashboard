@@ -44,7 +44,8 @@ class LiberaOrdemComercial extends Model
                     ELSE 'SIM'
                     END TABPRECO,
                     TABPRECO.DS_TABPRECO,
-                    TABPRECO.DT_VALIDADE
+                    TABPRECO.DT_VALIDADE,
+                    COUNT(IPP.id) QTDPNEUS
                 FROM PEDIDOPNEU PP
                 INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.IDPEDIDOPNEU = PP.ID)
                 INNER JOIN ITEM I ON (IPP.IDSERVICOPNEU = I.CD_ITEM)

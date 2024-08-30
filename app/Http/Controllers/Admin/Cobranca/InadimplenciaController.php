@@ -14,6 +14,8 @@ use function PHPUnit\Framework\isNull;
 
 class InadimplenciaController extends Controller
 {
+    public $request, $user, $inadimplencia, $banco;
+
     public function __construct(
         Request $request,
         Inadimplencia $inadimplencia

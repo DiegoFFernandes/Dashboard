@@ -300,7 +300,7 @@
             function initTable(tableId, data) {
                 table_regiao = $('#' + tableId).DataTable({
                     language: {
-                        url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
                     "searching": false,
                     "paging": false,
@@ -378,7 +378,7 @@
             function initTableClient(tableId, data) {
                 $('#' + tableId).DataTable({
                     language: {
-                        url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
                     "searching": true,
                     "paging": true,
@@ -441,7 +441,7 @@
             function initTableAll(rede) {                
                 table = $('#vvencer').DataTable({
                     // language: {
-                    //     url: "http://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
+                    //     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     // },
                     processing: false,
                     serverSide: false,

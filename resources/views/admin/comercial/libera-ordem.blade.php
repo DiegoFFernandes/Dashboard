@@ -45,7 +45,7 @@
     </section>
     <!-- /.row -->
     {{-- Modal de aprovação --}}
-    {{-- <div class="modal modal-default fade" id="modal-pedido">
+    <div class="modal modal-default fade" id="modal-pedido">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-    </div> --}}
+    </div>
 
     {{-- Modal de Itens --}}
     <div class="modal modal-default fade" id="modal-table-pedido">
@@ -243,12 +243,8 @@
                 },
                 ajax: "{{ route('get-ordens-bloqueadas-comercial') }}",
                 columns: [{
-                        "className": 'details-control',
-                        "orderable": false,
-                        "searchable": false,
-                        "data": 'null',
-                        "defaultContent": '<i class="fa fa-plus-circle"></i>',
-                        "width": "1%"
+                        data: "actions",
+                        name: "actions",                        
                     },
                     {
                         data: 'EMP',
@@ -283,7 +279,8 @@
                 ],
                 order: [2, 'asc']
             });
-            $('#table-ordem-block tbody').on('click', 'td.details-control', function() {
+
+            $('#table-ordem-block tbody').on('click', '.details-control', function() {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
                 var tableId = 'pedido-' + row.data().PEDIDO;
@@ -307,6 +304,28 @@
                 // }
 
                 initTable('item-pedido', row.data());
+            });
+
+            $('#table-ordem-block tbody').on('click', '.details-down', function() {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+                var tableId = 'pedido-' + row.data().PEDIDO;              
+
+                
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                    $(this).find('i').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                } else {
+                    // Open this row
+                    row.child(template(row.data())).show();
+                    initTable(tableId, row.data());
+                    tr.addClass('shown');
+                    $(this).find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
+                    tr.next().find('td').addClass('no-padding bg-gray-light');
+                }
+                
             });
 
             function initTable(tableId, data) {

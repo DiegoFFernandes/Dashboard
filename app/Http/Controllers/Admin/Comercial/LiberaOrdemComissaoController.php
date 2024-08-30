@@ -109,37 +109,11 @@ class LiberaOrdemComissaoController extends Controller
        $data = $this->libera->listOrdensBloqueadas($cd_regiao, $pedidos);
 
         return DataTables::of($data)
-            // ->addColumn('dsbloqueiopneu', function($d){
-            //     $dsbloqueio = $d->DSBLOQUEIO;
-            //     $linhas = explode("\n", $dsbloqueio);
-            //     $limiteUltrapassado = [];
-            //     $duplicatasAtraso = [];
-            //     $pessoa = [];
-            //     $pneus = [];
-
-            //     foreach ($linhas as $linha) {
-            //         // Remover espaços em branco no início e no final da linha
-            //         $linha = trim($linha);
-
-            //         if ($linha !== "") {
-            //             if (strpos($linha, "Ultrapassou o Limite de Crédito") !== false) {
-            //                 // Linha indicando que o limite de crédito foi ultrapassado
-            //                 $limiteUltrapassado[] = $linha;
-            //             } elseif (strpos($linha, "Duplicatas com Atraso acima do Limite") !== false){
-            //                 $duplicatasAtraso[] = $linha;
-            //             }
-            //             elseif (strpos($linha, "Pessoa.:") !== false){
-            //                 $pessoa[] = $linha;
-            //             }
-
-            //             else {
-            //                 // Linha contendo informações do pneu
-            //                 $pneus[] = $linha;
-            //             }
-            //         }
-            //     }  
-            //     return $pneus;
-            // })
+            ->addColumn('actions', function($d){
+                return '<button class="details-control fa fa-plus-circle" aria-hidden="true"></button>
+                <button class="details-down fa fa-arrow-down" aria-hidden="true"></button>';               
+            })
+            ->rawColumns(['actions'])
             ->make(true);
     }
     public function getListPneusOrdemBloqueadas($id)

@@ -63,9 +63,9 @@ class BloqueioPedidosController extends Controller
     }
     public function getBloqueioPedido()
     {
-        if ($this->user->hasRole('admin|gerencia')) {
+        if ($this->user->hasRole('admin')) {
             $cd_regiao = "";
-        } elseif ($this->user->hasRole('coordenador')) {
+        } elseif ($this->user->hasRole('coordenador|gerencia')) {
             //Criar condição caso o usuario for gerente mais não estiver associado no painel
             $find = $this->area->findAreaUser($this->user->id);
             $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
@@ -108,14 +108,13 @@ class BloqueioPedidosController extends Controller
     }
     public function getPedidoAcompanhar()
     {
-        if ($this->user->hasRole('admin|gerencia')) {
+        if ($this->user->hasRole('admin')) {
             $cd_regiao = "";
-        } elseif ($this->user->hasRole('coordenador')) {
-            //Criar condição caso o usuario for gerente mais não estiver associado no painel
+        } elseif ($this->user->hasRole('coordenador|gerencia')) {
             $find = $this->area->findAreaUser($this->user->id);
             $array = json_decode($find, true);
             if (empty($array)) {
-                return Redirect::route('admin.dashboard')->with('warning', 'Usuario com permissão  de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
+                return Redirect::route('admin.dashboard')->with('warning', 'Usuario com permissão de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
             }
             $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
             foreach ($regiao as $r) {
@@ -157,7 +156,7 @@ class BloqueioPedidosController extends Controller
             })
             ->make();
     }
-    
+
     public function getDetalheItemPedidoAcompanhar($nrordem)
     {
         // return $nrordem;

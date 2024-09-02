@@ -228,13 +228,13 @@ class Nota extends Model
                     N.TP_NOTA = 'S'
                     AND N.CD_SERIE IN ('F', 'E')
                     AND N.ST_NOTA = 'V'
-                    AND N.DT_EMISSAO >= CURRENT_DATE-1
+                    --AND N.DT_EMISSAO >= CURRENT_DATE-1
                     --AND N.HR_NOTA BETWEEN CURRENT_TIME - 1800 AND CURRENT_TIME
                     --and N.NR_NOTAFISCAL IN (35224,35229)                     
                     " . ($nr_lancamento == 0 ? "" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "                 
                     
-                    AND P.DS_EMAIL IS NOT NULL
-                    AND P.DS_EMAIL NOT IN ('TESTE@IVORECAP.COM.BR', 'TESTE@TESTE.COM.BR', 'FNE@IVORECAP.COM.BR', 'NFE@IVORECAP.COM.BR')
+                    --AND P.DS_EMAIL IS NOT NULL
+                    --AND P.DS_EMAIL NOT IN ('TESTE@IVORECAP.COM.BR', 'TESTE@TESTE.COM.BR', 'FNE@IVORECAP.COM.BR', 'NFE@IVORECAP.COM.BR')
                     " . ($cd_empresa == 0 ? "" : "AND N.CD_EMPRESA IN ($cd_empresa)") . " 
                     --AND N.CD_EMPRESA = 101
                 ORDER BY O_IDORDEMPRODUCAORECAP, O_ORDEM";
@@ -247,8 +247,10 @@ class Nota extends Model
                 return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
             }, (array) $result);
         }, $results);
+       
         return $results;
-        return response()->json($results, 200, [], JSON_UNESCAPED_UNICODE);
+
+        // return response()->json($results, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function StoreNota($input)
@@ -311,6 +313,7 @@ class Nota extends Model
                     when notas.status = 'I' THEN 'NÚMERO INVALIDO'
                     when notas.status = 'A' THEN 'AGUARDANDO ENVIO'
                     when notas.status = 'B' THEN 'NÃO USA WHATSAPP'
+                    when notas.status = 'C' THEN 'NOTA CANCELADA'
                     END as STATUS                   
                     ")
 

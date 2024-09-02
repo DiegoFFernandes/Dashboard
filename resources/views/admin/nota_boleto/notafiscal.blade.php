@@ -2,7 +2,6 @@
 
 @section('content')
     <!-- Main content -->
-
     <section class="content">
         <div class="row">
             <div class="col-md-12">
@@ -309,13 +308,7 @@
                 </div>
     </section>
 @endsection
-
-
-
-
 @section('scripts')
     @includeIf('admin.master.datatables')
     <script src="{{ asset('js/scripts.js') }}"></script>
-
-    <script type="text/javascript"></script>
 @endsection

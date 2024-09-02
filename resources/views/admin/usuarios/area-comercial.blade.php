@@ -21,7 +21,7 @@
                                     <select class="form-control select2" id="cd_areacomercial" style="width: 100%;">
                                         <option selected="selected">Selecione</option>
                                         @foreach ($area as $r)
-                                            <option value="{{ $r->CD_AREACOMERCIAL }}">{{ $r->DS_AREACOMERCIAL }}
+                                            <option value="{{ $r['CD_AREACOMERCIAL'] }}">{{ $r['DS_AREACOMERCIAL'] }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -107,11 +107,11 @@
                         <div class="col-md-12">
                             <input id="token" name="_token" type="hidden" value="{{ csrf_token() }}">
                             <div class="form-group">
-                                <label>Região Junsoft</label>
+                                <label>Area Junsoft</label>
                                 <select class="form-control" name="cd_areacomercial_modal" id="cd_areacomercial_modal"
                                     style="width: 100%;">
                                     @foreach ($area as $r)
-                                        <option value="{{ $r->CD_AREACOMERCIAL }}">{{ $r->DS_AREACOMERCIAL }}
+                                        <option value="{{ $r['CD_AREACOMERCIAL'] }}">{{ $r['DS_AREACOMERCIAL'] }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -131,6 +131,7 @@
 @endsection
 @section('scripts')
     @includeIf('admin.master.datatables')
+    <script src="{{ asset('js/scripts.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#cd_areacomercial').select2();
@@ -155,30 +156,10 @@
                     success: function(result) {
                         $("#loading").addClass('hidden');
                         if (result.errors) {
-                            setTimeout(function() {
-                                $(".alert").removeClass('alert-success hidden');
-                                $(".alert").addClass('alert-warning');
-                                $(".alert p").html('<i class="icon fa fa-ban"></i> ' +
-                                    result.errors);
-                            }, 400);
-                            window.setTimeout(function() {
-                                //$(".alert").alert('close');
-                                $(".alert").removeClass('alert-warning');
-                                $(".alert").addClass('hidden');
-                            }, 2000);
+                            msgToastr(result.errors, 'warning');
                         } else {
-                            //alert(result.success);                            
-                            setTimeout(function() {
-                                $(".alert").removeClass('alert-warning hidden');
-                                $(".alert").addClass('alert-success');
-                                $(".alert p").html('<i class="icon fa fa-check"></i> ' +
-                                    result.success);
-                            }, 400);
-                            window.setTimeout(function() {
-                                //$(".alert").alert('close');
-                                $(".alert").addClass('hidden');
-                                $('#table-area').DataTable().ajax.reload()
-                            }, 2000);
+                            msgToastr(result.success, 'success');
+                            $('#table-area').DataTable().ajax.reload()
                         }
                     }
                 });
@@ -224,99 +205,111 @@
             //dataTable e um variavel que tras a informação da tabela.
             $('#table-area').on('click', '.btn-edit', function() {
                 var rowData = dataTable.row($(this).parents('tr')).data();
-                console.log(rowData);
+                // console.log(rowData);
                 $('#id').val(rowData.id);
                 $('#cd_areacomercial_modal').val(rowData.cd_areacomercial).trigger('change');
                 $('#cd_usuario_modal').val(rowData.cd_usuario).trigger('change');
                 $('.modal').modal('show');
             });
             $('.btn-update').click(function() {
-                if (!confirm("Você tem certeza que deseja atualizar?")) return;
-                let id = $('#id').val(),
-                    cd_areacomercial = $('#cd_areacomercial_modal').val(),
-                    ds_areacomercial = $("#cd_areacomercial_modal option:selected").text(),
-                    cd_usuario = $('#cd_usuario_modal').val();
-                    console.log(cd_areacomercial)
-                
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route('edit-area-usuario') }}',
-                    data: {
-                        id: id,
-                        cd_areacomercial: cd_areacomercial,
-                        cd_usuario: cd_usuario,
-                        ds_areacomercial: ds_areacomercial,
-                        _token: $('#token').val(),
-                    },
-                    beforeSend: function() {
-                        $("#loading").removeClass('hidden');
-                    },
-                    success: function(result) {
-                        $("#loading").addClass('hidden');
-                        if (result.errors) {
-                            setTimeout(function() {
-                                $(".alert").removeClass('alert-success hidden');
-                                $(".alert").addClass('alert-warning');
-                                $(".alert p").html('<i class="icon fa fa-ban"></i> ' +
-                                    result.errors);
-                            }, 400);
-                            window.setTimeout(function() {
-                                //$(".alert").alert('close');
-                                $(".alert").removeClass('alert-warning');
-                                $(".alert").addClass('hidden');
-                            }, 2000);
-                        } else {
-                            //alert(result.success);                            
-                            setTimeout(function() {
-                                $(".alert").removeClass('alert-warning hidden');
-                                $(".alert").addClass('alert-success');
-                                $(".alert p").html('<i class="icon fa fa-check"></i> ' +
-                                    result.success);
-                            }, 400);
-                            window.setTimeout(function() {
-                                //$(".alert").alert('close');
-                                $(".alert").addClass('hidden');
-                                $('.modal').modal('hide');
-                                $('#table-area').DataTable().ajax.reload()
-                            }, 2000);
+                toastr.warning(
+                    "<button type='button' id='confirmationButtonYes' class='btn btn-success clear'>Sim</button>" +
+                    "<button type='button' id='confirmationButtonNo' class='btn btn-primary clear'>Não</button>",
+                    'Você tem certeza que deseja atualizar?', {
+                        closeButton: false,
+                        allowHtml: true,
+                        progressBar: false,
+                        timeOut: 0,
+                        positionClass: "toast-top-center",
+                        onShown: function(toast) {
+                            $("#confirmationButtonYes").click(function() {
+                                let id = $('#id').val(),
+                                    cd_areacomercial = $('#cd_areacomercial_modal').val(),
+                                    ds_areacomercial = $(
+                                        "#cd_areacomercial_modal option:selected").text(),
+                                    cd_usuario = $('#cd_usuario_modal').val();
+
+                                // console.log(cd_areacomercial);
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '{{ route('edit-area-usuario') }}',
+                                    data: {
+                                        id: id,
+                                        cd_areacomercial: cd_areacomercial,
+                                        cd_usuario: cd_usuario,
+                                        ds_areacomercial: ds_areacomercial,
+                                        _token: $('#token').val(),
+                                    },
+                                    beforeSend: function() {
+                                        $("#loading").removeClass('hidden');
+                                    },
+                                    success: function(result) {
+                                        $("#loading").addClass('hidden');
+                                        if (result.errors) {
+                                            msgToastr(result.errors, 'warning');
+                                        } else {
+                                            $('.modal').modal('hide');
+                                            msgToastr(result.success,
+                                                'success');
+                                            $('#table-area').DataTable().ajax
+                                                .reload()
+                                        }
+
+                                    }
+                                });
+                            });
                         }
-                    
                     }
-                });
+                );
+
+
             });
+
             //Delete Região/usuario
             var deleteId;
             $('body').on('click', '#getDeleteId', function() {
                 deleteId = $(this).data('id');
-                if (!confirm('Deseja realmente excluir o item ' + deleteId + ' ?')) return;
-                console.log(deleteId);
 
-                $.ajax({
-                    url: "{{ route('area-usuario.delete') }}",
-                    method: 'DELETE',
-                    data: {
-                        id: deleteId,
-                        "_token": $("[name=csrf-token]").attr("content"),
-                    },
-                    beforeSend: function() {
-                        $("#loading").removeClass('hidden');
-                    },
-                    success: function(result) {
-                        $("#loading").addClass('hidden');
-                        setTimeout(function() {
-                            $(".alert").removeClass('alert-warning hidden');
-                            $(".alert").addClass('alert-success');
-                            $(".alert p").html('<i class="icon fa fa-check"></i> ' +
-                                result.success);
-                        }, 400);
-                        window.setTimeout(function() {
-                            //$(".alert").alert('close');
-                            $(".alert").addClass('hidden');
-                            $('.modal').modal('hide');
-                            $('#table-area').DataTable().ajax.reload()
-                        }, 3000);
+                toastr.warning(
+                    "<button type='button' id='confirmationButtonYes' class='btn btn-success clear'>Sim</button>" +
+                    "<button type='button' id='confirmationButtonNo' class='btn btn-primary clear'>Não</button>",
+                    'Deseja realmente excluir o item ' + deleteId + ' ?', {
+                        closeButton: false,
+                        allowHtml: true,
+                        progressBar: false,
+                        timeOut: 0,
+                        positionClass: "toast-top-center",
+                        onShown: function(toast) {
+                            $("#confirmationButtonYes").click(function() {
+                                $.ajax({
+                                    url: "{{ route('area-usuario.delete') }}",
+                                    method: 'DELETE',
+                                    data: {
+                                        id: deleteId,
+                                        "_token": $("[name=csrf-token]").attr(
+                                            "content"),
+                                    },
+                                    beforeSend: function() {
+                                        $("#loading").removeClass('hidden');
+                                    },
+                                    success: function(result) {
+                                        $("#loading").addClass('hidden');
+                                        if (result.errors) {
+                                            msgToastr(result.errors, 'warning');
+                                        } else {
+                                            msgToastr(result.success,
+                                                'success');
+                                            $('#table-area').DataTable().ajax
+                                                .reload()
+                                        }
+                                    }
+                                });
+                            });
+                        }
                     }
-                });
+                );
+
+
             });
 
         });

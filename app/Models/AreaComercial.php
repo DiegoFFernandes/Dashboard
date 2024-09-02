@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -30,20 +31,24 @@ class AreaComercial extends Model
     }
     public function areaAll()
     {
-        $query = "select ac.cd_areacomercial, cast(ac.ds_areacomercial as varchar(40) character set utf8) ds_areacomercial
+        $query = "select ac.cd_areacomercial, ac.ds_areacomercial
         from areacomercial ac";
-        $key = "area_comercial" . Auth::user()->id;
+        $key = "area_comercial_" . Auth::user()->id;       
 
         return Cache::remember($key, now()->addMinutes(60), function () use ($query) {
-            return DB::connection($this->setConnet())->select($query);
+
+            $results = DB::connection("firebird_rede")->select($query);
+
+            return $results = Helper::ConvertFormatText($results);
+
         });
     }
-    public function showUserArea($cd_empresa)
+    public function showUserArea()
     {
         $this->connection = 'mysql';
         return AreaComercial::select('area_comercial.id', 'users.id as cd_usuario', 'users.name', 'area_comercial.cd_areacomercial', 'area_comercial.ds_areacomercial')
             ->join('users', 'users.id', 'area_comercial.cd_usuario')
-            ->whereIn('users.empresa', $cd_empresa)
+            // ->whereIn('users.empresa', $cd_empresa)
             ->orderBy('users.name')
             ->get();
     }
@@ -88,8 +93,8 @@ class AreaComercial extends Model
         AreaComercial::find($input->id)
             ->update([
                 'cd_usuario' => $input->cd_usuario,
-                'cd_areacomercial' => $input->areacomercial,
-                'ds_areacomercial' => $input->areacomercial,
+                'cd_areacomercial' => $input->cd_areacomercial,
+                'ds_areacomercial' => $input->ds_areacomercial,
                 'updated_at' => now(),
             ]);
         return response()->json(['success' => 'Região atualizada para usúario!']);

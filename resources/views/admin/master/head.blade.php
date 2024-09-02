@@ -62,7 +62,7 @@
     <!-- Template Main CSS File -->
     <link href="{{ asset('css/styleAdmin.css?v=11') }}" rel="stylesheet">
     <link href="{{ asset('css/notafiscal.css?v=5') }}" rel="stylesheet">
-
+    <link href="{{ asset('css/boleto.css?v=1') }}" rel="stylesheet">    
 
     @yield('style')    
 </head>

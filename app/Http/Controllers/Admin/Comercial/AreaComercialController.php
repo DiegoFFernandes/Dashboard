@@ -14,6 +14,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AreaComercialController extends Controller
 {
+    public $request, $regiao, $area, $empresa, $user;
     public function __construct(
         Request $request,
         RegiaoComercial $regiao,
@@ -63,15 +64,17 @@ class AreaComercialController extends Controller
         $this->request['cd_cadusuario'] = $this->user->id;
         $input = $this->_validate($this->request);
         $empresa = $this->arrayEmpresa();
+
         if ($this->area->verifyIfExists($input)) {
             return response()->json(['errors' => 'Area já está vinculada com esse usúario!']);
         };
-        if ($this->area->verifyIfExistsArea($input['cd_areacomercial'], $empresa)) {
-            return response()->json(['errors' => 'Já existe essa area associada com usúario!']);
-        }
-        if ($this->area->verifyIfExistsUser($input['cd_usuario'], $empresa)) {
-            return response()->json(['errors' => 'Já existe esse usuario associado com uma area!']);
-        }        
+        // if ($this->area->verifyIfExistsArea($input['cd_areacomercial'], $empresa)) {
+        //     return response()->json(['errors' => 'Já existe essa area associada com usúario!']);
+        // }
+        // if ($this->area->verifyIfExistsUser($input['cd_usuario'], $empresa)) {
+        //     return response()->json(['errors' => 'Já existe esse usuario associado com uma area!']);
+        // }
+
         $store =  $this->area->storeData($input);
         if ($store) {
             return response()->json(['success' => 'Area vinculada com sucesso!']);
@@ -96,11 +99,11 @@ class AreaComercialController extends Controller
     }
     public function list()
     {
-        $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
-        foreach ($empresa as $e) {
-            $array[] = $e->CD_EMPRESA;
-        }
-        $data = $this->area->showUserArea($array);
+        // $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
+        // foreach ($empresa as $e) {
+        //     $array[] = $e->CD_EMPRESA;
+        // }
+        $data = $this->area->showUserArea();
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
                 return '
@@ -112,18 +115,20 @@ class AreaComercialController extends Controller
     }
     public function update()
     {
-        $this->request['cd_cadusuario'] = $this->user->id;
+        $this->request['cd_cadusuario'] = $this->user->id;        
+
         $input = $this->_validate($this->request);
-        $empresa = $this->arrayEmpresa();
+        // $empresa = $this->arrayEmpresa();
+
         if ($this->area->verifyIfExists($input)) {
             return response()->json(['errors' => 'Area já está vinculada com esse usúario!']);
         };
-        if ($this->area->verifyIfExistsArea($input['cd_areacomercial'], $empresa)) {
-            return response()->json(['errors' => 'Já existe essa area associada com usúario!']);
-        }
-        if ($this->area->verifyIfExistsUser($input['cd_usuario'], $empresa)) {
-            return response()->json(['errors' => 'Já existe esse usuario associado com uma area!']);
-        }         
+        // if ($this->area->verifyIfExistsArea($input['cd_areacomercial'], $empresa)) {
+        //     return response()->json(['errors' => 'Já existe essa area associada com usúario!']);
+        // }
+        // if ($this->area->verifyIfExistsUser($input['cd_usuario'], $empresa)) {
+        //     return response()->json(['errors' => 'Já existe esse usuario associado com uma area!']);
+        // }
         return $this->area->updateData($this->request);
     }
     public function destroy()

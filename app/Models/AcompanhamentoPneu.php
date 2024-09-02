@@ -68,7 +68,7 @@ class AcompanhamentoPneu extends Model
     public function ListPedidoPneu($cd_regiao)
     {
         $query = "SELECT PP.IDEMPRESA CD_EMPRESA, PP.ID, PPM.idpedidomovel, 
-        cast(PP.IDPESSOA||' - '||PC.NM_PESSOA as varchar(80) character set utf8) PESSOA, 
+        cast(PP.IDPESSOA||' - '||PC.NM_PESSOA as varchar(200) character set utf8) PESSOA, 
         EP.cd_regiaocomercial,
         PP.DTEMISSAO, PP.DTENTREGA DTENTREGAPED,
         (CASE PP.stpedido
@@ -89,8 +89,8 @@ class AcompanhamentoPneu extends Model
         " . (($cd_regiao != "") ? "AND EP.cd_regiaocomercial IN ($cd_regiao)" : "") . " 
         ORDER BY PP.IDEMPRESA";
 
-        //return DB::connection('firebird_rede')->select($query);
-        $key = "PedidoAll_" . Auth::user()->id;
+        return DB::connection('firebird_rede')->select($query);
+        $key = "PedidoAll_2024" . Auth::user()->id;
         return Cache::remember($key, now()->addMinutes(15), function () use ($query) {
             return DB::connection('firebird_rede')->select($query);
         });

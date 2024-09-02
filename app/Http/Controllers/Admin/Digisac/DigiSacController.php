@@ -33,9 +33,10 @@ class DigiSacController extends Controller
 
     public function notafiscal()
     {
+        $oauth = Digisac::OAuthToken();
 
         $nota = $this->nota->NotasEmitidasResumo(0, 0);
-        
+
         $this->nota->StoreNota($nota);
 
         $notas_para_enviar = $this->nota->listNotaSend();
@@ -84,8 +85,6 @@ class DigiSacController extends Controller
             $base64Pdf = base64_encode($pdfContent);
 
             // return $pdf->download('notafiscal.pdf');
-
-            $oauth = Digisac::OAuthToken();
 
             $envio = Digisac::SendMessage($oauth, $nota[0], $base64Pdf);
 
@@ -260,5 +259,28 @@ class DigiSacController extends Controller
         $this->nota->UpdateNotaReenvia($id);
 
         return response()->json(['success' => 'Nova tentativa de disparo, aguarde processamento!']);
+    }
+    public function Boleto()
+    {
+        $view = view('admin.nota_boleto.boleto');
+        
+        return $html = $view->render();
+
+        $options = [
+            'page-size' => 'A4',
+            'no-stop-slow-scripts' => true,
+            'enable-javascript' => true,
+            'debug-javascript' => true,
+            'encoding' => 'UTF-8',
+            'javascript-delay' => 1000, // Adiciona um delay para garantir que o JS seja carregado antes da renderização.
+        ];
+
+        $pdf = SnappyPdf::loadHTML($html)->setOptions($options);
+
+        return $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.
+
+        $filePath = storage_path('app/public/boleto/boleto.pdf');
+
+        $pdf->save($filePath);
     }
 }

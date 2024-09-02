@@ -56,7 +56,7 @@ class User extends Authenticatable implements JWTSubject
     //     return static::where('id','!=','1')->orderBy('name','asc')->get();
     // }
     
-    public function getData($cd_empresa)
+    public function getData()
     {
         return static::where('id','!=','1')
         // ->whereIn('empresa', $cd_empresa)

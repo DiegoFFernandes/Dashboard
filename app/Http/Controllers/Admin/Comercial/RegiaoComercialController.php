@@ -37,12 +37,14 @@ class RegiaoComercialController extends Controller
         $user_auth    = $this->user;
         $uri         = $this->request->route()->uri();
         $regiao = $this->regiao->regiaoAll();
-        $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
-        foreach($empresa as $e){
-            $array[] = $e->CD_EMPRESA;
-        }    
-        $user =  $this->user->getData($array);
-        $list_regiao = $this->regiao->showUserRegiao($array);
+        // $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
+        // foreach($empresa as $e){
+        //     $array[] = $e->CD_EMPRESA;
+        // }    
+        $user =  $this->user->getData();
+
+        $list_regiao = $this->regiao->showUserRegiao();
+
         return view('admin.usuarios.regiao-comercial', compact(
             'title_page',
             'user_auth',
@@ -83,11 +85,11 @@ class RegiaoComercialController extends Controller
     }
     public function list()
     {
-        $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
-        foreach($empresa as $e){
-            $array[] = $e->CD_EMPRESA;
-        }
-        $data = $this->regiao->showUserRegiao($array);
+        // $empresa = $this->empresa->CarregaEmpresa($this->user->conexao);
+        // foreach($empresa as $e){
+        //     $array[] = $e->CD_EMPRESA;
+        // }
+        $data = $this->regiao->showUserRegiao();
         return DataTables::of($data)
             ->addColumn('Actions', function ($data) {
                 return '

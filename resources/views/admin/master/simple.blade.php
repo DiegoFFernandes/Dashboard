@@ -37,7 +37,7 @@
 
 @includeIf('admin.master.head')
 
-<body onload="init()">
+<body {{-- onload="init()"  --}}>
     <div class="wrapper">
 
         <!-- Content Wrapper. Contains page content -->

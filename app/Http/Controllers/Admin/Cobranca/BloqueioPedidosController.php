@@ -67,8 +67,15 @@ class BloqueioPedidosController extends Controller
             $cd_regiao = "";
         } elseif ($this->user->hasRole('coordenador|gerencia')) {
             //Criar condição caso o usuario for gerente mais não estiver associado no painel
-            $find = $this->area->findAreaUser($this->user->id);
-            $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
+           $area = $this->area->findAreaUser($this->user->id);
+
+           $cd_area = [];
+            foreach ($area as $a) {
+                $cd_area[] = $a['cd_areacomercial'];
+            }
+            $cd_area = implode(",", $cd_area);
+
+            $regiao = $this->regiao->regiaoArea($cd_area);
             foreach ($regiao as $r) {
                 $cd_regiao[] = $r->CD_REGIAOCOMERCIAL;
             }

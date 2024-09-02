@@ -59,7 +59,7 @@ class BloqueioPedido extends Model
         INNER JOIN PESSOA PV ON (PV.CD_PESSOA = VE.CD_VENDEDOR)
         LEFT  JOIN REGIAOCOMERCIAL RC ON (RC.CD_VENDEDOR = VE.CD_VENDEDOR AND EP.cd_regiaocomercial = RC.cd_regiaocomercial)
         LEFT JOIN AREACOMERCIAL AC ON (AC.cd_areacomercial = RC.cd_areacomercial)
-        WHERE PP.STPEDIDO NOT IN ('C', 'A', 'T')
+        WHERE PP.STPEDIDO NOT IN ('C', 'A', 'T', 'P')
         AND PP.IDEMPRESA IN (101,102,103,104,105,106,107,108,109,110)
         AND (PP.STPEDIDO = 'B' OR PE.ST_ATIVA = 'N' OR PE.ST_SCPC = 'S')
         " . (($cd_regiao != "") ? "AND EP.cd_regiaocomercial IN ($cd_regiao)" : "") . "

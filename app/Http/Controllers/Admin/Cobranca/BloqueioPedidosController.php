@@ -112,11 +112,19 @@ class BloqueioPedidosController extends Controller
             $cd_regiao = "";
         } elseif ($this->user->hasRole('coordenador|gerencia')) {
             $find = $this->area->findAreaUser($this->user->id);
-            $array = json_decode($find, true);
-            if (empty($array)) {
+            $area = json_decode($find, true);
+            if (empty($area)) {
                 return Redirect::route('admin.dashboard')->with('warning', 'Usuario com permissão de coordenador mais sem vinculo com área, fale com o Administrador do sistema!');
             }
-            $regiao = $this->regiao->regiaoArea($find[0]->cd_areacomercial);
+            $cd_area = [];
+            foreach ($area as $a) {
+                $cd_area[] = $a['cd_areacomercial'];
+            }
+            $cd_area = implode(",", $cd_area);
+
+            $regiao = $this->regiao->regiaoArea($cd_area);
+            
+            $cd_regiao = [];
             foreach ($regiao as $r) {
                 $cd_regiao[] = $r->CD_REGIAOCOMERCIAL;
             }

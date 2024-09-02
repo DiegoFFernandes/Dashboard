@@ -54,7 +54,7 @@ class RegiaoComercial extends Model
         ac.cd_areacomercial, cast(ac.ds_areacomercial as varchar(40) character set utf8) ds_areacomercial
         from regiaocomercial rc
         inner join areacomercial ac on (ac.cd_areacomercial = rc.cd_areacomercial)
-        where ac.cd_areacomercial = $cd_areacomercial
+        where ac.cd_areacomercial in ($cd_areacomercial)
         order by ds_regiaocomercial";
 
         return DB::connection('firebird_rede')->select($query);

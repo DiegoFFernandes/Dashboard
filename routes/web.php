@@ -219,7 +219,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('movimento/acompanha-pedidos', [BloqueioPedidosController::class, 'index'])->name('bloqueio-pedidos');
             Route::get('movimento/get-bloqueio-pedidos', [BloqueioPedidosController::class, 'getBloqueioPedido'])->name('get-bloqueio-pedidos');
             Route::get('movimento/get-pedidos', [BloqueioPedidosController::class, 'getPedidoAcompanhar'])->name('get-pedido-acompanhar');
-            Route::get('movimento/get-item-pedidos/{id}', [BloqueioPedidosController::class, 'getItemPedidoAcompanhar'])->name('get-item-pedido-acompanhar');
+            Route::get('movimento/get-item-pedidos', [BloqueioPedidosController::class, 'getItemPedidoAcompanhar'])->name('get-item-pedido-acompanhar');
             Route::get('movimento/get-detalhe-item-pedidos/{id}', [BloqueioPedidosController::class, 'getDetalheItemPedidoAcompanhar'])->name('get-detalhe-item-pedido');
         });
 

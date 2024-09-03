@@ -5,7 +5,7 @@
     <section class="content">
         <div class="row">
             <div class="col-md-12">
-                <div class="nav-tabs-custom" style="cursor: move;">
+                <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs ui-sortable-handle">
                         <li class="active"><a id="acompanhamento" href="#acompanhamento-pedido" data-toggle="tab"
                                 aria-expanded="false">Acompanhamento</a>
@@ -60,7 +60,7 @@
 @endsection
 
 @section('scripts')
-    @includeIf('admin.master.datatables')    
+    @includeIf('admin.master.datatables')
     <script id="details-template" type="text/x-handlebars-template">
         @verbatim
             <div class="label label-info">{{ PESSOA }}</div>
@@ -188,11 +188,8 @@
             scrollX: true,
             ajax: "{{ route('get-pedido-acompanhar') }}",
             columns: [{
-                    "className": 'details-control',
-                    "orderable": false,
-                    "searchable": false,
-                    "data": 'null',
-                    "defaultContent": '<i class="fa fa-plus-circle"></i>',
+                    data: 'actions',
+                    name: 'actions',
                     "width": "1%"
                 },
                 {
@@ -234,27 +231,29 @@
             }],
             "order": [5, 'desc']
         });
-        $('#pedido-acompanhar tbody').on('click', 'td.details-control', function() {
+        $('#pedido-acompanhar tbody').on('click', '.details-control', function() {
             var tr = $(this).closest('tr');
             var row = table.row(tr);
             var tableId = 'pedido-' + row.data().ID;
+            console.log(tableId);
             if (row.child.isShown()) {
                 // This row is already open - close it
                 row.child.hide();
                 tr.removeClass('shown');
-                $(this).find('i').removeClass('fa-minus-circle').addClass('fa-plus-circle');
+                $(this).removeClass('fa-minus-circle').addClass('fa-plus-circle');
             } else {
                 // Open this row
                 row.child(template(row.data())).show();
                 initTable(tableId, row.data());
                 // console.log(row.data());
                 tr.addClass('shown');
-                $(this).find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
+                $(this).removeClass('fa-plus-circle').addClass('fa-minus-circle');
                 tr.next().find('td').addClass('no-padding bg-gray');
             }
         });
 
         function initTable(tableId, data) {
+
             table_item_pedido = $('#' + tableId).DataTable({
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
@@ -264,7 +263,14 @@
                 "bInfo": false,
                 processing: false,
                 serverSide: false,
-                ajax: data.details_url,
+                ajax: {
+                    method: "GET",
+                    url: " {{ route('get-item-pedido-acompanhar') }}",
+                    data: {
+                        _token: $("[name=csrf-token]").attr("content"),
+                        id: data.ID
+                    }
+                },
                 columns: [{
                         "className": 'details-item-control',
                         "orderable": false,

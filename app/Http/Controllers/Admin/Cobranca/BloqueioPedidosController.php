@@ -67,9 +67,9 @@ class BloqueioPedidosController extends Controller
             $cd_regiao = "";
         } elseif ($this->user->hasRole('coordenador|gerencia')) {
             //Criar condição caso o usuario for gerente mais não estiver associado no painel
-           $area = $this->area->findAreaUser($this->user->id);
+            $area = $this->area->findAreaUser($this->user->id);
 
-           $cd_area = [];
+            $cd_area = [];
             foreach ($area as $a) {
                 $cd_area[] = $a['cd_areacomercial'];
             }
@@ -130,7 +130,7 @@ class BloqueioPedidosController extends Controller
             $cd_area = implode(",", $cd_area);
 
             $regiao = $this->regiao->regiaoArea($cd_area);
-            
+
             $cd_regiao = [];
             foreach ($regiao as $r) {
                 $cd_regiao[] = $r->CD_REGIAOCOMERCIAL;
@@ -148,9 +148,11 @@ class BloqueioPedidosController extends Controller
 
         $pedidos = $this->acompanha->ListPedidoPneu($cd_regiao);
         return DataTables::of($pedidos)
-            ->addColumn('details_url', function ($p) {
-                return route('get-item-pedido-acompanhar', $p->ID);
+            
+            ->addColumn('actions', function ($d) {
+                return '<button class="details-control fa fa-plus-circle" aria-hidden="true"></button>';
             })
+            ->rawColumns(['actions'])
             ->setRowClass(function ($p) {
                 if ($p->STPEDIDO == "ATENDIDO        ") {
                     return 'bg-green';
@@ -162,9 +164,9 @@ class BloqueioPedidosController extends Controller
             })
             ->make();
     }
-    public function getItemPedidoAcompanhar($pedido)
+    public function getItemPedidoAcompanhar()
     {
-        $itempedidos = $this->acompanha->ItemPedidoPneu($pedido);
+        $itempedidos = $this->acompanha->ItemPedidoPneu($this->request->id);
         return DataTables::of($itempedidos)
             ->addColumn('details_item_pedido_url', function ($i) {
                 return route('get-detalhe-item-pedido', $i->ID);

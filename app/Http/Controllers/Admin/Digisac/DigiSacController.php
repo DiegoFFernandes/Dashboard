@@ -10,6 +10,7 @@ use Digisac;
 use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -52,6 +53,10 @@ class DigiSacController extends Controller
                 $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'N');
                 continue;
             };
+            if ($search_send[0]['ST_NOTA'] == 'C') {
+                $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'C');
+                continue;
+            };
 
             $nota = $this->AgruparNota($search_send);
 
@@ -74,6 +79,12 @@ class DigiSacController extends Controller
 
             // return $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.
 
+            $diretory = storage_path('app/public/notas');
+
+            if(File::exists($diretory)){
+                File::cleanDirectory($diretory);
+            }
+
             $filePath = storage_path('app/public/notas/' . $nota[0]['NR_DOCUMENTO'] . '.pdf');
 
             $pdf->save($filePath);
@@ -88,7 +99,7 @@ class DigiSacController extends Controller
 
             $envio = Digisac::SendMessage($oauth, $nota[0], $base64Pdf);
 
-            unlink($filePath);
+            // unlink($filePath);
 
             if (!empty($envio->sent)) {
                 $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'E');
@@ -244,10 +255,7 @@ class DigiSacController extends Controller
 
         return DataTables::of($data)
             ->addColumn('actions', function ($data) {
-                return '
-            <button class="btn btn-xs btn-primary EditSend" data-id=" ' . $data->id . ' ">Reenviar</button>            
-    
-    ';
+                return '<button class="btn btn-xs btn-primary EditSend" data-id=" ' . $data->id . ' ">Reenviar</button>';
                 // <button type="button" data-id="' . $data->id . '" class="btn btn-danger btn-sm" id="getDeleteId">Excluir</button>
             })
             ->rawColumns(['actions'])
@@ -263,8 +271,8 @@ class DigiSacController extends Controller
     public function Boleto()
     {
         $view = view('admin.nota_boleto.boleto');
-        
-        return $html = $view->render();
+
+        $html = $view->render();
 
         $options = [
             'page-size' => 'A4',

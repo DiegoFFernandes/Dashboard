@@ -58,26 +58,26 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="nr_pedido">Pedido</label>
-                                <input id="nr_pedido" class="form-control" type="text" readonly>
+                                <input class="form-control nr_pedido" type="text" readonly>
                             </div>
                         </div>
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="pessoa">Pessoa</label>
-                                <input id="pessoa" class="form-control" type="text" readonly>
+                                <input id="" class="form-control pessoa" type="text" readonly>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="liberacao">Motivo Liberação</label>
-                                <textarea id="liberacao" class="form-control" rows="4" cols="50"></textarea>
+                                <textarea id="" class="form-control liberacao" rows="4" cols="50"></textarea>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-alert pull-left" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" id="btn-save-confirm">Salvar</button>
+                    <button type="button" class="btn btn-success btn-save-confirm" id="">Salvar</button>
                 </div>
             </div>
         </div>
@@ -99,13 +99,13 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="nr_pedido">Pedido</label>
-                                <input id="nr_pedido" class="form-control" type="text" readonly>
+                                <input class="form-control nr_pedido" type="text" readonly>
                             </div>
                         </div>
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="pessoa">Pessoa</label>
-                                <input id="pessoa" class="form-control" type="text" readonly>
+                                <input id="" class="form-control pessoa" type="text" readonly>
                             </div>
                         </div>
                     </div>
@@ -126,12 +126,12 @@
                         <div class="col-md-12">
                             <div class="form-group" style="text-align: left">
                                 <label for="liberacao">Motivo Liberação:</label>
-                                <textarea id="liberacao" class="form-control" rows="4" cols="50"></textarea>
+                                <textarea id="" class="form-control liberacao" rows="4" cols="50"></textarea>
                             </div>
                         </div>
 
                         <button type="button" class="btn btn-alert pull-left" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success" id="btn-save-confirm">Salvar</button>
+                        <button type="button" class="btn btn-success btn-save-confirm" id="">Aprovar</button>
 
                     </div>
                 </div>
@@ -285,8 +285,10 @@
                 var row = table.row(tr);
                 var tableId = 'pedido-' + row.data().PEDIDO;
 
-                $('#nr_pedido').val(row.data().PEDIDO);
-                $('#pessoa').val(row.data().PESSOA);
+                console.log(row.data());
+
+                $('.nr_pedido').val(row.data().PEDIDO);
+                $('.pessoa').val(row.data().PESSOA);
 
                 $('#modal-table-pedido').modal('show');
                 // if (row.child.isShown()) {
@@ -383,17 +385,17 @@
             $(document).on('click', '#btn-open-modal-aproover', function() {
                 var pessoa = $(this).data('pessoa');
                 var pedido = $(this).data('pedido');
-                $('#nr_pedido').val(pedido);
-                $('#pessoa').val(pessoa);
+                $('.nr_pedido').val(pedido);
+                $('.pessoa').val(pessoa);
                 $('#modal-pedido').modal('show');
             });
-            $(document).on('click', '#btn-save-confirm', function() {
+            $(document).on('click', '.btn-save-confirm', function() {
                 $.ajax({
                     url: "{{ route('save-libera-pedido') }}",
                     method: 'GET',
                     data: {
-                        pedido: $('#nr_pedido').val(),
-                        liberacao: $('#liberacao').val()
+                        pedido: $('.nr_pedido').val(),
+                        liberacao: $('.liberacao').val()
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');
@@ -407,6 +409,7 @@
                             $('#table-ordem-block').DataTable().ajax.reload();
                             // $('#modal-pedido').modal('hide');
                             $('#modal-table-pedido').modal('hide');
+                            $('#modal-pedido').modal('hide');
                         } else {
                             msgToastr(response.error,
                                 'warning');

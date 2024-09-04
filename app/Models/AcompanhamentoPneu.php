@@ -33,12 +33,22 @@ class AcompanhamentoPneu extends Model
     }
     public function BuscaSetores($nr_ordem)
     {
-        $query = "SELECT CAST(O_DS_ETAPA AS VARCHAR(200) character SET UTF8) as O_DS_ETAPA,
-        O_HR_ENTRADA, O_HR_SAIDA, O_NM_USUARIO, 
-        CAST(O_DS_COMPLEMENTOETAPA AS VARCHAR(1000) character SET UTF8) as O_DS_COMPLEMENTOETAPA, 
-        O_DT_ENTRADA, O_DT_SAIDA, (case O_ST_RETRABALHO WHEN 'N' THEN 'NAO' ELSE 'SIM' END) O_ST_RETRABALHO
-        FROM RETORNA_ACOMPANHAMENTOPNEU ($nr_ordem) R
-        ORDER BY CAST(R.O_DT_ENTRADA||' '||R.O_HR_ENTRADA AS DOM_TIMESTAMP)";
+        $query = "
+                SELECT
+                    CAST(O_DS_ETAPA AS VARCHAR(200) CHARACTER SET UTF8) AS O_DS_ETAPA,
+                    O_HR_ENTRADA,
+                    O_HR_SAIDA,
+                    CAST(O_NM_USUARIO AS VARCHAR(200) CHARACTER SET UTF8) AS O_NM_USUARIO,
+                    CAST(O_DS_COMPLEMENTOETAPA AS VARCHAR(1000) CHARACTER SET UTF8) AS O_DS_COMPLEMENTOETAPA,
+                    O_DT_ENTRADA,
+                    O_DT_SAIDA,
+                    (
+                    CASE O_ST_RETRABALHO
+                    WHEN 'N' THEN 'NAO'
+                    ELSE 'SIM'
+                    END) O_ST_RETRABALHO
+                FROM RETORNA_ACOMPANHAMENTOPNEU($nr_ordem) R
+                ORDER BY CAST(R.O_DT_ENTRADA || ' ' || R.O_HR_ENTRADA AS DOM_TIMESTAMP)";
 
         return DB::connection('firebird_rede')->select($query);
     }

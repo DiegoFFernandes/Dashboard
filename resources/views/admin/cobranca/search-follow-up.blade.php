@@ -455,9 +455,8 @@
                     language: {
                         url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
                     },
-                    rowReorder: {
-                        selector: 'td:nth-child(2)'
-                    },
+                    
+                    pagingType: 'simple',
                     processing: true,
                     responsive: true,
                     serverSide: true,

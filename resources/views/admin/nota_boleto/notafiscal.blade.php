@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="box borda">
-                    <div class="box-body ">
+                    <div class="box-body">
                         <div class="col-md-12 col-xs-12" style="height: 100px; padding-left :0 !important ">
                             <div class="col-md-10 col-xs-10"
                                 style="margin-bottom: 3px; height: 45px; padding-right: 0 !important;">

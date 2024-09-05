@@ -38,6 +38,9 @@ class RhGestorController extends Controller
     }
     public function IndicadorFinanceiroAgrupado()
     {
+        
+        ini_set('max_execution_time', 10000);
+        
         $data = $this->request->json()->all();
 
         $errors = [];

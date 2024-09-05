@@ -25,7 +25,7 @@
     <script type="text/javascript" defer>
         if ($(window).width() < 960) {
             let div = '<div class="iframe-embed-wrapper iframe-embed-responsive-16by9">'
-                +'<iframe src="https://app.powerbi.com/view?r=eyJrIjoiYjIzYTc0NjctYzI1Zi00ZjMwLWI2ZjEtMmQ2M2RjZmI0NzlkIiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9" frameborder="0">'
+                +'<iframe src="https://app.powerbi.com/view?r=eyJrIjoiNzBmMDYyZmUtN2I1Yy00MjU0LWE2NDUtMWJkODRiY2FiMmIxIiwidCI6ImUwZTY3NmNhLTU0YTYtNDlhZC1hNzgyLWJmYmNjYTk5ZWViMyJ9" frameborder="0">'
                 +'</iframe>'
                 +'</div>';
             $('#iframe-mobile').html(div);

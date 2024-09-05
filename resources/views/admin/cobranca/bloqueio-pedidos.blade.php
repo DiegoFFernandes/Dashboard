@@ -44,6 +44,7 @@
                                         <th>Pedido</th>
                                         <th>Pedido Palm</th>
                                         <th>Cliente</th>
+                                        <th>Pneus</th>
                                         <th>Dt Emissão</th>
                                         <th>Dt Entrega</th>
                                         <th>Status</th>
@@ -213,6 +214,11 @@
                     "width": "40%"
                 },
                 {
+                    data: 'QTDPNEUS',
+                    name: 'QTDPNEUS',
+                    "width": "1%"
+                },
+                {
                     data: 'DTEMISSAO',
                     name: 'DTEMISSAO',
                 },
@@ -226,10 +232,11 @@
                 },
             ],
             columnDefs: [{
-                targets: [5, 6],
+                targets: [6, 7],
+                className: 'dt-center',
                 render: $.fn.dataTable.render.moment('DD/MM/YYYY')
             }],
-            "order": [5, 'desc']
+            "order": [6, 'desc']
         });
         $('#pedido-acompanhar tbody').on('click', '.details-control', function() {
             var tr = $(this).closest('tr');

@@ -77,27 +77,45 @@ class AcompanhamentoPneu extends Model
     }
     public function ListPedidoPneu($cd_regiao)
     {
-        $query = "SELECT PP.IDEMPRESA CD_EMPRESA, PP.ID, PPM.idpedidomovel, 
-        cast(PP.IDPESSOA||' - '||PC.NM_PESSOA as varchar(200) character set utf8) PESSOA, 
-        EP.cd_regiaocomercial,
-        PP.DTEMISSAO, PP.DTENTREGA DTENTREGAPED,
-        (CASE PP.stpedido
-            WHEN 'A' THEN 'ATENDIDO'
-            WHEN 'C' THEN 'CANCELADO'
-            WHEN 'T' THEN 'EM PRODUCAO'
-            WHEN 'N' THEN 'AGUARDANDO'
-            WHEN 'B' THEN 'BLOQUEADO'
-            WHEN 'P' THEN 'PRODUCAO PARCIAL'
-            ELSE PP.stpedido
-        END) STPEDIDO
-        FROM PEDIDOPNEU PP
-        INNER JOIN PESSOA PC ON (PC.CD_PESSOA = PP.IDPESSOA)
-        LEFT JOIN ENDERECOPESSOA EP ON (EP.cd_pessoa = PC.cd_pessoa)
-        LEFT JOIN PEDIDOPNEUMOVEL PPM ON(PPM.ID = PP.ID)
-        WHERE PP.IDEMPRESA in (101,102,103,104,105,106,107,108,109,110)
-        AND PP.dtemissao between current_date-30 and current_date        
-        " . (($cd_regiao != "") ? "AND EP.cd_regiaocomercial IN ($cd_regiao)" : "") . " 
-        ORDER BY PP.IDEMPRESA";
+        $query = "
+                    SELECT
+                        PP.IDEMPRESA CD_EMPRESA,
+                        PP.ID,
+                        PPM.IDPEDIDOMOVEL,
+                        CAST(PP.IDPESSOA || ' - ' || PC.NM_PESSOA AS VARCHAR(200) CHARACTER SET UTF8) PESSOA,
+                        EP.CD_REGIAOCOMERCIAL,
+                        PP.DTEMISSAO,
+                        PP.DTENTREGA DTENTREGAPED,
+                        (
+                        CASE PP.STPEDIDO
+                        WHEN 'A' THEN 'ATENDIDO'
+                        WHEN 'C' THEN 'CANCELADO'
+                        WHEN 'T' THEN 'EM PRODUCAO'
+                        WHEN 'N' THEN 'AGUARDANDO'
+                        WHEN 'B' THEN 'BLOQUEADO'
+                        WHEN 'P' THEN 'PRODUCAO PARCIAL'
+                        ELSE PP.STPEDIDO
+                        END) STPEDIDO,
+                        COUNT(IPP.id) QTDPNEUS
+                    FROM PEDIDOPNEU PP
+                    INNER join ITEMPEDIDOPNEU IPP ON (IPP.idpedidopneu = PP.id)
+                    INNER JOIN PESSOA PC ON (PC.CD_PESSOA = PP.IDPESSOA)
+                    LEFT JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = PC.CD_PESSOA)
+                    LEFT JOIN PEDIDOPNEUMOVEL PPM ON (PPM.ID = PP.ID)
+                    WHERE PP.IDEMPRESA IN (101, 102, 103, 104, 105, 106, 107, 108, 109, 110)
+                        AND PP.DTEMISSAO BETWEEN CURRENT_DATE - 30 AND CURRENT_DATE
+                        " . (($cd_regiao != "") ? "AND EP.cd_regiaocomercial IN ($cd_regiao)" : "") . "
+                    GROUP BY PP.IDEMPRESA,
+                        PP.ID,
+                        PPM.IDPEDIDOMOVEL,
+                        PP.IDPESSOA,PC.NM_PESSOA,
+                        EP.CD_REGIAOCOMERCIAL,
+                        PP.DTEMISSAO,
+                        PP.DTENTREGA,
+                        PP.STPEDIDO
+
+                    ORDER BY PP.IDEMPRESA  
+                ";
 
         return DB::connection('firebird_rede')->select($query);
         $key = "PedidoAll_2024" . Auth::user()->id;

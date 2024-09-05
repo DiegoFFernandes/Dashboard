@@ -32,7 +32,7 @@ return [
     |    The environment variables to set while running the wkhtmltopdf process.
     |
     */
-    
+
     'pdf' => [
         'enabled' => true,
         'binary'  => base_path('vendor\wemersonjanuario\wkhtmltopdf-windows\bin\64bit\wkhtmltopdf'),
@@ -40,7 +40,7 @@ return [
         'options' => [],
         'env'     => [],
     ],
-    
+
     'image' => [
         'enabled' => true,
         'binary'  => base_path('vendor\wemersonjanuario\wkhtmltopdf-windows\bin\64bit\wkhtmltoimage'),
@@ -48,5 +48,7 @@ return [
         'options' => [],
         'env'     => [],
     ],
+
+
 
 ];

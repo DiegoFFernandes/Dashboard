@@ -9,6 +9,7 @@
     border-radius: 10px;
 }
 
+
 .dados_nfse {
     display: flex;
 
@@ -63,3 +64,5 @@ tr {
 .recuo {
     padding-left: 20px; /* Ajuste o valor conforme necessário */
 }
+
+

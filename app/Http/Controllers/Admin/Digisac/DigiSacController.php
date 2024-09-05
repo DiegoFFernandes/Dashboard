@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Digisac;
 
 use App\Http\Controllers\Controller;
+use App\Models\BoletoImpresso;
 use App\Models\Nota;
 use App\Models\Pessoa;
 use Barryvdh\Snappy\Facades\SnappyPdf;
@@ -16,16 +17,18 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DigiSacController extends Controller
 {
-    public $pessoa, $nota, $user, $request;
+    public $pessoa, $nota, $user, $request, $boleto;
 
     public function __construct(
         Request $request,
         Pessoa $pessoa,
-        Nota $nota
+        Nota $nota,
+        BoletoImpresso $boleto
     ) {
         $this->pessoa = $pessoa;
         $this->nota = $nota;
         $this->request = $request;
+        $this->boleto = $boleto;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -81,7 +84,7 @@ class DigiSacController extends Controller
 
             $diretory = storage_path('app/public/notas');
 
-            if(File::exists($diretory)){
+            if (File::exists($diretory)) {
                 File::cleanDirectory($diretory);
             }
 
@@ -270,17 +273,28 @@ class DigiSacController extends Controller
     }
     public function Boleto()
     {
-        $view = view('admin.nota_boleto.boleto');
+         $boletos = $this->boleto->Boleto(1340355, 101);
 
-        $html = $view->render();
+         $htmlArray = [];
 
+        foreach ($boletos as $boleto) {
+                
+            $codigo_barras = $this->getImagemCodigoDeBarras($boleto['DS_CODIGOBARRA']);
+
+            $view = view('admin.nota_boleto.boleto', compact('codigo_barras', 'boleto'));
+
+            $htmlArray[] = $view->render();           
+           
+        }       
+
+        $html = implode('<div style="page-break-after: always;"></div>', $htmlArray);
+
+        // Configurando o Snappy
         $options = [
             'page-size' => 'A4',
             'no-stop-slow-scripts' => true,
             'enable-javascript' => true,
-            'debug-javascript' => true,
-            'encoding' => 'UTF-8',
-            'javascript-delay' => 1000, // Adiciona um delay para garantir que o JS seja carregado antes da renderização.
+            'encoding' => 'UTF-8'
         ];
 
         $pdf = SnappyPdf::loadHTML($html)->setOptions($options);
@@ -290,5 +304,55 @@ class DigiSacController extends Controller
         $filePath = storage_path('app/public/boleto/boleto.pdf');
 
         $pdf->save($filePath);
+    }
+
+    public function getImagemCodigoDeBarras($codigo_barras)
+    {
+        $codigo_barras = (strlen($codigo_barras) % 2 != 0 ? '0' : '') . $codigo_barras;
+        $barcodes = ['00110', '10001', '01001', '11000', '00101', '10100', '01100', '00011', '10010', '01010'];
+        for ($f1 = 9; $f1 >= 0; $f1--) {
+            for ($f2 = 9; $f2 >= 0; $f2--) {
+                $f = ($f1 * 10) + $f2;
+                $texto = "";
+                for ($i = 1; $i < 6; $i++) {
+                    $texto .= substr($barcodes[$f1], ($i - 1), 1) . substr($barcodes[$f2], ($i - 1), 1);
+                }
+                $barcodes[$f] = $texto;
+            }
+        }
+
+        // Guarda inicial
+        $retorno = '<div class="barcode">' .
+            '<div class="black thin"></div>' .
+            '<div class="white thin"></div>' .
+            '<div class="black thin"></div>' .
+            '<div class="white thin"></div>';
+
+        // Draw dos dados
+        while (strlen($codigo_barras) > 0) {
+            $i = round(substr($codigo_barras, 0, 2));
+            $codigo_barras = substr($codigo_barras, strlen($codigo_barras) - (strlen($codigo_barras) - 2), strlen($codigo_barras) - 2);
+            $f = $barcodes[$i];
+            for ($i = 1; $i < 11; $i += 2) {
+                if (substr($f, ($i - 1), 1) == "0") {
+                    $f1 = 'thin';
+                } else {
+                    $f1 = 'large';
+                }
+                $retorno .= "<div class='black {$f1}'></div>";
+                if (substr($f, $i, 1) == "0") {
+                    $f2 = 'thin';
+                } else {
+                    $f2 = 'large';
+                }
+                $retorno .= "<div class='white {$f2}'></div>";
+            }
+        }
+
+        // Final
+        return $retorno . '<div class="black large"></div>' .
+            '<div class="white thin"></div>' .
+            '<div class="black thin"></div>' .
+            '</div>';
     }
 }

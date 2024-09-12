@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Digisac;
 
 use App\Http\Controllers\Controller;
+use App\Models\Boleto;
 use App\Models\BoletoImpresso;
 use App\Models\Nota;
 use App\Models\Pessoa;
@@ -23,7 +24,7 @@ class DigiSacController extends Controller
         Request $request,
         Pessoa $pessoa,
         Nota $nota,
-        BoletoImpresso $boleto
+        Boleto $boleto
     ) {
         $this->pessoa = $pessoa;
         $this->nota = $nota;
@@ -34,14 +35,13 @@ class DigiSacController extends Controller
             return $next($request);
         });
     }
-
     public function notafiscal()
     {
         $oauth = Digisac::OAuthToken();
 
-        $nota = $this->nota->NotasEmitidasResumo(0, 0);
+        // $nota = $this->nota->NotasEmitidasResumo(0, 0);
 
-        $this->nota->StoreNota($nota);
+        // $this->nota->StoreNota($nota);
 
         $notas_para_enviar = $this->nota->listNotaSend();
 
@@ -61,34 +61,20 @@ class DigiSacController extends Controller
                 continue;
             };
 
-            $nota = $this->AgruparNota($search_send);
+            $envio = Digisac::SendMessage($oauth, $search_send[0], null);
 
-            $view = View::make('admin.nota_boleto.notafiscal', compact(
-                'nota',
-                'index'
-            ));
-            $html = $view->render();
-
-            // Configurando o Snappy
-            $options = [
-                'page-size' => 'A4',
-                'no-stop-slow-scripts' => true,
-                'enable-javascript' => true,
-                'encoding' => 'UTF-8'
-
-            ];
-
-            $pdf = SnappyPdf::loadHTML($html)->setOptions($options);
-
-            // return $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.
-
-            $diretory = storage_path('app/public/notas');
-
-            if (File::exists($diretory)) {
-                File::cleanDirectory($diretory);
+            if (!empty($envio->error)) {
+                $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'B');
+                continue;
             }
 
-            $filePath = storage_path('app/public/notas/' . $nota[0]['NR_DOCUMENTO'] . '.pdf');
+            $this->CleanDiretory('notas');
+
+            $pdf = self::CreatePdfNota($search_send, $index, $oauth);
+
+            // return $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.       
+
+            $filePath = storage_path('app/public/notas/' . $search_send[0]['NR_DOCUMENTO'] . '.pdf');
 
             $pdf->save($filePath);
 
@@ -100,47 +86,28 @@ class DigiSacController extends Controller
 
             // return $pdf->download('notafiscal.pdf');
 
-            $envio = Digisac::SendMessage($oauth, $nota[0], $base64Pdf);
+            $envio = Digisac::SendMessage($oauth, $search_send[0], $base64Pdf);
 
-            // unlink($filePath);
+            if ($envio->sent == true) {
+                $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'E');
+            } elseif (!empty($envio->error)) {
+                $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'B');
+                continue;
+            }
 
-            if (!empty($envio->sent)) {
-                $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'E');
+            // lista e salva os dados de boleto no mysql
+            self::listAndStoreBoleto();
+
+            $boletosSend = $this->boleto->listBoletoSend($search_send[0]);
+
+            if (!empty($boletosSend[0]['STATUS']) && $boletosSend[0]['STATUS'] == "A") {
+                $this->BoletoLoop($boletosSend, $oauth, true);
+            } else {
+                echo $search_send[0]['NR_DOCUMENTO'] . " Sem Boleto.</br>";
             }
-            if (!empty($envio->error)) {
-                $this->nota->UpdateNotaSend($nota[0]['NR_LANCAMENTO'], 'B');
-            }
-            echo $nota[0]['NR_DOCUMENTO'] . " Processado / ";
+
+            echo $search_send[0]['NR_DOCUMENTO'] . " Nota Processado.</br>";
         }
-
-
-
-        // $pessoa = $this->pessoa::findPessoa();
-        // $oauth = Digisac::OAuthToken();
-        // $contact = json_decode(Digisac::AddContact($oauth, $pessoa), true);
-        // $pessoa[0]->ID_USER = $contact['id'];
-
-
-        // //  $list =  json_decode(Digisac::ListContacts($oauth), true);
-
-
-        // // foreach ($list['data'] as $l) {
-        // //     echo $l['name'] . '</br>';
-        // //     echo 'contactId: ' . $l['id'] . '</br>';            
-        // //     echo $l['data']['number'] . '</br>';
-        // //     echo '----------' . '<br>';
-        // // }
-        // Digisac::SendMessage($oauth, 'Diego');
-        // // Digisac::ContactExists($oauth, $pessoa[0]->NR_CELULAR);
-        // $nr_celular_corrigido = Helper::RemoveSpecialChar($pessoa[0]->NR_CELULAR);
-        // $pessoa[0]->NR_CELULAR = $nr_celular_corrigido;
-
-        // $create = $userServices->create($pessoa);
-        // if ($create == 1) {
-        //     return redirect()->route('admin.usuarios.listar')->with('message', 'Usuário criado com sucesso!');
-        // } elseif ($create == 3) {
-        //     return redirect()->route('admin.usuarios.listar')->with('warning', 'Email já existe, favor cadastrar outro!');
-        // };
     }
     public function AgruparNota($nota)
     {
@@ -273,39 +240,84 @@ class DigiSacController extends Controller
     }
     public function Boleto()
     {
-         $boletos = $this->boleto->Boleto(1340355, 101);
+        $oauth = Digisac::OAuthToken();
 
-         $htmlArray = [];
+        self::listAndStoreBoleto();
 
-        foreach ($boletos as $boleto) {
-                
-            $codigo_barras = $this->getImagemCodigoDeBarras($boleto['DS_CODIGOBARRA']);
+        $boletosSend = $this->boleto->listBoletoSend(null);
 
-            $view = view('admin.nota_boleto.boleto', compact('codigo_barras', 'boleto'));
-
-            $htmlArray[] = $view->render();           
-           
-        }       
-
-        $html = implode('<div style="page-break-after: always;"></div>', $htmlArray);
-
-        // Configurando o Snappy
-        $options = [
-            'page-size' => 'A4',
-            'no-stop-slow-scripts' => true,
-            'enable-javascript' => true,
-            'encoding' => 'UTF-8'
-        ];
-
-        $pdf = SnappyPdf::loadHTML($html)->setOptions($options);
-
-        return $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.
-
-        $filePath = storage_path('app/public/boleto/boleto.pdf');
-
-        $pdf->save($filePath);
+        $this->BoletoLoop($boletosSend, $oauth, false);
     }
+    public function BoletoLoop($boletosSend, $oauth, $status)
+    {
+        foreach ($boletosSend as $boleto) {
 
+            $boletos = $this->boleto->Boleto($boleto->NR_LANCAMENTO, $boleto->CD_EMPRESA);
+
+            //Verifica se existe numero de celular caso não existe vai para o proximo
+            if (empty($boletos[0]['NR_CELULAR'])) {
+                $this->boleto->UpdateBoletoSend($boleto, 'N');
+                continue;
+            };
+
+            if ($status === false) {
+                $envio = Digisac::SendMessage($oauth, $boleto, null);
+                //verificar se o cliente possui Whatsapp antes de continuar, caso não pula para o proximo
+                if (!empty($envio->error)) {
+                    $this->boleto->UpdateBoletoSend($boleto, 'B');
+                    continue;
+                }
+            }
+
+            $htmlArray = [];
+
+            foreach ($boletos as $boleto) {
+
+                $codigo_barras = $this->getImagemCodigoDeBarras($boleto['DS_CODIGOBARRA']);
+
+                $view = view('admin.nota_boleto.boleto', compact('codigo_barras', 'boleto'));
+
+                $htmlArray[] = $view->render();
+            }
+
+            $html = implode('<div style="page-break-after: always;"></div>', $htmlArray);
+
+            // Configurando o Snappy
+            $options = [
+                'page-size' => 'A4',
+                'no-stop-slow-scripts' => true,
+                'enable-javascript' => true,
+                'lowquality' => true,
+                'encoding' => 'UTF-8'
+            ];
+
+            $pdf = SnappyPdf::loadHTML($html)->setOptions($options);
+
+            $this->CleanDiretory('boleto');
+
+            // $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.
+
+            $filePath = storage_path('app/public/boleto/boleto' . $boleto['NR_DOCUMENTO'] . '.pdf');
+
+            $pdf->save($filePath);
+
+
+            // Lê o conteúdo do arquivo PDF
+            $pdfContent = file_get_contents($filePath);
+
+            // Converte o conteúdo do PDF para base64
+            $base64Pdf = base64_encode($pdfContent);
+
+            // return $pdf->download('notafiscal.pdf');
+
+            $envio = Digisac::SendMessage($oauth, $boleto, $base64Pdf);
+
+            if (!empty($envio->sent)) {
+                $this->boleto->UpdateBoletoSend($boleto, 'E');
+            }
+            echo $boleto['NR_DOCUMENTO'] . " Boleto Processado / ";
+        }
+    }
     public function getImagemCodigoDeBarras($codigo_barras)
     {
         $codigo_barras = (strlen($codigo_barras) % 2 != 0 ? '0' : '') . $codigo_barras;
@@ -354,5 +366,41 @@ class DigiSacController extends Controller
             '<div class="white thin"></div>' .
             '<div class="black thin"></div>' .
             '</div>';
+    }
+    public function CleanDiretory($diretory)
+    {
+        $diretory = storage_path('app/public/' . $diretory . '');
+
+        if (File::exists($diretory)) {
+            File::cleanDirectory($diretory);
+        }
+    }
+    private function CreatePdfNota($search_send, $index, $oauth)
+    {
+        $nota = $this->AgruparNota($search_send);
+
+        $view = View::make('admin.nota_boleto.notafiscal', compact(
+            'nota',
+            'index'
+        ));
+
+        $html = $view->render();
+
+        // Configurando o Snappy
+        $options = [
+            'page-size' => 'A4',
+            'no-stop-slow-scripts' => true,
+            'enable-javascript' => true,
+            'encoding' => 'UTF-8'
+
+        ];
+
+        return SnappyPdf::loadHTML($html)->setOptions($options);
+    }
+    private function listAndStoreBoleto()
+    {
+        $boletosStore = $this->boleto->BoletoResumo();
+
+        $this->boleto->storeData($boletosStore);
     }
 }

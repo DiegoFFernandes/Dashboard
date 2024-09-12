@@ -8,13 +8,13 @@
 
                 <div class="box-body">
                     <div class="col-md-12 col-xs-12 line">
-                        <div class="col-md-2 col-xs-2">
+                        <div class="col-md-3 col-xs-3">
                             <p class="cresol1">{{ $boleto['DS_BANCO'] }}</p>
                         </div>
                         <div class="col-md-2 col-xs-2">
                             <p class="codigol1">| {{ $boleto['DS_CODIGOBANCO'] }} |</p>
                         </div>
-                        <div class="col-md-4 col-xs-4"></div>
+                        <div class="col-md-3 col-xs-3"></div>
                         <div class="col-md-4 col-xs-4">
                             <p class="textol1">Comprovante de Entrega</p>
                         </div>
@@ -52,7 +52,7 @@
 
                         <div class="col-md-2 col-xs-2 column">
                             <p class="texto_sup">Nr Docto</p>
-                            <p class="numeros_center">{{ $boleto['NR_DOCUMENTO'] }}</p>
+                            <p class="numeros_center">{{ $boleto['NR_DOC'] }}</p>
                         </div>
 
                         <div class="col-md-1 col-xs-1 column">
@@ -101,13 +101,13 @@
                         <hr class="tracejado">
                     </div>
                     <div class="col-md-12 col-xs-12 line2">
-                        <div class="col-md-2 col-xs-2">
+                        <div class="col-md-3 col-xs-3">
                             <p class="cresol1">{{ $boleto['DS_BANCO'] }}</p>
                         </div>
                         <div class="col-md-2 col-xs-2">
                             <p class="codigol1">| {{ $boleto['DS_CODIGOBANCO'] }} |</p>
                         </div>
-                        <div class="col-md-5 col-xs-5"></div>
+                        <div class="col-md-4 col-xs-4"></div>
                         <div class="col-md-3 col-xs-3">
                             <p class="textol1">Recibo do Pagador</p>
                         </div>
@@ -153,7 +153,7 @@
                         </div>
                         <div class="col-md-2 col-xs-2 column">
                             <p class="texto_sup">Nr Docto</p>
-                            <p class="numeros_center">{{ $boleto['NR_DOCUMENTO'] }}</p>
+                            <p class="numeros_center">{{ $boleto['NR_DOC'] }}</p>
                         </div>
                         <div class="col-md-1 col-xs-1 column">
                             <p class="texto_sup">Espécie</p>
@@ -250,13 +250,13 @@
                         <hr class="tracejado">
                     </div>
                     <div class="col-md-12 col-xs-12 line2">
-                        <div class="col-md-2 col-xs-2">
+                        <div class="col-md-3 col-xs-3">
                             <p class="cresol1">{{ $boleto['DS_BANCO'] }}</p>
                         </div>
                         <div class="col-md-2 col-xs-2">
                             <p class="codigol1">| {{ $boleto['DS_CODIGOBANCO'] }} |</p>
                         </div>
-                        <div class="col-md-8 col-xs-8">
+                        <div class="col-md-7 col-xs-7">
                             <p class="textol1">{{ $boleto['DS_LINHADIGITAVEL'] }}</p>
                         </div>
                     </div>
@@ -301,7 +301,7 @@
                         </div>
                         <div class="col-md-2 col-xs-2 column">
                             <p class="texto_sup">Nr Docto</p>
-                            <p class="numeros_center">{{ $boleto['NR_DOCUMENTO'] }}</p>
+                            <p class="numeros_center">{{ $boleto['NR_DOC'] }}</p>
                         </div>
                         <div class="col-md-1 col-xs-1 column">
                             <p class="texto_sup">Espécie</p>
@@ -384,7 +384,7 @@
                             <p class="texto_sup">CPF / CNPJ do Pagador</p>
                             <p class="numeros_right">{{ $boleto['NR_CNPJCPFSACADO'] }}</p>
                             <p class="texto_sup">Código de Baixa</p>
-                            <p class="ajuste_sup">P</p>
+                            {{-- <p class="ajuste_sup">P</p> --}}
                             <p class="numeros_right">{{ $boleto['NR_NOSSONUMERO'] }}</p>
                         </div>
                     </div>

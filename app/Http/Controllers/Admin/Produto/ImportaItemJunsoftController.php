@@ -37,7 +37,7 @@ class ImportaItemJunsoftController extends Controller
     public function index()
     {   
         // return $import = $this->item->ImportaItemJunsoft(30);
-        $title_page   = 'Importa/Atualiza produtos cadastrados Junsoft(TPO001)';
+        $title_page   = 'Importa do Junsoft';
         $user_auth    = $this->user;
         $uri          = $this->request->route()->uri();
         $marcas        = $this->marca->MarcaAll();      

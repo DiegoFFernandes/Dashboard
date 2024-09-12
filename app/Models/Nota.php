@@ -288,8 +288,10 @@ class Nota extends Model
     public function listNotaSend()
     {
         return Nota::where('STATUS', 'A')
-            // ->whereIn('NR_LANCAMENTO', ['17356'])
+             ->whereIn('NR_LANCAMENTO', ['17227', '17230'])
             ->get();
+
+            // '19070', '19068', '19066', '19065', '39867', '39866'
     }
 
     public function UpdateNotaSend($input, $status)

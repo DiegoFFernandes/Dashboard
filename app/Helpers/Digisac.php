@@ -24,32 +24,22 @@ class Digisac
         // Retornando a resposta
         return json_decode($response->body());
     }
-    static function SendMessage($oauth, $nota, $file,)
+    static function SendMessage($oauth, $input, $file)
     {
-        $baarer_token = $oauth->token_type . ' ' . $oauth->access_token;
+        $data = self::prepareData($input, $file);
+
+        $bearer_token = self::prepareBearerToken($oauth);
+
         $url = env("URL_API_DIGISAC");
 
-        $data = [
-
-            'text' => 'Olá, ' . $nota['NM_PESSOA'] . ', foi emitida uma nota fiscal, ' . $nota['NR_DOCUMENTO'] . ', para seu CNPJ. Esse e um atendimento automatico não e necessario responder',
-            'number' => $nota['NR_CELULAR'],
-            'contactId' => 'c62377c8-12da-4a29-ae99-a124029cf03a',
-            'serviceId' => 'db615bbe-ddf0-438b-b2f3-6c05e5a13eb0',
-            'origin' => 'bot', // bot or user, 
-            'file' => [
-                'base64' => $file,
-                'mimetype' => 'application/pdf',
-                "name" => $nota['NR_DOCUMENTO'] . ".pdf"
-            ],
-        ];
-
-        $reponse = HTTP::withHeaders([
+        $response = HTTP::withHeaders([
             'Content-Type' => 'application/json',
-            'Authorization' => $baarer_token,
+            'Authorization' => $bearer_token,
         ])->post($url . '/messages', $data);
 
-        return json_decode($reponse);
+        return self::handleResponse($response);
     }
+
     static function ContactExists($oauth, $number)
     {
         $baarer_token = $oauth->token_type . ' ' . $oauth->access_token;
@@ -99,5 +89,36 @@ class Digisac
         return $response = HTTP::withHeaders([
             'Authorization' => $baarer_token,
         ])->get($url);
+    }
+
+    private static function prepareData($input, $file)
+    {
+        $baseData = [
+            'number' => $input['NR_CELULAR'],
+            'contactId' => 'c62377c8-12da-4a29-ae99-a124029cf03a',
+            'serviceId' => 'db615bbe-ddf0-438b-b2f3-6c05e5a13eb0',
+            'origin' => 'bot', // bot or user,
+        ];
+        if($file === null){
+            $baseData['text'] = 'Olá ' . $input['NM_PESSOA'] . ', foram emitidos documento(s), ' . $input['NR_DOCUMENTO'] . ' para o seu CPF/CNPJ.';
+        }else{
+            $baseData['file'] = [
+                'base64' => $file,
+                    'mimetype' => 'application/pdf',
+                    "name" => $input['NR_DOCUMENTO'] . ".pdf"
+            ];
+        }
+
+        return $baseData;
+    }
+    private static function prepareBearerToken($oauth){
+        return $oauth->token_type . ' ' . $oauth->access_token;
+    }
+    private static function handleResponse($response){
+        if($response->successful()){
+            return json_decode($response); 
+        }else{
+            return response()->json(['error' => 'Falha no Envio da mensagem'], 500);
+        }
     }
 }

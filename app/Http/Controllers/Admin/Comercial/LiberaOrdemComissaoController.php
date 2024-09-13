@@ -122,7 +122,6 @@ class LiberaOrdemComissaoController extends Controller
         // return $this->user->empresa;
         $data = $this->libera->listPneusOrdensBloqueadas($id, $localizacao);
 
-        // dd($data);
         return DataTables::of($data)->make(true);
     }
     public function saveLiberaPedido()

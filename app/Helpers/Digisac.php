@@ -92,7 +92,7 @@ class Digisac
     }
 
     private static function prepareData($input, $file)
-    {
+    {       
         $baseData = [
             'number' => $input['NR_CELULAR'],
             'contactId' => 'c62377c8-12da-4a29-ae99-a124029cf03a',
@@ -118,7 +118,7 @@ class Digisac
         if($response->successful()){
             return json_decode($response); 
         }else{
-            return response()->json(['error' => 'Falha no Envio da mensagem'], 500);
+            return json_decode($response); 
         }
     }
 }

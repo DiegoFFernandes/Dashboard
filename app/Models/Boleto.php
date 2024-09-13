@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -281,8 +282,11 @@ class Boleto extends Model
     {
         if ($nota === null) {
             return Boleto::where('STATUS', 'A')
-                ->whereIn('NR_LANCAMENTO', ['1078860'])
-                ->where('CD_EMPRESA', 104)
+                // ->whereIn('NR_LANCAMENTO', ['1343801'])
+                // ->where('CD_EMPRESA', 101)
+                ->where('created_at', '<' , Carbon::now()->subHour(2)) 
+                ->orderBy('id', 'desc')   
+                ->take(10)            
                 ->get();
         } else {       
              

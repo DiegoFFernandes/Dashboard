@@ -39,11 +39,11 @@ class DigiSacController extends Controller
     {
         $oauth = Digisac::OAuthToken();
 
-        // $nota = $this->nota->NotasEmitidasResumo(0, 0);
+        $nota = $this->nota->NotasEmitidasResumo(0, 0);
 
-        // $this->nota->StoreNota($nota);
+        $this->nota->StoreNota($nota);
 
-        $notas_para_enviar = $this->nota->listNotaSend();
+        return $notas_para_enviar = $this->nota->listNotaSend();
 
         foreach ($notas_para_enviar as $index => $nota) {
 
@@ -61,9 +61,9 @@ class DigiSacController extends Controller
                 continue;
             };
 
-            $envio = Digisac::SendMessage($oauth, $search_send[0], null);
+            return $envio = Digisac::SendMessage($oauth, $search_send[0], null);
 
-            if (!empty($envio->error)) {
+            if (empty($envio->sent)) {
                 $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'B');
                 continue;
             }
@@ -90,7 +90,7 @@ class DigiSacController extends Controller
 
             if ($envio->sent == true) {
                 $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'E');
-            } elseif (!empty($envio->error)) {
+            } elseif (empty($envio->sent)) {
                 $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'B');
                 continue;
             }
@@ -240,31 +240,32 @@ class DigiSacController extends Controller
     }
     public function Boleto()
     {
+        ini_set('max_execution_time', 10000);
         $oauth = Digisac::OAuthToken();
 
         self::listAndStoreBoleto();
 
-        $boletosSend = $this->boleto->listBoletoSend(null);
-
-        $this->BoletoLoop($boletosSend, $oauth, false);
+        $boletosSend = $this->boleto->listBoletoSend(null);   
+          
+         return $this->BoletoLoop($boletosSend, $oauth, false);
     }
     public function BoletoLoop($boletosSend, $oauth, $status)
     {
-        foreach ($boletosSend as $boleto) {
+        foreach ($boletosSend as $b) {
 
-            $boletos = $this->boleto->Boleto($boleto->NR_LANCAMENTO, $boleto->CD_EMPRESA);
+            $boletos = $this->boleto->Boleto($b->NR_LANCAMENTO, $b->CD_EMPRESA);
 
             //Verifica se existe numero de celular caso não existe vai para o proximo
             if (empty($boletos[0]['NR_CELULAR'])) {
-                $this->boleto->UpdateBoletoSend($boleto, 'N');
+                $this->boleto->UpdateBoletoSend($boletos[0], 'N');
                 continue;
             };
 
-            if ($status === false) {
-                $envio = Digisac::SendMessage($oauth, $boleto, null);
+            if ($status === false) {                       
+                 $envio = Digisac::SendMessage($oauth, $boletos[0], null);
                 //verificar se o cliente possui Whatsapp antes de continuar, caso não pula para o proximo
-                if (!empty($envio->error)) {
-                    $this->boleto->UpdateBoletoSend($boleto, 'B');
+                if (empty($envio->sent)) {
+                    $this->boleto->UpdateBoletoSend($boletos[0], 'B');
                     continue;
                 }
             }
@@ -297,7 +298,7 @@ class DigiSacController extends Controller
 
             // $pdf->inline('nota_fiscal.pdf'); //Exibe o pdf sem fazer o downlaod.
 
-            $filePath = storage_path('app/public/boleto/boleto' . $boleto['NR_DOCUMENTO'] . '.pdf');
+            $filePath = storage_path('app/public/boleto/boleto' . $boletos[0]['NR_DOCUMENTO'] . '.pdf');
 
             $pdf->save($filePath);
 
@@ -310,10 +311,10 @@ class DigiSacController extends Controller
 
             // return $pdf->download('notafiscal.pdf');
 
-            $envio = Digisac::SendMessage($oauth, $boleto, $base64Pdf);
+            $envio = Digisac::SendMessage($oauth, $boletos[0], $base64Pdf);
 
             if (!empty($envio->sent)) {
-                $this->boleto->UpdateBoletoSend($boleto, 'E');
+                $this->boleto->UpdateBoletoSend($boletos[0], 'E');
             }
             echo $boleto['NR_DOCUMENTO'] . " Boleto Processado / ";
         }

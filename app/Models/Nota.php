@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -288,12 +289,12 @@ class Nota extends Model
     public function listNotaSend()
     {
         return Nota::where('STATUS', 'A')
-             ->whereIn('NR_LANCAMENTO', ['17227', '17230'])
-            ->get();
-
-            // '19070', '19068', '19066', '19065', '39867', '39866'
+            //  ->whereIn('NR_LANCAMENTO', ['17227', '17230'])
+            ->where('created_at', '<' , Carbon::now()->subHour()) 
+             ->orderBy('id', 'desc') 
+             ->take(10)
+             ->get();
     }
-
     public function UpdateNotaSend($input, $status)
     {
         return Nota::where('NR_LANCAMENTO', $input)->update([
@@ -301,7 +302,6 @@ class Nota extends Model
             'updated_at' => \Carbon\Carbon::now()
         ]);
     }
-
     public function listNotaSendAll()
     {
         return Nota::select(

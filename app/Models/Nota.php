@@ -57,13 +57,13 @@ class Nota extends Model
                 AND N.CD_SERIE IN ('F', 'E')
                 AND N.ST_NOTA = 'V'
                 AND N.DT_EMISSAO = CURRENT_DATE                
-                AND N.HR_NOTA BETWEEN CURRENT_TIME - 3600 AND CURRENT_TIME
+                --AND N.HR_NOTA BETWEEN CURRENT_TIME - 3600 AND CURRENT_TIME
                 AND NFSE.CD_AUTENTICACAO IS NOT NULL
                 --and N.NR_NOTAFISCAL IN (35224,35229)
                 --" . ($nr_lancamento == 0 ? "" : "AND N.NR_LANCAMENTO IN ($nr_lancamento)") . "
 
-                AND P.DS_EMAIL IS NOT NULL
-                AND P.DS_EMAIL NOT IN ('TESTE@IVORECAP.COM.BR', 'TESTE@TESTE.COM.BR', 'FNE@IVORECAP.COM.BR', 'NFE@IVORECAP.COM.BR')
+                --AND P.DS_EMAIL IS NOT NULL
+                --AND P.DS_EMAIL NOT IN ('TESTE@IVORECAP.COM.BR', 'TESTE@TESTE.COM.BR', 'FNE@IVORECAP.COM.BR', 'NFE@IVORECAP.COM.BR')
                 --" . ($cd_empresa == 0 ? "" : "AND N.CD_EMPRESA IN ($cd_empresa)") . "
                 
         ";

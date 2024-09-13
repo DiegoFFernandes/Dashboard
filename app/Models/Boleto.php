@@ -197,11 +197,11 @@ class Boleto extends Model
                     AND CO.CD_PESSOA = O.CD_PESSOA
                     AND CO.CD_TIPOCONTA = O.CD_TIPOCONTA
                     AND CO.NR_PARCELA = O.NR_PARCELA)
-                INNER JOIN NOTA N ON (N.CD_EMPRESA = COALESCE(CO.CD_EMPRESA, C.CD_EMPRESA)
+                LEFT JOIN NOTA N ON (N.CD_EMPRESA = COALESCE(CO.CD_EMPRESA, C.CD_EMPRESA)
                     AND N.CD_PESSOA = COALESCE(CO.CD_PESSOA, C.CD_PESSOA)
                     AND N.NR_LANCAMENTO = COALESCE(CO.NR_LANCTONOTA, C.NR_LANCTONOTA)
                     AND N.TP_NOTA = COALESCE(CO.TP_CONTAS, C.TP_CONTAS))
-                WHERE C.ST_CONTAS NOT IN ('C', 'L', 'A')
+                WHERE C.ST_CONTAS NOT IN ('L', 'A')
                     --AND N.DT_EMISSAO >= CURRENT_DATE-1
                     --AND C.CD_FORMAPAGTO IN ('CL')
                     AND C.NR_LANCAMENTO = $nr_lancamento
@@ -282,7 +282,7 @@ class Boleto extends Model
     {
         if ($nota === null) {
             return Boleto::where('STATUS', 'A')
-                // ->whereIn('NR_LANCAMENTO', ['1343801'])
+                // ->whereIn('NR_LANCAMENTO', ['NR_LANCAMENTO'])
                 // ->where('CD_EMPRESA', 101)
                 ->where('created_at', '<' , Carbon::now()->subHour(2)) 
                 ->orderBy('id', 'desc')   

@@ -26,10 +26,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();send:updatetipopessoa
-        $schedule->command('send:updatetipopessoa')->everyMinute();
+        // $schedule->command('send:updatetipopessoa')->everyMinute();
         $schedule->command('send:updatelicenca')->everyMinute();
         // $schedule->command('send:update_fechamento_contabil')->everyFiveMinutes();
-        $schedule->command('send:send_wpp_nota_boleto')->everyFiveMinutes();
+        $schedule->command('send:send_wpp_nota_boleto')->everyMinute();
+        $schedule->command('send:send_wpp_boleto')->everyMinute();
     }
 
     /**

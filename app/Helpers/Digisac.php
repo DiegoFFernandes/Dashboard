@@ -24,9 +24,9 @@ class Digisac
         // Retornando a resposta
         return json_decode($response->body());
     }
-    static function SendMessage($oauth, $input, $file)
+    static function SendMessage($oauth, $input, $file, $tipo)
     {
-        $data = self::prepareData($input, $file);
+        $data = self::prepareData($input, $file, $tipo);
 
         $bearer_token = self::prepareBearerToken($oauth);
 
@@ -91,7 +91,7 @@ class Digisac
         ])->get($url);
     }
 
-    private static function prepareData($input, $file)
+    private static function prepareData($input, $file, $tipo)
     {       
         $baseData = [
             'number' => $input['NR_CELULAR'],
@@ -105,7 +105,7 @@ class Digisac
             $baseData['file'] = [
                 'base64' => $file,
                     'mimetype' => 'application/pdf',
-                    "name" => $input['NR_DOCUMENTO'] . ".pdf"
+                    "name" => $tipo.'-'.$input['NR_DOCUMENTO'] . ".pdf"
             ];
         }
 

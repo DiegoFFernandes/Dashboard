@@ -8,6 +8,7 @@ use App\Models\BoletoImpresso;
 use App\Models\Nota;
 use App\Models\Pessoa;
 use Barryvdh\Snappy\Facades\SnappyPdf;
+use Carbon\Carbon;
 use Digisac;
 use Helper;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class DigiSacController extends Controller
 
         $this->nota->StoreNota($nota);
 
-        return $notas_para_enviar = $this->nota->listNotaSend();
+        $notas_para_enviar = $this->nota->listNotaSend();
 
         foreach ($notas_para_enviar as $index => $nota) {
 
@@ -61,7 +62,7 @@ class DigiSacController extends Controller
                 continue;
             };
 
-            return $envio = Digisac::SendMessage($oauth, $search_send[0], null);
+            $envio = Digisac::SendMessage($oauth, $search_send[0], null, null);
 
             if (empty($envio->sent)) {
                 $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'B');
@@ -86,7 +87,7 @@ class DigiSacController extends Controller
 
             // return $pdf->download('notafiscal.pdf');
 
-            $envio = Digisac::SendMessage($oauth, $search_send[0], $base64Pdf);
+            $envio = Digisac::SendMessage($oauth, $search_send[0], $base64Pdf, 'Nota');
 
             if ($envio->sent == true) {
                 $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'E');
@@ -240,14 +241,17 @@ class DigiSacController extends Controller
     }
     public function Boleto()
     {
-        ini_set('max_execution_time', 10000);
         $oauth = Digisac::OAuthToken();
 
         self::listAndStoreBoleto();
 
-        $boletosSend = $this->boleto->listBoletoSend(null);   
-          
-         return $this->BoletoLoop($boletosSend, $oauth, false);
+        $boletosSend = $this->boleto->listBoletoSend(null);
+
+        if (Helper::is_empty_object($boletosSend)) {
+            return false;
+        }
+
+        return $this->BoletoLoop($boletosSend, $oauth, false);
     }
     public function BoletoLoop($boletosSend, $oauth, $status)
     {
@@ -255,14 +259,24 @@ class DigiSacController extends Controller
 
             $boletos = $this->boleto->Boleto($b->NR_LANCAMENTO, $b->CD_EMPRESA);
 
+            if (Helper::is_empty_object($boletos)) {
+                continue;
+            }
+
+            //Caso boleto estiver cancelado muda o status no mysql
+            if ($boletos[0]['ST_CONTAS'] == 'C') {
+                $this->boleto->UpdateBoletoSend($boletos[0], 'C');
+                continue;
+            };
+
             //Verifica se existe numero de celular caso não existe vai para o proximo
             if (empty($boletos[0]['NR_CELULAR'])) {
                 $this->boleto->UpdateBoletoSend($boletos[0], 'N');
                 continue;
             };
 
-            if ($status === false) {                       
-                 $envio = Digisac::SendMessage($oauth, $boletos[0], null);
+            if ($status === false) {
+                $envio = Digisac::SendMessage($oauth, $boletos[0], null, null);
                 //verificar se o cliente possui Whatsapp antes de continuar, caso não pula para o proximo
                 if (empty($envio->sent)) {
                     $this->boleto->UpdateBoletoSend($boletos[0], 'B');
@@ -311,7 +325,7 @@ class DigiSacController extends Controller
 
             // return $pdf->download('notafiscal.pdf');
 
-            $envio = Digisac::SendMessage($oauth, $boletos[0], $base64Pdf);
+            $envio = Digisac::SendMessage($oauth, $boletos[0], $base64Pdf, 'Boleto');
 
             if (!empty($envio->sent)) {
                 $this->boleto->UpdateBoletoSend($boletos[0], 'E');

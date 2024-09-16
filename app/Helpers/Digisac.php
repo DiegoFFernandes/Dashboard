@@ -9,6 +9,7 @@ class Digisac
 
     static function OAuthToken()
     {
+        $url = env('URL_API_DIGISAC');
         $data = [
             'grant_type' => 'password',
             'client_id' => 'api',
@@ -19,7 +20,7 @@ class Digisac
             'accountId' => ''
         ];
         // Fazendo a requisição HTTP
-        $response = Http::asForm()->post('https://rhivorecap.digisac.co/api/v1/oauth/token', $data);
+        $response = Http::asForm()->post($url . '/oauth/token', $data);
 
         // Retornando a resposta
         return json_decode($response->body());
@@ -39,7 +40,6 @@ class Digisac
 
         return self::handleResponse($response);
     }
-
     static function ContactExists($oauth, $number)
     {
         $baarer_token = $oauth->token_type . ' ' . $oauth->access_token;
@@ -90,35 +90,38 @@ class Digisac
             'Authorization' => $baarer_token,
         ])->get($url);
     }
-
     private static function prepareData($input, $file, $tipo)
-    {       
+    {
         $baseData = [
             'number' => $input['NR_CELULAR'],
-            'contactId' => 'c62377c8-12da-4a29-ae99-a124029cf03a',
-            'serviceId' => 'db615bbe-ddf0-438b-b2f3-6c05e5a13eb0',
+            // 'contactId' => 'db85d685-22e2-467e-ab8f-814529cd729f',
+            'userId' => '6754a119-0cd0-4cb1-835c-cc1d41bad87d',
+            'serviceId' => '13ffc5b3-7571-45eb-b1f0-d2715dc334ce',
             'origin' => 'bot', // bot or user,
         ];
-        if($file === null){
+        if ($file === null) {
             $baseData['text'] = 'Olá ' . $input['NM_PESSOA'] . ', foram emitidos documento(s), ' . $input['NR_DOCUMENTO'] . ' para o seu CPF/CNPJ.';
-        }else{
+        } else {
+            $baseData['text'] = "";
             $baseData['file'] = [
                 'base64' => $file,
-                    'mimetype' => 'application/pdf',
-                    "name" => $tipo.'-'.$input['NR_DOCUMENTO'] . ".pdf"
+                'mimetype' => 'application/pdf',
+                "name" => $tipo . '-' . $input['NR_DOCUMENTO'] . ".pdf"
             ];
         }
 
         return $baseData;
     }
-    private static function prepareBearerToken($oauth){
+    private static function prepareBearerToken($oauth)
+    {
         return $oauth->token_type . ' ' . $oauth->access_token;
     }
-    private static function handleResponse($response){
-        if($response->successful()){
-            return json_decode($response); 
-        }else{
-            return json_decode($response); 
+    private static function handleResponse($response)
+    {
+        if ($response->successful()) {
+            return json_decode($response);
+        } else {
+            return json_decode($response);
         }
     }
 }

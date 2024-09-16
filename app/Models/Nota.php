@@ -241,7 +241,7 @@ class Nota extends Model
                         --AND N.CD_EMPRESA = 101
                     ORDER BY O_IDORDEMPRODUCAORECAP, O_ORDEM
                     ";
-                    
+
 
         $results =  DB::connection('firebird_rede')->select($query);
 
@@ -251,7 +251,7 @@ class Nota extends Model
                 return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
             }, (array) $result);
         }, $results);
-       
+
         return $results;
 
         // return response()->json($results, 200, [], JSON_UNESCAPED_UNICODE);
@@ -289,11 +289,11 @@ class Nota extends Model
     public function listNotaSend()
     {
         return Nota::where('STATUS', 'A')
-            //  ->whereIn('NR_LANCAMENTO', ['17227', '17230'])
-            ->where('created_at', '<' , Carbon::now()->subHour()) 
-             ->orderBy('id', 'desc') 
-             ->take(10)
-             ->get();
+            //  ->whereIn('NR_LANCAMENTO', ['19361'])
+            ->where('created_at', '<', Carbon::now()->subHour())
+            ->orderBy('id', 'desc')
+            ->take(10)
+            ->get();
     }
     public function UpdateNotaSend($input, $status)
     {
@@ -322,9 +322,9 @@ class Nota extends Model
                     END as STATUS                   
                     ")
 
-        )->orderBy('updated_at','desc')
+        )->orderBy('updated_at', 'desc')
             // ->whereIn('NR_LANCAMENTO', ['3392'])
-        ->get();
+            ->get();
     }
 
     public function UpdateNotaReenvia($input)

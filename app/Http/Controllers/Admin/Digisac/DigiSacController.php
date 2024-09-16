@@ -38,13 +38,13 @@ class DigiSacController extends Controller
     }
     public function notafiscal()
     {
-        $oauth = Digisac::OAuthToken();
+       $oauth = Digisac::OAuthToken();
 
         $nota = $this->nota->NotasEmitidasResumo(0, 0);
 
         $this->nota->StoreNota($nota);
 
-        $notas_para_enviar = $this->nota->listNotaSend();
+       $notas_para_enviar = $this->nota->listNotaSend();
 
         foreach ($notas_para_enviar as $index => $nota) {
 

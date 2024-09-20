@@ -84,6 +84,7 @@ class LiberaOrdemComercial extends Model
     {
         $query = "
                 SELECT
+                IPP.id,
                 PP.STPEDIDO,
                 PP.TP_BLOQUEIO,
                 PP.ID PEDIDO,
@@ -117,5 +118,40 @@ class LiberaOrdemComercial extends Model
                 " . (($id <> 0) ? " and pp.id = '" . $id . "'" : "") . "";
 
         return DB::connection('firebird_rede')->select($query);
+    }
+    public function updateValueItempedidoPneu($pneu)
+    {
+        self::updateValueItempedidoPneuBorracheiro($pneu);
+
+        return DB::transaction(function () use ($pneu) {
+
+            DB::connection('firebird_rede')->select("EXECUTE PROCEDURE GERA_SESSAO");
+
+            $query = "UPDATE ITEMPEDIDOPNEU IPP SET IPP.VLUNITARIO = " . $pneu['VL_VENDA'] . " WHERE IPP.ID = " . $pneu['ID'] . "";
+
+            return DB::connection('firebird_rede')->statement($query);
+        });
+    }
+
+    public function updateValueItempedidoPneuBorracheiro($pneu)
+    {
+        $query = "
+                    SELECT
+                        IIPB.ID,
+                        IIPB.IDITEMPEDIDOPNEU,
+                        IIPB.IDBORRACHEIRO,
+                        IIPB.PC_COMISSAO,
+                        IIPB.VL_COMISSAO,
+                        IIPB.DT_REGISTRO
+                    FROM ITEMPEDIDOPNEUBORRACHEIRO IIPB
+                    WHERE IIPB.IDITEMPEDIDOPNEU = " . $pneu['ID'] . " ";
+         $data = DB::connection('firebird_rede')->select($query);
+        
+        foreach ($data as $d) {
+            $VL_COMISSAO = ($pneu['VL_VENDA'] * $d->PC_COMISSAO) / 100;
+
+            $query = "UPDATE ITEMPEDIDOPNEUBORRACHEIRO IIPB SET IIPB.VL_COMISSAO = $VL_COMISSAO WHERE IIPB.ID = $d->ID";
+            DB::connection('firebird_rede')->statement($query);
+        }
     }
 }

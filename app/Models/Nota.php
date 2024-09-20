@@ -311,7 +311,7 @@ class Nota extends Model
             'notas.nr_nota',
             'notas.nm_pessoa',
             'notas.nr_cnpjcpf',
-            'notas.updated_at',
+            
             DB::raw("CASE 
                     when notas.status = 'E' THEN 'ENVIADO' 
                     when notas.status = 'N' THEN 'SEM NÚMERO'
@@ -319,10 +319,25 @@ class Nota extends Model
                     when notas.status = 'A' THEN 'AGUARDANDO ENVIO'
                     when notas.status = 'B' THEN 'NÃO USA WHATSAPP'
                     when notas.status = 'C' THEN 'NOTA CANCELADA'
-                    END as STATUS                   
-                    ")
+                    END as STATUS_NOTA                  
+                    "),
+            DB::raw("COALESCE(
+                    CASE
+                        when B.status = 'E' THEN 'ENVIADO'
+                        when B.status = 'N' THEN 'SEM NÚMERO'
+                        when B.status = 'I' THEN 'NÚMERO INVALIDO'
+                        when B.status = 'A' THEN 'AGUARDANDO ENVIO'
+                        when B.status = 'B' THEN 'NÃO USA WHATSAPP'
+                        when B.status = 'C' THEN 'NOTA CANCELADA'
+                    END, 'REPARCEL. OU S/BOLETO') as STATUS_BOLETO"),
+            'notas.updated_at',        
 
-        )->orderBy('updated_at', 'desc')
+
+
+        )
+            ->leftJoin('boleto as b', 'b.NR_LANCNOTA', 'notas.NR_LANCAMENTO')
+
+            ->orderBy('updated_at', 'desc')
             // ->whereIn('NR_LANCAMENTO', ['3392'])
             ->get();
     }

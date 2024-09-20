@@ -55,7 +55,7 @@ class Boleto extends Model
                 INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
                 WHERE C.ST_CONTAS NOT IN ('C', 'L', 'A')
                     AND C.DT_LANCAMENTO BETWEEN CURRENT_DATE AND CURRENT_DATE
-                    --AND C.CD_FORMAPAGTO IN ('UN')
+                    AND C.CD_FORMAPAGTO NOT IN ( 'V2', 'VB', 'V1', 'VD', 'V3')
                     --AND C.NR_LANCAMENTO = 
                     --AND C.CD_EMPRESA = 
 
@@ -203,7 +203,7 @@ class Boleto extends Model
                     AND N.TP_NOTA = COALESCE(CO.TP_CONTAS, C.TP_CONTAS))
                 WHERE C.ST_CONTAS NOT IN ('L', 'A')
                     --AND N.DT_EMISSAO >= CURRENT_DATE-1
-                    --AND C.CD_FORMAPAGTO IN ('CL')
+                    AND C.CD_FORMAPAGTO NOT IN ( 'V2', 'VB', 'V1', 'VD', 'V3')
                     AND C.NR_LANCAMENTO = $nr_lancamento
                     AND C.CD_EMPRESA = $empresa
 

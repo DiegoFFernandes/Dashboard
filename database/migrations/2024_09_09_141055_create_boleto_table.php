@@ -17,6 +17,7 @@ class CreateBoletoTable extends Migration
             $table->id();
             $table->integer('CD_EMPRESA');
             $table->integer('NR_LANCAMENTO');
+            $table->integer('NR_LANCNOTA')->nullable();
             $table->integer('NR_DOCUMENTO');            
             $table->string('NM_PESSOA', 200);
             $table->string('NR_CNPJCPF', 200);

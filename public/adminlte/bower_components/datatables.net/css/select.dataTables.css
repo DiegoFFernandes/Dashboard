@@ -69,10 +69,10 @@ table.dataTable > tbody > tr > .selected {
     line-height: 6px;
     text-align: center;
   }
-  table.dataTable.compact > tbody > tr > td.select-checkbox:before,
+  /* table.dataTable.compact > tbody > tr > td.select-checkbox:before,
   table.dataTable.compact > tbody > tr > th.select-checkbox:before {
     margin-top: -12px;
-  }
+  } */
   table.dataTable.compact > tbody > tr.selected > td.select-checkbox:after,
   table.dataTable.compact > tbody > tr.selected > th.select-checkbox:after {
     margin-top: -16px;

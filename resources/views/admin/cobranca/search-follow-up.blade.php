@@ -155,7 +155,8 @@
                                             <th>Nota</th>
                                             <th>Cnpj/Cpf</th>
                                             <th>Cliente</th>
-                                            <th>Status</th>
+                                            <th>Status Nota</th>
+                                            <th>Status Boleto</th>
                                             <th>Disparo</th>
                                             <th>#</th>
                                         </thead>
@@ -491,8 +492,12 @@
                             name: 'nm_pessoa'
                         },
                         {
-                            data: 'STATUS',
-                            name: 'STATUS'
+                            data: 'STATUS_NOTA',
+                            name: 'STATUS_NOTA'
+                        },
+                        {
+                            data: 'STATUS_BOLETO',
+                            name: 'STATUS_BOLETO'
                         },
                         {
                             data: 'updated_at',

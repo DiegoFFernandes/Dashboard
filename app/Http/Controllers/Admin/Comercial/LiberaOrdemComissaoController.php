@@ -129,10 +129,16 @@ class LiberaOrdemComissaoController extends Controller
         $pedido = $this->pedido->verifyIfExists($this->request->pedido);
         $pedido ? "True" : "False";
 
+        // return $this->request->pneus;
+
         // $localizacao = Helper::VerifyRegion($this->user->conexao);
         $data = $this->libera->listOrdensBloqueadas("", $this->request->pedido);
+
         $data[0]->DSLIBERACAO = $data[0]->DSLIBERACAO . ' / (Dash - ' . $this->user->name . ') Obs: ' . $this->request->liberacao;
 
+        foreach($this->request->pneus as $pneu){            
+          $this->libera->updateValueItempedidoPneu($pneu);
+        }       
         if ($data[0]->TP_BLOQUEIO == "C") //Se bloqueio for igual a Comercial
         {
             $update = $this->pedido->updateData($data[0], $stpedido = 'N', $tpbloqueio = '');

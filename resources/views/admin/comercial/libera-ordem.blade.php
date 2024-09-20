@@ -112,12 +112,11 @@
 
                     <table class="table compact row-border" id="item-pedido" style="width:80%; font-size:12px">
                         <thead>
-                            <tr>
-                                <th style="">Sq</th>
-                                <th>Item</th>
-                                <th style="">Vl Venda</th>
-                                <th style="">Vl Tabela</th>
-                                <th style="">%Desc</th>
+                            <th style="">Sq</th>
+                            <th>Item</th>
+                            <th style="">Vl Venda</th>
+                            <th style="">Vl Tabela</th>
+                            <th style="">%Desc</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -147,20 +146,20 @@
     <script id="details-template" type="text/x-handlebars-template">
         @verbatim
             <div class="label label-info">{{ PESSOA }} - {{ PEDIDO}}</div>
-            <table class="table row-border" id="pedido-{{ PEDIDO }}" style="width:80%; font-size:12px" >
+            <table class="table row-border" id="pedido-{{ PEDIDO }}" style="width:90%; font-size:12px" >
                 <thead>
-                    <tr>                        
+                    <tr>
                         <th style="">Sq</th>
                         <th>Item</th>
                         <th style="">Vl Venda</th>
                         <th style="">Vl Tabela</th>
-                        <th style="">%Desc</th>                        
+                        <th style="">%Desc</th>                                                
                     </tr>
                 </thead>
                 <tbody></tbody> 
                 <tfoot>
                     <tr style="">
-                        <td colspan="5" id="tfooter" class="text-center" style="padding-top: 5px; padding-bottom: 15px;">
+                        <td colspan="6" id="tfooter" class="text-center" style="padding-top: 5px; padding-bottom: 15px;">
                             <div class="col-md-6 col-sm-2" style="padding-top: 10px;">
                                 <button class="btn btn-success btn-sm btn-block" data-pedido="{{ PEDIDO }}" data-pessoa="{{ PESSOA }}" id="btn-open-modal-aproover">Aprovar</button>
                             </div>
@@ -210,6 +209,8 @@
             });
 
             var template = Handlebars.compile($("#details-template").html());
+            var tableId = 0;
+            var table_item_pedido;
             var table = $('#table-ordem-block').DataTable({
                 language: {
                     url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json",
@@ -244,7 +245,7 @@
                 ajax: "{{ route('get-ordens-bloqueadas-comercial') }}",
                 columns: [{
                         data: "actions",
-                        name: "actions",                        
+                        name: "actions",
                     },
                     {
                         data: 'EMP',
@@ -283,9 +284,9 @@
             $('#table-ordem-block tbody').on('click', '.details-control', function() {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
-                var tableId = 'pedido-' + row.data().PEDIDO;
+                tableId = 'pedido-' + row.data().PEDIDO;
 
-                console.log(row.data());
+                // console.log(row.data());
 
                 $('.nr_pedido').val(row.data().PEDIDO);
                 $('.pessoa').val(row.data().PESSOA);
@@ -311,9 +312,9 @@
             $('#table-ordem-block tbody').on('click', '.details-down', function() {
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
-                var tableId = 'pedido-' + row.data().PEDIDO;              
+                tableId = 'pedido-' + row.data().PEDIDO;
 
-                
+
                 if (row.child.isShown()) {
                     // This row is already open - close it
                     row.child.hide();
@@ -327,7 +328,7 @@
                     $(this).find('i').removeClass('fa-plus-circle').addClass('fa-minus-circle');
                     tr.next().find('td').addClass('no-padding bg-gray-light');
                 }
-                
+
             });
 
             function initTable(tableId, data) {
@@ -360,12 +361,12 @@
                         {
                             data: 'VL_VENDA',
                             name: 'VL_VENDA',
-                            width: '1%'
+                            width: '2%'
                         },
                         {
                             data: 'VL_PRECO',
                             name: 'VL_PRECO',
-                            width: '1%'
+                            width: '2%'
                         },
                         {
                             data: 'PC_DESCONTO',
@@ -373,14 +374,58 @@
                             width: '1%'
                         }
                     ],
+                    // columnDefs: [{
+                    //     targets: [2, 3],
+                    //     render: $.fn.dataTable.render.number('.', ',', 2)
+
+                    // }],
+
                     "footerCallback": function(tfoot, data, start, end, display) {
                         $(tfoot).find('td').removeClass('no-padding');
                     }
+                });
+            }
 
+
+
+            $(document).on('click', '#item-pedido td:nth-child(3)', function() {
+                var row = $(this).closest('tr');
+                var rowData = table_item_pedido.row(row).data();
+
+                var valorCellVenda = $(row).find('td').eq(2);
+                var valorVenda = parseFloat(valorCellVenda.text()).toFixed(2);
+
+                var valorCellTabela = $(row).find('td').eq(3);
+                var valorTabela = parseFloat(valorCellTabela.text()).toFixed(2);
+                
+                
+
+                // Verificar se o input já está sendo editado
+                if (!valorCellVenda.find('input').length) {
+                    valorCellVenda.html('<input type="number" value="' + valorVenda +
+                        '" class="edit-input" style="color: black; width: 100%; box-sizing: border-box;"/>'
+                    );
+
+                    // Levar o foco ao input e selecionar seu conteúdo
+                    var input = valorCellVenda.find('input');
+                    input.focus();
+                    input.select();
+                }
+
+                // Quando o campo perde o foco, salva o valor editado
+                valorCellVenda.find('input').on('blur', function() {                 
+                    
+                    var newValue = parseFloat($(this).val()).toFixed(2);
+                    valorCellVenda.html(newValue);
+                    // Atualiza os dados no DataTables
+                    var newPercent = parseFloat((100-(newValue*100)/valorTabela)).toFixed(2);
+
+                    rowData.VL_VENDA = newValue;
+                    rowData.PC_DESCONTO = newPercent;
+                    table_item_pedido.row(row).data(rowData).draw();
                 });
 
-
-            }
+            });
 
             $(document).on('click', '#btn-open-modal-aproover', function() {
                 var pessoa = $(this).data('pessoa');
@@ -389,13 +434,17 @@
                 $('.pessoa').val(pessoa);
                 $('#modal-pedido').modal('show');
             });
+
             $(document).on('click', '.btn-save-confirm', function() {
+                //obtem os dados de toda a tabela, para fazer o update no banco 
+                var dataTable = table_item_pedido.rows().data().toArray();
                 $.ajax({
                     url: "{{ route('save-libera-pedido') }}",
                     method: 'GET',
                     data: {
                         pedido: $('.nr_pedido').val(),
-                        liberacao: $('.liberacao').val()
+                        liberacao: $('.liberacao').val(),
+                        pneus: dataTable
                     },
                     beforeSend: function() {
                         $("#loading").removeClass('hidden');

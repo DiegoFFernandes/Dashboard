@@ -114,8 +114,8 @@
                         <thead>
                             <th style="">Sq</th>
                             <th>Item</th>
-                            <th style="">Vl Venda</th>
-                            <th style="">Vl Tabela</th>
+                            <th style="">Venda</th>
+                            <th style="">Tabela</th>
                             <th style="">%Desc</th>
                             </tr>
                         </thead>
@@ -151,8 +151,8 @@
                     <tr>
                         <th style="">Sq</th>
                         <th>Item</th>
-                        <th style="">Vl Venda</th>
-                        <th style="">Vl Tabela</th>
+                        <th style="">Venda</th>
+                        <th style="">Tabela</th>
                         <th style="">%Desc</th>                                                
                     </tr>
                 </thead>
@@ -386,8 +386,6 @@
                 });
             }
 
-
-
             $(document).on('click', '#item-pedido td:nth-child(3)', function() {
                 var row = $(this).closest('tr');
                 var rowData = table_item_pedido.row(row).data();
@@ -440,8 +438,9 @@
                 var dataTable = table_item_pedido.rows().data().toArray();
                 $.ajax({
                     url: "{{ route('save-libera-pedido') }}",
-                    method: 'GET',
+                    method: 'POST',
                     data: {
+                        _token: $("[name=csrf-token]").attr("content"),
                         pedido: $('.nr_pedido').val(),
                         liberacao: $('.liberacao').val(),
                         pneus: dataTable

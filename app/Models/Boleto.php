@@ -107,8 +107,8 @@ class Boleto extends Model
     public function Boleto($nr_lancamento, $empresa)
     {
         $query = "
-                    SELECT DISTINCT
-                    EP.NR_CELULAR,
+                   SELECT DISTINCT
+                    CPP.NRTELEFONE NR_CELULAR,
                     P.CD_PESSOA,
                     P.NM_PESSOA,
                     C.ST_CONTAS,
@@ -184,7 +184,17 @@ class Boleto extends Model
                 INNER JOIN PESSOA P ON (P.CD_PESSOA = C.CD_PESSOA)
                 INNER JOIN ENDERECOPESSOA EP ON (EP.CD_PESSOA = P.CD_PESSOA
                     AND EP.CD_ENDERECO = 1)
-                    --INNER JOIN PESSOAPERFIL PF ON (P.CD_PESSOA = PF.CD_PESSOA)
+                LEFT JOIN(SELECT
+                            MAX(CP.ID) ID,
+                            CP.CD_PESSOA,
+                            CP.IDTIPOCONTATO
+                        FROM CONTATOPESSOA CP
+                        WHERE CP.IDTIPOCONTATO IN (2)
+                        GROUP BY CP.CD_PESSOA,
+                            CP.IDTIPOCONTATO) CP ON (CP.CD_PESSOA = EP.CD_PESSOA)
+
+                LEFT JOIN CONTATOPESSOA CPP ON (CPP.ID = CP.ID
+                    AND CPP.CD_PESSOA = CP.CD_PESSOA)
                 LEFT JOIN DESTINOREPARCELAMENTO D ON (D.CD_EMPRCONTAS = C.CD_EMPRESA
                     AND D.NR_LANCAMENTO = C.NR_LANCAMENTO
                     AND D.CD_PESSOA = C.CD_PESSOA
@@ -203,11 +213,11 @@ class Boleto extends Model
                     AND N.TP_NOTA = COALESCE(CO.TP_CONTAS, C.TP_CONTAS))
                 WHERE C.ST_CONTAS NOT IN ('L', 'A')
                     --AND N.DT_EMISSAO >= CURRENT_DATE-1
-                    AND C.CD_FORMAPAGTO NOT IN ( 'V2', 'VB', 'V1', 'VD', 'V3')
+                    AND C.CD_FORMAPAGTO NOT IN ('V2', 'VB', 'V1', 'VD', 'V3')
                     AND C.NR_LANCAMENTO = $nr_lancamento
                     AND C.CD_EMPRESA = $empresa
 
-                GROUP BY EP.NR_CELULAR,
+                GROUP BY CPP.NRTELEFONE,
                     P.CD_PESSOA,
                     P.NM_PESSOA,
                     C.ST_CONTAS,
@@ -265,7 +275,7 @@ class Boleto extends Model
                 ORDER BY P.CD_PESSOA,
                     P.NM_PESSOA,
                     NR_DOC,
-                    C.NR_PARCELA                    
+                    C.NR_PARCELA                
                 ";
 
         $results = DB::connection('firebird_rede')->select($query);

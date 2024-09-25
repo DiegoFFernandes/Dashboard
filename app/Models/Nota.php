@@ -314,7 +314,8 @@ class Nota extends Model
             'notas.id',
             'notas.cd_empresa',
             'notas.nr_lancamento',
-            'notas.nr_nota',
+            DB::raw("coalesce(b.nr_documento, notas.nr_nota) nr_documento"),
+           
             'notas.nm_pessoa',
             'notas.nr_cnpjcpf',
 
@@ -341,9 +342,11 @@ class Nota extends Model
 
 
         )
-            ->leftJoin('boleto as b', 'b.NR_LANCNOTA', 'notas.NR_LANCAMENTO')
-
-            ->orderBy('updated_at', 'desc')
+            ->leftJoin('boleto as b', function($join){
+                $join->on('b.NR_LANCNOTA', 'notas.NR_LANCAMENTO')
+                ->on('b.CD_EMPRESA', 'notas.CD_EMPRESA');
+            })       
+            ->orderBy('notas.updated_at', 'desc')
             // ->whereIn('NR_LANCAMENTO', ['3392'])
             ->get();
     }

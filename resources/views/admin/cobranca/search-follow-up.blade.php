@@ -152,7 +152,7 @@
                                         <thead>
                                             <th>Emp</th>
                                             <th>Lancamento</th>
-                                            <th>Nota</th>
+                                            <th>Documento</th>
                                             <th>Cnpj/Cpf</th>
                                             <th>Cliente</th>
                                             <th>Status Nota</th>
@@ -480,8 +480,8 @@
                             visible: false
                         },
                         {
-                            data: 'nr_nota',
-                            name: 'nr_nota'
+                            data: 'nr_documento',
+                            name: 'nr_documento'
                         },
                         {
                             data: 'nr_cnpjcpf',

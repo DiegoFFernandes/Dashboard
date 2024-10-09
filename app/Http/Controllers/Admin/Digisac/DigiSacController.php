@@ -51,10 +51,7 @@ class DigiSacController extends Controller
 
         foreach ($notas_para_enviar as $index => $nota) {
 
-            $search_send = $this->nota->NotasEmitidas($nota['NR_LANCAMENTO'], $nota['CD_EMPRESA']);
-
-            //Salva o item para tentativas de disparo, aqui recebe a tentativa numero 0;
-            $this->tentativas->StoreDataTentativas($search_send[0]['CD_EMPRESA'], $search_send[0]['NR_NOTA']);
+            $search_send = $this->nota->NotasEmitidas($nota['NR_LANCAMENTO'], $nota['CD_EMPRESA']);            
 
             if (empty($search_send[0]['CD_AUTENTICACAO'])) {
                 continue;
@@ -67,6 +64,9 @@ class DigiSacController extends Controller
                 $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'C');
                 continue;
             };
+
+            //Salva o item para tentativas de disparo, aqui recebe a tentativa numero 0;
+            $this->tentativas->StoreDataTentativas($search_send[0]['CD_EMPRESA'], $search_send[0]['NR_NOTA']);
 
             //Faz o update para primeira tentativa de disparo para o cliente adicionando +1 no envio atual;
             $tentativa = self::tentativaEnvio($search_send[0]['CD_EMPRESA'], $search_send[0]['NR_NOTA']);

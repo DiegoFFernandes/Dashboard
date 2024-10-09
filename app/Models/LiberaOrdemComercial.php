@@ -132,10 +132,14 @@ class LiberaOrdemComercial extends Model
             return DB::connection('firebird_rede')->statement($query);
         });
     }
-
     public function updateValueItempedidoPneuBorracheiro($pneu)
     {
-        $query = "
+
+        return DB::transaction(function () use ($pneu) {
+
+            DB::connection('firebird_rede')->select("EXECUTE PROCEDURE GERA_SESSAO");
+
+            $query = "
                     SELECT
                         IIPB.ID,
                         IIPB.IDITEMPEDIDOPNEU,
@@ -145,13 +149,15 @@ class LiberaOrdemComercial extends Model
                         IIPB.DT_REGISTRO
                     FROM ITEMPEDIDOPNEUBORRACHEIRO IIPB
                     WHERE IIPB.IDITEMPEDIDOPNEU = " . $pneu['ID'] . " ";
-         $data = DB::connection('firebird_rede')->select($query);
-        
-        foreach ($data as $d) {
-            $VL_COMISSAO = ($pneu['VL_VENDA'] * $d->PC_COMISSAO) / 100;
+                    
+            $data = DB::connection('firebird_rede')->select($query);
 
-            $query = "UPDATE ITEMPEDIDOPNEUBORRACHEIRO IIPB SET IIPB.VL_COMISSAO = $VL_COMISSAO WHERE IIPB.ID = $d->ID";
-            DB::connection('firebird_rede')->statement($query);
-        }
+            foreach ($data as $d) {
+                $VL_COMISSAO = ($pneu['VL_VENDA'] * $d->PC_COMISSAO) / 100;
+
+                $query = "UPDATE ITEMPEDIDOPNEUBORRACHEIRO IIPB SET IIPB.VL_COMISSAO = $VL_COMISSAO WHERE IIPB.ID = $d->ID";
+                DB::connection('firebird_rede')->statement($query);
+            }
+        });
     }
 }

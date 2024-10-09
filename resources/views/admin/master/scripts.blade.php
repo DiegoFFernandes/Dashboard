@@ -43,7 +43,10 @@
 <!--Ck Editor
 <script src="{{ asset('adminlte/bower_components/ckeditor/ckeditor.js') }}"></script>
 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+
 <script src="{{ asset('adminlte/bower_components/select2/dist/js/select2.min.js') }}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>

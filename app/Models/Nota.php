@@ -294,8 +294,9 @@ class Nota extends Model
 
     public function listNotaSend()
     {
-        return Nota::where('STATUS', 'A')
-            //  ->whereIn('NR_LANCAMENTO', ['19361'])
+        return Nota::
+            where('STATUS', 'A')
+            // ->whereIn('NR_LANCAMENTO', ['40130'])
             ->where('created_at', '<', Carbon::now()->subHour())
             ->orderBy('id', 'desc')
             ->take(10)
@@ -326,6 +327,7 @@ class Nota extends Model
                     when notas.status = 'A' THEN 'AGUARDANDO ENVIO'
                     when notas.status = 'B' THEN 'NÃO USA WHATSAPP'
                     when notas.status = 'C' THEN 'NOTA CANCELADA'
+                    when notas.status = 'T' THEN 'FALHA POR TENTATIVAS'
                     END as STATUS_NOTA                  
                     "),
             DB::raw("COALESCE(

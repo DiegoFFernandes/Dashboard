@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Contabilidade\ParametroContabilController;
 use App\Http\Controllers\Admin\Junsoft\ItemCentroResultadoController;
 use App\Http\Controllers\Admin\Junsoft\SubgrupoCentroResultadoController;
+use App\Http\Controllers\Admin\Junsoft\SuperViewController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'permission:ver-gerenciador-contabil'])->group(function () {
@@ -21,6 +22,16 @@ Route::middleware(['auth', 'role:admin|controladoria'])->group(function () {
         Route::post('ajax-store-sub-centro-resultado', [SubgrupoCentroResultadoController::class, 'StoreSubCentroResultado'])->name('ajax-sub-centro-resultado.store');
         Route::post('ajax-delete-sub-centro-resultado', [SubgrupoCentroResultadoController::class, 'DeleteSubCentroResultado'])->name('ajax-sub-centro-resultado.delete');
         Route::get('ajax-list-sub-centro-resultado', [SubgrupoCentroResultadoController::class, 'listSubgrupoCentroResultado'])->name('ajax-sub-centro-resultado.list');
+        
+    });
+});
+
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::prefix('view')->group(function () {
+        Route::get('coleta-rede', [SuperViewController::class, 'coletaRede'])->name('view.coleta-rede');
+        Route::get('list-coleta-rede', [SuperViewController::class, 'listColetas'])->name('view.list-coleta-rede');
+        
         
     });
 });

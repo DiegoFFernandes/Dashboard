@@ -18,6 +18,7 @@ class Boleto extends Model
     protected $fillable = [
         'CD_EMPRESA',
         'NR_LANCAMENTO',
+        'NR_LANCNOTA',
         'NR_DOCUMENTO',
         'DT_EMISSAO',
         'NM_PESSOA',
@@ -82,31 +83,27 @@ class Boleto extends Model
 
     public function storeData($input)
     {
-        try {
-            foreach ($input as $i) {
-                Boleto::firstOrCreate(
-                    [
-                        'CD_EMPRESA' => $i['CD_EMPRESA'],
-                        'NR_LANCAMENTO' => $i['NR_LANCAMENTO'],
-                    ],
-                    [
-                        'CD_EMPRESA' => $i['CD_EMPRESA'],   
-                        'NR_LANCNOTA' => $i['NR_LANCTONOTA'],
-                        'NR_LANCAMENTO' => $i['NR_LANCAMENTO'],
-                        'NR_DOCUMENTO' => $i['NR_DOCUMENTO'],
-                        'DT_EMISSAO' => $i['DT_EMISSAO'],
-                        'NM_PESSOA' => $i['NM_PESSOA'],
-                        'NR_CNPJCPF' => $i['NR_CNPJCPF'],
-                        'CD_FORMAPAGTO' => $i['CD_FORMAPAGTO'],
-                        'STATUS' => 'A'
-                    ]
-                );
-            }
-        } catch (\Throwable $th) {
-            return $th;
+        foreach ($input as $i) {
+
+            Boleto::firstOrCreate(
+                [
+                    'CD_EMPRESA' => $i['CD_EMPRESA'],
+                    'NR_LANCAMENTO' => $i['NR_LANCAMENTO'],
+                ],
+                [
+                    'CD_EMPRESA' => $i['CD_EMPRESA'],
+                    'NR_LANCNOTA' => $i['NR_LANCTONOTA'] == '' ? null : $i['NR_LANCTONOTA'],
+                    'NR_LANCAMENTO' => $i['NR_LANCAMENTO'],
+                    'NR_DOCUMENTO' => $i['NR_DOCUMENTO'],
+                    'DT_EMISSAO' => $i['DT_EMISSAO'],
+                    'NM_PESSOA' => $i['NM_PESSOA'],
+                    'NR_CNPJCPF' => $i['NR_CNPJCPF'],
+                    'CD_FORMAPAGTO' => $i['CD_FORMAPAGTO'],
+                    'STATUS' => 'A'
+                ]
+            );
         }
     }
-
     public function Boleto($nr_lancamento, $empresa)
     {
         $query = "
@@ -295,14 +292,14 @@ class Boleto extends Model
     {
         if ($nota === null) {
             return Boleto::where('STATUS', 'A')
-                // ->whereIn('NR_LANCAMENTO', ['NR_LANCAMENTO'])
-                // ->where('CD_EMPRESA', 101)
-                ->where('created_at', '<' , Carbon::now()->subHour(2)) 
-                ->orderBy('id', 'desc')   
-                ->take(10)            
+                // ->where('NR_DOCUMENTO', 1103666)
+                // ->where('CD_EMPRESA', 102)
+                ->where('created_at', '<', Carbon::now()->subHour(2))
+                ->orderBy('id', 'desc')
+                ->take(10)
                 ->get();
-        } else {       
-             
+        } else {
+
             return Boleto::where('STATUS', 'A')
                 ->whereIn('NR_DOCUMENTO', [$nota['NR_DOCUMENTO']])
                 ->where('CD_EMPRESA', $nota['CD_EMPRESA'])

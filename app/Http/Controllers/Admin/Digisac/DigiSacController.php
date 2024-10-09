@@ -7,6 +7,7 @@ use App\Models\Boleto;
 use App\Models\BoletoImpresso;
 use App\Models\Nota;
 use App\Models\Pessoa;
+use App\Models\TentativaEnvio;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Carbon\Carbon;
 use Digisac;
@@ -19,18 +20,20 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DigiSacController extends Controller
 {
-    public $pessoa, $nota, $user, $request, $boleto;
+    public $pessoa, $nota, $user, $request, $boleto, $tentativas;
 
     public function __construct(
         Request $request,
         Pessoa $pessoa,
         Nota $nota,
-        Boleto $boleto
+        Boleto $boleto,
+        TentativaEnvio $tentativa
     ) {
         $this->pessoa = $pessoa;
         $this->nota = $nota;
         $this->request = $request;
         $this->boleto = $boleto;
+        $this->tentativas = $tentativa;
         $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
             return $next($request);
@@ -38,17 +41,20 @@ class DigiSacController extends Controller
     }
     public function notafiscal()
     {
-       $oauth = Digisac::OAuthToken();
+        $oauth = Digisac::OAuthToken();
 
         $nota = $this->nota->NotasEmitidasResumo(0, 0);
 
         $this->nota->StoreNota($nota);
 
-       $notas_para_enviar = $this->nota->listNotaSend();
+        $notas_para_enviar = $this->nota->listNotaSend();
 
         foreach ($notas_para_enviar as $index => $nota) {
 
             $search_send = $this->nota->NotasEmitidas($nota['NR_LANCAMENTO'], $nota['CD_EMPRESA']);
+
+            //Salva o item para tentativas de disparo, aqui recebe a tentativa numero 0;
+            $this->tentativas->StoreDataTentativas($search_send[0]['CD_EMPRESA'], $search_send[0]['NR_NOTA']);
 
             if (empty($search_send[0]['CD_AUTENTICACAO'])) {
                 continue;
@@ -59,6 +65,15 @@ class DigiSacController extends Controller
             };
             if ($search_send[0]['ST_NOTA'] == 'C') {
                 $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'C');
+                continue;
+            };
+
+            //Faz o update para primeira tentativa de disparo para o cliente adicionando +1 no envio atual;
+            $tentativa = self::tentativaEnvio($search_send[0]['CD_EMPRESA'], $search_send[0]['NR_NOTA']);
+
+            //Se tentativa maior 2 muda o Status para numero de tentativas alcançada
+            if ($tentativa > 2) {
+                $this->nota->UpdateNotaSend($search_send[0]['NR_LANCAMENTO'], 'T');
                 continue;
             };
 
@@ -96,13 +111,14 @@ class DigiSacController extends Controller
                 continue;
             }
 
-            // lista e salva os dados de boleto no mysql
+            // lista e salva os dados dos novos boleto no mysql
             self::listAndStoreBoleto();
 
+            //Lista os boletos para enviar
             $boletosSend = $this->boleto->listBoletoSend($search_send[0]);
 
             if (!empty($boletosSend[0]['STATUS']) && $boletosSend[0]['STATUS'] == "A") {
-                $this->BoletoLoop($boletosSend, $oauth, true);
+                $this->BoletoLoop($boletosSend, $oauth, true, 'nota_boleto');
             } else {
                 echo $search_send[0]['NR_DOCUMENTO'] . " Sem Boleto.</br>";
             }
@@ -251,18 +267,31 @@ class DigiSacController extends Controller
             return false;
         }
 
-        return $this->BoletoLoop($boletosSend, $oauth, false);
+        return $this->BoletoLoop($boletosSend, $oauth, false, 'boleto');
     }
-    public function BoletoLoop($boletosSend, $oauth, $status)
+    public function BoletoLoop($boletosSend, $oauth, $status, $ambos)
     {
         foreach ($boletosSend as $b) {
+
+            //Salva o item para tentativas de disparo, aqui recebe a tentativa numero 0;
+            $this->tentativas->StoreDataTentativas($b->CD_EMPRESA, $b->NR_DOCUMENTO);
 
             $boletos = $this->boleto->Boleto($b->NR_LANCAMENTO, $b->CD_EMPRESA);
 
             if (Helper::is_empty_object($boletos)) {
                 continue;
             }
-
+            //Verifica se o envio e junto com a nota ou somente o boleto
+            if ($ambos == 'boleto') {
+                //Faz o update para primeira tentativa de disparo para o cliente adicionando +1 no envio atual;
+                $tentativa = self::tentativaEnvio($b->CD_EMPRESA, $b->NR_DOCUMENTO);
+                //Se tentativa maior 2 muda o Status para numero de tentativas alcançada
+                if ($tentativa > 2) {
+                    $this->boleto->UpdateBoletoSend($boletos[0], 'T');
+                    continue;
+                };
+            }
+           
             //Caso boleto estiver cancelado muda o status no mysql
             if ($boletos[0]['ST_CONTAS'] == 'C') {
                 $this->boleto->UpdateBoletoSend($boletos[0], 'C');
@@ -417,5 +446,14 @@ class DigiSacController extends Controller
         $boletosStore = $this->boleto->BoletoResumo();
 
         $this->boleto->storeData($boletosStore);
+    }
+    private function tentativaEnvio($cd_empresa, $nr_documento)
+    {
+        $tentativa_envio = $this->tentativas->searchTentativas($cd_empresa, $nr_documento);
+        $tentativa = $tentativa_envio['NR_TENTATIVAS'] + 1;
+
+        $this->tentativas->UpdateTentativas($cd_empresa, $nr_documento, $tentativa);
+
+        return $tentativa;
     }
 }

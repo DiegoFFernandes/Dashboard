@@ -614,7 +614,7 @@
                                         </a>
                                         <ul class="treeview-menu">
                                             <li class="">
-                                                <a href="https://ivorecap.sharepoint.com/:f:/s/comercialredeivo/EtpwvT_EqaBCmYVM1K25sOsBUHHhkvj5Xwespza7tZjl8w?e=4nzEUw"
+                                                <a href="https://ivorecap.sharepoint.com/:f:/s/comercialredeivo/EtpwvT_EqaBCmYVM1K25sOsBwJZk8hCDmRXlQ5dJZNZmTA"
                                                     target="_blank">
                                                     <i class="fa fa-circle-o"></i>Gestão Comercial</a>
                                             </li>

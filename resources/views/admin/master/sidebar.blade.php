@@ -614,9 +614,9 @@
                                         </a>
                                         <ul class="treeview-menu">
                                             <li class="">
-                                                <a href="https://ivorecap-my.sharepoint.com/:f:/g/personal/qualidadepvai2_ivorecap_onmicrosoft_com/EkoR6O9ShalMg7n_zXD3KlwBONhN4UnnMjjyNJHuFwm7Dg?e=RKRMl8"
+                                                <a href="https://ivorecap.sharepoint.com/:f:/s/comercialredeivo/EtpwvT_EqaBCmYVM1K25sOsBUHHhkvj5Xwespza7tZjl8w?e=4nzEUw"
                                                     target="_blank">
-                                                    <i class="fa fa-circle-o"></i>N2 - Comercial</a>
+                                                    <i class="fa fa-circle-o"></i>Gestão Comercial</a>
                                             </li>
                                         </ul>
                                     </li>

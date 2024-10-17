@@ -54,6 +54,7 @@ class SolicitacaoCompra extends Model
                         ITEMSOLICITACAO ISC
                     INNER JOIN ITEM I ON (I.CD_ITEM = ISC.CD_ITEM)
                     WHERE ISC.NR_SOLICITACAO = $nr_solicitacao
+                        isc.cd_empresa = $cd_empresa
             ";
 
         $results = DB::connection('firebird_rede')->select($query);

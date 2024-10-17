@@ -237,7 +237,7 @@
                 return false;
             }
             // libera a solicitação para compra
-            loadData('A', dsLiberacao)
+            loadData('N', dsLiberacao)
         });
 
         $('.btn-blocker').click(function() {

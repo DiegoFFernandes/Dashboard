@@ -468,6 +468,22 @@
                     </ul>
                 </li>
             @endrole
+            @role('admin|compras')
+                <li class="treeview {{ request()->segment(1) == 'compras' ? 'active' : '' }}" style="height: auto;">
+                    <a href="#">
+                        <i class="fa fa-shopping-bag"></i> <span>Compras</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu" style="display: none;">
+                        <li class="{{ request()->routeIs('libera-pedido-compra.index') ? 'active' : '' }}"><a
+                                href="{{ route('libera-pedido-compra.index') }}"><i class="fa fa-thumbs-up"></i>Liberação de Compra</a>
+                        </li>                        
+                    </li>
+                    </ul>
+                </li>
+            @endrole
             @role('admin|controladoria')
                 <li class="treeview {{ request()->segment(1) == 'junsoft' ? 'active' : '' }}" style="height: auto;">
                     <a href="#">

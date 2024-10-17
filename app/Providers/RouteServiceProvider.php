@@ -61,6 +61,7 @@ class RouteServiceProvider extends ServiceProvider
                     require base_path('routes/junsoft.php');
                     require base_path('routes/indicadores.php');
                     require base_path('routes/cobranca.php');
+                    require base_path('routes/compras.php');
                 });
         });
     }

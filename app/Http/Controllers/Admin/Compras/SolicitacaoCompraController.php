@@ -82,7 +82,7 @@ class SolicitacaoCompraController extends Controller
             );
             $status = $c['status'];
         }
-        if ($status == 'S') {
+        if ($status == 'B') {
             return response()->json(['warning' => 'Solicitação ainda esta bloqueada, movidas para bloqueadas pendentes!']);
         } else {
             return response()->json(['success' => 'Solicitação liberada com sucesso!']);

@@ -299,7 +299,7 @@ iframe {
     color: green;
 }
 
-.btn-open{
+.btn-open {
     color: rgb(0, 77, 128);
 }
 
@@ -380,4 +380,22 @@ tfoot input {
 
 thead input {
     width: 100%;
+}
+
+#camera-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    /* Ou altura fixa como 300px ou a altura do modal */
+    width: 100%;
+    position: relative;
+}
+
+#results {
+    /* float: right; */
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid;
+    background: #ccc;
 }

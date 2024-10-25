@@ -25,9 +25,7 @@ Route::middleware(['auth', 'permission:ver-procedimento'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('procedimento', [ProcedimentoController::class, 'showPDF'])->name('procedimento.show-pdf');
-
-    Route::prefix('procedimento-aprovador')->group(function () {
+   Route::prefix('procedimento-aprovador')->group(function () {
         Route::get('autorizador', [ProcedimentoAprovadorController::class, 'index'])->name('procedimento.autorizador');
         Route::get('list-procedimento-para-liberar', [ProcedimentoAprovadorController::class, 'GetProcedimentoAprovador'])->name('procedimento.get-procedimento-aprovador');
         Route::get('store', [ProcedimentoAprovadorController::class, 'store'])->name('procedimento.aprovador.store');

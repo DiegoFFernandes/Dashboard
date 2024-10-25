@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Helper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -109,4 +110,24 @@ class Contas extends Model
             return DB::connection('firebird_rede')->select($query);
         });
     }
+    public function SaldoAdiantamento($nr_cnpjcpf)
+    {
+        $query = "
+            SELECT
+                    CONTAS.CD_EMPRESA,
+                    CONTAS.CD_PESSOA || ' - ' || P.NM_PESSOA NM_PESSOA,
+                    CONTAS.VL_SALDO,
+                    CONTAS.DT_VENCIMENTO,
+                    CONTAS.DS_OBSERVACAO
+                FROM CONTAS
+                INNER JOIN PESSOA P ON (P.CD_PESSOA = CONTAS.CD_PESSOA)
+                WHERE CONTAS.CD_TIPOCONTA = 14
+                    AND CONTAS.ST_CONTAS IN ('P', 'T')
+                    AND P.NR_CNPJCPF = '$nr_cnpjcpf'";
+
+        $results = DB::connection('firebird_rede')->select($query);
+
+        return Helper::ConvertFormatText($results);
+    }
+    
 }

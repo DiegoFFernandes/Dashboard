@@ -103,6 +103,18 @@
                                             <th>Visualizado</th>
                                             <th>#</th>
                                         </thead>
+                                        <tbody></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th style="text-align:right">Total:</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>                                                
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>                                        
                                     </table>
                                 </div>
                             </div>
@@ -123,7 +135,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal"
                             id="close-camera">Fechar Camera</button>
-                        <button type="button" class="btn btn-primary" id="take_picture">Tirar Foto</button>
+                        <button type="button" class="btn btn-primary" id="take_picture">Capturar Foto</button>
                         <ul id="menu" class="list-unstyled">
                         </ul>
                     </div>
@@ -292,6 +304,29 @@
                         render: $.fn.dataTable.render.number('.', ',', 2),
 
                     }],
+                    footerCallback: function(row, data, start, end, display) {
+                        var api = this.api();
+
+                        // Função para converter em inteiro
+                        var intVal = function(i) {
+                            return typeof i === 'string' ?
+                                i.replace(/[\$,]/g, '') * 1 :
+                                // Remove símbolos e converte para número
+                                typeof i === 'number' ?
+                                i : 0;
+                        };
+                        total = api
+                            .column(2, {page: 'current'})
+                            .data()
+                            .reduce(function(a, b) {
+                                return parseFloat(a) + parseFloat(b);
+                            }, 0);
+
+                        $(api.column(2).footer()).html(
+                            $.fn.dataTable.render.number('.', ',', 2).display(total)
+                            
+                        );
+                    }
                 });
                 return table;
             }
@@ -329,6 +364,7 @@
             }
 
             function clear() {
+                pictures = [];
                 $('#menu').empty();
                 $('#tp_despesa').val(0).trigger('change');
                 $('.vl_consumido').val("");
@@ -481,7 +517,6 @@
 
                 $('a[href="#new-comprovante"]').tab('show');
             });
-
 
         });
     </script>

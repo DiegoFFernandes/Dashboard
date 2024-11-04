@@ -104,9 +104,8 @@ class PermissionController extends Controller
   }
 
   public function updatePermissionPowerBi()
-  {
+  { 
     $office360token = PowerbiHelper::getOffice360AccessToken();
-
     $datasetID = env('DATASET_ID_REDE');
 
     $url = "https://api.powerbi.com/v1.0/myorg/datasets/%s/refreshes";
@@ -120,7 +119,8 @@ class PermissionController extends Controller
       "type" => "Full",
       "objects" => [
         [
-          "table" => "dRLS"
+          "table" => "dRLS",
+          "table" => "dFATURAMENTO"
         ]
       ]
     ];

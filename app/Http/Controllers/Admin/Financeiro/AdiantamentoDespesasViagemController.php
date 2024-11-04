@@ -79,7 +79,7 @@ class AdiantamentoDespesasViagemController extends Controller
     }
     public function StoreVlConsumido()
     {
-        $this->request['cd_comprovante'] = 0;;
+        $this->request['cd_comprovante'] = 0;
         $input = self::__validate($this->request);
 
         if ($input->fails()) {

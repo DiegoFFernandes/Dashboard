@@ -121,9 +121,9 @@ class Contas extends Model
                     CONTAS.DS_OBSERVACAO
                 FROM CONTAS
                 INNER JOIN PESSOA P ON (P.CD_PESSOA = CONTAS.CD_PESSOA)
-                WHERE CONTAS.CD_TIPOCONTA = 14
+                WHERE CONTAS.CD_TIPOCONTA in (14,11,4)
                     AND CONTAS.ST_CONTAS IN ('P', 'T')
-                    AND P.NR_CNPJCPF = '$nr_cnpjcpf'";
+                    AND REPLACE(REPLACE(REPLACE(P.NR_CNPJCPF, '.', ''), '-', ''), '/', '') = '$nr_cnpjcpf'";
 
         $results = DB::connection('firebird_rede')->select($query);
 

@@ -1,6 +1,6 @@
 <header class="main-header">
     <!-- Logo -->
-    <a href="" class="logo">
+    <a href="" class="logo hidden-sm hidden-xs">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><b>IVO</b></span>
         <!-- logo for regular state and mobile devices -->
@@ -65,7 +65,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <li class="hidden-xs hidden-md">
                         <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                     </li>
                 </ul>

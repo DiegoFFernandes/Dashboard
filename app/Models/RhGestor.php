@@ -43,4 +43,7 @@ class RhGestor extends Model
            throw $e;
         }
     }
+    public function destroyData($comp){
+        return RhGestor::where('comp', $comp)->delete();
+    }
 }

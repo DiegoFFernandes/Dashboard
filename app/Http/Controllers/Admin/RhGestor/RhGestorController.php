@@ -27,21 +27,21 @@ class RhGestorController extends Controller
         $this->rh = $rh;
         $this->area = $area;
     }
-    public function list()
-    {
-    }
-    public function storeEmployee()
-    {
-    }
-    public function storeArea()
-    {
-    }
+    public function list() {}
+    public function storeEmployee() {}
+    public function storeArea() {}
     public function IndicadorFinanceiroAgrupado()
     {
-        
         ini_set('max_execution_time', 10000);
-        
-        $data = $this->request->json()->all();
+
+        $data = $this->request->json()->all();      
+
+        $dateTime = DateTime::createFromFormat('n/j/Y g:i:s A', $data[0]['Competencia']);
+        $dateTime->modify('+1 month');
+        $comp = $dateTime->format('m/Y');
+
+        //deleta todos os dados da competencia que o rhgestor esta enviando para nós para inserir novamente.
+        $this->rh->destroyData($comp);
 
         $errors = [];
 
@@ -68,7 +68,10 @@ class RhGestorController extends Controller
 
             $validator = $this->__validate($item);
 
+            //Verifica se existe a pessoa se não vai o insert ou atualiza os dados dela de acordo com o CPF
             $this->pessoa->UpdateOrInsert($data[$index]);
+
+            //Armazenas novas lotações caso não existir
             $this->area->StoreAreaLotacao($cd_area_lotacao);
 
 
@@ -84,7 +87,7 @@ class RhGestorController extends Controller
         }
         if (!empty($errors)) {
             return response()->json(['errors' => $errors], 422);
-        }
+        }      
 
         foreach ($data as $index => $item) {
             try {

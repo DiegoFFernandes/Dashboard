@@ -120,7 +120,8 @@ class PermissionController extends Controller
       "objects" => [
         [
           "table" => "dRLS",
-          "table" => "dFATURAMENTO"
+          "table" => "dFATURAMENTO",
+          "table" => "dCUSTOPESSOAL"
         ]
       ]
     ];

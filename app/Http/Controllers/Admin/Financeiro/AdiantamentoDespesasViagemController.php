@@ -80,7 +80,7 @@ class AdiantamentoDespesasViagemController extends Controller
     public function StoreVlConsumido()
     {
         $this->request['cd_comprovante'] = 0;
-        $input = self::__validate($this->request);
+        $input = self::__validate($this->request);        
 
         if ($input->fails()) {
             $error = '<ul>';
@@ -121,6 +121,8 @@ class AdiantamentoDespesasViagemController extends Controller
             }
             return response()->json(['success' => 'Despesa incluida com sucesso!']);
         } catch (\Throwable $th) {
+
+            return $th;
             return response()->json(['error' => 'houve algum erro contate setor de TI!']);
         }
     }
@@ -133,9 +135,11 @@ class AdiantamentoDespesasViagemController extends Controller
                 'tp_despesa' => ['required', Rule::in(['C', 'A', 'O', 'H'])],
                 'vl_consumido' => ['required', 'numeric'],
                 'update_image' => [Rule::in(['0', '1'])],
+                'dt_despesa' => ['required', 'date'],
                 'ds_observacao' => 'max:2400'
             ],
             [
+                'dt_despesa.required' => 'Data da Despesa e obrigatoria',
                 'tp_despesa.required' => 'Tipo Despesa deve ser preechida!',
                 'vl_consumido.required' => 'Valor Consumido deve ser preenchido!'
             ]

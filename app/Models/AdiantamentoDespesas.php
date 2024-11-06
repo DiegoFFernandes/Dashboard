@@ -15,7 +15,11 @@ class AdiantamentoDespesas extends Model
         'cd_user',
         'tp_despesa',
         'vl_consumido',
+        'dt_despesa',
         'ds_observacao'
+    ];
+    protected $casts = [
+        'dt_despesa' => 'datetime:d/m/Y'
     ];
 
     public function storeDespesasConsumidas($input)
@@ -23,6 +27,7 @@ class AdiantamentoDespesas extends Model
         return AdiantamentoDespesas::create([
             'cd_user' => Auth::user()->id,
             'tp_despesa' => $input['tp_despesa'],
+            'dt_despesa' => $input['dt_despesa'],
             'vl_consumido' => $input['vl_consumido'],
             'ds_observacao' => $input['ds_observacao'],
 
@@ -33,6 +38,7 @@ class AdiantamentoDespesas extends Model
     {
         AdiantamentoDespesas::where('cd_adiantamento', $input['cd_comprovante'])->update([
             'tp_despesa' => $input['tp_despesa'],
+            'dt_despesa' => $input['dt_despesa'],
             'vl_consumido' => $input['vl_consumido'],
             'ds_observacao' => $input['ds_observacao'],
             'updated_at' => now(),
@@ -55,6 +61,7 @@ class AdiantamentoDespesas extends Model
             'adiantamento_despesas.cd_adiantamento',
             'users.name',
             'adiantamento_despesas.vl_consumido',
+            'adiantamento_despesas.dt_despesa',
             DB::raw("case 
                         when adiantamento_despesas.tp_despesa = 'C' then 'Combustivel'
                         when adiantamento_despesas.tp_despesa = 'A' then 'Alimentação'

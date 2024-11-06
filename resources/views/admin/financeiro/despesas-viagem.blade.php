@@ -21,29 +21,34 @@
                             <div class="box-body">
                                 @csrf
                                 <div class="col-md-12" style="background-color: #ecf0f5; padding-top:15px">
-                                    <input class="form-control cd_comprovante hidden" type="number">
-
-                                    <div class="col-md-3">
+                                    <input class="form-control cd_comprovante hidden" type="number">                                    
+                                    <div class="col-md-4">
                                         <label for="">Valor Adiantado:</label>
                                         <div class="form-group text-justify" style="background-color: #79ffa75c; opacity:1">
                                             <input class="form-control vl_adiantado text-right" type="text" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <label for="">Valor Gasto Adiantamento:</label>
                                         <div class="form-group text-justify">
                                             <input class="form-control vl_utilizado text-right" type="text" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <label for="">Valor Devolver:</label>
                                         <div class="form-group text-justify">
                                             <input class="form-control vl_devolver text-right" type="text" readonly>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
-                                        <label for="">Tipo Despesas:</label>
+                                    <div class="col-md-3">
+                                        <label for="">Data Despesa:</label>
+                                        <div class="form-group text-justify">
+                                            <input class="form-control dt_despesa" type="date">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Tipo Despesa:</label>
                                         <div class="form-group">
                                             <select class="form-control" name="tp_despesa" id="tp_despesa"
                                                 style="width: 100%;" required>
@@ -61,7 +66,7 @@
                                             <input class="form-control vl_consumido valor" type="number">
                                         </div>
                                     </div>
-                                    <div class="col-md-4 ">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="image">Capturar Comprovante:</label>
                                             {{-- <input type="file" class="form-control" id="image"> --}}
@@ -99,6 +104,7 @@
                                             <th>Pessoa</th>
                                             <th>Vl Consumido</th>
                                             <th>Tipo despesa</th>
+                                            <th>Data despesa</th>
                                             <th>Observação</th>
                                             <th>Visualizado</th>
                                             <th>#</th>
@@ -179,7 +185,7 @@
         $(document).ready(function() {
             var pictures = [],
                 height, width, imagem, id, update_image = 0,
-                tp_despesa, vl_consumido, cd_comprovante;
+                tp_despesa, vl_consumido, cd_comprovante, dt_despesa;
 
             saldo();
             if (screen.height <= screen.width) {
@@ -286,6 +292,10 @@
                             name: 'tp_despesa',
                         },
                         {
+                            data: 'dt_despesa',
+                            name: 'dt_despesa',
+                        },
+                        {
                             data: 'ds_observacao',
                             name: 'ds_observacao',
                         }, {
@@ -369,6 +379,7 @@
                 $('#tp_despesa').val(0).trigger('change');
                 $('.vl_consumido').val("");
                 $('.cd_comprovante').val("");
+                $('.dt_despesa').val("");
             }
 
             function StoreOrUpdate(route, type) {
@@ -377,6 +388,7 @@
                 vl_consumido = $('.vl_consumido').val();
                 cd_comprovante = $('.cd_comprovante').val();
                 ds_observacao = $('#observacao').val();
+                dt_despesa = $('.dt_despesa').val();
 
                 if (tp_despesa == 0) {
                     msgToastr('O campo Tipo de Despesa é obrigatório.', 'warning');
@@ -434,6 +446,7 @@
                         ds_observacao: ds_observacao,
                         tp_despesa: tp_despesa,
                         vl_consumido: vl_consumido,
+                        dt_despesa: dt_despesa,
                         pictures: pictures,
                         cd_comprovante: cd_comprovante,
                         update_image: update_image,
@@ -512,6 +525,12 @@
                 $('#menu').empty();
 
                 $('#tp_despesa').val(row.data().despesa);
+                var dt_usuario = row.data().dt_despesa;
+                const [dia, mes, ano] = dt_usuario.split('/');
+
+                var dt_corrigida = ano+'-'+mes+'-'+dia;
+
+                $('.dt_despesa').val(dt_corrigida);
                 $('.cd_comprovante').val(row.data().cd_adiantamento);
                 $('.vl_consumido').val(row.data().vl_consumido);
 

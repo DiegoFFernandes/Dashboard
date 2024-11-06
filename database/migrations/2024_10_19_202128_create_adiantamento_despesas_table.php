@@ -17,6 +17,7 @@ class CreateAdiantamentoDespesasTable extends Migration
             $table->id('cd_adiantamento');
             $table->unsignedBigInteger('cd_user');
             $table->char('tp_despesa','1');
+            $table->date('dt_despesa');
             $table->float('vl_consumido');
             $table->string('ds_observacao',2400);
             $table->char('st_visto','1');

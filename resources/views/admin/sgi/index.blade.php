@@ -423,8 +423,10 @@
                             status: data
                         }
                     },
-
-
+                    dom: 'Blfrtip',
+                    buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
                     columns: [{
                             data: 'id',
                             name: 'id'

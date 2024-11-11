@@ -123,7 +123,7 @@ class Contas extends Model
                 INNER JOIN PESSOA P ON (P.CD_PESSOA = CONTAS.CD_PESSOA)
                 WHERE CONTAS.CD_TIPOCONTA in (14,11,4)
                     AND CONTAS.ST_CONTAS IN ('P', 'T')
-                    AND REPLACE(REPLACE(REPLACE(P.NR_CNPJCPF, '.', ''), '-', ''), '/', '') = '$nr_cnpjcpf'";
+                    AND P.NR_CNPJCPF = '$nr_cnpjcpf'";
 
         $results = DB::connection('firebird_rede')->select($query);
 

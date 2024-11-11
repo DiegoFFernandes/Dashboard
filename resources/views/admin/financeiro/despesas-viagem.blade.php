@@ -22,14 +22,14 @@
                                 @csrf
                                 <div class="col-md-12" style="background-color: #ecf0f5; padding-top:15px">
                                     <input class="form-control cd_comprovante hidden" type="number">                                    
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
                                         <label for="">Valor Adiantado:</label>
                                         <div class="form-group text-justify" style="background-color: #79ffa75c; opacity:1">
                                             <input class="form-control vl_adiantado text-right" type="text" readonly>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label for="">Valor Gasto Adiantamento:</label>
+                                    <div class="col-md-4 col-sm-6 col-xs-6">
+                                        <label for="">Valor Gasto:</label>
                                         <div class="form-group text-justify">
                                             <input class="form-control vl_utilizado text-right" type="text" readonly>
                                         </div>

@@ -59,7 +59,7 @@ class RhGestorController extends Controller
 
             //Quando não existe Lotação criada no RhGestor, por padrão o banco deles vem A Denifir, a rotina abaixo muda para 99998.
             if ($cd_area_lotacao[0] === 'A definir') {
-                $cd_area_lotacao[0] = 99998;
+                $cd_area_lotacao[0] = 99996; // 'GRUPO A DEFINIR NO MYSQL'
                 $cd_area_lotacao[1] = 'A DEFENIR';
             }
 

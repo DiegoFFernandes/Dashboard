@@ -114,11 +114,11 @@ class Contas extends Model
     {
         $query = "
             SELECT
-                    CONTAS.CD_EMPRESA,
-                    CONTAS.CD_PESSOA || ' - ' || P.NM_PESSOA NM_PESSOA,
-                    CONTAS.VL_SALDO,
-                    CONTAS.DT_VENCIMENTO,
-                    CONTAS.DS_OBSERVACAO
+                    --CONTAS.CD_EMPRESA,
+                    --CONTAS.CD_PESSOA || ' - ' || P.NM_PESSOA NM_PESSOA,
+                    SUM(CONTAS.VL_SALDO) VL_SALDO 
+                    --CONTAS.DT_VENCIMENTO,
+                    --CONTAS.DS_OBSERVACAO
                 FROM CONTAS
                 INNER JOIN PESSOA P ON (P.CD_PESSOA = CONTAS.CD_PESSOA)
                 WHERE CONTAS.CD_TIPOCONTA in (14,11,4)

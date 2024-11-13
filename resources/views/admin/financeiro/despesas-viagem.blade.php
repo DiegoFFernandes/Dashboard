@@ -21,7 +21,7 @@
                             <div class="box-body">
                                 @csrf
                                 <div class="col-md-12" style="background-color: #ecf0f5; padding-top:15px">
-                                    <input class="form-control cd_comprovante hidden" type="number">                                    
+                                    <input class="form-control cd_comprovante hidden" type="number">
                                     <div class="col-md-4 col-sm-6 col-xs-6">
                                         <label for="">Valor Adiantado:</label>
                                         <div class="form-group text-justify" style="background-color: #79ffa75c; opacity:1">
@@ -117,10 +117,11 @@
                                                 <th></th>
                                                 <th></th>
                                                 <th></th>
-                                                <th></th>                                                
+                                                <th></th>
+                                                <th></th>
                                                 <th></th>
                                             </tr>
-                                        </tfoot>                                        
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -326,7 +327,9 @@
                                 i : 0;
                         };
                         total = api
-                            .column(2, {page: 'current'})
+                            .column(2, {
+                                page: 'current'
+                            })
                             .data()
                             .reduce(function(a, b) {
                                 return parseFloat(a) + parseFloat(b);
@@ -334,7 +337,7 @@
 
                         $(api.column(2).footer()).html(
                             $.fn.dataTable.render.number('.', ',', 2).display(total)
-                            
+
                         );
                     }
                 });
@@ -528,7 +531,7 @@
                 var dt_usuario = row.data().dt_despesa;
                 const [dia, mes, ano] = dt_usuario.split('/');
 
-                var dt_corrigida = ano+'-'+mes+'-'+dia;
+                var dt_corrigida = ano + '-' + mes + '-' + dia;
 
                 $('.dt_despesa').val(dt_corrigida);
                 $('.cd_comprovante').val(row.data().cd_adiantamento);

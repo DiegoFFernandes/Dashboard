@@ -394,8 +394,7 @@
                 var valorVenda = parseFloat(valorCellVenda.text()).toFixed(2);
 
                 var valorCellTabela = $(row).find('td').eq(3);
-                var valorTabela = parseFloat(valorCellTabela.text()).toFixed(2);
-                
+                var valorTabela = parseFloat(valorCellTabela.text()).toFixed(2);                
                 
 
                 // Verificar se o input já está sendo editado

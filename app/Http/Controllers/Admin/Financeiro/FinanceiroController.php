@@ -52,7 +52,8 @@ class FinanceiroController extends Controller
         $dt_fim = $this->request->dt_fim;
         $nm_empresa = $this->request->nm_empresa;
 
-        $this->financeiro->Conciliacao($cd_empresa, $dt_ini, $dt_fim);
+        // $this->financeiro->Conciliacao($cd_empresa, $dt_ini, $dt_fim);
+
         $myFile = Excel::raw(new ConciliacaoFinanceiraExport(
             $cd_empresa,
             $dt_ini,

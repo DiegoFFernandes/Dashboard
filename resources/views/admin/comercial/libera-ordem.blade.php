@@ -394,8 +394,8 @@
                 var valorVenda = parseFloat(valorCellVenda.text()).toFixed(2);
 
                 var valorCellTabela = $(row).find('td').eq(3);
-                var valorTabela = parseFloat(valorCellTabela.text()).toFixed(2);                
-                
+                var valorTabela = parseFloat(valorCellTabela.text()).toFixed(2);
+
 
                 // Verificar se o input já está sendo editado
                 if (!valorCellVenda.find('input').length) {
@@ -410,12 +410,12 @@
                 }
 
                 // Quando o campo perde o foco, salva o valor editado
-                valorCellVenda.find('input').on('blur', function() {                 
-                    
+                valorCellVenda.find('input').on('blur', function() {
+
                     var newValue = parseFloat($(this).val()).toFixed(2);
                     valorCellVenda.html(newValue);
                     // Atualiza os dados no DataTables
-                    var newPercent = parseFloat((100-(newValue*100)/valorTabela)).toFixed(2);
+                    var newPercent = parseFloat((100 - (newValue * 100) / valorTabela)).toFixed(2);
 
                     rowData.VL_VENDA = newValue;
                     rowData.PC_DESCONTO = newPercent;
@@ -453,6 +453,14 @@
                         if (response.success) {
                             msgToastr(response.success,
                                 'success');
+                            $('#table-ordem-block').DataTable().ajax.reload();
+                            // $('#modal-pedido').modal('hide');
+                            $('#modal-table-pedido').modal('hide');
+                            $('#modal-pedido').modal('hide');
+                        }
+                        if (response.warning) {
+                            msgToastr(response.warning,
+                                'warning');
                             $('#table-ordem-block').DataTable().ajax.reload();
                             // $('#modal-pedido').modal('hide');
                             $('#modal-table-pedido').modal('hide');

@@ -1,7 +1,7 @@
 @if ($errors->all())
     @foreach ($errors->all() as $error)
         <!-- alert -->
-        <div class="alert alert-warning alert-dismissible alert-geral" >
+        <div class="alert alert-warning alert-dismissible alert-geral">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <i class="icon fa fa-check"></i>{{ $error }}
         </div>
@@ -27,3 +27,20 @@
 {{-- @error('file')
     <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
 @enderror --}}
+
+{{-- Verificar se existe algo para exportar para excel --}}
+@if (session()->has('export_results'))
+    <script src="{{ asset('js/scripts.js') }}"></script>
+    <script>
+        window.onload = function() {
+            @if (session('export_results') && count(session('export_results')) > 0)
+                msgToastr("O download do arquivo está sendo iniciado. Por favor, aguarde.", 'success');
+            @else
+                msgToastr("Nenhum dado disponível para download.", 'success');
+                return; // Não redirecionar se não houver dados
+            @endif
+
+            window.location.href = "{{ route('admin.download-excel') }}";
+        };
+    </script>
+@endif

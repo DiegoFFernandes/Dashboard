@@ -84,7 +84,7 @@ class LiberaOrdemComercial extends Model
     {
         $query = "
                 SELECT
-                IPP.id,
+                IPP.ID,
                 PP.STPEDIDO,
                 PP.TP_BLOQUEIO,
                 PP.ID PEDIDO,
@@ -104,17 +104,23 @@ class LiberaOrdemComercial extends Model
                 ELSE ITP.VL_PRECO
                 END)) AS NUMERIC(15,2)) PC_DESCONTO,
                 ITP.CD_TABPRECO
-            FROM PEDIDOPNEU PP
+            FROM
+                PEDIDOPNEU PP
             INNER JOIN ITEMPEDIDOPNEU IPP ON (IPP.IDPEDIDOPNEU = PP.ID)
-            --inner join itempedidopneuborracheiro ipb on (ipb.iditempedidopneu = ipp.id)
+                --inner join itempedidopneuborracheiro ipb on (ipb.iditempedidopneu = ipp.id)
             INNER JOIN ITEM I ON (IPP.IDSERVICOPNEU = I.CD_ITEM)
-            LEFT JOIN ITEMTABPRECO ITP ON (ITP.CD_TABPRECO = 1
-                AND ITP.CD_ITEM = IPP.IDSERVICOPNEU)
+            LEFT JOIN ITEMTABPRECO ITP ON (ITP.CD_TABPRECO = CASE
+                                                            WHEN I.CD_MARCA = 128 THEN 1010807
+                                                            WHEN I.CD_MARCA = 127 THEN 1007710
+                                                            ELSE 1
+                                                            END AND
+                ITP.CD_ITEM = IPP.IDSERVICOPNEU)
             INNER JOIN PESSOA P ON (P.CD_PESSOA = PP.IDPESSOA)
             INNER JOIN PESSOA PV ON (PV.CD_PESSOA = PP.IDVENDEDOR)
-            WHERE PP.IDEMPRESA <> 1
-                AND PP.STPEDIDO IN ('B')
-                AND PP.TP_BLOQUEIO <> 'F'
+            WHERE
+                PP.IDEMPRESA <> 1 AND
+                PP.STPEDIDO IN ('B') AND
+                PP.TP_BLOQUEIO <> 'F'
                 " . (($id <> 0) ? " and pp.id = '" . $id . "'" : "") . "";
 
         return DB::connection('firebird_rede')->select($query);

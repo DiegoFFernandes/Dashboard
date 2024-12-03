@@ -27,10 +27,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();send:updatetipopessoa
         // $schedule->command('send:updatetipopessoa')->everyMinute();
-        // $schedule->command('send:updatelicenca')->everyMinute();
-        $schedule->command('send:update_fechamento_contabil')->everyTenHours();
-        // $schedule->command('send:send_wpp_nota_boleto')->everyMinute();
-        // $schedule->command('send:send_wpp_boleto')->everyMinute();
+        $schedule->command('send:updatelicenca')->everyMinute();
+        $schedule->command('send:update_fechamento_contabil')->everySixHours();
+        $schedule->command('send:send_wpp_nota_boleto')->everyMinute();
+        $schedule->command('send:send_wpp_boleto')->everyMinute();
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\PedidoPneuLaudoAssociadoRecusadoExport;
 use App\Http\Controllers\Admin\AnaliseFrota\ItemAnaliseFrotaController;
 use App\Http\Controllers\Admin\Cobranca\BloqueioPedidosController;
 use App\Http\Controllers\Admin\Producao\AcompanhaOrdemController;
@@ -42,6 +43,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PowerBi\PowerBiEmbeddedController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 Route::get('/clear-cache-all', function () {
 
@@ -61,6 +63,16 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.log
 Route::post('/login/do', [LoginController::class, 'Login'])->name('admin.login.do');
 Route::get('/logout', [LoginController::class, 'logout'])->name('admin.logout');
 Route::get('/painel', [LoginController::class, 'dashboard'])->name('admin.dashboard');
+
+Route::get('/painel/download-excel', function () {
+    $results = session()->pull('export_results'); // Pegar os dados da sessão
+    if (!$results) {
+        abort(404, 'Nenhum dado para exportar');
+    }
+    return Excel::download(new PedidoPneuLaudoAssociadoRecusadoExport($results), 'resultados.xlsx');
+})->name('admin.download-excel');
+
+
 
 Route::get('/empresa', [EmpresaController::class, 'index'])->name('empresa.index');
 Route::get('webhook', [WebHookController::class, 'index'])->name('webhook');
@@ -280,7 +292,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('pessoa')->group(function () {
 
         Route::get('update-teste', [PessoaController::class, 'updateTeste'])->name('update.teste');
-        
+
 
         Route::get('listar', [PessoaController::class, 'index'])->name('pessoa.index');
         Route::get('get-pessoa', [PessoaController::class, 'getpessoa'])->name('get-pessoa');

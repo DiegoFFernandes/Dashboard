@@ -145,12 +145,12 @@ class LiberaOrdemComissaoController extends Controller
             if ($update) {
                 return response()->json(['success' => 'Ordem Liberada com sucesso!']);
             } else {
-                return response()->json(['errors' => 'Houve algum erro favor contactar TI!']);
+                return response()->json(['error' => 'Houve algum erro favor contactar TI!']);
             }
         } elseif ($data[0]->TP_BLOQUEIO == "A") {
             $update = $this->pedido->updateData($data[0], $stpedido = "B", $tpbloqueio = "F");
             if ($update) {
-                return response()->json(['success' => 'Ordem Liberada com sucesso, mas ainda falta liberação de credito!']);
+                return response()->json(['warning' => 'Ordem Liberada com sucesso, mas ainda falta liberação de credito!']);
             } else {
                 return response()->json(['error' => 'Houve algum erro favor contactar TI!']);
             }

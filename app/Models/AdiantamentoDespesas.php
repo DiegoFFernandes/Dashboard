@@ -66,6 +66,7 @@ class AdiantamentoDespesas extends Model
                         when adiantamento_despesas.tp_despesa = 'C' then 'Combustivel'
                         when adiantamento_despesas.tp_despesa = 'A' then 'Alimentação'
                         when adiantamento_despesas.tp_despesa = 'H' then 'Hospedagem'
+                        when adiantamento_despesas.tp_despesa = 'P' then 'Pedágio'
                         when adiantamento_despesas.tp_despesa = 'O' then 'Outros'
                     end tp_despesa"),
             'adiantamento_despesas.tp_despesa as despesa',

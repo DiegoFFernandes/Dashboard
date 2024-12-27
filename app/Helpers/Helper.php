@@ -103,8 +103,9 @@ class Helper
             $ipaddress = 'UNKNOWN';
         return $ipaddress;
     }
-    
-    public static function ConvertFormatText($results){
+
+    public static function ConvertFormatText($results)
+    {
         // Garantir que os dados estejam em UTF-8
         $results = array_map(function ($result) {
             return array_map(function ($value) {
@@ -112,5 +113,31 @@ class Helper
             }, (array) $result);
         }, $results);
         return $results;
+    }
+
+    public static function VerifyTablesPowerBi($table)
+    {
+
+        if ($table == 'permissions') {
+            $objects =  [
+                "table" => "dRLS"
+            ];
+        }
+        if ($table == 'faturamento' || $table == 'informe') {
+            $objects =  [
+                'table' => "dFATURAMENTO",
+                'table' => 'dCALENDARIO',
+                'table' => 'dPESSOA',
+                'table' => 'dVENDEDOR',
+                'table' => 'dSUBGRUPO',
+                'table' => 'dITEM',
+                'table' => 'dCONDPAGTO',
+                'table' => 'dSERIE',
+                'table' => 'dSUBGRUPO_META',
+                'table' => 'dCONTAS_ENTRADAS'
+            ];
+        }
+
+        return $objects;
     }
 }

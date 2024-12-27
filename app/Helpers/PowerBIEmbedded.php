@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
+
 class PowerbiHelper
 {
     public static function processPowerbiHttpRequest($url, $header, $data, $method = 'POST')
@@ -56,5 +58,55 @@ class PowerbiHelper
         print '<pre>';
         print_r($param);
         print '</pre>';
+    }
+
+    public static function updateTablePowerBi($objects)
+    {
+        $office360token = self::getOffice360AccessToken();
+        $datasetID = env('DATASET_ID_REDE');
+
+        $url = "https://api.powerbi.com/v1.0/myorg/datasets/%s/refreshes";
+        $url = sprintf($url, $datasetID);
+
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => $office360token->token_type . ' ' . $office360token->access_token,
+        ];
+        $body = [
+            "type" => "Full",
+            "objects" => [
+                $objects
+            ]
+        ];
+        return Http::withHeaders($headers)->post($url, $body);
+    }
+
+    public static function handleResponse($response, $successRoute, $errorRoute){
+         // Verifica se a requisição foi bem-sucedida
+         if ($response->successful()) {
+            return redirect()->route($successRoute)->with(['info' => 'Atualizando tabelas, aguarde processamento no servidor!']);
+        }
+
+        // Verifica erros no lado do cliente
+        if ($response->clientError()) {
+            $responseData = $response->json();
+
+            // Caso de erro específico
+            if (isset($responseData['error']['message']) && $responseData['error']['code'] === 'InvalidRequest') {
+                return redirect()->route($errorRoute)->with(['warning' => 'Já existe uma solicitação de atualização em andamento. Tente novamente mais tarde.']);
+            }
+
+            // Caso de erro genérico
+            return redirect()->route($errorRoute)->with(['warning' => 'Erro ao atualizar as permissões do Power BI.']);
+        }
+
+        // Caso de erro no lado do servidor
+        if ($response->serverError()) {
+            return redirect()->route($errorRoute)->with(['error' => 'Erro interno no servidor. Tente novamente mais tarde.']);
+        }
+
+        // Caso nenhum dos anteriores seja identificado
+        return redirect()->route($errorRoute)->with(['error' => 'Erro desconhecido ao processar a solicitação.']);
+    
     }
 }

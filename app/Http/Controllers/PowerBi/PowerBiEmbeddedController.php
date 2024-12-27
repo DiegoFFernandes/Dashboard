@@ -59,7 +59,7 @@ class PowerBiEmbeddedController extends Controller
             return redirect()->route('admin.dashboard')->with('warning', 'Houve algum problema ao carregar o token');
         }
 
-       $content = $this->initToken($groupID, $reportID, $office360token, $permissionPower, $datasetID);
+        $content = $this->initToken($groupID, $reportID, $office360token, $permissionPower, $datasetID);
 
         if ($updatetoken == 1) {
             return response()->json($content);
@@ -86,7 +86,7 @@ class PowerBiEmbeddedController extends Controller
     }
 
     public function initToken($groupID, $reportID, $office360token, $permissionPower, $datasetID)
-    {        
+    {
         empty($this->user['email']) ? $username = env('POWERBI_USERNAME') : $username = $this->user['email'];
 
         $url = 'https://api.powerbi.com/v1.0/myorg/groups/%s/reports/%s/GenerateToken';
@@ -130,7 +130,7 @@ class PowerBiEmbeddedController extends Controller
 
         $content = $this->initToken($groupID, $reportID, $office360token, $permissionPower, $datasetID);
 
-        
+
         return view(
             'admin.diretoria.inadimplencia',
             compact(
@@ -144,5 +144,15 @@ class PowerBiEmbeddedController extends Controller
                 'uri'
             )
         );
+    }
+
+    public function updateTablesPowerBi()
+    {
+        $table = $this->request->table;
+        $objects = Helper::VerifyTablesPowerBi($table);
+
+        $response = PowerbiHelper::updateTablePowerBi($objects);
+
+        return PowerbiHelper::handleResponse($response, 'admin.dashboard', 'admin.dashboard');
     }
 }

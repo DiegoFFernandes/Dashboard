@@ -18,7 +18,7 @@
                 <div class="box box-primary">
                     <div class="box-header">
                         <a href="{{ route('admin.usuarios.permission.create') }}" class="btn btn-success">Criar novo</a>
-                        <a href="{{ route('permission-powerbi.update') }}" class="btn btn-primary" id="updatePermissionPowerBI">Permissão PowerBI</a>
+                        <a href="{{ route('tables-powerbi.update', ['table' => 'permissions']) }}" class="btn btn-primary" id="updatePermissionPowerBI">Permissão PowerBI</a>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

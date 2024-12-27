@@ -34,7 +34,7 @@
     <script>
         window.onload = function() {
             @if (session('export_results') && count(session('export_results')) > 0)
-                msgToastr("O download do arquivo está sendo iniciado. Por favor, aguarde.", 'success');
+                msgToastr("Ordens que foram associadas na MRC004 e foram recusadas foram atualizadas para 'Atendidas'. Por favor, aguarde estamos criando uma planilha com as ordens alteradas por segurança!", 'success');
             @else
                 msgToastr("Nenhum dado disponível para download.", 'success');
                 return; // Não redirecionar se não houver dados

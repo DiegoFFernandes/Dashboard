@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Helper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -102,48 +103,5 @@ class PermissionController extends Controller
     return redirect()->route('admin.usuarios.permission')
       ->with('status', 'Permissões usuario deletadas com successo');
   }
-
-  public function updatePermissionPowerBi()
-  { 
-    $office360token = PowerbiHelper::getOffice360AccessToken();
-    $datasetID = env('DATASET_ID_REDE');
-
-    $url = "https://api.powerbi.com/v1.0/myorg/datasets/%s/refreshes";
-    $url = sprintf($url,   $datasetID);
-
-    $headers = [
-      'Content-Type' => 'application/json',
-      'Authorization' => $office360token->token_type . ' ' . $office360token->access_token,
-    ];
-    $body = [
-      "type" => "Full",
-      "objects" => [
-        [
-          "table" => "dRLS",
-          "table" => "dFATURAMENTO",
-          "table" => "dCUSTOPESSOAL"
-        ]
-      ]
-    ];
-    $response = Http::withHeaders($headers)->post($url, $body);
-
-
-    // Verificando a resposta da API
-    // Verifica se a requisição foi bem-sucedida
-    if ($response->successful()) {
-      return Redirect::route('admin.usuarios.permission')->with(['info' => 'Atualizando permissões, aguarde processamento no servidor!']);
-    }
-
-    // Se a resposta contiver um erro, trata conforme necessário
-    if ($response->clientError()) {
-      $responseData = $response->json();
-
-      if (isset($responseData['error']['message']) && $responseData['error']['code'] === 'InvalidRequest') {
-
-        return Redirect::route('admin.usuarios.permission')->with(['warning' => 'Já existe uma solicitação de atualização em andamento. Tente novamente mais tarde.']);
-      }
-      return Redirect::route('admin.usuarios.permission')->with(['warning' => 'Erro ao atualizar as permissões do Power BI.']);     
-      
-    }
-  }
+ 
 }

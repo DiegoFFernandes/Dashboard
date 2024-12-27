@@ -56,6 +56,7 @@
                                                 <option value="C">Combústivel</option>
                                                 <option value="A">Alimentação</option>
                                                 <option value="H">Hospedagem</option>
+                                                <option value="P">Pedágio</option>
                                                 <option value="O">Outro</option>
                                             </select>
                                         </div>

@@ -53,7 +53,7 @@ class PedidoPneu extends Model
     {
         $query = "
                 SELECT
-                    FIRST 10
+                    FIRST 50
                     P.IDEMPRESA,
                     LTP.NR_LAUDO,
                     P.ID AS NR_PEDIDO,
@@ -67,7 +67,7 @@ class PedidoPneu extends Model
                 WHERE LTP.IDITEMPEDIDOPNEURECUSA IS NULL
                     AND LTP.IDITEMPEDIDOPNEUGARANTIA IS NOT NULL
                     --and P.ID in (90538,92118,92009)
-                    AND LTP.TP_LAUDO = 'R'
+                    AND LTP.TP_LAUDO in ('R','G')
                     AND P.STPEDIDO = 'N'
                     AND P.IDTIPOPEDIDO = 3";
         $data = DB::connection('firebird_rede')->select($query);
